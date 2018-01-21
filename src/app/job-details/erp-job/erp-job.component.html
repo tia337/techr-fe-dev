@@ -1,0 +1,122 @@
+<div class="erp_main_choise">
+  <div class="turnOnOffBlock">
+      <h3>Active on Employee Referral Page</h3>
+      <mat-slide-toggle
+        class="onoffERP"
+        [(ngModel)]="isActive"
+        (click)="changeActiveStateForErp()">
+      </mat-slide-toggle>
+  </div>
+  <div class="settings_One_Block">
+      <h3>Link to Referral Program</h3>
+    <div *ngIf="samplesArray != undefined && customsArray != undefined">
+
+
+      <button mat-button class="one" [matMenuTriggerFor]="erprograms">Select Program</button>
+
+      <mat-menu #erprograms="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="standart">Standart Programs</button>
+        <button mat-menu-item [matMenuTriggerFor]="customprograms">{{ cmpName }} Programs</button>
+      </mat-menu>
+      <mat-menu #standart="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="AdditionalHolidays">Additional Holidays</button>
+        <button mat-menu-item [matMenuTriggerFor]="Bonus">Bonus</button>
+        <button mat-menu-item [matMenuTriggerFor]="Cash">Cash</button>
+        <button mat-menu-item [matMenuTriggerFor]="Generic">Generic</button>
+        <button mat-menu-item [matMenuTriggerFor]="Perks">Perks</button>
+        <button mat-menu-item [matMenuTriggerFor]="SpecialTrips">Special Trips</button>
+        <button mat-menu-item [matMenuTriggerFor]="Other">Other</button>
+      </mat-menu>
+
+      <mat-menu #AdditionalHolidays="matMenu">
+        <div *ngFor="let sample of samplesArray">
+            <button *ngIf="sample.type.name == 'Additional Holidays'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #Bonus="matMenu">
+        <div *ngFor="let sample of samplesArray">
+            <button *ngIf="sample.type.name == 'Bonus'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #Cash="matMenu">
+        <div *ngFor="let sample of samplesArray">
+            <button *ngIf="sample.type.name == 'Cash'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #Generic="matMenu">
+        <div *ngFor="let sample of samplesArray">
+            <button *ngIf="sample.type.name == 'Generic'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #Perks="matMenu">
+        <div *ngFor="let sample of samplesArray">
+            <button *ngIf="sample.type.name == 'Perks'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #SpecialTrips="matMenu">
+        <div *ngFor="let sample of samplesArray">
+            <button *ngIf="sample.type.name == 'Special Trips'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #Other="matMenu">
+        <div *ngFor="let sample of samplesArray">
+            <button *ngIf="sample.type.name == 'Other'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+
+
+
+      <mat-menu  #customprograms="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="AdditionalHolidaysU">Additional Holidays</button>
+        <button mat-menu-item [matMenuTriggerFor]="BonusU">Bonus</button>
+        <button mat-menu-item [matMenuTriggerFor]="CashU">Cash</button>
+        <button mat-menu-item [matMenuTriggerFor]="GenericU">Generic</button>
+        <button mat-menu-item [matMenuTriggerFor]="PerksU">Perks</button>
+        <button mat-menu-item [matMenuTriggerFor]="SpecialTripsU">Special Trips</button>
+        <button mat-menu-item [matMenuTriggerFor]="OtherU">Other</button>
+      </mat-menu>
+      <mat-menu #AdditionalHolidaysU="matMenu">
+        <div *ngFor="let sample of customsArray">
+            <button *ngIf="sample.type.name == 'Additional Holidays'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #BonusU="matMenu">
+        <div *ngFor="let sample of customsArray">
+            <button *ngIf="sample.type.name == 'Bonus'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #CashU="matMenu">
+        <div *ngFor="let sample of customsArray">
+            <button *ngIf="sample.type.name == 'Cash'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #GenericU="matMenu">
+        <div *ngFor="let sample of customsArray">
+            <button *ngIf="sample.type.name == 'Generic'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #PerksU="matMenu">
+        <div *ngFor="let sample of customsArray">
+            <button *ngIf="sample.type.name == 'Perks'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #SpecialTripsU="matMenu">
+        <div *ngFor="let sample of customsArray">
+            <button *ngIf="sample.type.name == 'Special Trips'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+      <mat-menu #OtherU="matMenu">
+        <div *ngFor="let sample of customsArray">
+            <button *ngIf="sample.type.name == 'Other'" mat-menu-item (click)="choiceProgram(sample)">{{sample.title}}</button>
+        </div>
+      </mat-menu>
+    </div>
+    <button mat-button  class="two" *ngIf="choicedProgram != undefined" (click)="removeErpProgram()">{{ choicedProgram.title  }}
+      <div class="block">REMOVE</div>
+    </button>
+  </div>
+  <div class="additional">
+      <h3>Email program to employees</h3>
+      <button mat-button (click)="sendEmail()">Create Email</button>
+  </div>
+</div>

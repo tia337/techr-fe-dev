@@ -1,0 +1,32 @@
+
+<h3>Skills</h3>
+<div class = "flexbox-container" *ngFor = "let ss of sortedSkills">
+  <p class = "category">{{ss.category}}</p>
+  <div class = "exp-skill-container" *ngFor='let skil of ss.skills | keys'>
+  <div class = "experience" *ngIf = "skil.key == 1">
+    <p>1-3<p>
+  </div>
+  <div class = "experience" *ngIf = "skil.key == 2">
+    <p>3+<p>
+  </div>
+  <div class = "experience" *ngIf = "skil.key == 3">
+    <p>5+<p>
+  </div>
+    <div  class = "skills" *ngFor = "let skillsObj of skil.value">
+      <p>{{skillsObj.get("skill").get("title")}}</p>
+    </div>
+  </div>
+</div>
+<h3 *ngIf = "summary != ''">Summary</h3> 
+<p class = "summary">{{summary}}</p>
+<h3 *ngIf = "lastExperience != []">Last Experience</h3> 
+<div *ngIf = "lastExperience != []">
+  <div *ngFor = "let lexp of lastExperience">
+    <p class = "lexperience"><strong>{{lexp["title"]}}</strong></p>
+    <p *ngIf = "lexp.company" class = "lexperience">{{lexp.company.name}}</p>
+    <p class = "lexperience" *ngIf = "lexp.isCurrent && lexp.startDate">{{lexp.startDate.month | date:'MMM'}} {{lexp.startDate.year}} - Present</p>
+    <p class = "lexperience" *ngIf = "!lexp.isCurrent && lexp.startDate">{{lexp.startDate.month | date:'MMM'}} {{lexp.startDate.year}} - Present</p>
+    <p *ngIf = "lexp.location" class = "lexperience">{{lexp.location.name}}</p>
+    <p *ngIf = "lexp.summary" class = "lexperience summary">{{lexp.summary}}</p>
+  </div>
+</div>

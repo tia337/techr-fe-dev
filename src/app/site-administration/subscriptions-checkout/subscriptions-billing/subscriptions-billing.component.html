@@ -1,0 +1,109 @@
+<h2 class = "billing-title">Billing Summary</h2>
+<div class = "list-decription">
+
+<div class = "flex-container">
+  <div class = "container-checkbox-inf">
+    <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i><a>You are buying the <strong>{{curTarif}}</strong> plan
+  <a class = "link" *ngIf = "curTarif == 'standard'" (click) = "changeCurTarif('professional')"> Switch to professional</a>
+  <a class = "link" *ngIf = "curTarif == 'professional'" (click) = "changeCurTarif('standard')"> Switch to standard</a></a>
+  </div>
+  <div class = "container-checkbox-inf">
+    <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i><a>You are paying <strong>{{curPayingPlan}}</strong>
+  <a class = "link" *ngIf = "curPayingPlan == 'anually'" (click) = "updateCurPaying('month')">Switch to Monthly</a>
+  <a class = "link" *ngIf = "curPayingPlan == 'monthly'" (click) = "updateCurPaying('year')">Switch to Anually</a></a>
+  </div>
+  <div *ngIf = "curPayingPlan == 'anually' && curCurrency.length>0">
+    <div class = "container-checkbox-inf">
+    <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i><a>Your price per seat per month is <strong>{{(anualPrice/12) | currency:curCurrency:true:'1.0-2'}}</strong></a>
+    </div>
+    <div class = "container-checkbox-inf">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i><a>Your will pay <a class="strike">{{(monthlyPrice*teamMembers*12) | currency:curCurrency:true}}</a> {{anualPrice*teamMembers | currency:curCurrency:true}} (after credit)</a>
+    </div>
+  </div>
+  <div *ngIf = "curPayingPlan == 'monthly' && curCurrency.length>0">
+    <div class = "container-checkbox-inf">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i><a>Your price per seat per month is <strong>{{monthlyPrice | currency:curCurrency:true}}</strong></a>
+    </div>
+    <div class = "container-checkbox-inf">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i><a>Your will pay <strong>{{monthlyPrice*teamMembers | currency:curCurrency:true}}</strong> (after credit)</a>
+    </div>
+  </div>
+</div>
+<p class = "par-details">You are paying for {{teamMembers}} users now. We will automatically update<br>your account balance when active members
+  are added to or removed from<br>your Recruitment team. See details</p>
+
+
+
+<!----------------------------------- -->
+
+<section *ngIf="loading == Loading.success; else loader">
+
+  <div class="stripe-form-inner" *ngIf="!hasCustomer || !defaultPaymentSource; else newSource">
+    <div class="form-section">
+      <div class="card-info-wrap">
+        <div class="card-inputs">
+          <div class="subheader bold">Enter new card details</div>
+          <label class="card-input-label">
+            Card Number:
+            <div class="card-input input-text" id="card-number"></div>
+          </label>
+
+          <div class="cvc-expiry-wrap">
+
+            <label class="card-input-label card-input-cvc">
+              CVC:
+              <div class="card-input input-text" id="card-cvc"></div>
+            </label>
+
+            <label class="card-input-label card-input-expiry">
+              Card Expiry:
+              <div class="card-input input-text" id="card-expiry"></div>
+            </label>
+
+          </div>
+
+          <label class="card-input-label">
+            Post Code:
+            <div class="card-input input-text" id="postal-code"></div>
+          </label>
+
+        </div>
+
+        <div class="submit-button-wrap">
+          <button class="primary-button submit-button submit-new-card" [ngClass]="{'integration': transactionActive == true}" type="button" (click)="subscribeNewCustomer()">
+              <mat-spinner *ngIf = 'transactionActive == true'  [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+            Complete</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <ng-template #newSource>
+    <div class="stripe-form-inner">
+
+
+      <!--{{defaultPaymentSource.brand}} - **** **** **** {{defaultPaymentSource.last4}}(default)-->
+    <div class = "pay-wrap">
+      <div class = "def-car-wrap">
+        <card [card]="defaultPaymentSource" [isDefault]="true"></card>
+        <p class = "or-title">or</p>
+        <button mat-raised-button (click)="addCard()" class = "add-card">Add card</button>
+      </div>
+      <div class="submit-button-wrap">
+        <button class="primary-button submit-button" [ngClass]="{'integration': transactionActive == true}" type="button" (click)="subscribeExistingCustomer()">
+            <mat-spinner *ngIf = 'transactionActive == true'  [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+          Complete</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<button (click)="createUnpaidSubscription()">Create unpaid plan</button>
+(only for clients with stripe customer)
+</section>
+
+<ng-template #loader>
+  Loading...
+</ng-template>

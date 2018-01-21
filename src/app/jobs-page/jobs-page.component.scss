@@ -1,0 +1,123 @@
+@import '../../styles/inputs';
+@import './../../styles/mixins';
+
+.jobs-inner-page {
+  padding: 30px 40px;
+  .filters_search_block {
+    @include displayFlex();
+    @include flex-direction(row);
+    width: 100%;
+    .filters {
+      //width: 30%;
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-wrap(wrap);
+      .filters-form {
+        @include flex(1, 0, auto);
+        margin: 0 20px;
+        min-width: 250px;
+        max-width: 300px;
+        width: 100%;
+        .example-full-width {
+          width: 100%;
+        }
+      }
+    }
+    .search {
+      @include displayFlex();
+      @include flex-direction(row);
+      @include flex-wrap(wrap);
+      width: 65%;
+      .example-form {
+        margin-right: 30px;
+        min-width: 250px;
+        max-width: 300px;
+        width: 100%;
+      }
+      .example-full-width {
+        width: 100%;
+        position: relative;
+        button.clear_button {
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          min-width: 25px;
+          // border-radius: 50%;
+          border: 0;
+          border-bottom: 2px solid rgb(0, 123, 204);
+        }
+      }
+    }
+  }
+  .buttons-wrap {
+    margin: 10px 0;
+  }
+  .pagination_block {
+    margin: 20px 0 20px 0;
+    @include displayFlex();
+    @include flex-direction(row);
+    @include flex-justify-content(start);
+    width: calc(100% - 260px);
+    button {
+      min-width: 50px;
+      max-width: 50px;
+      margin-right: 5px;
+    }
+  }
+  .jobs-wrap {
+    .job-box-wrap {
+      padding: 5px 0;
+    }
+  }
+  .no-jobs-block {
+    margin: 60px 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-start;
+    .egret-img {
+      max-width: 12vw;
+      margin: 0 6vw;
+    }
+    .no-jobs-messages-wrap {
+      .no-jobs-message {
+        font-size: 1.5em;
+      }
+    }
+  }
+}
+.roles {
+  position: relative;
+  .reset_button {
+    position: absolute;
+    right: 0;
+    bottom: -50px;
+    background-color: $middle-grey;
+  }
+}
+
+.feedback_triangle {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-bottom: 80px solid #007ab6;
+	border-left: 80px solid transparent;
+  z-index: 999999;
+  cursor: pointer;
+	.feedback_text {
+		@include transform-rotate(-45deg);
+		position: absolute;
+		right: -1px;
+		top: 38px;
+		color: rgb(255, 255, 255);
+		font-weight: bold;
+    opacity: 1;
+    cursor: pointer;
+	}
+  }
+  .triangle-wrap{
+    position: relative;
+  }

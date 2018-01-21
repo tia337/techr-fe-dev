@@ -1,0 +1,4 @@
+<div class="question-wrap" [formGroup]="question">
+  <span class="question-index">Q{{getIndex() + 1}}: </span>
+  <textarea class="question-field" autosize formControlName="content" placeholder="Question" (keydown)="handleKeysEvents($event)" #questionElement></textarea>
+</div>

@@ -1,0 +1,220 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+$dashed-border: 1px dashed #ccc;
+
+.top-td{
+    .top-td-div{
+        display: flex;
+        flex-direction: column;
+    }
+    text-align: left;
+    
+}
+.prices{
+    text-align: center;
+    font-size: $font-size-36;
+    font-weight: bold;
+}
+.price-description{
+    text-align: left !important;
+}
+.black-line{
+    background-color:$middle-grey;
+    color: $x-dark-grey;
+}
+
+.contact-sales-title{
+    font-size: $font-size-24;
+}
+
+.billing-link{
+    cursor: pointer;
+    font-weight: bold;
+    color: $dark-blue;
+}
+
+.black{
+    text-align: left; 
+    border-right: 1px solid $middle-grey;
+}
+
+table, td, th {    
+    border-right: 1px solid #ddd;
+    text-align: left;
+}
+
+td {
+    text-align: center;
+    padding: 15px;
+}
+
+th{
+    text-align: center;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    @include position-sticky;
+    top: 0;
+    background: white;
+}
+.sticky{
+    border-bottom:1px solid #ddd;
+    padding-bottom: 15px;
+}
+
+.text-description{
+    text-align: left;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.subsctiptions-title{
+    padding: 50px;
+    border-bottom: $dashed-border;
+}
+
+.buy{
+    padding:10px;
+    margin-top:5%;
+    border: none; /* Remove borders */
+    color: white; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: #2196F3;
+    border-radius: 4px;
+}
+.buy:hover{
+    background: #0b7dda;
+}
+.buy-green{
+    padding:10px;
+    margin-top:5%;
+    border: none; /* Remove borders */
+    color: white; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: $dark-green;
+    border-radius: 4px;
+}
+.buy-dark{
+    padding:10px;
+    margin-top:5%;
+    border: none; /* Remove borders */
+    color: white; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: $blue;
+    border-radius: 4px;
+}
+.buy-trial{
+    padding:10px;
+    margin-top:5%;
+    border: none; /* Remove borders */
+    color: white; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: $dark-green;
+    border-radius: 4px;
+}
+
+.last{
+    border-right: none;
+    border-left: 1px solid #ddd;
+}
+
+.contact-sales{
+    padding:10px;
+    margin-top:5%;
+    border: none; /* Remove borders */
+    color: $x-dark-grey; /* Add a text color */
+    padding: 14px 28px; /* Add some padding */
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    background-color: $middle-grey;
+    border-radius: 4px;
+}
+.contact-sales:hover{
+    background: $x-dark-grey;
+    color:white;
+}
+.done{
+    width: 50px;
+    height: 50px; 
+}
+.blue{
+    cursor: pointer;
+    color: $blue;
+}
+.blue:hover{
+    color: $dark-blue;
+}
+.categories{
+    text-align: left;
+}
+.text-under-btn{
+    text-align: left;
+}
+.chosed-tick{
+    padding-top:2px;
+    margin-right: 10px;
+    width: 17px;
+    height: 17px; 
+}
+.our-plans-img{
+    width:80%;
+}
+.our-plans{
+    width: 20%;
+}
+.free-trial-plan{
+    width: 20%;
+}
+.standard-plan{
+    width: 20%;
+}
+.professional-plan{
+    width: 20%;
+}
+.enterprise-plan{
+    width: 20%;
+}
+.feedback_triangle {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-bottom: 80px solid #007ab6;
+	border-left: 80px solid transparent;
+  z-index: 999999;
+  cursor: pointer;
+	.feedback_text {
+		@include transform-rotate(-45deg);
+		position: absolute;
+		right: -1px;
+		top: 38px;
+		color: rgb(255, 255, 255);
+		font-weight: bold;
+    opacity: 1;
+    cursor: pointer;
+	}
+  }
+  .triangle-wrap{
+    position: relative;
+  }
+  table{
+      margin-bottom: 30px;
+  }
+  .speaker{
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 20px;
+    transform: rotate(-45deg);
+  }
+.sticky-cont{
+    position: sticky;
+    top: 1px;
+}

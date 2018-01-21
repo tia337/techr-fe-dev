@@ -1,0 +1,128 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import './theme.scss';
+@import "../node_modules/nouislider/distribute/nouislider.min.css";
+$fa-font-path: "../node_modules/font-awesome/fonts";
+@import "../node_modules/font-awesome/scss/font-awesome.scss";
+@import './styles/variables';
+
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    font-family: 'Open Sans', sans-serif;
+    font-size: $font-size-14;
+    font-weight: 300;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: normal;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background: none;
+    border: 0;
+}
+
+.dropdown-item:focus,
+.dropdown-item:hover {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    color: #fff;
+    text-decoration: none;
+    background-color: #007bff;
+}
+
+.dropdown-item.disabled,
+.dropdown-item:disabled {
+    color: #868e96;
+    background-color: transparent;
+}
+
+// Slider styles (overwrite)
+.ng2-nouislider {
+    // margin-bottom: 1.8rem !important;
+    .noUi-target.noUi-horizontal {
+        height: 4px;
+        border: none;
+        background-color: #22A4A5;
+        border-radius: 4px;
+        .noUi-base {
+            background-color: #22A4A5;
+            border-radius: 4px;
+            .noUi-origin .noUi-handle {
+                width: 26px;
+                height: 26px;
+                margin-top: -5px;
+                border: none;
+                background-color: rgba(34, 164, 165, 0.7);
+                box-shadow: none;
+                border-radius: 50%;
+                &::before {
+                    display: none;
+                }
+                &::after {
+                    content: " ";
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    background-color: #22A4A5;
+                    position: relative;
+                    top: 4px;
+                    left: 8px;
+                    border-radius: 50%;
+                }
+                .noUi-tooltip {
+                    bottom: 0;
+                    top: 100%;
+                    background-color: transparent;
+                    border: none;
+                    font-size: 9px;
+                }
+            }
+        }
+    }
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 5mm;
+    }
+}

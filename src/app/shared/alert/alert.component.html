@@ -1,0 +1,33 @@
+<div class="alert-overlay" (click)="close()">
+
+  <div class="alert-wrap" [style.width.vw]="width" (click)="$event.stopPropagation()">
+    <div class="alert-header">
+      <i *ngIf="icon" class="header-icon fa fa-{{icon}}" aria-hidden="true"></i>
+      <h2 *ngIf="title">{{title}}</h2>
+    </div>
+    <div class="alert-content">
+      <div class="img-logo" [ngSwitch]="type">
+        <img *ngSwitchCase="'simple'" src="../../../assets/img/egret-logo-button.png" />
+        <img *ngSwitchCase="'sad'" src="../../../assets/img/bird-icon.png" />
+        <img *ngSwitchCase="'happy'" src="../../../assets/img/happy-egret.jpg" />
+        <img *ngSwitchDefault src="../../../assets/img/egret-logo-button.png" />
+      </div>
+      <div class="alert-content-text {{contentAlign}}" #content>
+        <!--<div *ngFor="let line of content" class="content-line">-->
+          <!--{{line}}-->
+        <!--</div>-->
+      </div>
+    </div>
+    <div class="alert-footer">
+      <div *ngFor="let button of buttons; let i = index" class="button-wrap">
+        <span *ngIf = "loaderActive.indexOf(i) != -1">
+            <mat-spinner  [diameter] = '30' [strokeWidth] = '4' class = "spinner"></mat-spinner>
+        </span>
+        <!-- <button class="{{button.type}}-button"  (click)="activateLoader(i, button.loader)">{{button.title}}</button> -->
+        <button class="{{button.type}}-button" [class.selected-button] = "loaderActive.indexOf(i) != -1" (click)="button.onClick(); activateLoader(i, button.loader)">{{button.title}}</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

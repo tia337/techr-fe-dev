@@ -1,0 +1,27 @@
+<div [ngClass]="{'display-none': previewLoaded == false}"  class="preview-scorecard-overlay" (click)="closePreviewModal()">
+
+  <div [ngClass]="{'display-none': previewLoaded == false}" class="preview-wrap" #preview (click)="$event.stopPropagation()">
+
+    <scorecard-preview [scorecardId]="scorecard.id" (loaded) = "prevLoaded()" class="preview-block"></scorecard-preview>
+
+    <div class="buttons-wrap">
+
+      <div class="print-button-wrap">
+        <button class="primary-button print-button" (click)="printScorecard()">Print</button>
+      </div>
+
+      <!--<div *ngIf="isMyScorecard && editable !== false" class="admin-buttons">-->
+        <!--<button class="primary-button" (click)="editScorecard()">Edit</button>-->
+        <!--<button class="primary-button" (click)="archiveScorecard()">Archive</button>-->
+        <!--<button class="warn-button" (click)="deleteScorecard()">Delete</button>-->
+      <!--</div>-->
+      <div class="admin-buttons" *ngIf="isMyScorecard">
+        <button *ngFor="let button of buttons" class="{{button.type}}-button" (click)="button.onClick()">{{button.title}}</button>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+

@@ -1,0 +1,39 @@
+<div class="card-inner" *ngIf="cardDetails; else createNewCard" [class.default]="isDefault">
+
+  <div *ngIf="isDefault" class="black-stripe default">
+    Default payment source
+  </div>
+  <div *ngIf="!isDefault" class="black-stripe not-default" (click)="setToDefault()">
+    Set to default
+  </div>
+  <div class="card-number-wrap">
+    <span class="card-type">{{cardDetails.brand}}</span>
+    <div class="card-number">XXX-XXX-XXX-{{cardDetails.last4}}</div>
+  </div>
+  <div class="card-exp-date-wrap">
+    <div class="exp-date">exp. {{cardDetails.exp_month}} / {{cardDetails.exp_year}}</div>
+  </div>
+  <div class="card-footer">
+    <div class="edit-buttons">
+      <a (click)="updateCard()"><i class="fa fa-pencil" aria-hidden="true"></i> Update Card Details</a>
+      <a (click)="removeCard()"><i class="fa fa-ban" aria-hidden="true"></i> Remove</a>
+    </div>
+    <div class="secure-mark">
+      <i class="fa fa-shield" aria-hidden="true"></i> Secure
+    </div>
+  </div>
+
+</div>
+
+<ng-template #createNewCard>
+  <div class="card-inner new-card" (click)="addCard()">
+    <div class="black-stripe not-default">
+      Add new card
+    </div>
+    <div class="card-footer">
+      <div class="secure-mark">
+        <i class="fa fa-shield" aria-hidden="true"></i> Secure
+      </div>
+    </div>
+  </div>
+</ng-template>

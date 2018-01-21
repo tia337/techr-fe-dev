@@ -1,0 +1,98 @@
+@import '../../../../styles/variables';
+.team-members-inner {
+    padding: 20px;
+    min-height: 100%;
+    .main-block-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        h3 {
+            font-weight: 100;
+            font-size: 1.5em;
+        }
+        .invite-button {
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #4372C4;
+            color: #fff;
+        }
+    }
+    .filters-block {
+        background-color: #A6A6A6;
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .search-wrap {
+            width: 25%;
+            margin: 0 20px;
+            .input-search {
+                width: 100%;
+                padding: 7px 7px 7px 30px;
+                background-color: #F1F3F5;
+                border: 1px solid #959696;
+                color: #959696;
+                border-radius: 4px;
+                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30.239 30.239"><g><path fill="#959696" d="M20.194,3.46c-4.613-4.613-12.121-4.613-16.734,0c-4.612,4.614-4.612,12.121,0,16.735c4.108,4.107,10.506,4.547,15.116,1.34c0.097,0.459,0.319,0.897,0.676,1.254l6.718,6.718c0.979,0.977,2.561,0.977,3.535,0c0.978-0.978,0.978-2.56,0-3.535l-6.718-6.72c-0.355-0.354-0.794-0.577-1.253-0.674C24.743,13.967,24.303,7.57,20.194,3.46zM18.073,18.074c-3.444,3.444-9.049,3.444-12.492,0c-3.442-3.444-3.442-9.048,0-12.492c3.443-3.443,9.048-3.443,12.492,0C21.517,9.026,21.517,14.63,18.073,18.074z"/></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>');
+                background-repeat: no-repeat;
+                background-position: 5px center;
+                background-size: 15px;
+            }
+        }
+        mat-select /deep/ .mat-select-trigger {
+            background-color: #D9D9D9;
+            min-width: 140px;
+            .mat-select-value {
+                padding: 0 10px;
+            }
+            .mat-select-underline {
+                display: none;
+            }
+        }
+    }
+    table.members-table {
+        font-size: 0.9em;
+        margin-top: 45px;
+        border: none;
+        width: 100%;
+        th {
+            text-align: left;
+            padding: 1.5vw;
+        }
+        tr {
+            &.member-row {
+                cursor: pointer;
+            }
+            td {
+                width: auto;
+                max-width: 15vw;
+                padding: 1.5vw;
+                text-align: left;
+                .access-level {
+                    display: inline-block;
+                    border: 1px solid #000;
+                    padding: 3px 15px;
+                }
+                .invitation-expires {
+                    font-weight: 800;
+                }
+                .invitation-edit-button {
+                    cursor: pointer;
+                    font-size: $font-size-14;
+                }
+                .resend-button {
+                    color: $blue;
+                }
+                .delete-invitation-button {
+                    color: $warn;
+                }
+            }
+            .full-name {
+                color: $dark-blue;
+                word-wrap: break-word;
+            }
+        }
+    }
+}

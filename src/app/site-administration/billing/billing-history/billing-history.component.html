@@ -1,0 +1,29 @@
+<div class="payment-history-inner">
+
+  <div class="payment-history-header header">
+    Billing History
+  </div>
+
+  <table class="invoices-table">
+    <tr>
+      <th>Date Created</th>
+      <th>Period</th>
+      <th>Status</th>
+      <th>Invoice Number</th>
+      <th>Amount</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let invoice of invoices">
+      <td>{{invoice.date * 1000 | date:'shortDate'}}</td>
+      <td>{{invoice.period_start * 1000 | date:'shortDate'}} to {{invoice.period_end * 1000 | date:'shortDate'}}</td>
+      <td [ngSwitch]="invoice.paid">
+        <span *ngSwitchCase="true">Paid</span>
+        <span *ngSwitchCase="false">Pending</span>
+      </td>
+      <td>{{invoice.number}}</td>
+      <td>{{invoice.total / 100 | currency:invoice.currency:true:'1.0-0'}}</td>
+      <td><span (click)="previewInvoice(invoice)">Preview</span> / <span (click)="downloadInvoice(invoice)">Download</span></td>
+    </tr>
+  </table>
+
+</div>

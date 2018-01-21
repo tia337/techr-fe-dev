@@ -1,0 +1,39 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.header {
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  background-color: $x-light-blue;
+  height: 35vh;
+  @include displayFlex;
+  @include flex-align-items(center);
+  @include flex-justify-content(flex-start);
+  padding-left: 10vw;
+  font-family: 'Playfair Display', sans-serif;
+  font-size: $font-size-38;
+  color: $dark-indigo-two;
+}
+
+.content {
+  margin-top: 50px;
+  padding: 0 10vw;
+  width: 100vw;
+  font-size: $font-size-16;
+  font-family: 'Open Sans', sans-serif;
+
+  .title {
+    font-family: 'Playfair Display', sans-serif;
+    font-size: $font-size-22;
+    display: block;
+    margin: 30px 0 10px 0;
+  }
+  p {
+    margin: 15px 0;
+  }
+  ul {
+    padding-left: 35px;
+    margin: 10px 0;
+  }
+}

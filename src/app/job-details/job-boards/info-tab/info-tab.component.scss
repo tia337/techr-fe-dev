@@ -1,0 +1,18 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../../../../styles/buttons';
+@import '../../../../styles/typography';
+
+.info-window{
+    z-index: 999;
+    width: 60vw;
+    position: relative;
+    border-radius: 4px;
+    background-color: #f4f6f9;
+    overflow: hidden;
+}
+.info-overlay {
+    // position: relative !important;
+    @include overlay;
+    @include flex-align-items(center);
+}

@@ -1,0 +1,56 @@
+@import '../../../styles/variables';
+@import '../../../styles/buttons';
+@import '../../../styles/inputs';
+
+.scorecard-select-stage-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 20px 20px;
+
+  .bold {
+    margin-bottom: 15px;
+    font-size: $font-size-24;
+    font-weight: bold;
+  }
+
+  .forms-wrap {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    .stage-dropdown {
+      max-width: 200px;
+      min-width: 150px;
+      margin: 0 10px 0 0;
+
+      // padding-left: 10px;
+      // background-color: $white;
+      // padding: 0 10px;
+      // border: 1px solid $dark-grey;
+      // & /deep/ .mat-select-trigger .mat-select-underline {
+      //   display: none !important;
+      // }
+    }
+
+    .continue-button-wrap {
+      width: auto;
+      margin: 0 0 0 10px;
+      .continue-button {
+        
+      }
+      
+    }
+
+  }
+
+  .description {
+    font-size: $font-size-14;
+    color: $dark-grey;
+  }
+  
+}

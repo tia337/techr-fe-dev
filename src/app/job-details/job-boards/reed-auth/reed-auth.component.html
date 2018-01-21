@@ -1,0 +1,50 @@
+<div class="main_url_input">
+    <button class="close_button" (click)="exit()"></button>
+    <div *ngIf="showInfo" class="input_url infoBlock" (click)="$event.stopPropagation()">
+        <div class="title">
+            <h2>Integrating Reed.co.uk with SwipeIn.hr</h2>
+        </div>
+        <div class="steps">
+            <h2>Step 1: </h2>
+            <h3> Go to your Reed account settings on
+                <a href="https://www.reed.co.uk/recruiter/" target="_blank">www.reed.co.uk</a>.</h3>
+        </div>
+        <div class="steps">
+            <h2>Step 2: </h2>
+            <h3> Click on Get your posting Key at the bottom left of your settings.</h3>
+        </div>
+        <div class="steps">
+            <div class="steps_with_images stepOne">
+                <p>Step 1: On your Reed account</p>
+                <img src="./../../../../assets/images/ReedTooltip/stepOne.png" alt="">
+            </div>
+            <div class="steps_with_images stepTwo">
+                <p>Step 2: On your Reed account</p>
+                <img src="./../../../../assets/images/ReedTooltip/stepTwo.png" alt="">
+            </div>
+        </div>
+        <div class="steps" style="font-weight: bold;">
+            <h3>Once done; enter your Reed posting key and email address into the reed integration form and click OK</h3>
+        </div>
+    </div>
+    <div *ngIf="!showInfo" class="input_url" (click)="$event.stopPropagation()">
+        <mat-icon #infoButton class="info-icon" (click)="showInfoFunc()">
+            info_outline
+        </mat-icon>
+        <div class="title">
+            {{ title }}
+        </div>
+        <div class="input">
+            <mat-form-field class="example-form">
+                <input matInput placeholder="Input your Reed posting API key" [(ngModel)]="apiKey" required>
+            </mat-form-field>
+            <mat-form-field class="example-form">
+                <input matInput placeholder="Input your Reed email address" [formControl]="emailFormControl">
+            </mat-form-field>
+        </div>
+        <div class="buttons_block">
+            <button class="button" (click)="exit()">Cancel</button>
+            <button *ngIf="(apiKey && emailFormControl.valid)" class="button" (click)="addToCart()">OK</button>
+        </div>
+    </div>
+</div>

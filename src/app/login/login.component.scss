@@ -1,0 +1,344 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+@import '../../styles/buttons';
+
+.pre-login-inner {
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  .header-section {
+    height: 693px;
+    position: relative;
+
+    .content {
+      padding-left: 135px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      .title {
+        margin: 47px 0 48px 0;
+        font-family: 'Playfair Display', serif;
+        font-size: $font-size-38;
+        color: $dark-indigo-two;
+        letter-spacing: 1.4px;
+        font-weight: 100;
+        .and-sign {
+          font-family: 'Arial', sans-serif;
+          font-weight: 100;
+        }
+      }
+      .modal {
+        width: 27vw;
+        min-width: 400px;
+        padding: 35px 35px 20px 35px;
+        @include border-radius(4px);
+        @include displayFlex;
+        @include flex-direction(column);
+        @include flex-justify-content(flex-start);
+        @include flex-align-items(center);
+        background-color: $white;
+        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
+
+        .modal-header {
+          max-width: 100%;
+          @include flex(1, 0, auto);
+          @include displayFlex;
+          @include flex-direction(row);
+          @include flex-justify-content(space-between);
+          @include flex-align-items(center);
+          .modal-title {
+            @include flex(1, 1, auto);
+            font-size: $font-size-18;
+            font-weight: 600;
+            font-family: 'Open Sans', sans-serif;
+            color: $nice-blue;
+          }
+          .bird {
+            @include flex(0, 1, auto);
+          }
+        }
+        ul.modal-list {
+          @include flex(1, 0, auto);
+          margin-top: 30px;
+          padding-left: 20px;
+          li {
+            @include displayFlex;
+            @include flex-justify-content(flex-start);
+            @include flex-align-items(flex-start);
+            margin-top: 9px;
+            font-size: $font-size-16;
+            font-family: 'Open Sans', sans-serif;
+            color: $dark-indigo-two;
+            list-style-type: none;
+            &:before {
+              margin-top: $font-size-16 / 2;
+              @include flex(0, 0, auto);
+              content: ' ';
+              display: inline-block;
+              width: 8px;
+              height: 8px;
+              margin-right: 22px;
+              @include border-radius(50%);
+              background-color: $powder-blue;
+            }
+          }
+        }
+
+        .get-started-button {
+          margin-top: 35px;
+          width: auto;
+          padding: 12px 20px;
+          font-size: $font-size-18;
+        }
+
+        .conditions {
+          margin-top: 25px;
+          color: rgba(12, 12, 35, 0.6);
+        }
+      }
+    }
+
+  .background-color {
+      width: 100%;
+      height: 504px;
+      background-color: $x-light-blue;
+      position: absolute;
+    }
+
+    .background-image {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-image: url('../../assets/img/pre-login/background-device.png') !important;
+      background-image: image-set(
+          url('../../assets/img/pre-login/background-device.png') 1x,
+          url('../../assets/img/pre-login/background-device@2x.png') 2x,
+          url('../../assets/img/pre-login/background-device@3x.png') 3x
+      ) !important;
+      background-image: -webkit-image-set(
+          url('../../assets/img/pre-login/background-device.png') 1x,
+          url('../../assets/img/pre-login/background-device@2x.png') 2x,
+          url('../../assets/img/pre-login/background-device@3x.png') 3x
+      ) !important;
+      background-position: 100% 196px;
+      background-repeat: no-repeat;
+    }
+  }
+
+  .advantages-section {
+    .advantages-block {
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-justify-content(center);
+      @include flex-wrap(wrap);
+      margin-bottom: 60px;
+      .advantage {
+        @include flex(0, 0, 25%);
+        margin: 10px 2%;
+        @include displayFlex;
+        @include flex-direction(column);
+        @include flex-align-items(center);
+        .advantage-img {
+
+        }
+        .advantage-title {
+          font-size: $font-size-24;
+          color: $water-blue;
+          margin-top: 35px;
+          font-weight: 300;
+        }
+        .advantage-description {
+          padding: 20px 3vw;
+          font-size: $font-size-16;
+        }
+      }
+    }
+  }
+
+  .features-section {
+    .tabs-links {
+      margin-bottom: 30px;
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-justify-content(space-around);
+      padding: 10px 30px;
+      .tab-link {
+        text-decoration: none;
+        color: $dark-indigo-two;
+        font-size: $font-size-22;
+        font-weight: 300;
+        padding-bottom: 4px;
+        @include animation-transition(color, .3s);
+        @include animation-transition(border-bottom, .3s);
+        border-bottom: 2px solid transparent;
+        &.active {
+          border-bottom: 2px solid $water-blue;
+          color: $water-blue;
+        }
+        &:hover {
+          @include animation-transition(color, .3s);
+          @include animation-transition(border-bottom, .3s);
+          border-bottom: 2px solid $water-blue;
+          color: $water-blue;
+        }
+      }
+    }
+  }
+
+  .feedback-section {
+
+    .feedback-wrap {
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-justify-content(space-around);
+      @include flex-wrap(wrap);
+      margin: 100px auto 40px auto;
+      .feedback-block {
+        @include flex(0, 0, 20%);
+        margin: 10px 5%;
+        @include displayFlex;
+        @include flex-direction(column);
+        .avatar {
+          @include border-radius(50%);
+          max-width: 160px;
+          max-height: 160px;
+        }
+
+        .name {
+          font-size: $font-size-22;
+          color: $water-blue;
+          margin-top: 50px;
+        }
+
+        .position {
+          font-size: $font-size-14;
+          margin-top: 8px;
+          color: $steel;
+        }
+
+        .review {
+          font-size: $font-size-18;
+          margin-top: 15px;
+        }
+
+
+      }
+    }
+  }
+
+  .mobile-section {
+    padding-bottom: 30px;
+    .blocks-wrap {
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-justify-content(center);
+      @include flex-align-items(center);
+      .mobile-content {
+        width: 20%;
+        min-width: 300px;
+        margin-right: 15px;
+        .content {
+          font-size: $font-size-18;
+
+        }
+        .buttons-wrap {
+          width: 100%;
+          @include displayFlex;
+          @include flex-direction(row);
+          @include flex-justify-content(space-between);
+          margin-top: 30px;
+
+          .button {
+            padding: 0;
+            max-height: 50px;
+            max-width: 150px;
+            &.android {
+              margin-left: 5px;
+            }
+            &.apple {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+      .mobile-image {
+        width: 20%;
+        min-width: 300px;
+        text-align: right;
+        margin-left: 15px;
+        .phones {
+          max-width: 100%;
+          max-height: 300px;
+        }
+      }
+    }
+  }
+
+  .footer-section {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(center);
+    @include flex-justify-content(space-around);
+    padding: 20px;
+    .logo-wrap {
+      @include flex(0, 0, 30%);
+      text-align: center;
+      .logo {
+        max-height: 100px;
+        //max-width: 10%;
+      }
+    }
+    .buttons-wrap {
+      @include flex(1, 0, auto);
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-align-items(center);
+      @include flex-justify-content(center);
+      .footer-menu-link {
+        margin: 0 20px;
+        color: $dark-indigo-two;
+        font-size: $font-size-18;
+        text-decoration: none;
+        @include animation-transition(color, .4s);
+        &:hover {
+          color: $water-blue;
+          @include animation-transition(color, .4s);
+        }
+      }
+    }
+  }
+
+}
+
+// ------------------------------------------------------------
+
+.section {
+  overflow: hidden;
+  height: 100%;
+  &:not(:first-child):nth-child(odd) {
+    background-color: $x-light-blue;
+  }
+  .section-title {
+    color: $dark-indigo-two;
+    font-family: 'Playfair Display', sans-serif;
+    font-size: $font-size-36;
+    width: 100%;
+    @include displayFlex;
+    @include flex-direction(column);
+    @include flex-align-items(center);
+    margin: 50px auto 46px auto;
+    font-weight: 300;
+    &:after {
+      content: ' ';
+      display: block;
+      margin-top: 16px;
+      height: 2px;
+      width: 100px;
+      background-color: $butterscotch;
+    }
+  }
+}
+
+.bold {
+  font-weight: bold;
+}

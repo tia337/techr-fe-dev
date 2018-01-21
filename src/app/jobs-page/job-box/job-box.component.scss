@@ -1,0 +1,165 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+@import '../../../styles/typography';
+
+.job-offer {
+  //height: 171px;
+  //max-height: 500px;
+  //opacity: 1;
+  width: 100%;
+  margin-left: 0;
+  border: 1px solid #A0A0A0;
+  border-radius: 4px;
+  @include displayFlex;
+  @include flex-direction(column);
+  width: calc(100% - 260px);
+  .job-offer-header {
+    height: 48px;
+    @include displayFlex;
+    @include flex-justify-content(space-between);
+    @include flex-direction(row);
+    @include flex-align-items(center);
+    position: relative;
+    .job-header-info {
+      @include flex(1, 0, auto);
+      width: 30%;
+      cursor: pointer;
+      .job-title {
+        padding: 3px;
+        color: #7a7b7c;
+        font-size: 14px;
+        .location {
+          color: #909193;
+          font-size: 12px;
+          margin-left: 10px;
+        }
+      }
+      .job-type {
+        font-size: 12px;
+        padding: 3px;
+      }
+    }
+    .job-offer-buttons {
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-align-items(center);
+      @include flex(0, 0, auto);
+      .menu-popup {
+        top: 5px;
+        background-color: $white;
+        min-width: 250px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        position: absolute;
+        left: calc(100% + 5px);
+        ul {
+          li {
+            list-style-type: none;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px 0;
+            &.yellow-link {
+              color: #DAC170;
+            }
+            &.blue-link {
+              color: #4F5E8B;
+            }
+            &.red-link {
+              color: #FF5B5A;
+            }
+            .menu-icon {
+              font-size: 20px;
+              color: #000;
+              vertical-align: middle;
+              margin-right: 5px;
+            }
+            &.info::after {
+              content: "info_outline";
+              font-family: 'Material Icons';
+              vertical-align: middle;
+              position: absolute;
+              right: 15px;
+              font-size: 20px;
+              color: #000;
+              display: inline-block;
+            }
+          }
+        }
+        &.hidden {
+          display: none;
+        }
+      }
+      .job-header-button {
+        background-color: #D9D9D9;
+        color: #727272;
+        margin: 5px;
+        height: 25px;
+        padding: 0 15px;
+        border: none;
+        cursor: pointer;
+        &.icon-button {
+          background-color: #fff;
+          padding: 0;
+          min-width: 25px;
+          .icon {
+            font-size: $font-size-24;
+          }
+        }
+      }
+    }
+  }
+  .job-offer-stages {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(stretch);
+    text-align: center;
+    background-color: #F2F2F2;
+    margin: 5px 5px;
+    .job-stage {
+      @include flex(1, 1, 120px);
+      cursor: pointer;
+      .job-stage-inner {
+        height: 100%;
+        border: 1px solid rgb(201, 201, 201);
+        //border-radius: 2px;
+        padding: 15px 0;
+        font-size: 15px;
+        background-color: #F2F2F2;
+      }
+      .job-stage-inner:hover {
+        cursor: pointer;
+        background-color: rgb(238, 236, 236) !important;
+      }
+    }
+  }
+  .job-offer-footer {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(center);
+    @include flex-justify-content(space-between);
+    padding: 0 5px 5px 5px;
+    font-size: $font-size-10;
+    .posted-on{
+      cursor: default;
+    }
+    //.posted-on {
+    //  max-width: 50%;
+    //  text-overflow: ellipsis;
+    //  white-space: nowrap;
+    //  overflow: hidden;
+    //}
+    .post-date {
+      cursor: default;
+      margin-left: auto;
+    }
+  }
+
+  &.invisible {
+    //opacity: 0;
+    margin-left: 10000px;
+    //max-height: 0;
+    @include animation-transition(margin-left, .5s);
+    //@include animation-transition(max-height, .3s);
+  }
+}

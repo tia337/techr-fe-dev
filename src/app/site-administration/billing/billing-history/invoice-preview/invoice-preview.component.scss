@@ -1,0 +1,146 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/typography';
+@import '../../../../../styles/buttons';
+
+.receipt-overlay {
+  position: fixed;
+  @include displayFlex;
+  @include flex-direction(row);
+  @include flex-align-items(flex-start);
+  @include flex-justify-content(center);
+  width: 100vw;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  z-index: 20;
+  overflow-y: auto;
+
+  .receipt-inner {
+    margin: 20px auto;
+    @include border-radius(5px);
+    width: 50%;
+    border: 1px solid $x-dark-grey;
+    background-color: $white;
+    @include displayFlex;
+    @include flex-direction(column);
+    @include flex-justify-content(center);
+
+    .receipt-header {
+
+
+      .receipt-title {
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-align-items(center);
+        @include flex-justify-content(center);
+        padding: 10px 0;
+      }
+      .invoice-header-total {
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-align-items(center);
+        @include flex-justify-content(center);
+        background-color: $blue;
+        color: $white;
+        padding: 15px 0;
+
+      }
+      .receipt-date-number {
+        padding: 5px 10px;
+        background-color: darken($blue, 5%);
+        color: $white;
+        @include displayFlex;
+        @include flex-align-items(center);
+        @include flex-justify-content(space-between);
+      }
+    }
+
+    .receipt-content {
+      padding: 10px 5%;
+      .receipt-items-labels {
+        @include displayFlex;
+        @include flex-justify-content(space-between);
+        @include flex-align-items(center);
+
+        .receipt-description, .receipt-amount {
+          padding: 5px;
+        }
+      }
+      .receipt-item {
+        @include displayFlex;
+        @include flex-justify-content(space-between);
+        @include flex-align-items(center);
+        padding: 10px 5px;
+        &:not(:last-child) {
+          border-bottom: 1px solid $x-dark-grey;
+        }
+        &.price {
+          @include flex-align-self(flex-end);
+          margin-left: auto;
+          max-width: 50%;
+        }
+        .item-name {
+          max-width: 70%;
+        }
+        .item-price {
+          max-width: 30%;
+        }
+      }
+    }
+
+    .comapny-number {
+      padding: 5px 5%;
+      font-size: $font-size-12;
+    }
+
+    .contact-info {
+      background-color: $light-grey;
+      border-top: 1px solid $dark-grey;
+      border-bottom: 1px solid $dark-grey;
+      @include displayFlex;
+      @include flex-justify-content(center);
+      @include flex-align-items(center);
+      color: $x-dark-grey;
+      font-size: $font-size-24;
+      padding: 30px 15%;
+      .email-link {
+        color: $blue;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    .print-button-wrap {
+      min-width: 100px;
+      max-width: 30%;
+      margin: 15px auto;
+    }
+
+  }
+
+}
+@media print {
+  .receipt-overlay {
+    .receipt-inner {
+      width: 100%;
+      .receipt-header {
+        .invoice-header-total {
+          background-color: $blue;
+          color: $white;
+        }
+        .receipt-date-number {
+          background-color: darken($blue, 5%);
+          color: $white;
+        }
+      }
+    }
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+

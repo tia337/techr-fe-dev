@@ -1,0 +1,45 @@
+@import './../../../../styles/mixins';
+@import './../../../../styles/buttons';
+.main_url_input {
+  @include overlay();
+  @include flex-align-items(center);
+  .input_url {
+      width: 35%;
+      background-color: $light-grey;
+      border-radius: 5px;
+      padding: 10px;
+    .title {
+        @include displayFlex();
+        @include flex-direction(column);
+        width: 100%;
+        border-bottom: 1px solid $x-dark-grey;
+        padding: 10px;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      .input {
+        @include displayFlex();
+        @include flex-direction(column);
+        width: 100%;
+        margin-bottom: 15px;
+        background-color: whitesmoke;
+        .example-form {
+            min-width: 150px;
+            max-width: 500px;
+            width: 100%;
+          }
+      }
+      .buttons_block {
+        @include displayFlex();
+        @include flex-direction(row-reverse);
+        @include flex-align-items(center);
+        background-color: $light-grey;
+        width: 100%;
+        button {
+            margin: 5px;
+            // background-color: $middle-grey;
+        }
+      }
+  }
+}
+

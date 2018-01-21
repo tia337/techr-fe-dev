@@ -1,0 +1,22 @@
+<div class="template" [class.customEmail]="isCustom" *ngIf="!isDeleted">
+    <div class="template-name" *ngIf="!isCustom" [routerLink]="['/templates', template.id]">
+        {{template.get('Title')}}
+    </div>
+    <div class="template-name" *ngIf="isCustom">
+        <div class="email">
+            <div class="email-title" [routerLink]="['/templates_custom', templateC.id]">{{templateC.get('Title')}}</div>
+            <div class="email-author" [routerLink]="['/templates_custom', templateC.id]">
+                <p>Created by {{emailInfo['emailAuthor']}}</p>
+                <p>at {{emailInfo['creationDate']}}</p>
+            </div>
+            <div class="email-modification" [routerLink]="['/templates_custom', templateC.id]">
+                <p>Modified by {{emailInfo['modificator']}}</p>
+                <p>at {{emailInfo['modificationDate']}}</p>
+            </div>
+            <div class="email-events">
+                <button class="edit" [routerLink]="['/templates_custom', templateC.id]">Edit</button>
+                <button class="remove" (click)="deleteTemlate(templateC.id)">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

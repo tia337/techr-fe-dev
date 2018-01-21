@@ -1,0 +1,352 @@
+
+@import './../../styles/mixins';
+@import './../../styles/variables';
+
+.boxingforuploading {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	@include displayFlex();
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	z-index: 1000;
+	.uploadmaincontrainer {
+		position: relative;
+		margin-top: 55px;
+		width: 80%;
+		height: 85%;
+		background-color: #dddddd;
+		border-radius: 5px;
+		z-index: 2;
+		.preloader {
+			z-index: 9000;
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			@include displayFlex();
+			justify-content: center;
+			align-items: center;
+			background-color: rgba(97, 97, 97, 0.9);
+			background-size: cover;
+			.loading{
+				position: relative;
+				z-index: 9001;
+				font-size: 26px;
+			}
+			img {
+				z-index: 9001;
+				width: 100px;
+				height: 100px;
+				color: blue;
+			}
+		}
+		.resultsReady {
+			z-index: 9001;
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			@include displayFlex();
+			flex-direction: column;
+			justify-content: flex-start;
+			background-color: #ffffff;
+			border-radius: 5px;
+			.resultItem {
+				@include displayFlex();
+				flex-direction: row;
+				font-size: $font-size-16;
+				font-weight: bold;
+				margin: 15px 0 0 40px;
+			}
+			h3 {
+				margin-top: 20px;
+				text-align: center;
+			}
+			button {
+				align-self: center;
+				position: absolute;
+				bottom: 1rem;
+				width: 50%;
+				height: 4rem;
+			}
+		}
+		.headofupload {
+			height: 10%;
+			width: 100%;
+			position: relative;
+			@include displayFlex();
+			flex-direction: row;
+			align-items: center;
+			i {
+				padding: 10px;
+				font-size: $font-size-36;
+			}
+			h4 {
+				font-size: $font-size-16;
+			}
+			button {
+				position: absolute;
+				right: 10px;
+				top: 10px;
+				width: 2rem;
+				height: 2rem;
+				border: 0;
+				border-radius: 50%;
+				background-color: #919191;
+				&:hover {
+					background-color: #ffffff;
+				}
+			}
+		}
+		.bigblock {
+			height: 40%;
+			width: 100%;
+			@include displayFlex();
+			flex-direction: row;
+			.uploadpanel {
+				width: 48%;
+				margin: 0 0.5% 0 1.5%;
+				background-color: rgba(214, 171, 76, 0.624);
+				@include displayFlex();
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				border: 2px dashed white;
+				border-radius: 10px;
+				i {
+					font-size: 6rem;
+				}
+				.upbtn {
+					margin-top: 15px;
+					width: 6rem;
+					height: 2rem;
+					@include displayFlex();
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+					background-color: #919191;
+					font-weight: bold;
+					&:hover {
+						background-color: #dcdcdc;
+					}
+				}
+			}
+			.tooltipForUpload {
+				width: 48%;
+				margin: 0 1.5% 0 0.5%;
+				padding: 10px;
+				background-color: rgba(98, 166, 255, 0.535);
+				p {
+					font-size: $font-size-16;
+				}
+			}
+		}
+		.filesPanel {
+			height: 10%;
+			width: 100%;
+			overflow: hidden;
+			@include displayFlex();
+			flex-direction: row;
+			padding: 2px 3px 3px 3px;
+			.justtext {
+				width: 7%;
+				padding: 1rem 0.5rem 1rem 0.5rem;
+				font-size: $font-size-16;
+				font-weight: bold;
+			}
+			.blockFiles {
+				@include displayFlex();
+				flex-direction: row;
+				width: 93%;
+				margin-top: 0.5rem;
+				button {
+					padding: 5px;
+					min-width: 6rem;
+					height: 2rem;
+					@include displayFlex();
+					justify-content: center;
+					border: 0;
+					border-radius: 10px;
+					background-color: #919191;
+					position: relative;
+					font-size: $font-size-12;
+					margin-right: 0.5rem;
+					&:hover {
+						background-color: #ffffff;
+						color: red;
+					}
+				}
+			}
+
+		}
+		.choicedirection {
+			height: 15%;
+			width: 100%;
+			@include displayFlex();
+			flex-direction: row;
+			margin-bottom: 1%;
+			padding-right: 1rem;
+			.justtext {
+				width: 7%;
+				padding: 1rem 0.5rem 1rem 0.5rem;
+				margin-right: 1rem;
+				font-size: $font-size-14;
+				font-weight: bold;
+			}
+			button {
+				width: 10%;
+				flex-grow: 1;
+				padding: 5px;
+				background-color: #a0a0a0;
+				border: 2px solid gray;
+				&:hover {
+					background-color: #2d2aff;
+				}
+			}
+			.active2 {
+				background-color: #2d2aff;
+			}
+		}
+		.choicedirection_erp {
+			height: 5%;
+			width: 100%;
+			@include displayFlex();
+			flex-direction: row;
+			margin-bottom: 1%;
+			padding-right: 1rem;
+			.justtext {
+				width: 7%;
+				padding: 1rem 0.5rem 1rem 0.5rem;
+				margin-right: 1rem;
+				font-size: $font-size-10;
+				font-weight: bold;
+			}
+			button {
+				width: 10%;
+				flex-grow: 1;
+				padding: 5px;
+				background-color: #a0a0a0;
+				border: 2px solid gray;
+				font-size: $font-size-10;
+				&:hover {
+					background-color: #2d2aff;
+				}
+			}
+			.active2 {
+				background-color: #2d2aff;
+			}
+		}
+		.employee_referrals {
+			height: 10%;
+			width: 100%;
+			@include displayFlex();
+			flex-direction: row;
+			padding-right: 1rem;
+			.justtext {
+				width: 7%;
+				padding: 1rem 0.5rem 1rem 0.5rem;
+				margin-right: 1rem;
+				font-size: $font-size-10;
+				font-weight: bold;
+			}
+			.fewwords {
+				padding: 5px;
+				border-radius: 2px;
+				border: 1px dashed grey;
+				flex-grow: 1;
+				resize: none;
+			}
+		}
+
+		.choicesource {
+			height: 10%;
+			width: 100%;
+			@include displayFlex();
+			flex-direction: row;
+			align-items: center;
+			padding-left: 5px;
+			z-index: 9999;
+			.jobboards,
+			.source {
+				margin-left: 15px;
+				background-color: #919191;
+				&:hover {
+					background-color: #dcdcdc;
+				}
+			}
+			.emailInput {
+				margin-left: 15px;
+				width: 170px;
+				height: 25px;
+			}
+			.urlInput {
+				margin-left: 15px;
+				width: 170px;
+				height: 25px;
+			}
+		}
+		.uploadCandidateButton {
+			height: 13%;
+			width: 100%;
+			padding: 0.5%;
+			@include displayFlex();
+			flex-direction: row;
+			button {
+				width: 100%;
+				border: 0;
+				border-radius: 5px;
+			}
+			.deactivated {
+				background-color: #5c5c5c;
+			}
+			.activated {
+				background-color: #7d7dff;
+				&:hover {
+					background-color: #2d2aff;
+				}
+			}
+		}
+	}
+
+	.closer {
+		position: absolute;
+		top: 55px;
+		left: 0;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		border: 0;
+		background-color: rgba(97, 97, 97, 0.7);
+		&:active{
+			background-color: rgba(97, 97, 97, 0.6);
+		}
+	}
+	.spinner{
+		position: absolute;
+		left: -38px;
+   		bottom: 3px;
+		color: white;
+		height: 20px;
+		width: 20px;
+	  }
+	  .spinner /deep/{
+		svg{
+		  circle{
+			stroke: rgb(7, 7, 7) !important;
+		  }
+		}
+	  }
+}
+#email-input{
+	min-width: 210px;
+}
+.noneback{
+	background-color: transparent !important;
+}

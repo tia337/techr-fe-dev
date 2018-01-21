@@ -1,0 +1,19 @@
+<div class="header-block">
+  <h2>Billing</h2>
+  <div class="header-buttons-wrap">
+    <a [routerLink]="[{ outlets: { 'billing-sections': ['overview'] } }]" skipLocationChange [routerLinkActive]="['active']" class="header-button">Overview</a>
+    <a [routerLink]="[{ outlets: { 'billing-sections': ['payment-details'] } }]" skipLocationChange [routerLinkActive]="['active']" class="header-button">Payment Details</a>
+    <a [routerLink]="[{ outlets: { 'billing-sections': ['billing-history'] } }]" skipLocationChange [routerLinkActive]="['active']" class="header-button">Billing History</a>
+  </div>
+</div>
+
+<router-outlet name="billing-sections"></router-outlet>
+
+<!--<div class = "triangle-wrap">-->
+    <!--<div class="feedback_triangle" (click)="feedbackCreation()">-->
+        <!--<div class="feedback_text">-->
+            <!--FeedBack+-->
+        <!--</div>-->
+        <!--<img class = "speaker" src = "../../../assets/icons/speaker.png">-->
+    <!--</div>-->
+<!--</div>-->

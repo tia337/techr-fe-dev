@@ -1,0 +1,50 @@
+@import '../../../styles/variables';
+@import '../../../styles/buttons';
+@import '../../../styles/mixins';
+@import '../../../theme.scss';
+
+.share-title-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .share-title{
+        margin-top: 10vh;
+        font-size: $font-size-24;
+        font-weight: 400;
+    }
+}
+
+.social-networks-container{
+    margin-top: 15vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    .linkedin-share{
+    }
+    .social-network{
+        width:100%;
+        text-align: center;
+        // margin-top: 17vh;
+        padding-bottom: 10px;
+        .share-button-container{
+            margin-top: 15px;
+        }
+        .share-button{
+            width: 40%;
+            
+            background-color: #F2F2F2;
+            color:#7a7b7c;
+        }
+        .share-button:hover{
+            background-color: #d9d9d9;
+            color: black;
+        }
+    }
+    .social-network-logo{
+        max-width: 200px;
+        height: 45px;
+    }
+}

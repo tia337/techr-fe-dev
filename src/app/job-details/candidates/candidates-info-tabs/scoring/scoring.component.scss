@@ -1,0 +1,55 @@
+@import './../../../../../styles/mixins';
+.size-box{
+    width: 80%;
+    .flex-container {
+        width:100%;
+        margin: 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: left;
+        .photo-container {
+            width: 13%;
+            flex: 1 0 initial;
+            margin:10px;
+            img {
+                width:75px;
+            }
+        }
+        .description-container{
+          min-width: 350px;
+          width: 60%;
+          flex: 4 0 initial;
+          .verdict-icon {
+            width: 20px;
+            height: 20px;
+          }
+          .matButtons {
+              line-height: 25px;
+              background-color: $middle-grey;
+              font-size: 12px !important;
+          }
+        }
+        .time-container{
+            max-width: 15%;
+            flex: 1 0 initial;
+        }
+    }
+}
+.spinner-edit{
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    left: 30px;
+    bottom: -7px;
+}
+.spinner-edit /deep/{
+    svg{
+        circle{
+        stroke: #000000 !important;
+        }
+    }
+}
+
+.edit-btn{
+    width: 100px;
+}

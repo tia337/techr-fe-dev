@@ -1,0 +1,25 @@
+<section class="permissions-inner">
+  <h3 class="">Permissions</h3>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th></th>
+      <th>Rights</th>
+    </tr>
+    <tr (click)="goToAccessLevel(1)" >
+      <td>Site-admin</td>
+      <td><div class="permission-label">Site-admin</div></td>
+      <td>SwipeIn application access. Can invite and manage users, company settings and billing</td>
+    </tr>
+    <tr (click)="goToAccessLevel(2)" >
+      <td>Admin</td>
+      <td><div class="permission-label">Admin</div></td>
+      <td>Swipe in application access. Can invite and manage users and company settings.</td>
+    </tr>
+    <tr (click)="goToAccessLevel(3)" >
+      <td>Contributor</td>
+      <td><div class="permission-label">Contributor</div></td>
+      <td>Swipe in application access. Can invite users.</td>
+    </tr>
+  </table>
+</section>

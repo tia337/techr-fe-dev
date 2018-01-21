@@ -1,0 +1,16 @@
+<div class="main_url_input" (click)="exit()">
+  <div class="input_url" (click)="$event.stopPropagation()">
+    <div class="title">
+      {{ title }}
+    </div>
+    <div class="input">
+      <mat-form-field class="example-form">
+        <input matInput placeholder="Input URL here" [(ngModel)]="url" required>
+      </mat-form-field>
+    </div>
+    <div class="buttons_block">
+        <button class="button" (click)="exit()">Cancel</button>
+        <button class="button" (click)="addToCart()">OK</button>
+    </div>
+  </div>
+</div>

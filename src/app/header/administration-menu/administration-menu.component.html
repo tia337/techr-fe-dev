@@ -1,0 +1,21 @@
+<div  (click) = "close()"></div>
+
+<div class="menu-wrap" (mouseleave)="close()" [class.fade-out] = "closeAnim == true">
+  <section class="menu-section site-administration">
+    <div class="section-header"><a routerLink="/administration">Site Administration</a></div>
+    <ul>
+      <li><a routerLink="/administration/company-settings" routerLinkActive="active-link" (click) = "closeForLinks()">Company settings</a></li>
+      <li><a routerLink="/administration/user-management" routerLinkActive="active-link" (click) = "closeForLinks()">User management & Permissions</a></li>
+      <!-- <li><a routerLink="/administration/jobs-settings" routerLinkActive="active-link" (click) = "closeForLinks()">Jobs settings</a></li> -->
+      <li><a routerLink="/administration/subscriptions" routerLinkActive="active-link" (click) = "closeForLinks()">Subscriptions</a></li>
+      <li><a routerLink="/administration/billing" routerLinkActive="active-link" (click) = "closeForLinks()">Billing</a></li>
+      <li><a routerLink="/administration/app-integrations" routerLinkActive="active-link" (click) = "closeForLinks()">App Integrations</a></li>
+      <!--  -->
+
+
+    </ul>
+  </section>
+  <!-- <section class="menu-section site-administration">
+    <div class="section-header">Import Candidates</div>
+  </section> -->
+</div>

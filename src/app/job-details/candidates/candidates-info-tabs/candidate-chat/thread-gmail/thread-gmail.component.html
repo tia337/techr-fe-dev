@@ -1,0 +1,28 @@
+<div class="thread">
+    <div class="wrap">
+        <div class="short list" [style.display]="isShortlist ? 'block' : 'none'">
+            <div class="thread">
+                <app-chat-message [msg]='msg'></app-chat-message>
+            </div>
+            <div class="toggle-thread" (click)="changeListType()">See email history: {{countMessages}} messages</div>
+        </div>
+        <div class="long list" [style.display]="!isShortlist ? 'block' : 'none'" *ngIf="rootMsg && lastMsg">
+            <div class="thread email">
+                <app-chat-message [msg]='lastMsg' [email] = 'true'></app-chat-message>
+            </div>
+            <div class="buttons">
+                <div class="toggle-thread close" (click)="changeListType()">
+                    <a>
+                        <i class="fa fa-times" aria-hidden="true"></i> Close email history
+                    </a>
+                </div>
+                <div class="reply toggle-thread" (click)="sendResponse(lastMsg)">
+                    <a>
+                        <i class="fa fa-reply" aria-hidden="true"></i> Reply
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <app-gmail [sendingEmail]='sendingEmail' [userId]='userId' [contractId]='contractId'></app-gmail> -->

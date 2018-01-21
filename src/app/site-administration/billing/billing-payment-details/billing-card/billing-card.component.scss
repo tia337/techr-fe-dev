@@ -1,0 +1,122 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+$default-color: #FFD84B;
+
+.card-inner {
+  min-width: 300px;
+  min-height: 150px;
+  border: 1px solid $black;
+  @include border-radius(5px);
+  @include displayFlex;
+  @include flex-direction(column);
+  @include flex-justify-content(space-between);
+  overflow: hidden;
+  width: 20vw;
+  height: 10vw;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  background-color: lighten($default-color, 20%);
+  //padding: 10px;
+
+  &.default {
+    background-color: $default-color;
+  }
+
+  &.new-card {
+    cursor: pointer;
+    background-color: $light-grey;
+    .card-footer {
+      @include flex-justify-content(flex-end);
+    }
+  }
+
+  .black-stripe {
+    cursor: default;
+    background-color: $black;
+    margin-top: 5%;
+    font-size: $font-size-14;
+    color: $white;
+    padding: 5px;
+    width: 100%;
+
+    &.default {
+      text-align: center;
+    }
+
+    &.not-default {
+      text-align: right;
+      cursor: pointer;
+      &:hover {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .card-number-wrap {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-justify-content(center);
+    @include flex-align-items(center);
+    font-size: $font-size-16;
+    margin-top: 5%;
+    .card-type {
+      font-size: $font-size-10;
+      padding: 2px 3px;
+      border: 1px solid $black;
+      margin-right: 5px;
+      border-radius: 3px;
+    }
+    .card-number {
+      cursor: default;
+    }
+  }
+
+  .card-exp-date-wrap {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-justify-content(flex-end);
+    @include flex-align-items(center);
+    padding: 3px 7px;
+    .exp-date {
+      font-size: $font-size-12;
+    }
+  }
+
+  .card-footer {
+
+    padding: 10px 5px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    //width: 100%;
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-justify-content(space-between);
+    .edit-buttons {
+      @include flex-align-self(start);
+      @include displayFlex;
+      @include flex-direction(column);
+      @include flex-align-items(flex-start);
+      a{
+        cursor: pointer;
+      }
+      a:hover{
+        font-weight: bold;
+      }
+    }
+    .secure-mark {
+      cursor: default;
+      font-size: $font-size-16;
+      @include flex-align-self(flex-end);
+
+    }
+  }
+}
+
+a {
+
+}

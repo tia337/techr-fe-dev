@@ -1,0 +1,49 @@
+<div class="alert-overlay" (click)="close()">
+
+  <div class="alert-wrap" (click)="$event.stopPropagation()">
+    <div class="alert-header">
+      <h2>
+        It’s a shame you want to leave. That’s a sign that we might need some improvements!
+      </h2>
+    </div>
+    <div class="alert-content">
+
+      <div class="cancel-reason-title bold">
+        Could we kindly ask you what’s your reason for leaving?
+      </div>
+
+      <div class="input-wrap">
+        <mat-select class="input-dropdown" [(ngModel)]="cancelationReasonNumber">
+          <mat-option [value]="0" disabled>Select reason</mat-option>
+          <mat-option [value]="1">We don’t do enough hiring to justify the investment on SwipeIn</mat-option>
+          <mat-option [value]="2">We are moving to different product</mat-option>
+          <mat-option [value]="3">Other</mat-option>
+        </mat-select>
+      </div>
+
+      <div *ngIf="isCancelTextVisible" class="input-wrap">
+        <input type="text" class="input-text" [(ngModel)]="cancelationReasonText" placeholder="Why are you leaving?" />
+      </div>
+
+
+    </div>
+    <div class="alert-footer">
+      <div class="button-wrap" *ngIf="me && me.get('Client_Pointer')">
+        <button class="secondary-button" (click)="showCancelModal()" [ngSwitch]="me.get('Client_Pointer').get('IsCancelationOfferRedeemed')">
+          <span *ngSwitchCase="true">
+            Confirm<br>Cancelation
+          </span>
+          <span *ngSwitchCase="false">
+            Continue<br>with cancelation
+          </span>
+          <span *ngSwitchDefault>
+            Confirm<br>Cancelation
+          </span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+

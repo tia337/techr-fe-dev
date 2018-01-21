@@ -1,0 +1,101 @@
+<div *ngIf="selectedContract" class="boxingforuploading">
+	<div  class="uploadmaincontrainer" id="cvUploader">
+		<ng4-files-drop (filesSelect)="filesSelect($event)">
+			<div class="headofupload">
+				<i class="fa fa-upload uppp"></i>
+				<h4>Upload Candidates to <strong> {{ selectedContract.name }}</strong></h4>
+				<button (click)="closePanel()">X</button>
+			</div>
+			<div class="bigblock">
+				<div class="uploadpanel">
+					<h2>Upload Candidates</h2>
+					<i class="fa fa-cloud-upload"></i>
+					<div class="dragNdropZone">
+						<div id="xXx">
+							DRAG FILE HERE
+						</div>
+					</div>
+					<ng4-files-click (filesSelect)="filesSelect($event)">
+						<div mat-button class="upbtn">Upload File</div>
+					</ng4-files-click>
+				</div>
+
+				<div class="tooltipForUpload">
+						<h3>Upload CV and SwipeIn automatically creates the following candidate details:</h3>
+						<br>
+						<p><i class="fa fa-arrow-right"></i>  Name / Surname</p>
+						<p><i class="fa fa-arrow-right"></i>  E-mail address</p>
+						<p><i class="fa fa-arrow-right"></i>  Key skills</p>
+						<p><i class="fa fa-arrow-right"></i>  Headline and Summary</p>
+				</div>
+			</div>
+			<div class="filesPanel">
+				<div class="justtext">
+					Files:
+				</div>
+				<div class="blockFiles" *ngIf="files != undefined">		
+					<button *ngFor="let file of files" (click)="cancelFile(file)">
+						{{ file.name }}
+					</button>
+				</div>
+			</div>
+			<div class="choicedirection" [class.choicedirection_erp]="userListChoice == 5">
+				<div class="justtext" style="text-align: left; padding-left: 15px;">Stage:</div>
+				<button [class.active2]="userListChoice == -1" (click)="userListChoiceFunc(-1)">Applied</button>
+				<button [class.active2]="userListChoice == 5" (click)="userListChoiceFunc(5)">Employee Referral</button>
+				<button [class.active2]="userListChoice == 0" (click)="userListChoiceFunc(0)">Shortlist</button>
+				<button [class.active2]="userListChoice == 1" (click)="userListChoiceFunc(1)">Phone Interview</button>
+				<button [class.active2]="userListChoice == 2" (click)="userListChoiceFunc(2)">F2F Interview</button>
+				<button [class.active2]="userListChoice == 3" (click)="userListChoiceFunc(3)">Job Offered</button>
+				<button [class.active2]="userListChoice == 4" (click)="userListChoiceFunc(4)">Hired</button>
+			</div>
+			<div *ngIf="userListChoice == 5" class="employee_referrals">
+				<div class="justtext" style="text-align: left; padding-left: 15px;">Few lines:</div>
+				<textarea class="fewwords" [(ngModel)]="fewLines" id="" cols="*" rows="8" placeholder="Enter a few lines of why your referral could be a good fit for the position"></textarea>
+			</div>
+			<div class="choicesource">
+				<div class="selectSource"><h4 style="text-align: left; padding-left: 15px;">Channel Source: </h4></div>
+				<div *ngIf="sourceDifferentways" [class.noneback] = "userListChoice == 5" class="source">
+					<button class="listButton" mat-button [matMenuTriggerFor]="sources" [disabled] = 'userListChoice == 5'>{{ sourceCandidate }}</button>
+					<mat-menu #sources="matMenu">
+						<button *ngFor="let source of sourceDifferentways" mat-menu-item (click)="choiceSource(source)">{{ source.name }}</button>
+					</mat-menu>
+				</div>
+				<div class="jobboards">
+					<button *ngIf="sourceCandidate == 'Online JobBoard'" class="listButton" mat-button [matMenuTriggerFor]="sourceJobBoards">{{ sourceJobBoard }}</button>
+					<mat-menu #sourceJobBoards="matMenu">
+						<button *ngFor="let jboard of sourceOnlineJobBoard" mat-menu-item (click)="choiceJobBoard(jboard)">{{ jboard.name }}</button>
+					</mat-menu>
+				</div>
+				<div *ngIf="sourceCandidate == 'Employee Referral'" class="enterEmail">
+					<input type="email" name="" id="email-input" class="emailInput" [(ngModel)]="employeeEmail" placeholder="Enter referee employee email address">
+				</div>
+				<div *ngIf="sourceCandidate == 'Employee Referral'" class="enterLinkedIn">
+					<input type="url" name="" id="" class="urlInput" [(ngModel)]="referralLinkedIn" placeholder="Referral LinkedIn">
+				</div>
+			</div>
+
+			<div class="uploadCandidateButton">
+				<button *ngIf="!isActive" class="deactivated" (click)="alertForHR()">Add file(-s) and Source to upload CV</button>
+				<button *ngIf="isActive"  class="activated" (click)="choseUploadConfig()">Upload Candidate</button>
+			</div>
+		</ng4-files-drop>
+		<div *ngIf="isReadyPreLoader" class="preloader">
+			<!-- <img src="./../../assets/preloader/Loader7.gif" alt=""> -->
+			<span *ngIf="filesCount===1" class = "loading">
+				<mat-spinner [diameter] = '35' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+				Uploading candidate…</span>
+			<span *ngIf="filesCount>1" class = "loading">
+				<mat-spinner [diameter] = '35' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+				Uploading candidates…</span>
+		</div>
+		<div class="resultsReady" *ngIf="resultsReady">
+			<h3>RESULTS OF CREATION</h3>
+			<div *ngFor="let result of resultsArray" class="resultItem">
+				{{ result.cvName }} : {{ result.result }}
+			</div>
+			<button (click)="closeResults()">OK</button>
+		</div>
+	</div>
+	<button class="closer" (click)="closePanel()"></button>
+</div>

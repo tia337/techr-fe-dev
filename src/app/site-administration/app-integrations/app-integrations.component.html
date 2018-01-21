@@ -1,0 +1,43 @@
+<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+<div class = "app-integ-wrap">
+    <h1> App Integrations </h1>
+    <div class= "names">
+        <div class = "name">
+            <button  (click) = "getID()" [ngClass] = "{'cat-selected': selectedCat == 'All'}">All</button>
+            <button  *ngFor = "let r of notEmptyCateg" [ngClass] = "{'cat-selected': selectedCat == r.get('Category')}"  (click) = "getID(r)">{{r.get("Category")}}</button>
+        </div>
+    </div>
+    <table>
+    <tr>
+        <th class = "company">Company</th>
+        <th class ="list category">Category</th>
+        <th class = "th integrate">Integrate</th>
+        <th class = "status">Status</th>
+    </tr>
+    <tr *ngFor = "let com of companies; let i = index">
+        <td class = "company"><img src = "{{com.get('Integration_Logo')._url}}" alt = "{{com.get('Title')}}"></td> 
+        <!-- <td class = "company">{{com.get('Title')}}</td> -->
+        <td class = "category">{{com.get("Integration_Category").get("Category")}}</td>
+        <td class = "integrate">
+            <label class = "switch" *ngIf = "com.get('needsIntegration') === true"> 
+                <div (click) = "accessCheck(com)">
+                <input type = "checkbox"   [checked] = "isIntegrated(com)" disabled>
+                <span class = "slider round"  ></span>  
+                </div>
+            </label>
+        </td> 
+        <td class = "status">
+            <p *ngIf = "isIntegrated(com) && com.get('needsIntegration') === true">Successfully Integrated</p> 
+            <p *ngIf = "com.get('needsIntegration') !== true">Successfully Integrated</p> 
+        </td> 
+    </tr>
+    </table>
+</div>
+<div class = "triangle-wrap">
+    <div class="feedback_triangle" (click)="feedbackCreation()">
+        <div class="feedback_text">
+            FeedBack+
+        </div>
+        <img class = "speaker" src = "../../../assets/icons/speaker.png">
+    </div>
+</div>

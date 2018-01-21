@@ -1,0 +1,316 @@
+@import '../../../styles/buttons';
+@import './../../../styles/mixins';
+$dashed-border: 1px dashed #ccc;
+.company-settings-title {
+    min-height: 110px;
+    padding: 20px;
+    border-bottom: $dashed-border;
+    color: white;
+}
+
+input {
+    width: 100%;
+    border: 1px solid #eeeeee;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    text-align: left;
+    padding: 7px 12px;
+    font-size: 14px;
+}
+
+.top-container {
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.file-input {
+    margin-top: 25px;
+    @include displayFlex();
+    @include flex-direction(row);
+    align-items: center;
+    border: 1px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    .logo-pic {
+        width: 300px;
+        cursor: pointer;
+    }
+    #logo {
+        display: none;
+    }
+    .upload {
+        display: inline-block;
+        background: #eeeeee;
+        font-size: 14px;
+        color: rgb(0, 0, 0);
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+    .upload:hover {
+        background: #d4d4d4;
+    }
+    .upload-name {
+        padding: 7px 12px;
+        border: 1px solid #eeeeee;
+        margin-left: -5px;
+    }
+}
+
+.company-name {
+    @include displayFlex();
+    @include flex-direction(column);
+    padding: 20px;
+    width: 100%;
+    .headerrrz {
+        @include displayFlex();
+        @include flex-direction(row);
+        width: 100%;
+        h3 {
+            width: 400px;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 350px;
+            margin-right: 80px;
+        }
+    }
+    .passwordChange {
+        @include displayFlex();
+        @include flex-direction(row);
+        .pwdInput {
+            width: 350px;
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+        .changeButton {
+            button {
+                display: inline-block;
+                background: #eeeeee;
+                font-size: 14px;
+                color: rgb(0, 0, 0);
+                padding: 8px 12px;
+                cursor: pointer;
+                border: none;
+            }
+            button:hover {
+                background: #d4d4d4;
+            }
+        }
+    }
+    .style_block {
+        @include displayFlex();
+        @include flex-direction(row);
+        width: 100%;
+        .page_style {
+            @include displayFlex();
+            @include flex-direction(row);
+            width: 350px;
+            font-size: 1rem;
+            padding: 15px;
+            font-size: $font-size-12;
+            mat-radio-button {
+                margin-left: 5px;
+            }
+        }
+        .view_img {
+            width: 220px;
+            margin-left: 20px;
+            img {
+                width: 100%;
+                height: inherit;
+            }
+        }
+    }
+    .erp_page_greetings {
+        @include displayFlex();
+        @include flex-direction(column);
+        margin-bottom: 15px;
+    }
+}
+
+.title-text {
+    margin-left: 20px;
+}
+
+.textpannel {
+    margin-top: 3px;
+    margin-left: 20px;
+    margin-right: 40px;
+    border: 1px solid #eeeeee;
+    width: 58vw;
+    height: 200px;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.page-end {
+    margin-bottom: 20px;
+}
+
+.save-button {
+    margin-left: 20px;
+    width: 15%;
+    margin-bottom: 20px;
+}
+
+.company-text {
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.save-changes {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 25px;
+    font-size: 18px;
+    height: 50px;
+}
+
+.main-wrap {
+    margin-top: 50px;
+    min-height: 100%;
+}
+
+.grey {
+    background-color: rgb(202, 202, 202);
+}
+
+.grey:hover {
+    background-color: rgb(202, 202, 202) !important;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.title-line {
+    padding: 15px 0px;
+    margin-bottom: 10px;
+    margin-top: 50px;
+    margin-left: 15px;
+    background-color: rgb(238, 238, 238);
+    color: rgb(43, 43, 43);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.right-wrap-logo {
+    margin-left: 35px;
+    @include displayFlex();
+    @include flex-direction(column);
+    .remove_logo {
+        button {
+            display: inline-block;
+            background: #eeeeee;
+            font-size: 14px;
+            color: rgb(0, 0, 0);
+            padding: 8px 12px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            &:hover {
+                background: #a01515;
+            }
+        }
+        margin-top: 10px;
+    }
+}
+
+.logo-title {
+    margin-bottom: 3px;
+    font-size: 20px;
+    margin-left: 15px;
+}
+
+.first {
+    margin-top: -80px;
+    width: 15%;
+    display: block;
+    position: sticky;
+    top: 20px;
+    // margin-top: -90px;
+    margin-bottom: 20px;
+    margin-left: 75%;
+}
+
+.logo-input-wrap {
+    margin-top: 10px;
+}
+
+.title-line2 {
+    margin-top: 30px !important;
+}
+
+.textpannel-referal {
+    margin-left: 0px !important;
+}
+
+.go-to {
+    display: inline-block;
+    background: #eeeeee;
+    font-size: 14px;
+    color: rgb(0, 0, 0);
+    padding: 8px 12px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    margin-bottom: 30px;
+    &:hover {
+        background: #d4d4d4;
+    }
+}
+
+.go-to:hover {
+    background: #d4d4d4;
+}
+
+.feedback_triangle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 80px solid #007ab6;
+    border-left: 80px solid transparent;
+    z-index: 999999;
+    cursor: pointer;
+    .feedback_text {
+        @include transform-rotate(-45deg);
+        position: absolute;
+        right: -1px;
+        top: 38px;
+        color: rgb(255, 255, 255);
+        font-weight: bold;
+        opacity: 1;
+        cursor: pointer;
+    }
+}
+
+.triangle-wrap {
+    position: relative;
+}
+
+.speaker {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 20px;
+    transform: rotate(-45deg);
+}
+.classic-img{
+    border: 1px solid black;
+}
+.access-check-div{
+    position:absolute; 
+    left:0; 
+    right:0; 
+    top:0; 
+    bottom:0;
+}
+.relative{
+    position:  relative !important;
+}

@@ -1,0 +1,228 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+.candidate-profile-inner-section {
+    @include displayFlex;
+    @include flex-direction(column);
+    width: 100%;
+    .profile-header {
+        width: 100%;
+        @include displayFlex;
+        @include flex-direction(row);
+        .header-candidate-general-info {
+            background: #dae6f95e;
+            @include displayFlex;
+            @include flex(1, 1, 55%);
+            @include flex-direction(column);
+            @include flex-justify-content(center);
+            .candidate-scoring {
+                @include displayFlex;
+                @include flex-direction(row);
+                @include flex-justify-content(space-between);
+                @include flex-align-items(center);
+                padding: 0;
+                .icons {
+                    @include displayFlex;
+                    @include flex(0, 0, auto);
+                    @include flex-direction(row);
+                    @include flex-justify-content(space-around);
+                    padding: 5px 5px 0 0;
+                    .verdict-icon-wrap {
+                        @include displayFlex;
+                        @include flex-direction(column);
+                        @include flex-justify-content(space-around);
+                        @include flex-align-items(center);
+                        padding: 0 7px;
+                        .verdict-icon {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+                }
+                .stars-wrap {
+                    width: 30%;
+                    @include displayFlex();
+                    @include flex-direction(column);
+                    @include flex-align-items(center);
+                    @include flex-justify-content(center);
+                }
+                .candidate-location {
+                    white-space: normal;
+                    // @include flex(1, 0, auto);
+                }
+            }
+            .candidate-info-top-block {
+                @include displayFlex();
+                @include flex-direction(row);
+                @include flex-justify-content(space-between);
+                padding: 0 12px 5px 5px;
+                .avatar-wrap {
+                    @include displayFlex();
+                    @include flex(0, 0, 20%);
+                    @include flex-align-items(center);
+                    @include flex-justify-content(center);
+                    padding: 5px 10px;
+                    // width: 20%;
+                    .avatar {
+                        max-width: 100%;
+                        max-height: 100%;
+                        border-radius: 50%;
+                    }
+                }
+                .candidate-name-position {
+                    @include displayFlex();
+                    @include flex(0, 0, 60%);
+                    @include flex-direction(column);
+                    @include flex-align-items(flex-start);
+                    @include flex-justify-content(center);
+                    .candidate-name {
+                        font-size: $font-size-16;
+                        word-wrap: wrap;
+                    }
+                    .candidate-position {
+                        font-size: $font-size-12;
+                    }
+                    .company-name {
+                        font-size: $font-size-14;
+                        color: $dark-grey;
+                        .company-title:not(:last-child):after {
+                            content: ', ';
+                        }
+                    }
+                }
+                .buttons {
+                    @include flex-align-self(flex-end);
+                    @include displayFlex;
+                    margin-left: auto;
+                    padding: 0;
+                    padding-right: 0 7px;
+                    // @include flex(0, 0, 20%);
+                    // @include flex-justify-content(flex-end);
+                    // font-size: $font-size-24;
+                    .button {
+                        cursor: pointer;
+                        padding: 0;
+                        padding-left: 7px;
+                    }
+                    .move-candidate-button {
+                        position: relative;
+                        .move-candidate-dropdown {
+                            position: absolute;
+                            display: none;
+                            font-size: $font-size-12;
+                            border: 1px solid $black;
+                            z-index: 100;
+                            background-color: $white;
+                            width: 150px;
+                            .header {
+                                font-size: $font-size-14;
+                                border-bottom: 1px solid $black;
+                                padding: 6px;
+                            }
+                            .inteview-stage {
+                                // border: 2px solid red;
+                                z-index: 101;
+                                cursor: pointer !important;
+                                font-weight: 100;
+                                padding: 4px;
+                            }
+                            &.opened {
+                                display: inline-block;
+                            }
+                        }
+                    }
+                }
+            }
+            .candidate-info-bottom-block {
+                @include displayFlex();
+                @include flex(1, 0, auto);
+                @include flex-direction(row);
+                @include flex-align-items(center);
+                @include flex-justify-content(space-between);
+                padding: 0 5px;
+                .candidate-match {
+                    @include flex(1, 0, auto);
+                }
+            }
+        }
+        .header-candidate-summary {
+            @include displayFlex();
+            @include flex(1, 1, 40%);
+            @include flex-direction(column);
+            @include flex-justify-content(center);
+            background-color: $dark-blue;
+            color: #fff;
+            .candidate-roles-wrap {
+                @include displayFlex();
+                @include flex-direction(row);
+                @include flex-justify-content(center);
+                font-size: $font-size-12;
+                margin: 2px auto;
+                .candidate-role {
+                    padding: 0 5px;
+                    text-align: center;
+                    height: auto;
+                    .separator {
+                        text-align: center;
+                    }
+                }
+            }
+            .summary-list {
+                margin: 5px auto 10px 5px;
+                font-size: $font-size-10;
+                li {
+                    list-style-type: none;
+                    &:before {
+                        content: 'check';
+                        font-family: 'Material Icons';
+                        padding: 0 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.candidate-tabs {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-justify-content(flex-start);
+    width: 100%;
+    border-bottom: 1px solid $x-dark-grey;
+    margin-bottom: 5px;
+    .candidate-tab {
+        @include animation-transition(color, .3s);
+        text-decoration: none;
+        color: rgba(0, 0, 0, 0.5);
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-justify-content(center);
+        @include flex-align-items(center);
+        @include flex(1, 0, auto);
+        font-size: $font-size-14;
+        font-weight: 100;
+        padding: 3px 5px;
+        border-top: 1px solid $x-dark-grey;
+        border-left: 1px solid $x-dark-grey;
+        &:last-child {
+            border-left: 1px solid $x-dark-grey;
+            border-right: 1px solid $x-dark-grey;
+        }
+        &:hover {
+            @include animation-transition(color, .3s);
+            color: rgba(0, 0, 0, 1);
+            background-color: $light-grey;
+        }
+    }
+}
+
+.active {
+    background-color: #D9D9D9;
+}
+
+.mail {
+    height: 30px;
+}
+
+.move-to {
+    height: 30px;
+}

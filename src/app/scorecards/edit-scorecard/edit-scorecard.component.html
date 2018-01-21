@@ -1,0 +1,34 @@
+<div class="edit-scorecard-overlay" (click)="closeEditModal()">
+
+  <div class="edit-scorecard-inner" (click)="$event.stopPropagation()">
+    <!--(click)="$event.stopPropagation()"-->
+    <form [formGroup]="editForm" (ngSubmit)="updateScorecard()">
+      <div class="role-input-wrap">
+        <input class="input-text role-input" type="text" formControlName="role" />
+      </div>
+      <div class="stage-dropdown-wrap">
+        <mat-select class="input-dropdown stage-dropdown" formControlName="type">
+          <mat-option [value]="1">Phone Interview</mat-option>
+          <mat-option [value]="2">F2F Interview</mat-option>
+        </mat-select>
+      </div>
+
+      <div class="areas-wrap" formArrayName="areas">
+        <!--<subform></subform>-->
+        <div class="questions-block" *ngFor="let form of toFormArray(editForm.controls['areas']).controls; let i = index">
+          <subform [questionsForm]="editForm.controls['areas'].controls[i]" [edit]="true"></subform>
+          <div class="remove-button" (click)="removeArea(i)"><mat-icon class="remove-area-button">close</mat-icon></div>
+        </div>
+
+      </div>
+
+      <div class="buttons-wrap">
+        <button class="secondary-button" type="button" (click)="addArea()">Add area</button>
+        <button class="primary-button" type="submit" [disabled]="editProcessing">Save changes</button>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+

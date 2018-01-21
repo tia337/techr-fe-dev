@@ -1,0 +1,52 @@
+<section class="job-details-inner-page" *ngIf="contract">
+  <h2 class="job-details-title" routerLink="/jobs" *ngIf="pipelineLoader === Loading.success">
+    <mat-icon>keyboard_arrow_left</mat-icon>{{contract.get('title')}}
+  </h2>
+
+  <div class="job-dashboards-wrap">
+
+    <div class="job-offer">
+      <div class="job-offer-header">
+        <div class="job-header-info">
+          <div *ngIf="contract" class="job-title">{{contract.get('title')}}<span *ngIf="contract.get('jobCountry')" class="location">{{contract.get('jobCountry').get('Country')}}</span></div>
+
+          <div *ngIf="!contract.get('salaryHidden') && contract.get('SalaryCurrency')" class="job-type">
+                        <span [ngSwitch]="contract.get('jobType')">
+								<span *ngSwitchCase=2>Contract</span>
+                        <span *ngSwitchCase=1>Permanent</span>
+                        <span *ngSwitchCase=3>Urgent/Freelance</span>
+                        <span *ngSwitchDefault>Permanent or Contract</span>
+                        </span> — {{(contract.get('jobType') == 1 ? contract.get('minAnnualRate') : contract.get('isRatedHourly') ? contract.get('Min_hourly') : contract.get('minRate')) | currency:contract.get('SalaryCurrency').get('Currency'):true:'1.0-0'}}
+            - {{(contract.get('jobType') == 1 ? contract.get('maxAnnualRate') : contract.get('isRatedHourly') ? contract.get('Max_hourly') : contract.get('maxRate')) | currency:contract.get('SalaryCurrency').get('Currency'):true:'1.0-0'}}
+          </div>
+          <div *ngIf="contract.get('salaryHidden')" class="job-type">{{contract.get('jobType')}} — Negotiable</div>
+        </div>
+      </div>
+
+      <div class="job-offer-properties">
+
+
+        <label class="job-property" *ngFor="let stage of stages" (change)="setActiveStage()">
+          <input type="radio" [value]="stage.type" class="interview-stage" name="interview-stage" [disabled]="stagesDisabled == Loading.loading" [(ngModel)]="currentInterviewStage" />
+          <div class="job-property-inner">
+            <div *ngIf="stage.value !== 0" class="property-value">{{stage.value}}</div>
+            <div *ngIf="stage.value === 0" class="property-value">—</div>
+            <div class="property-title">{{stage.title}}</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="job-details-tabs">
+    <a *ngIf="contract.get('status') != 3" class="job-details-tab" routerLink="candidates" routerLinkActive="active" skipLocationChange>Candidates</a>
+    <a *ngIf="contract.get('status') != 3" class="job-details-tab" routerLink="job-boards" routerLinkActive="active" skipLocationChange>Job Boards Distribution</a>
+    <!--<a *ngIf="contract.get('status') != 3" class="job-details-tab" routerLink="social-media-share" routerLinkActive="active" skipLocationChange>Social Media Share</a>-->
+    <a *ngIf="contract.get('status') != 3" class="job-details-tab" routerLink="refferal-program" routerLinkActive="active" skipLocationChange>Employee Referral Share</a>
+    <a class="job-details-tab" routerLink="job-overview" routerLinkActive="active" skipLocationChange>Job Overview</a>
+  </div>
+
+  <router-outlet></router-outlet>
+
+</section>

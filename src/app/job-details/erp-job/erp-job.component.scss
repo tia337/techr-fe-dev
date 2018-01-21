@@ -1,0 +1,87 @@
+@import '../../../styles/variables';
+@import '../../../styles/inputs';
+@import '../../../styles/mixins';
+@import '../../../styles/typography';
+
+.erp_main_choise {
+    @include displayFlex();
+    @include flex-direction(column);
+    width: 100%;
+    padding: 15px;
+    min-height: 260px;
+    background-color: whitesmoke;
+    .turnOnOffBlock {
+        @include displayFlex();
+        @include flex-direction(row);
+        @include flex-align-items(center);
+        width: 100%;
+        min-height: 50px;
+        padding: 10px;
+        h3 {
+            width: 30%;
+            font-weight: normal;
+        }
+        .onoffERP {
+            width: 10%;
+            align-self: center;
+            margin: 7px 0 0 0;
+        }
+    }
+    .settings_One_Block {
+        @include displayFlex();
+        @include flex-direction(row);
+        @include flex-align-items(center);
+        width: 100%;
+        min-height: 50px;
+        padding: 10px;        
+        h3 {
+            width: 30%;
+            font-weight: normal;
+        }
+        button.one {
+            height: 40px;
+            min-width: 30%;
+            margin-right: 100px;
+            background-color: #bababa;
+        }
+        button.two {
+            height: 40px;
+            min-width: 30%;
+            margin-right: 100px;
+            background-color: #bababa;
+            position: relative;
+            .block {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(255, 255, 255, 0.72);
+                color: black;
+                display: none;
+                z-index: 8888;
+            }
+            &:hover .block {
+                display: block;
+            }
+        }
+    }
+    .additional {
+        @include displayFlex();
+        @include flex-direction(row);
+        @include flex-align-items(center);
+        width: 100%;
+        min-height: 50px;
+        padding: 10px;
+        h3 {
+            width: 30%;
+            font-weight: normal;
+        }
+        button {
+            height: 40px;
+            min-width: 30%;
+            margin-right: 100px;
+            background-color: #bababa;
+        }
+    }
+}

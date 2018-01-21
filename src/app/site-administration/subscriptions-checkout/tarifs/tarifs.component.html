@@ -1,0 +1,40 @@
+<h3 class = "small-title">Select a plan for your Recruitment Team</h3>
+<p>Compare Plans and features on our <a class = "link" [routerLink] = "['/', 'administration', 'subscriptions']">Pricing page</a></p>
+<div class = "drop">
+<mat-select [(ngModel)]="tarif"  (change)= "changeCurTarif(tarif)" class = "input-dropdown">
+  <mat-option value = "professional" >Professional</mat-option>
+  <mat-option value = "standard" >Standard</mat-option>
+</mat-select>
+</div>
+<h3 class = "plan-type">You have selected the {{curTarif}} plan. </h3>
+<div *ngIf = "curCurrency.length>0">
+<div class="billing-type-container" [class.chosed-el] = "billingType == 'year'" (click) = "updateCurPaying('year')">
+  <div class="first-column">
+    <input class="test" value = "year" type="radio" [checked] = "billingType == 'year'" (click) = "updateCurPaying($event.target.value)">
+  </div>
+  <div class="second-column">
+    <a class = "nowrap"><a class = "tarif-title">Annual billing</a>- get 2 month free!</a>
+    {{teamMembers * anualPrice  | currency:curCurrency:true}} for {{teamMembers}} users per year <a class = "taxes">(plus applicable taxes)</a>
+  </div>
+  <div class="third-column">{{anualPrice/12 | currency:curCurrency:true}}</div>
+  <div class="fourth-column">+applicable taxes <br>per user/month</div>
+</div>
+<br>
+<div class="billing-type-container" [class.chosed-el] = "billingType == 'month'" (click) = "updateCurPaying('month')">
+  <div class="first-column">
+    <input class="test" value = "month" type="radio" [checked] = "billingType == 'month'" (click) = "updateCurPaying($event.target.value)">
+  </div>
+  <div class="second-column">
+    <div class = "second-column-wrap">
+      <a class = "tarif-title">Monthly billing</a><br>
+      {{anualPrice/12 | currency:curCurrency:true}} per month for {{teamMembers}} users. 
+      You will spend {{teamMembers * monthlyPrice * 12  | currency:curCurrency:true}} per year <a class = "taxes">(plus applicable taxes)</a>
+    </div>
+  </div>
+  <div class="third-column"><a class = "third-column-wrap">{{monthlyPrice | currency:curCurrency:true}}</a></div>
+  <div class="fourth-column"><a class  = "fourth-column-wrap">+applicable taxes <br>per user/month</a></div>
+</div>
+<p class = "info"> You are paying for {{teamMembers}} users now. We will automatically update your<br>account
+   balance when active members are added to or removed from<br>your Recruitment team. See details</p>
+<button class="primary-button continuebutton" [routerLink] = "['/', 'administration', 'subscriptions-checkout', 'subscriptions-billing']">Continue To Payment Method</button>
+</div>

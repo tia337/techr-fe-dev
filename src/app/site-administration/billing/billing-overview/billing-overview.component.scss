@@ -1,0 +1,164 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/typography';
+@import '../../../../styles/mixins';
+
+.billing-overview-inner {
+  padding: $default-padding;
+  width: 100%;
+  //min-height: 100%;
+  @include displayFlex;
+  @include flex-direction(row);
+  @include flex-align-items(flex-start);
+  //.billing-info-wrap {
+    //@include displayFlex;
+    //@include flex-direction(row);
+    //@include flex-align-items(flex-start);
+
+    .current-subscription {
+      @include flex(0, 1, 80%);
+      @include displayFlex;
+      @include flex-direction(column);
+      @include flex-justify-content(flex-start);
+      @include flex-align-items(flex-start);
+      padding-right: 10px;
+      position: relative;
+
+      .current-subscription-header {
+        width: 100%;
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-justify-content(flex-start);
+        @include flex-align-items(center);
+        padding: 10px 0;
+        border-bottom: 1px solid $x-dark-grey;
+        .current-subscription-title {
+          margin-right: 30px;
+        }
+        .current-subscription-date {
+
+        }
+      }
+
+      .current-subscription-prices-wrap {
+        width: 100%;
+        .current-subscription-price {
+          @include displayFlex;
+          @include flex-direction(row);
+          @include flex-justify-content(space-between);
+          @include flex-align-items(center);
+          width: 100%;
+          margin-top: 15px;
+          .subscription-name {
+            font-size: $font-size-14;
+          }
+          .subscription-price {
+            font-size: $font-size-24;
+          }
+        }
+
+      }
+
+      .subscriptions-summary {
+        margin-top: 20px;
+        width: 100%;
+        .summary-header {
+          
+          font-size: $font-size-24;
+
+          .discount-label, .discount {
+            font-size: $font-size-16;
+            color: darken($green, 10%);
+          }
+
+          //.discount {
+          //  font-size: $font-size-16;
+          //  color: $green;
+          //}
+        }
+
+        .summary-description {
+          font-size: $font-size-12;
+          color: $dark-grey;
+        }
+
+        &.canceled-subscription {
+
+          .summary-header {
+            color: $warn;
+            font-size: $font-size-24;
+            margin-bottom: 20px;
+          }
+
+          .summary-description {
+            color: $black;
+            font-size: $font-size-16;
+            margin: 15px 0;
+          }
+        }
+      }
+
+      .trial-description {
+        margin-top: 30px;
+      }
+
+    }
+    .manage-subscriptions {
+      @include flex(0, 0, 30%);
+      margin-top: 22px;
+      //max-width: 30%;
+
+      border-left: 2px solid $green;
+      padding: 0 10px;
+      .manage-subscriptions-menu {
+        @include displayFlex;
+        @include flex-direction(column);
+        .menu-item {
+          //padding: 5px 0;
+          //color: $blue;
+          //text-decoration: none;
+          //cursor: pointer;
+        }
+      }
+    }
+  //}
+}
+
+a {
+  padding: 5px 0;
+  color: $blue;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.save-button{
+  text-align: center;
+  color: #ffffff;
+  padding: 8px 10px;
+  background-color: #ff5a59cc;
+  border-radius: 4px;
+  margin-left: 5px;
+  font-size: 18px;
+}
+.save-button:hover{
+  background-color: #ff5a59f0;
+}
+.save-button:active{
+  box-shadow: 0 3px 8px 0 #e94938c7, 0 0px 20px 0 #e94938c7;
+}
+
+.save-title{
+  color: #ff5a59cc !important;
+  font-size: 24px;
+}
+
+.watermark {
+  opacity: 0.2;
+}
+
+.unpaid {
+  max-width: 60%;
+  transform: translateX(-50%) rotate(-20deg);
+  position: absolute;
+  top: 20%;
+  left: 50%;
+}

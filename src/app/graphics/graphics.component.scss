@@ -1,0 +1,404 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   graphics.component.scss                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afarapon <afarapon@student.unit.ua>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/15 18:21:10 by afarapon          #+#    #+#             */
+/*   Updated: 2017/12/15 18:24:37 by afarapon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100');
+@import url('https://fonts.googleapis.com/css?family=Comfortaa:700');
+@import './../../styles/mixins';
+
+canvas {
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+.chartData {
+	margin-left: 2%;
+}
+.chartStyle {
+	margin-left: 2%;
+}
+
+.chartTwoSettings {
+	width: 22.5%;
+}
+#tab_one{
+	margin-top: 10px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	width: 100%;
+	button {
+		width: 8%;
+		height: 40px;
+		border: 0;
+		background-color: #eeeeee;
+		border-bottom: 2px solid #c2c2c2;
+		margin-bottom: 17px;
+		&:hover {
+			background-color: #bbb8b8;
+			border-bottom: 2px solid #45c8e9;
+		}
+		&.active2 {
+			font-weight: bold;
+			border-bottom: 2px solid #00bf00;
+		}
+	}
+	form {
+		margin-right: 10px;
+		margin-left: 10px;
+		flex-grow: 1;
+	}
+}
+#tabs {
+	position: relative;
+	background-color: #eeeeee;
+}
+
+.preloader_blocker {
+	position: absolute;
+	@include displayFlex();
+	@include flex-justify-content(center);
+	@include flex-align-items(center);
+	top: 0;
+	left: 0;
+	width: 1000px;
+	height: 610px;
+	z-index: 300000;
+	background-color: rgba(0, 0, 0, 0.5);
+	img {
+		width: 100px;
+		height: 100px;
+	}
+}
+
+.tabs_buttons {
+	@include displayFlex();
+	@include flex-direction(row);
+	align-items: center;
+	width: 100%;
+	background-color: #ffffff;
+	.tabs {
+		width: 160px;
+		height: 50px;
+		border: 0;
+		background-color: #ffffff;
+		border-bottom: 2px solid #c2c2c2;
+		color: grey;
+		&:hover {
+			color: black;
+			padding: 0;
+			border: 0;
+			border-bottom: 2px solid #00a9d3;
+		}
+		&.activeTab {
+			color: black;
+			padding: 0;
+			font-weight: bold;
+			background-color: #eeeeee;
+			border: 0;
+			border-bottom: 2px solid #469cff;
+		}
+	}
+}
+
+.someGroup {
+  width:1000px;
+  height: 565px;
+  margin:0 auto;
+  margin-top:2%;
+  margin-bottom:2%;
+  img {
+	  width: 100%;
+  }
+}
+.canvasMainChart {
+	margin-top: 5px;
+	padding: 0 25px 0 10px;
+	width: 1000px;
+	height: 500px;
+	#chart1Canv{
+		height: 482px !important;
+	}
+}
+
+.searchSkill-form {
+	min-width: 90px;
+	max-width: 200px;
+	width: 100%;
+}
+.skillSearch-full-width {
+	width: 100%;
+	position: relative;
+	button.clear_button {
+		position: absolute;
+		right: 0;
+		top: -17px;
+	}
+}
+.cont {
+	display: flex;
+	flex-direction: row;
+}
+.tabs2 {
+	@include displayFlex();
+	@include flex-direction(row-reverse);
+	margin-left: 2%;
+	.tabs2 {
+		width: 20%;
+		order: 1
+	}
+	#radarArea,
+	#radarArea2 {
+		width: 80%;
+		order: 1;
+	}
+}
+.tabs3 {
+	@include displayFlex();
+	@include flex-direction(row-reverse);
+	margin-left: 2%;
+	.tabs3 {
+		width: 20%;
+		order: 1
+	}
+	#radarArea2 {
+		width: 80%;
+		order: 1;
+	}
+}
+
+//					VIEW SETTINGS FOR CUSTOM TOOLTIPS
+.tooltipHtmlItem,
+.tooltipHtmlItem2 {
+	@include displayFlex();
+	@include flex-direction(row);
+	position: absolute;
+	-webkit-transition: all .1s ease;
+	transition: all .1s ease;
+	-webkit-transform: translate(-50%, 0);
+	transform: translate(-50%, 0);
+	opacity: 0;
+	h4 {
+		padding-top: 15px;
+		color: white;
+		text-align: center;
+		font-size: 10px;
+		font-weight: bold;
+		height: 40px;
+		pointer-events: none;
+	}
+	button.expandStats:active {
+		background-color: rgba(186, 186, 186, 0.577);
+	}
+	button:hover {
+		background-color: #c7c7c7;
+	}
+	button.expandStats {
+		text-align: center;
+		border: 0;
+		border-radius: 0;
+		width: 100%;
+		height: 40px;
+	}
+}
+#statsBlock,
+#statsBlock2 {
+	display: none;
+	@include flex-direction(column);
+	background-color: rgba(0, 0, 0, 0.8);
+}
+.seeStats,
+.seeStats2 {
+	text-align: center;
+	border: 0;
+	border-radius: 0;
+	width: 100%;
+	height: 40px;
+	background-color: #eeeeee;
+}
+#tooltipMenu,
+#tooltipMenu2 {
+	background-color: rgba(0, 0, 0, 0.8);
+	border-radius: 3px;
+	max-height: 202px;
+	width: 150px;
+	@include displayFlex();
+	@include flex-direction(column);
+}
+
+/* PANEL SETTINGS */
+#panelForPrograms,
+#panelForSkills,
+#panelForSkills2 {
+	position: absolute;
+	@include displayFlex();
+	@include flex-direction(column);
+	left: 150px;
+	width: 500px;
+	min-height: 30px;
+	max-height: 300px;
+	border-radius: 3px;
+	background-color: rgba(0, 0, 0, 0.8);
+	padding-bottom: 5px;
+	overflow-y: auto;
+}
+
+
+.skillInfo {
+	min-height: 25px;
+	text-align: left;
+	font-size: 14px;
+	color: white;
+}
+.skillWrapper {
+	min-height: 25px;
+	display: flex;
+	flex-direction: row;
+}
+.skillname {
+	min-height: 25px;
+	width: 40%;
+	margin: 2px;
+	font-size: 12px;
+	padding-top: 5px;
+	padding-left: 10px;
+}
+.skillCategory {
+	min-height: 25px;
+	width: 55%;
+	margin: 2px;
+	padding-top: 5px;
+	font-size: 10px;
+}
+.skillCount {
+	min-height: 25px;
+	width: 5%;
+	margin: 2px;
+	padding-top: 5px;
+}
+/*				ROLE PANEL SETTINGS			 */
+#panelForEmployees,
+#panelForRoles,
+#panelForRoles2 {
+	position: absolute;
+	@include displayFlex();
+	@include flex-direction(column);
+	left: 150px;
+	width: 340px;
+	min-height: 30px;
+	max-height: 600px;
+	border-radius: 3px;
+	background-color: rgba(0, 0, 0, 0.8);
+	padding-bottom: 5px;
+	overflow-y: auto;
+}
+.roleInfo {
+	@include displayFlex();
+	@include flex-direction(row);
+	text-align: left;
+	font-size: 14px;
+	color: white;
+}
+.rolename {
+	height: 20px;
+	width: 85%;
+	margin: 2px;
+	padding-top: 5px;
+	padding-left: 10px;
+}
+.roleCount {
+	height: 20px;
+	width: 15%;
+	margin: 2px;
+	padding-top: 5px;
+}
+//				OWNER PANEL SETTINGS
+#panelForOwners,
+#panelForOwners2 {
+	position: absolute;
+	@include displayFlex();
+	@include flex-direction(column);
+	left: 150px;
+	width: 300px;
+	min-height: 30px;
+	max-height: 600px;
+	border-radius: 3px;
+	background-color: rgba(0, 0, 0, 0.8);
+	padding-bottom: 5px;
+	overflow-y: auto;
+}
+.ownerInfo {
+	@include displayFlex();
+	@include flex-direction(row);
+	text-align: left;
+	font-size: 14px;
+	color: white;
+}
+.ownerAvatar {
+	position: relative;
+	height: 35px;
+	width: 10%;
+	margin-right: 10px;
+	padding-top: 5px;
+	padding-left: 10px;
+	font-size: 8px;
+	text-align: center;
+	img.thumbnail {
+		position: relative;
+		width: 30px;
+		height: 30px;
+		// &:hover {
+		// 	width: 100px;
+		// 	height: 100px;
+		// 	position: absolute;
+		// }
+	}
+}
+.ownerName {
+	height: 20px;
+	width: 80%;
+	margin: 2px;
+	padding-top: 7px;
+	padding-left: 10px;
+}
+.ownerCount {
+	height: 20px;
+	width: 10%;
+	margin: 2px;
+	padding-top: 7px;
+}
+#panelForPrograms,
+#panelForEmployees,
+#panelForOwners,
+#panelForOwners2,
+#panelForRoles,
+#panelForRoles2,
+#panelForSkills,
+#panelForSkills2 {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.text_no {
+	@include displayFlex();
+	@include flex-justify-content(center);
+	@include flex-align-items(center);
+	width: 1000px;
+	height: 565px;
+	background-color: rgb(153, 153, 153);
+	z-index: 888;
+	.text_no_contract {
+		font-size: 3rem;
+		color: black;
+	}
+}

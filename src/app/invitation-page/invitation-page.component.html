@@ -1,0 +1,31 @@
+<section class="invitation-page-inner">
+  <div class="invitation-page-wrap">
+    <div class="invitation-wrap">
+      <h1 class="invitation-header" *ngIf="loading == Loading.success">Join the {{clientName}} recruitment Team</h1>
+      <div class="separator"></div>
+      <div class="invitation-content">
+        <div class="content-block">
+          <div class="logo-wrap">
+            <img src="../../assets/img/invitation/logo.png" srcset="../../assets/img/invitation/logo@2x.png 2x, ../../assets/img/invitation/logo@3x.png 3x" class="logo">
+            <span class="swipein-label">SwipeIn</span>
+          </div>
+          <div *ngIf="loading == Loading.success" class="content-wrap">
+            <!--<div class="content-wrap" *ngIf="authorName && invitedUserName">-->
+            Hi {{invitedUserName}},
+            <br/>
+            {{authorName}} has invited you to join the {{clientName}} recruitment team on SwipeIn.hr
+          </div>
+
+          <div *ngIf="loading == Loading.error" class="content-wrap">
+            This link is not active anymore
+          </div>
+
+        </div>
+        <div class="img-wrap">
+          <img src="../../assets/img/invitation/bird.png" srcset="../../assets/img/invitation/bird@2x.png 2x, ../../assets/img/invitation/bird@3x.png 3x" class="bird-img">
+        </div>
+      </div>
+      <button *ngIf="loading == Loading.success" class="signup-button" type="button" (click)="signUp()">Join with LinkedIn</button>
+    </div>
+  </div>
+</section>

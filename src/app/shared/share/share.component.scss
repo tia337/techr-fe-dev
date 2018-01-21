@@ -1,0 +1,41 @@
+.sn-wrap {
+  z-index: 99;
+  position: fixed;
+  top: 50vh;
+  left: 50vw;
+  border: 1px solid #000;
+  background-color: #fff;
+
+  .sn-choose {
+    .sn-header {
+      text-align: center;
+      padding: 5px;
+      border-bottom: 1px solid #000;
+    }
+
+    .sn-icons-wrap {
+      display: flex;
+      flex-direction: row;
+
+      .sn-icon {
+        width: 40px;
+        height: 40px;
+        margin: 8px 5px;
+        cursor: pointer;
+      }
+    }
+
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 98;
+  background-color: transparent;
+}

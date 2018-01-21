@@ -1,0 +1,231 @@
+<div id="tabs" class="someGroup">
+	<div class="tabs_buttons">
+		<button class="tabs" [disabled]="unlockButtons" [class.activeTab]="graphicType == 1" (click)="loadAndReloadGraphic(1)">Lead Time Metrics</button>
+		<button class="tabs" [disabled]="unlockButtons" [class.activeTab]="graphicType == 3" (click)="loadAndReloadGraphic(3)">Recruitment Channels</button>
+		<button class="tabs" [disabled]="unlockButtons" [class.activeTab]="graphicType == 2" (click)="loadAndReloadGraphic(2)">Source JobBoards</button>
+	</div>
+	<div id="tab_one">
+		<button class="timeButton" [disabled]="unlockButtons" [class.active2]="isSelected === 7" (click)="searchAndUpdate(7)">1 week</button>
+		<button class="timeButton" [disabled]="unlockButtons" [class.active2]="isSelected === 30" (click)="searchAndUpdate(30)">1 month</button>
+		<button class="timeButton" [disabled]="unlockButtons" [class.active2]="isSelected === 90" (click)="searchAndUpdate(90)">3 month</button>
+		<button class="timeButton" [disabled]="unlockButtons" [class.active2]="isSelected === 180" (click)="searchAndUpdate(180)">6 month</button>
+		<button class="timeButton" [disabled]="unlockButtons" [class.active2]="isSelected === 111" (click)="searchAndUpdate(111)">1 year</button>
+		<button class="timeButton" [disabled]="unlockButtons" [class.active2]="isSelected === 555" (click)="searchAndUpdate(555)">5 years</button>
+		<button class="timeButton" [disabled]="unlockButtons" [class.active2]="isSelected === 999" (click)="searchAndUpdate(999)">All</button>
+		<form *ngIf="skillsArray.length > 0" class="searchSkill-form">
+			<mat-form-field class="skillSearch-full-width">
+				<input class="searchInput" type="text" placeholder="Skills search" aria-label="Number" matInput [formControl]="skillCtrl"
+				[matAutocomplete]="auto"
+				(keyup.enter)="keyPressSkill($event)">
+				<button *ngIf="(skillsArray && skillCtrl && skillCtrl.value)" class="clear_button" aria-label="Clear" (click)="clearButton(1)">
+					x
+				</button>
+				<mat-autocomplete #auto="matAutocomplete">
+					<mat-option *ngFor="let skill of filteredSkills | async" [value]="skill" (click)="selectClickSkill($event)">
+						{{ skill }}
+					</mat-option>
+				</mat-autocomplete>
+			</mat-form-field>
+		</form>
+		<form *ngIf="rolesArray.length > 0" class="searchSkill-form">
+			<mat-form-field class="skillSearch-full-width">
+				<input class="searchInput" type="text" placeholder="Roles search" aria-label="Number" matInput [formControl]="roleCtrl"
+				[matAutocomplete]="auto2"
+				(keyup.enter)="keyPressRole($event)">
+				<button *ngIf="(rolesArray && roleCtrl && roleCtrl.value)" aria-label="Clear" class="clear_button" (click)="clearButton(2)">
+					x
+				</button>
+				<mat-autocomplete #auto2="matAutocomplete">
+					<mat-option *ngFor="let role of filteredRoles | async" [value]="role" (click)="selectClickRole($event)">
+						{{ role }}
+					</mat-option>
+				</mat-autocomplete>
+			</mat-form-field>
+		</form>
+	</div>
+	<div  id="first_graphic">
+		<div class="canvasMainChart">
+			<canvas id="chart1Canv" width="965" height="482"></canvas>
+		</div>
+	</div>
+	<div  id="second_graphic">
+		<div class="tabs2">
+			<div *ngIf="graphicType == 2" class="chartTwoSettings">
+				<form class="chartStyle">
+					<mat-form-field>
+						<mat-select placeholder="Chart Style" [(ngModel)]="selectedValue" (change)="changeRoundChartStyle($event)" name="style" [disabled]="unlockButtons">
+							<mat-option *ngFor="let style of styles" [value]="style.value">
+								{{style.viewValue}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</form>
+				<form class="chartData">
+					<mat-form-field>
+						<mat-select placeholder="Switch Data" [(ngModel)]="dataSelectedValue" (change)="changeDataForRound($event)" name="data" [disabled]="unlockButtons">
+							<mat-option *ngFor="let data of dataSource" [value]="data.value">
+								{{ data.viewValue }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</form>
+			</div>
+			<div id="radarArea">
+				<canvas id="chart2Canv" width="100%" height=""></canvas>
+				<div id="bestTooltip" class="tooltipHtmlItem">
+					<div id="tooltipMenu">
+						<h4 id="tooltipTitle">Title</h4>
+						<button class="expandStats" (click)="changeView($event)">See stats</button>
+						<div id="statsBlock">
+							<button class="seeStats" (click)="lookAtTheTops(1)">Top skills</button>
+							<button class="seeStats" (click)="lookAtTheTops(2)">Top roles</button>
+							<button class="seeStats" (click)="lookAtTheTops(3)">Top owners</button>
+						</div>
+					</div>
+					<div id="panelForSkills">
+						<div *ngFor="let sk of tempArrSk[ind]" class="skillInfo">
+							<div class="skillWrapper">
+								<div class="skillname">
+									{{ sk.skName }}
+								</div>
+								<div class="skillCategory">
+									{{ sk.cat }}
+								</div>
+								<div class="skillCount">
+									+{{ sk.count }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="panelForRoles">
+						<div *ngFor="let rl of tempArrRl[ind]" class="roleInfo">
+							<div class="rolename">
+								{{ rl.rlName }}
+							</div>
+							<div class="roleCount">
+								+{{ rl.count }}
+							</div>
+						</div>
+					</div>
+					<div id="panelForOwners">
+						<div *ngFor="let ow of tempArrOwn[ind]" class="ownerInfo">
+							<div class="ownerAvatar">
+								<img class="thumbnail" [src]="ow.avatarUrl" alt="No photo">
+							</div>
+							<div class="ownerName">
+								{{ ow.oName }}
+							</div>
+							<div class="ownerCount">
+								+{{ ow.count }}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div  id="third_graphic">
+		<div class="tabs3">
+			<div *ngIf="graphicType == 3" class="chartTwoSettings">
+				<form class="chartStyle">
+					<mat-form-field>
+						<mat-select placeholder="Chart Style" [(ngModel)]="selectedValue" (change)="changeRoundChartStyle($event)" name="style" [disabled]="unlockButtons">
+							<mat-option *ngFor="let style of styles" [value]="style.value">
+								{{style.viewValue}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</form>
+				<form class="chartData">
+					<mat-form-field>
+						<mat-select placeholder="Switch Data" [(ngModel)]="dataSelectedValue" (change)="changeDataForRound($event)" name="data" [disabled]="unlockButtons">
+							<mat-option *ngFor="let data of dataSource" [value]="data.value">
+								{{data.viewValue}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</form>
+			</div>
+			<div id="radarArea2">
+				<canvas id="chart3Canv" width="100%" height=""></canvas>
+				<div id="bestTooltip2" class="tooltipHtmlItem2">
+					<div id="tooltipMenu2">
+						<h4 id="tooltipTitle2">Title</h4>
+						<button class="expandStats" (click)="changeView2($event)">See stats</button>
+						<div id="statsBlock2">
+							<button *ngIf="names[ind] == 'Employee Referral'" class="seeStats" (click)="lookAtTheTopsRC(4)">Top programs</button>
+							<button *ngIf="names[ind] == 'Employee Referral'" class="seeStats" (click)="lookAtTheTopsRC(5)">Top employees</button>
+							<button class="seeStats" (click)="lookAtTheTopsRC(1)">Top skills</button>
+							<button class="seeStats" (click)="lookAtTheTopsRC(2)">Top roles</button>
+							<button *ngIf="names[ind] != 'Employee Referral'" class="seeStats" (click)="lookAtTheTopsRC(3)">Top owners</button>
+						</div>
+					</div>
+					<div id="panelForSkills2">
+						<div *ngFor="let sk of tempArrSk[ind]" class="skillInfo">
+							<div class="skillWrapper">
+								<div class="skillname">
+									{{ sk.skName }}
+								</div>
+								<div class="skillCategory">
+									{{ sk.cat }}
+								</div>
+								<div class="skillCount">
+									+{{ sk.count }}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="panelForRoles2">
+						<div *ngFor="let rl of tempArrRl[ind]" class="roleInfo">
+							<div class="rolename">
+								{{ rl.rlName }}
+							</div>
+							<div class="roleCount">
+								+{{ rl.count }}
+							</div>
+						</div>
+					</div>
+					<div id="panelForOwners2">
+						<div *ngFor="let ow of tempArrOwn[ind]" class="ownerInfo">
+							<div class="ownerAvatar">
+								<img class="thumbnail" [src]="ow.avatarUrl" alt="No photo">
+							</div>
+							<div class="ownerName">
+								{{ ow.oName }}
+							</div>
+							<div class="ownerCount">
+								+{{ ow.count }}
+							</div>
+						</div>
+					</div>
+					<div id="panelForEmployees">
+							<div *ngFor="let emp of tempEmps" class="roleInfo">
+								<div class="rolename">
+									{{ emp.empMail }}
+								</div>
+								<div class="roleCount">
+									+{{ emp.count }}
+								</div>
+							</div>
+					</div>
+					<div id="panelForPrograms">
+							<div *ngFor="let erp of tempErps" class="skillInfo">
+								<div class="skillWrapper">
+									<div class="skillname">
+										{{ erp.erpName }}
+									</div>
+									<div class="skillCategory">
+										{{ erp.type }}
+									</div>
+									<div class="skillCount">
+										+{{ erp.count }}
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,118 @@
+@import '../../../styles/variables';
+@import '../../../styles/inputs';
+@import '../../../styles/buttons';
+
+.add-questions-inner-section {
+  width: 80%;
+  margin: 10px auto;
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: rgba(89, 89, 89, 0.5);
+  border-radius: 10px;
+
+  .stage-title {
+    font-size: $font-size-36;
+    font-weight: 100;
+    padding-bottom: 15px;
+    color: $white;
+    .interview-type-icon {
+      border: 1px solid $white;
+      border-radius: 50%;
+      padding: 20px;
+      margin-right: 10px;
+      float: left;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .questions-form {
+    
+    
+    display: flex;
+    flex-direction: column;
+
+    .role-input-field {
+      font-size: $font-size-24;
+      text-align: center;
+      // border: none;
+      // border-bottom: 1px solid $dark-grey;
+      
+    }
+    .questions-forms-array {
+      margin: 15px 0;
+      .questions-block {
+        margin: 15px 0;
+        border: 1px solid $dark-grey;
+        position: relative;
+        .remove-button {
+          position: absolute;
+          top: 4px;
+          right: 0px;
+          .remove-area-button {
+            font-size: $font-size-16;
+            color: $dark-grey;
+            cursor: pointer;
+            &:hover {
+              color: $black;
+            }
+          }
+        }
+      }
+      
+    }
+
+    .buttons-wrap {
+      flex: 0 1 auto;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      // margin-bottom: 20px;
+      .back-button {
+        margin-right: auto;
+        border: 2px solid white;
+      }
+
+      .add-question-button {
+        width: auto;
+        color: $white;
+      }
+
+      .add-form-button {
+        border: 2px solid white;
+        margin-right: 10px;
+        
+      }
+      .continue-button {
+        margin-left: 10px;
+      }
+    }
+
+  }
+}
+
+.validation-animation {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate(0, 0);
+  backface-visibility: hidden;
+  // perspective: 1000px;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate(-2px, 0);
+  }
+  
+  20%, 80% {
+    transform: translate(4px, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate(-8px, 0);
+  }
+
+  40%, 60% {
+    transform: translate(8px, 0);
+  }
+}

@@ -1,0 +1,13 @@
+@import '../../../styles/variables';
+
+$dashed-border: 1px dashed #ccc;
+
+.title{
+    padding: 50px;
+    border-bottom: $dashed-border;
+}
+.link{
+    text-decoration: none;
+    cursor: pointer;
+    color: $dark-blue;
+}

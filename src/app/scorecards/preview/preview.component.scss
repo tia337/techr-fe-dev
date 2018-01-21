@@ -1,0 +1,167 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.scorecard-preview-inner {
+  background-color: $white;
+  border-radius: 5px;
+  padding: 20px 15px;
+  .top-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: $font-size-12;
+    .name {
+
+    }
+    .print-name-placeholder {
+      display: none;
+    }
+    .stage {
+
+    }
+  }
+  .position-title {
+    font-size: $font-size-24;
+    font-weight: 100;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0 10px 0;
+  }
+  .areas {
+    .area {
+      font-size: $font-size-14;
+
+      border: 1px solid $dark-grey;
+
+      .area-title {
+        font-weight: bold;
+        padding: 10px;
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-justify-content(space-between);
+        @include flex-align-items(center);
+      }
+      .question {
+        padding: 5px 10px 5px 15px;
+        font-weight: 100;
+        border-top: 1px solid $dark-grey;
+      }
+    }
+  }
+
+  .scorecard-footer {
+    @include displayFlex;
+    @include flex-direction(column);
+
+
+
+    .weighted-score-wrap {
+      margin: 10px 0;
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-align-items(center);
+      @include flex-justify-content(flex-end);
+      .rating-stars {
+        margin-left: 10px;
+      }
+    }
+
+    .scorecard-summary-wrap {
+      border: 1px solid $dark-grey;
+
+      .scorecard-summary-header {
+        border-bottom: 1px solid $dark-grey;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        .scorecard-summary-label {
+          flex: 1 0 50%;
+          padding: 8px;
+          font-weight: bold;
+        }
+        .scorecard-summary-buttons-wrap {
+          flex: 1 0 50%;
+          display: flex;
+          flex-direction: row;
+          .move-button {
+            flex: 1 0 auto;
+            border-left: 1px solid $dark-grey;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .print-checkbox {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .scorecard-summary-final-thoughts-wrap {
+        padding: 15px;
+        .scorecard-summary-final-thoughts {
+          display: block;
+          border: none;
+          width: 100%;
+          margin: 0;
+          color: $dark-grey;
+        }
+      }
+    }
+  }
+}
+
+@media print {
+  .scorecard-preview-inner {
+    overflow: visible;
+    .top-block {
+      .name {
+        display: none;
+      }
+      .print-name-placeholder {
+        display: inline-block;
+      }
+    }
+    .areas {
+      .area {
+        page-break-before: auto;
+        page-break-inside: avoid;
+        //display: block;
+        //page-break-after: auto;
+        //page-break-after: always;
+        //page-break-inside: auto;
+        .area-title {
+
+          .question {
+
+            //display: block;
+
+          }
+        }
+      }
+    }
+    .scorecard-footer {
+      .scorecard-summary-wrap {
+        border-bottom: none;
+        .scorecard-summary-header {
+          .scorecard-summary-buttons-wrap {
+            .move-button {
+              .print-checkbox {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                border: 1px solid $black;
+                margin-right: 5px;
+              }
+            }
+          }
+        }
+        .scorecard-summary-final-thoughts-wrap {
+          display: none;
+        }
+      }
+    }
+
+  }
+}

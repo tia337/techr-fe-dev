@@ -1,0 +1,86 @@
+<app-header></app-header>
+<mat-sidenav-container class="main-nav">
+  <mat-sidenav mode="side" #sidenav class="sidenav" [opened]="true" (mouseenter)="mouseEnter($event)" (mouseleave)="mouseEnter($event)">
+
+    <div class="sidenav-toggle open" #sidenavToggle (click)="toggle()">
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </div>
+
+    <div class="sidenav-content-inner">
+      <div class="toggle">
+        <label class="checkbox__label">
+          <input class="checkbox" type="checkbox" (click)="pinSideNav()" checked>
+          <!-- [checked]="sideNavPinned" -->
+          <span class="pin__track">
+					<span class="pin">
+						<span class="pin__component__wrapper">
+						<span class="pin__component pin__component--top"></span>
+						<span class="pin__component pin__component--bottom"></span>
+						</span>
+					</span>
+					</span>
+        </label>
+      </div>
+      <!-- <div class="logo-wrap">
+          <img *ngIf="clientLogo" src="{{clientLogo._url}}" />
+      </div> -->
+
+      <nav class="side-nav">
+        <ul>
+          <span (click)="postJob()">
+            <li class=" func-buttons ">
+              <p>
+                Post Job
+              </p>
+              <!-- <mat-icon class="fa fa-file-text-o "></mat-icon> -->
+            </li>
+          </span>
+          <span [routerLink]="['/', 'scorecards']">
+            <li class="func-buttons ">
+              <p>Scorecards</p>
+              <!-- <mat-icon class="fa fa-address-card-o "></mat-icon> -->
+            </li>
+          </span>
+          <span [routerLink]="['/', 'empref']">
+            <li class="func-buttons ">
+              <p>
+                Employee Referral Programs
+              </p>
+              <!-- <mat-icon class="fa fa-address-card-o "></mat-icon> -->
+            </li>
+          </span>
+          <span [routerLink]="['/', 'templates']">
+            <li class="func-buttons ">
+              <p>
+                Templates
+              </p>
+              <!-- <mat-icon class="fa fa-address-card-o "></mat-icon> -->
+            </li>
+          </span>
+        </ul>
+        <span class="invite-button " (click)="changeLocationToInviteuser() ">
+          <p>+Invite People</p>
+          <!-- <mat-icon>add_circle_outline</mat-icon>     -->
+        </span>
+      </nav>
+      <div class="team-section ">
+        <div class="team-section-header ">
+          Your Team
+        </div>
+
+      </div>
+      <div class="team-members " *ngIf="teamMembers ">
+        <div *ngFor="let teamMember of teamMembers " class="team-member ">
+          <!-- <div class="indicator "></div> -->
+          {{ teamMember.get('firstName') }}
+        </div>
+      </div>
+
+    </div>
+
+  </mat-sidenav>
+
+  <div class="main-content ">
+	<router-outlet></router-outlet>
+  </div>
+</mat-sidenav-container>

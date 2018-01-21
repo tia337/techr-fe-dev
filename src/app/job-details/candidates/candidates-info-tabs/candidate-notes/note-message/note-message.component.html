@@ -1,0 +1,45 @@
+<div class="wrap" *ngIf="!isLoading">
+    <div *ngIf="!isSystem; else systemMessage" class='message' [class.system-message]="message.sender.name===''" [class.isPrivate]="isPrivate">
+        <div class="sender">
+            <div class="sender-avatar">
+                <img src={{message.sender.avatar}} alt="Sender avatar">
+            </div>
+            <div class="sender-name">{{message.sender.name}}</div>
+        </div>
+        <div class="body">
+            <div class="body-info">
+                <div class="body-info-date">{{message.date}}</div>
+            </div>
+            <div *ngIf="!message.attachedFileURL;else attached" class="body-text">
+                <pre class="body-text-test">{{message.text}}</pre>
+            </div>
+            <ng-template #attached class="body-text">
+                <div class="body-text">
+                    <pre class="body-text-test"><a href={{message.attachedFileURL}} target="_blank">{{message.text}}</a></pre>
+                </div>
+            </ng-template>
+            <div class="icon-lock" *ngIf="isSender">
+                <input attr.id="myonoffswitch{{note.objectId}}" type="checkbox" class="tgl tgl-skewed" [checked]="!note.IsPrivate" (click)="updateStatus(note)" />
+                <label data-tg-off="Private" data-tg-on="Visible to your team" attr.for="myonoffswitch{{note.objectId}}" class="tgl-btn" style="width: 120px;"></label>
+            </div>
+        </div>
+    </div>
+    <ng-template #systemMessage>
+        <div class='message' [class.system-message]="message.sender.name===''">
+            <div class="sender">
+                <div class="sender-avatar">
+                    <img src={{message.sender.avatar}} alt="Sender avatar">
+                </div>
+                <div class="sender-name">{{message.sender.name}}</div>
+            </div>
+            <div class="body">
+                <div class="body-info">
+                    <div class="body-info-date">{{message.date}}</div>
+                </div>
+                <div class="body-text">
+                    <pre class="body-text-test">{{message.text}}</pre>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

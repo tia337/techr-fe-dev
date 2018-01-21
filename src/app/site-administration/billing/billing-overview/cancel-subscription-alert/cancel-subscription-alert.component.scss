@@ -1,0 +1,65 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/inputs';
+@import '../../../../../styles/buttons';
+
+.alert-overlay {
+  @include overlay;
+  @include flex-align-items(center);
+
+  .alert-wrap {
+    min-width: 300px;
+    width: 50vw;
+    //border: 4px dashed $x-dark-grey;
+    position: relative;
+    border: 1px solid $x-dark-grey;
+    border-radius: 5px;
+    // padding: 20px;
+    @include displayFlex;
+    @include flex-direction(column);
+    background-color: $white;
+    overflow: hidden;
+
+    .alert-header {
+      background-color: $light-grey;
+      border-bottom: 1px solid $x-dark-grey;
+      padding: 10px 20px;
+      text-align: center;
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-align-items(center);
+      @include flex-justify-content(center);
+    }
+
+    .alert-content {
+      padding: 10px;
+      text-align: center;
+      .cancel-reason-title {
+        font-size: $font-size-16;
+        margin: 10px auto 20px auto;
+        //color: $green;
+      }
+
+      .input-wrap {
+        margin: 10px auto;
+        max-width: 70%;
+      }
+
+    }
+
+    .alert-footer {
+      border-top: 1px solid $x-dark-grey;
+      background-color: $light-grey;
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-align-items(center);
+      @include flex-justify-content(flex-end);
+      padding: 10px;
+      .button-wrap {
+        @include flex(0, 0, auto);
+        margin-left: 5px;
+      }
+    }
+  }
+
+}

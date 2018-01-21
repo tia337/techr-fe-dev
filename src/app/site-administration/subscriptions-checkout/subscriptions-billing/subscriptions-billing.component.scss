@@ -1,0 +1,186 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../../../../styles/buttons';
+@import '../../../../styles/typography';
+
+.billing-title{
+    margin-top: 60px;
+    margin-left: 50px;
+}
+.flex-container{
+    // width:60%;  
+    margin-left: 55px !important;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    .container-checkbox-inf{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 8px;  
+        a{
+          font-size: 20px;
+        }
+    }
+}
+.par-details{
+    font-size: 16px;
+    margin-left: 50px;
+}
+
+.strike{
+    text-decoration:line-through;
+    font-weight: bold;
+}
+.checkbox{
+    color:$blue;
+    margin-right: 10px;
+}
+.link {
+    margin-left: 10px;
+    font-size: 15px !important;
+    text-decoration: underline;
+    color: grey;
+    cursor: pointer;
+}
+
+.stripe-form-inner {
+  //@include border-radius(5px);
+  background-color: $white;
+  //border: 1px solid $black;
+  //margin: 20px auto;
+  //min-width: 200px;
+  //width: 40%;
+  padding: 10px;
+  margin-bottom: 50px;
+
+  .form-section {
+
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-justify-content(space-between);
+    @include flex-align-items(stretch);
+
+    .card-info-wrap {
+      margin-left: 40px;
+      margin-top: 30px;
+      @include displayFlex;
+      @include flex-direction(column);
+      @include flex-justify-content(space-between);
+      @include flex(1, 0, auto);
+      max-width: 40vw;
+
+      .card-inputs {
+        padding: 5px 10px;
+
+        .card-input-label {
+          display: block;
+          margin-top: 10px;
+          height: 50px;
+          .card-input {
+            height: 30px;
+            @include border-radius(5px);
+            border: 1px solid $dark-grey;
+            padding: 0 6px;
+            margin: 3px 0;
+          }
+        }
+
+        .cvc-expiry-wrap {
+          @include displayFlex;
+          @include flex-direction(row);
+          @include flex-justify-content(space-between);
+          .card-input-label {
+            @include flex(1, 0, auto);
+            max-width: 50%;
+            &.card-input-cvc {
+              padding-right: 15px;
+            }
+            &.card-input-expiry {
+              padding-left: 15px;
+            }
+          }
+        }
+
+        .default-card-checkbox {
+          display: block;
+          margin-top: 10px;
+        }
+      }
+
+      .submit-button-wrap {
+        width: 50%;
+        margin: 5px 10px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 10px;
+        width: 40vw;
+        
+      }
+
+    }
+
+  }
+
+}
+.def-car-wrap{
+  width: 40vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px;
+}
+.add-card{
+  height: 40px;
+}
+.or-title{
+  font-size: 1.3rem;
+  font-style: italic;
+}
+.pay-wrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.submit-button {
+  position: relative;
+  width: 30%;
+  font-style: italic;
+  font-size: 19px;
+}
+.submit-button-wrap{
+  margin-top: 10px;
+  width: 40vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.submit-new-card{
+  position: relative;
+  margin-top: 20px;
+}
+.integration{
+  background-color: $dark-blue;
+}
+.integration:hover{
+  background-color: $dark-blue;
+  cursor: not-allowed;
+}
+.spinner{
+  position: absolute;
+  left: 15px;
+  bottom: 9px;
+  color: white;
+  height: 20px;
+  width: 20px;
+}
+.spinner /deep/{
+  svg{
+    circle{
+    stroke: white !important;
+    }
+}
+}

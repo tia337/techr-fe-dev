@@ -1,0 +1,82 @@
+<div *ngIf = "loadFinished === true" class="score-candidate-overlay" (click)="close()">
+  <div *ngIf = "loadFinished === true" class="score-candidate-inner" (click)="$event.stopPropagation()">
+    <div class="scorecard-preview-inner">
+      <div class="top-block">
+        <div class="name">
+          {{candidate.get('firstName')}} {{candidate.get('lastName')}}
+        </div>
+        <div class="stage" [ngSwitch]="scorecard.get('Scorecard_type')">
+          <span *ngSwitchCase="1">Phone Interview stage</span>
+          <span *ngSwitchCase="2">F2F Interview stage</span>
+        </div>
+      </div>
+        <div class="position-title">
+          {{scorecard.get('ScorecardTitle')}}
+        </div>
+        <div class="areas" *ngIf="areas && questions">
+          <div class="area" *ngFor="let area of areas">
+            <div class="area-title">
+              <span>{{area.area.get('AreaTitle')}}</span>
+              <star-rating size="m" [formControl]="area.rating" (change)="countAverage()"></star-rating>
+            </div>
+            <div class="question" *ngFor="let question of questions[area.area.id]; let qIndex = index">
+              <div>Q{{qIndex+1}}: {{question.question.get('Question')}}</div>
+              <textarea class="question-note" rows="5" #questionList [formControl]="question.note" ></textarea>
+
+            </div>
+          </div>
+        </div>
+      <div class="scorecard-footer">
+        <div class="weighted-score-wrap">
+          Weighted score: <star-rating class="rating-stars" size="m" [disabled]="true" [(ngModel)]="weightedScore"></star-rating>
+        </div>
+        <div class="scorecard-summary-wrap">
+          <div class="scorecard-summary-header">
+            <div class="scorecard-summary-label">Should we move this candidate to the next stage?</div>
+            <div class="scorecard-summary-buttons-wrap" #finalVerdictElement>
+
+              <div class="move-button">
+                <input type="radio" name="finalMark" [value]="FinalVerdict.definitely" [(ngModel)]="finalMark" id="button-definitely">
+                <label for="button-definitely">Definitely</label>
+              </div>
+              <div class="move-button">
+                <input type="radio" name="finalMark" [value]="FinalVerdict.yes" [(ngModel)]="finalMark" id="button-yes">
+                <label for="button-yes">Yes</label>
+              </div>
+              <div class="move-button">
+                <input type="radio" name="finalMark" [value]="FinalVerdict.notSure" [(ngModel)]="finalMark" id="button-not-sure">
+                <label for="button-not-sure">Not Sure</label>
+              </div>
+
+
+            </div>
+          </div>
+          <div class="scorecard-summary-final-thoughts-wrap">
+            <textarea
+              class="scorecard-summary-final-thoughts"
+              [mention]="team" [mentionConfig]="{labelKey: 'name'}"
+              autosize
+              [(ngModel)]="verdict"
+              placeholder="Give your final thoughts on whatever you think this candidate should move to the next stage or not. Tag colleagues by using @">
+            </textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--<button (click)="testStars()">TEST STARS</button>-->
+    <!--<button (click)="testNotes()">TEST NOTES</button>-->
+    <div class="buttons-wrap">
+      <button *ngIf="!scoringExist" class="primary-button submit-button" (click)="scoreCandidate()">
+        <mat-spinner *ngIf = "scoringInProcess === true"  [diameter] = '25' [strokeWidth] = '3' class = "spinner-score"></mat-spinner> 
+          Score Candidate
+      </button>
+      <button *ngIf="scoringExist" class="primary-button submit-button" (click)="scoreCandidate()">
+          <mat-spinner *ngIf = "scoringInProcess === true"  [diameter] = '25' [strokeWidth] = '3' class = "spinner-score"></mat-spinner> 
+        Save changes
+      </button>
+    </div>
+
+
+  </div>
+</div>

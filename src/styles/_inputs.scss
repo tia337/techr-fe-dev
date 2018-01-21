@@ -1,0 +1,28 @@
+@import './variables';
+
+.input-text {
+  border: 1px solid $dark-grey;
+  // border-radius: 4px;
+  padding: 0 6px;
+  width: 100%;
+  // ------------------------
+  font-size: $font-size-16;
+  min-height: 30px;
+  line-height: 30px;
+  // ------------------------
+}
+
+.input-dropdown {
+  // min-width: 100%;
+  width: 100%;
+  position: relative;
+  // padding-left: 10px;
+  background-color: $white;
+  padding: 5px 5px;
+  border: 1px solid $dark-grey;
+  border-radius: 4px;
+  font-size: $font-size-14;
+  & /deep/ .mat-select-trigger .mat-select-underline {
+    display: none !important;
+  }
+}

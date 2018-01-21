@@ -1,0 +1,73 @@
+<section class="invite-user-inner">
+  <mat-icon class="back-arrow-button" [routerLink]="['/', 'administration', 'user-management']">keyboard_arrow_left</mat-icon>
+  <div class="forms-wrap" >
+    <div class="invite-user-block">
+      <div class="invite-header">Invite User(s) to your team</div>
+
+<!--       <div class="invite-form">
+
+        <div class="form-group">
+          <label for="email-address" class="input-form-label">
+            Email address
+          </label>
+          <input class="input-form" type="email" id="email-address" />
+        </div>
+
+        <div class="form-group">
+          <label for="full-name" class="input-form-label">
+            Full Name
+          </label>
+          <input class="input-form" type="text" id="full-name" />
+        </div>
+
+        <div class="form-group">
+          <label for="user-permissions" class="input-form-label">
+            User Permissions
+          </label>
+          <input class="input-form" type="text" id="user-permissions" />
+          <mat-icon>info_outline</mat-icon>
+        </div>
+
+        <div class="form-group">
+          <label for="invite-message" class="input-form-label">
+            Invite Message
+          </label>
+          <textarea class="input-form" id="invite-message" ></textarea>
+        </div>
+
+        <div class="form-group form-standalone invitation-email">
+          <input id="send-invitation-email" type="checkbox" />
+          <label for="send-invitation-email">Send invitation email</label>
+          <mat-icon>help_outline</mat-icon>
+        </div>
+
+        <hr/>
+
+        <div class="form-group form-standalone">
+          <input id="create-another" type="checkbox" />
+          <label for="create-another">Create Another</label>
+        </div>
+
+        <div class="buttons-wrap">
+          <button class="">Create User</button>
+          <button>Cancel</button>
+        </div>
+
+      </div> -->
+      <div #rootInviteForm ></div>
+
+      <!-- <div class="form-group form-standalone">
+          <button class="form-button another-form-button" (click)="createForm()">Create Another</button>
+      </div> -->
+
+      <div class="buttons-wrap">
+        <button class="form-button submit-button" (click)="submitAll()">Invite</button>
+        <button class="form-button another-form-button" (click)="createForm()">Add another user</button>
+      </div>
+
+    </div>
+    <!-- <app-invite-form></app-invite-form> -->
+
+  </div>
+</section>
+

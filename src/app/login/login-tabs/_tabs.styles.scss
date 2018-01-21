@@ -1,0 +1,77 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.tab-inner {
+  @include displayFlex;
+  @include flex-direction(row);
+  @include flex-align-items(stretch);
+  width: 100%;
+  height: 320px;
+
+  .content-wrap {
+    @include flex(0, 0, 50%);
+    @include displayFlex;
+    @include flex-justify-content(flex-start);
+    @include flex-direction(column);
+    max-width: 50%;
+    padding: 20px 40px;
+    font-size: $font-size-18;
+    color: $dark-indigo-two;
+    .header {
+      font-size: $font-size-24;
+      font-weight: 600;
+      color: $water-blue;
+      margin-bottom: 25px;
+    }
+  }
+
+  .image-wrap {
+    @include displayFlex;
+    @include flex-justify-content(center);
+    @include flex(0, 0, 42%);
+    @include flex-align-self(center);
+    max-width: 42%;
+    img {
+      max-height: 300px;
+      max-width: 100%;
+    }
+  }
+
+  .arrow {
+    @include displayFlex;
+    @include flex-align-self(center);
+    @include flex-justify-content(center);
+    @include flex-align-items(center);
+    font-size: $font-size-36;
+    @include flex(0, 0, $font-size-36);
+    margin: auto;
+    padding: 20px 10px;
+    background-color: rgba(109, 109, 109, 0.4);
+    color: $dark-indigo-two;
+    text-decoration: none;
+    @include animation-transition(opacity, .4s);
+    @include animation-transition(color, .4s);
+    @include animation-transition(background-color, .4s);
+    opacity: 0.2;
+    &:hover {
+      opacity: 1;
+      background-color: $water-blue;
+      color: $white;
+      @include animation-transition(background-color, .4s);
+      @include animation-transition(color, .4s);
+      @include animation-transition(opacity, .4s);
+    }
+    &.left {
+      border-radius: 0 8px 8px 0;
+      margin-left: 0;
+    }
+    &.right {
+      border-radius: 8px 0 0 8px;
+      margin-right: 0;
+    }
+    &.invisible {
+      visibility: hidden;
+    }
+  }
+}
+

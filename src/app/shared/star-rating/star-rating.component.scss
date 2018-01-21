@@ -1,0 +1,113 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+$default-star-color: #808080;
+$active-star-color: $blue;
+
+:host {
+  margin: 0;
+  padding: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  display: block;
+  border: none;
+}
+
+.rating {
+  padding: 0;
+  display: inline-block;
+
+  .zero-star {
+    display: none !important;
+  }
+
+  .star {
+    position: relative;
+    float: right;
+    cursor: default;
+
+    input {
+      display: none;
+    }
+
+    &:before {
+      color: $default-star-color;
+      float: right;
+      font-size: $font-size-16;
+      font-weight: 100 !important;
+      display: inline-block;
+      font-family: FontAwesome;
+      content: "\f005";
+      border: 3px solid transparent;
+      @include animation-transition(color, .4s);
+    }
+
+    &.s:before {
+      font-size: $font-size-12;
+    }
+
+    &.m:before {
+      font-size: $font-size-16;
+    }
+
+    &.l:before {
+      font-size: $font-size-24;
+    }
+
+    &.xl:before {
+      font-size: $font-size-36;
+    }
+
+    &.half:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: "\f089";
+    }
+
+    &.active ~ .star:before,
+    &.active:before {
+      color: lighten($active-star-color, 20%);
+      @include animation-transition(color, .4s);
+    }
+
+  }
+
+  @media print {
+    .star:before {
+      content: "\f006";
+    }
+
+    .star.half:before {
+      display: none;
+    }
+
+    .star.active ~ .star:before,
+    .star.active:before {
+      color: lighten($active-star-color, 20%);
+      content: "\f005";
+    }
+
+    .star.active.half:before {
+      display: inline-block !important;
+      color: lighten($active-star-color, 20%);
+      content: "\f089";
+    }
+  }
+
+  &:not([disabled]) {
+    .star {
+      cursor: pointer;
+      &:hover ~ .star:before,
+      &:hover:before {
+        color: $active-star-color !important;
+        @include animation-transition(color, .4s);
+      }
+    }
+
+  }
+
+}

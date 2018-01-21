@@ -1,0 +1,132 @@
+<section class="team-members-inner">
+    <div class="main-block-header">
+        <h3>Users</h3>
+        <a class="invite-button" [routerLink]="['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['invite-user'] } }]" skipLocationChange>Invite User</a>
+    </div>
+
+    <div class="filters-block">
+        <div class="search-wrap">
+            <input class="input-search" type="search" [(ngModel)]="searchInput" />
+        </div>
+        <mat-select [(ngModel)]="userFilter">
+            <mat-option [value]="'all'">All users</mat-option>
+            <mat-option [value]="'active'">Active users</mat-option>
+            <mat-option [value]="'pending'">Pending accept invitation</mat-option>
+            <mat-option [value]="'inactive'">Inactive users</mat-option>
+        </mat-select>
+    </div>
+
+    <table class="members-table">
+        <tr>
+            <th>Full name</th>
+            <th>Application rights</th>
+            <th>Status</th>
+            <th>E-mail address</th>
+            <!-- <th></th> -->
+            <!-- <th></th> -->
+        </tr>
+
+        <ng-container *ngIf="userFilter === 'all'">
+            <tr *ngFor="let member of allMembers | SearchPipe:searchInput:'members'" (click)="goToUser(member.id, member.active)" class="member-row">
+                <td *ngIf="member.get('firstName')" class="full-name">{{member.get('firstName')}} {{member.get('lastName')}}</td>
+                <td *ngIf="member.get('Full_Name')" class="full-name">{{member.get('Full_Name')}}</td>
+                <td>
+                    <div class="access-level" *ngIf="(member.get('HR_Access_Level') && member.get('HR_Access_Level') === 1) || (member.get('Access_Level') && member.get('Access_Level') === 1)">Site-admin</div>
+                    <div class="access-level" *ngIf="(member.get('HR_Access_Level') && member.get('HR_Access_Level') === 2) || (member.get('Access_Level') && member.get('Access_Level') === 2)">Admin</div>
+                    <div class="access-level" *ngIf="(member.get('HR_Access_Level') && member.get('HR_Access_Level') === 3) || (member.get('Access_Level') && member.get('Access_Level') === 3)">Contributor</div>
+                </td>
+                <!-- <td *ngIf="member.get('Work_email')">Active</td> -->
+                <td>
+                    <!-- <td> -->
+                    <div *ngIf="member.get('Invitation_Status') != undefined && member.get('Invitation_Status') === 0">Pending accept invitation</div>
+                    <div *ngIf="member.get('Invitation_Status') != undefined && member.get('Invitation_Status') === 2">Invitation expired</div>
+                    <!-- <div *ngSwitchCase="0">Pending accept invitation</div> -->
+                    <!-- <div *ngSwitchCase="1">Active</div> -->
+                    <!-- <div *ngSwitchCase="2">Expired</div> -->
+                    <div *ngIf="!(member.get('Invitation_Status') != undefined) && member.get('Invitation_Status') !== 0 && member.get('Invitation_Status') !== 2 && member.active">Active</div>
+                    <div *ngIf="!(member.get('Invitation_Status') != undefined) && member.get('Invitation_Status') !== 0 && member.get('Invitation_Status') !== 2 && !member.active">Inactive</div>
+                </td>
+                <td *ngIf="member.get('Work_email')">{{member.get('Work_email')}}</td>
+                <td *ngIf="member.get('Email_Address')">{{member.get('Email_Address')}}</td>
+                <td *ngIf="!member.get('Email_Address') && !member.get('Work_email')">{{member.get('Email_Address')}}</td>
+                <td *ngIf="member.get('Invitation_Status') != undefined">
+                    <div class="invitation-expires" *ngIf="member.get('Invitation_Status') === 0">Invitation expires in {{member.get('Days_Left_Expiration')}} days</div>
+                    <div class="invitation-expires" *ngIf="member.get('Invitation_Status') === 2">Expired</div>
+                </td>
+                <td>
+                    <span *ngIf="member.get('Invitation_Status') != undefined" (click)="resendInvitation(member.id)" class="invitation-edit-button resend-button">Resend</span>
+                    <span *ngIf="member.get('Invitation_Status') === 2">
+				 		<span (click)="deleteInvitation(member)" class="invitation-edit-button delete-invitation-button">Delete</span>
+                    </span>
+                </td>
+            </tr>
+        </ng-container>
+        <ng-container *ngIf="userFilter === 'active'">
+            <tr *ngFor="let member of teamMembers | SearchPipe:searchInput:'members'" (click)="goToUser(member.id, 1)" class="member-row">
+                <td class="full-name">{{member.get('firstName')}} {{member.get('lastName')}}</td>
+                <td [ngSwitch]="member.get('HR_Access_Level')">
+                    <div class="access-level" *ngSwitchCase="1">Site-admin</div>
+                    <div class="access-level" *ngSwitchCase="2">Admin</div>
+                    <div class="access-level" *ngSwitchCase="3">Contributor</div>
+
+                </td>
+                <td>Active</td>
+                <td>{{member.get('Work_email')}}</td>
+
+            </tr>
+        </ng-container>
+
+        <ng-container *ngIf="userFilter === 'pending'">
+            <tr *ngFor="let invitation of invitations | SearchPipe:searchInput:'invitations'" class="invitation-row">
+                <td class="full-name">{{invitation.get('Full_Name')}}</td>
+                <td [ngSwitch]="invitation.get('Access_Level')">
+                    <div class="access-level" *ngSwitchCase="1">Site-admin</div>
+                    <div class="access-level" *ngSwitchCase="2">Admin</div>
+                    <div class="access-level" *ngSwitchCase="3">Contributor</div>
+                </td>
+
+
+                <td [ngSwitch]="invitation.get('Invitation_Status')">
+                    <!-- <td> -->
+                    <div *ngSwitchCase="0">Pending accept invitation</div>
+                    <div *ngSwitchCase="2">Invitation expired</div>
+                    <!-- <div *ngSwitchCase="0">Pending accept invitation</div> -->
+                    <!-- <div *ngSwitchCase="1">Active</div> -->
+                    <!-- <div *ngSwitchCase="2">Expired</div> -->
+                </td>
+
+
+                <td>{{invitation.get('Email_Address')}}</td>
+                <!-- <td class="invitation-expires">Invitation expires in 15 days</td> -->
+
+                <td [ngSwitch]="invitation.get('Invitation_Status')">
+                    <div class="invitation-expires" *ngSwitchCase="0">Invitation expires in {{invitation.get('Days_Left_Expiration')}} days</div>
+                    <div class="invitation-expires" *ngSwitchCase="2">Expired</div>
+
+                </td>
+
+                <td>
+                    <span (click)="resendInvitation(invitation.id)" class="invitation-edit-button resend-button">Resend</span>
+                    <span *ngIf="invitation.get('Invitation_Status') === 2">
+             <span (click)="deleteInvitation(invitation)" class="invitation-edit-button delete-invitation-button">Delete</span>
+                    </span>
+                </td>
+
+
+            </tr>
+        </ng-container>
+        <ng-container *ngIf="userFilter === 'inactive'">
+            <tr *ngFor="let member of inactiveMembers | SearchPipe:searchInput:'members'" (click)="goToUser(member.id, 0)" class="member-row">
+                <td class="full-name">{{member.get('firstName')}} {{member.get('lastName')}}</td>
+                <td>
+                    <!-- [ngSwitch]="member.get('HR_Access_Level')" -->
+                    <!-- <div class="access-level" *ngSwitchCase="1">Site-admin</div>
+						<div class="access-level" *ngSwitchCase="2">Admin</div>
+						<div class="access-level" *ngSwitchCase="3">Contributor</div> -->
+                </td>
+                <td>Inactive</td>
+                <td>{{member.get('Work_email')}}</td>
+            </tr>
+        </ng-container>
+    </table>
+</section>

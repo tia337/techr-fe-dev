@@ -1,0 +1,72 @@
+<div class="receipt-overlay" (click)="close()">
+
+  <div class="receipt-inner" (click)="$event.stopPropagation()" #receipt>
+    <div class="receipt-header">
+      <div class="receipt-title subheader">
+        Receipt
+      </div>
+      <div class="invoice-header-total header">
+        {{invoice.total / 100 | currency:invoice.currency:true:'1.0-0'}} at SwipeIn
+      </div>
+      <div class="receipt-date-number">
+        <div class="receipt-date">
+          {{invoice.date * 1000 | date:'longDate'}}
+        </div>
+        <div class="receipt-number">
+          #{{invoice.number}}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="receipt-content">
+      <div class="receipt-items-labels">
+        <div class="receipt-description">
+          Description
+        </div>
+        <div>
+          SwipeIn Recruitment Platform
+        </div>
+        <div class="receipt-amount">
+          Amount
+        </div>
+      </div>
+
+      <div *ngFor="let item of invoice.lines.data" class="receipt-item">
+        <div class="item-name">
+          {{item.plan.name}} x {{item.quantity}} user(s)
+        </div>
+        <div class="item-price">
+          {{item.amount / 100 | currency:item.currency:true:'1.0-0'}}
+        </div>
+      </div>
+
+      <div class="receipt-item price">
+        <span>Total(before taxes and discounts):</span>
+        <span>{{invoice.subtotal / 100 | currency:invoice.currency:true:'1.0-0'}}</span>
+      </div>
+      <div class="receipt-item price">
+        <span>Final Price:</span>
+        <span>{{invoice.total / 100 | currency:invoice.currency:true:'1.0-0'}}</span>
+      </div>
+
+    </div>
+
+    <div class="comapny-number">
+      Swipein Ltd. registered in England and Wales with company number 09755830
+    </div>
+
+    <div class="contact-info no-print">
+      <div class="contacts">
+        Have a question or need help? <a class="email-link" href="mailto:userservice@swipein.co.uk">Send us an email</a> on userservice@swipein.co.uk
+      </div>
+    </div>
+
+    <div class="print-button-wrap no-print">
+      <button class="primary-button" type="button" (click)="download()">Print</button>
+    </div>
+  </div>
+
+
+
+</div>

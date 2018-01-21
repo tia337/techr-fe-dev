@@ -1,0 +1,65 @@
+@import '../../../styles/variables';
+@import '../../../styles/buttons';
+
+.flex-container{
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .left-container{
+        .card-thumbnail{
+            width:40px;
+        }
+        .left-input{
+        text-align: center;
+        width: 100%;
+        border: 1px solid #b9cae5;
+        border-radius: 4px;
+        height: 30px;
+        }
+        .left-input-small{
+        text-align: center;
+        width: 30%;
+        border: 1px solid #b9cae5;
+        border-radius: 4px;
+        height: 30px;
+        }
+        .form-row{
+            margin: 5px;
+        }
+        margin-right: 10px;
+    }
+    .cvc-zip-container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        h6{
+            margin-top: 2px;
+        }
+    .input-img-container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    }
+    .right-container{
+        input{
+            width: 100%;
+            border: 1px solid #b9cae5;
+            border-radius: 4px;
+            height: 30px;
+            margin:3px;
+            text-align:center;
+        }
+        span{
+            margin:3px;
+        }
+    }
+    span{
+        margin-bottom: 5px;
+    }
+}
+.purchase{
+    margin-left: 25px;
+    width: 20%;
+}

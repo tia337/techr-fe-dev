@@ -1,0 +1,71 @@
+<div class="overlay" (click)="closeModal()"></div>
+
+<div class="modal-wrap" *ngIf="allowEditAL !== undefined">
+  <div class="modal-header" *ngIf="allowEditAL === true">
+    Edit Access level
+  </div>
+  <div class="modal-header" *ngIf="allowEditAL === false">
+    <mat-icon class="lock-icon">lock_outline</mat-icon>
+    Access level Required
+  </div>
+  <div class="modal-content" *ngIf="allowEditAL === true">
+    Access type:
+    <!-- <mat-select [(ngModel)]="accessLevel" class="al-select">
+      <mat-option *ngFor="let option of permissions" [value]="option.value" [disabled]="option.disabled">{{option.name}}
+        <div style="border: 1px dashed #f00;">
+          <mat-icon>lock_outline</mat-icon>
+        </div>
+      </mat-option>
+    </mat-select> -->
+    <div class="al-dropdown">
+      <div class="al-dropdown-overlay hidden" (click)="closeDropdown()"></div>
+      <div class="current-permission" (click)="showDropdown()">{{checkedPermission.name}}<mat-icon class="down-arrow">keyboard_arrow_down</mat-icon></div>
+      <div class="al-select hidden">
+
+        <div *ngFor="let option of permissions">
+
+          <input type="radio" id="permission-type-{{option.value}}" class="permission-radio-button" name="access-level" value="{{option.value}}" [(ngModel)]="accessLevel" [disabled]="option.disabled" (change)="setCheckedPermission()" />
+
+          <label (click)="closeDropdown()" for="permission-type-{{option.value}}" class="permission-label">
+            <div class="permission-dropdown-section">
+              <div class="permission-name">{{option.name}}</div>
+            </div>
+            <div class="permission-dropdown-section">
+              <div class="permission-name-label">{{option.name}}</div>
+            </div>
+            <div class="permission-dropdown-section">
+              <mat-icon class="info-icon" [matTooltip]="option.tooltip" matTooltipPosition="above">info_outline</mat-icon>
+            </div>
+          </label>
+
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+
+
+  <div class="modal-content alert-message" *ngIf="allowEditAL === false">
+    <img class="bird-icon" src="../../../../../assets/img/bird-icon.png" />
+    <div class="alert-text" >
+      <div>
+        You can’t deactivate or edit other users’ permissions. You need to be <b>Site-Admin</b> or <b>Admin in order to preform that</b>. <span *ngIf="siteAdmin">{{siteAdmin.name}} {{siteAdmin.surname}} can change your access level.</span>
+      </div><br>
+      <div>
+        <b>Contact SwipeIn</b> if you need urgent access or you can’t contact your administrators
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="modal-footer" *ngIf="allowEditAL === true">
+    <button class="button accept" (click)="changePermissions()">Save changes</button>
+    <button class="button cancel" (click)="closeModal()">Cancel</button>
+  </div>
+  <div *ngIf="allowEditAL === false" class="modal-footer">
+    <button class="button accept ok" (click)="closeModal()">OK</button>
+  </div>
+</div>

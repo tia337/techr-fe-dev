@@ -1,0 +1,146 @@
+@import '../../../../../styles/buttons';
+@import '../../../../../styles/inputs';
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+// Styles for highlihnting elements
+// .text-input-highlight-container {
+//     position: relative;
+// }
+// .text-input-highlight-container .text-input-element {
+//     background: none;
+//     position: relative;
+//     z-index: 2;
+// }
+// .text-input-highlight-container .text-highlight-element {
+//     overflow: hidden !important;
+//     white-space: pre-wrap;
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     left: 0;
+//     right: 0;
+//     background: white;
+//     color: transparent;
+//     z-index: 1;
+// }
+// .text-input-highlight-container .text-highlight-tag {
+//     border-radius: 8px;
+//     padding: 1px 3px;
+//     margin: -1px -3px;
+//     overflow-wrap: break-word;
+// }
+// .bg-blue {
+//     background-color: lightblue;
+// }
+// .bg-pink {
+//     background-color: lightcoral;
+// }
+// .bg-blue-dark {
+//     background-color: #86c5da;
+// }
+// .bg-pink-dark {
+//     background-color: #eb5252;
+// }
+// textarea {
+//     margin: 0 auto;
+//     width: 100%;
+//     resize: none;
+//     height: 60px;
+//     padding: 5px;
+// }
+// -----
+.notes {
+    //background-color: $light-grey;
+    @include displayFlex();
+    @include flex-direction(column);
+    width: 90%;
+    margin: 5px auto;
+    &-controls {
+        @include displayFlex();
+        @include flex-justify-content(center);
+        .input-message {
+            @extend .input-text;
+            margin: 5px 0 0 0;
+            height: 35px;
+            max-height: 100px;
+            font-size: 0.875rem;
+            line-height: 20px;
+             ::-webkit-scrollbar {
+                width: 0px;
+                background: transparent;
+                /* make scrollbar transparent */
+            }
+        }
+    }
+    .buttons {
+        @include displayFlex();
+        @include flex-justify-content(space-between);
+        @include flex-align-items(center);
+        color: white;
+        align-items: center;
+        &-right {
+            @include displayFlex();
+            &-send {
+                margin: 0;
+                padding: 0;
+                @include displayFlex();
+                @include flex-justify-content(center);
+                background-color: $blue;
+            }
+            &-upload {
+                color: black;
+                font-size: $font-size-24;
+                .upload {
+                    display: none;
+                }
+            }
+        }
+        &-left {
+            @include displayFlex();
+            mat-form-field {
+                width: 250px;
+                font-family: 'FontAwesome';
+                mat-select {
+                    mat-option {
+                        font-family: inherit;
+                        font-size: $font-size-12;
+                        span {
+                            text-align: rignt;
+                        }
+                    }
+                }
+            }
+            .icon-lock {
+                width: 25px;
+                height: 25px;
+                margin: 10px;
+                font-size: $font-size-24;
+                color: black;
+            }
+        }
+    }
+    &-container {
+        @include flex-align-self(center);
+        overflow-y: hidden;
+        overflow-x: hidden;
+        // height: 300px;
+        width: 100%;
+        margin: 5px 0 0 0;
+        background-color: white;
+         ::-webkit-scrollbar {
+            width: 0px;
+            /* remove scrollbar space */
+            background: transparent;
+            /* optional: just make scrollbar invisible */
+        }
+        .loading {
+            @include displayFlex();
+            // @include flex-align-items(center);
+            @include flex-justify-content(center);
+            margin-top: 15px;
+            img {
+                width: 85px;
+            }
+        }
+    }
+}

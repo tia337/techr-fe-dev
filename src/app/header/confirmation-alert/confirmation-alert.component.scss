@@ -1,0 +1,202 @@
+.overlay {
+  position: fixed;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.2);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+// .alert-wrap {
+
+//   position: fixed;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   width: 100vw;
+//   height: 100vh;
+//   z-index: 99;
+//   top: 0;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+
+
+  
+  .alert {
+    top: 50%;
+    left: 50%;
+    // left: 50%;
+    // right: 50%;
+    transform: translate(-50%, -50%);
+    // align-self: center;
+
+    // width: 40vw;
+    border: 4px dashed #0f0;
+    position: fixed;
+    border: 1px solid #919191;
+    border-radius: 5px;
+    // padding: 20px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    overflow: hidden;
+
+    .alert-header {
+      background-color: #F5F5F5;
+      border-bottom: 1px solid #919191;
+      padding: 10px 0;
+      text-align: center;
+      font-size: 1.5em;
+    }
+
+    .alert-content {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+
+      .form-container {
+        display: flex;
+        flex-direction: column;
+        margin: 0 25px;
+        justify-content: center;
+        .form-group {
+          display: block;
+          margin: 10px 0;
+
+          label {
+            font-size: 1em;
+
+            &.form-align {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+              // border: 1px dashed #f00;
+              width: calc(100% + 20px);
+              // min-width: 30vw;
+              font-size: .9em;
+
+              .form {
+                width: 200px;
+                border-top: 2px solid #807F80;
+                border-bottom: 2px solid #807F80;
+                border-left: 6px solid #807F80;
+                border-right: 6px solid #807F80;
+                font-size: 1.2em;
+                height: 30px;
+                padding: 0 5px;
+                & /deep/ .mat-select-trigger .mat-select-underline {
+                  display: none;
+                }
+              }
+            }
+
+          }
+
+
+
+          .error-message {
+            font-size: 0.7em;
+            color: #f00;
+            float: right;
+            margin-right: -20px;
+          }
+
+
+        }
+
+        .different-company-label {
+          font-size: 0.8em;
+          margin-bottom: 15px;
+        }
+
+      }
+
+      
+
+      .img-logo {
+        flex: 0 0 6vw;
+        padding: 10px;
+        max-height: 100%;
+        margin: 0 25px;
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+      }
+      
+      .alert-content-text {
+        flex: 1 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .alert-footer {
+      background-color: #F5F5F5;
+      display: flex;
+      justify-content: flex-end;
+      .submit-button {
+        // background-color: #012060;
+        // padding: 8px 12px;
+        // margin: 10px;
+        // font-size: .9em;
+        // color: #fff;
+        // border: none;
+        // cursor: pointer;
+      }
+      .submit-button{
+        position: relative;
+        padding:10px;
+        margin-top:5%;
+        border: none; /* Remove borders */
+        color: white; /* Add a text color */
+        padding: 10px 30px; /* Add some padding */
+        cursor: pointer; /* Add a pointer cursor on mouse-over */
+        background-color: #2196F3;
+        border-radius: 4px;
+        font-size: 14px;
+        margin-top: 10px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+       }
+      .submit-button:hover{
+        background: #0b7dda;
+      }
+      .submit-button:active{
+        box-shadow: 0 3px 8px 0 #2196F3, 0 0px 20px 0 #2196F3;
+      }
+      .submit-loading{
+        cursor: wait;
+        background: #0866b3;
+      }
+      .submit-loading:hover{
+        background: #0866b3 !important;
+      }
+      .spinner{
+        height: 20px;
+        width: 20px;
+        position: absolute;
+        left: 4px;
+        bottom: 7px;
+      }
+      .spinner /deep/{
+        svg{
+          circle{
+            stroke: #ffffff !important;
+          }
+        }
+      }
+    }
+  }
+// }
+// }

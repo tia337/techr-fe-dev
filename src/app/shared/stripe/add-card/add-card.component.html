@@ -1,0 +1,104 @@
+<div class="add-card-overlay" (click)="close()">
+
+  <div class="add-card-inner" (click)="$event.stopPropagation()">
+
+    <div class="form-section">
+
+      <div class="card-info-wrap">
+        <div class="card-inputs">
+
+
+          <div class="subheader bold">Enter new card details</div>
+          <label class="card-input-label">Card Number:
+            <div class="card-input input-text" id="card-number"></div>
+          </label>
+
+          <div class="cvc-expiry-wrap">
+
+            <label class="card-input-label card-input-cvc">
+              CVC:
+              <div class="card-input input-text" id="card-cvc"></div>
+            </label>
+
+            <label class="card-input-label card-input-expiry">
+              Card Expiry:
+              <div class="card-input input-text" id="card-expiry"></div>
+            </label>
+
+          </div>
+
+          <label class="card-input-label">Post Code:
+            <div class="card-input input-text" id="postal-code"></div>
+          </label>
+
+          <label class="default-card-checkbox">
+            <input type="checkbox" [disabled]="alwaysDefault" [(ngModel)]="isDefault"/>
+            Set as default payment method
+          </label>
+          
+          <label *ngIf = "useCardNow === true" class="default-card-checkbox">
+              <input type="checkbox" [(ngModel)]="useCardNowBool"/>
+              Use now for payment
+          </label>
+
+        </div>
+
+        <div class="submit-button-wrap">
+          <button class="primary-button submit-button add-card-button" type="button" (click)="addCard()">
+            <mat-spinner *ngIf = "addingCart == true" [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+            Add card
+          </button>
+        </div>
+
+      </div>
+
+      <div class="billing-address-wrap" [formGroup]="billingAddressForm">
+
+        <div class="subheader bold">Enter Billing Information</div>
+
+        <label class="address-input-label">
+          Name:
+          <input class="input-text address-input" type="text" formControlName="name" />
+        </label>
+
+        <label class="address-input-label">
+          Country:
+          <input class="input-text address-input" type="text" formControlName="address_country" />
+        </label>
+
+        <label class="address-input-label">
+          State:
+          <input class="input-text address-input" type="text" formControlName="address_state" />
+        </label>
+
+        <label class="address-input-label">
+          City:
+          <input class="input-text address-input" type="text" formControlName="address_city" />
+        </label>
+
+        <label class="address-input-label">
+          Address Line 1:
+          <input class="input-text address-input" type="text" formControlName="address_line1" />
+        </label>
+
+        <label class="address-input-label">
+          Address Line 2:
+          <input class="input-text address-input" type="text" formControlName="address_line2" />
+        </label>
+
+        <!--<label class="address-input-label">-->
+          <!--ZIP Code:-->
+          <!--<input class="input-text address-input" type="text" formControlName="address_zip" />-->
+        <!--</label>-->
+
+      </div>
+
+    </div>
+
+
+
+
+
+  </div>
+
+</div>

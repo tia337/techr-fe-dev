@@ -1,0 +1,139 @@
+<app-header></app-header>
+<section class="pre-login-inner">
+
+  <section class="section header-section">
+    <div class="background-color"></div>
+    <div class="background-image"></div>
+    <div class="content">
+      <h1 class="title">Modern recruitment software for Tech <span class="and-sign">&</span> Digital companies</h1>
+      <div class="modal">
+        <div class="modal-header">
+          <h4 class="modal-title">Unlocking the hiring potential of digital enterprises</h4>
+          <!--<h4 class="modal-title">Saving Digital enterprises from bad recruitment software</h4>-->
+          <img src="../../assets/img/pre-login/bird.png" srcset="../../assets/img/pre-login/bird@2x.png 2x, ../../assets/img/pre-login/bird@3x.png 3x" class="bird" />
+        </div>
+        <ul class="modal-list">
+          <li>Reach 30,000+ digital professionals instantly</li>
+          <li>Publish your jobs in 20+ leading job boards from a single platform</li>
+          <li>Discover new active and passive talent every day</li>
+          <li>Hire as a team</li>
+          <li>Unlock your employee referral company culture</li>
+        </ul>
+        <div class="get-started-button-wrap">
+          <button type="button" class="primary-button get-started-button" (click)="signIn()">Get Started for Free</button>
+        </div>
+        <div class="conditions">
+          No credit card required. Cancel anytime.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section advantages-section">
+    <h2 class="section-title">Advantages</h2>
+
+    <div class="advantages-block">
+      <div class="advantage">
+        <img src="../../assets/img/pre-login/advantages/ridiculously-simple.png"
+             srcset="../../assets/img/pre-login/advantages/ridiculously-simple@2x.png 2x,
+                ../../assets/img/pre-login/advantages/ridiculously-simple@3x.png 3x" class="advantage-img">
+        <h3 class="advantage-title">Ridiculously simple</h3>
+        <p class="advantage-description">
+          You will have a laugh on us at how easy is to post jobs, chat to candidates or collaborate with colleagues
+        </p>
+      </div>
+      <div class="advantage">
+        <img src="../../assets/img/pre-login/advantages/powerful-features.png"
+             srcset="../../assets/img/pre-login/advantages/powerful-features@2x.png 2x,
+                ../../assets/img/pre-login/advantages/powerful-features@3x.png 3x" class="advantage-img">
+        <h3 class="advantage-title">Powerful features</h3>
+        <p class="advantage-description">
+          Simplify time consuming tasks such as direct sourcing. SwipeIn suggests you the best candidates for your vacancies.
+        </p>
+      </div>
+      <div class="advantage">
+        <img src="../../assets/img/pre-login/advantages/on-the-go-any-device.png"
+             srcset="../../assets/img/pre-login/advantages/on-the-go-any-device@2x.png 2x,
+                ../../assets/img/pre-login/advantages/on-the-go-any-device@3x.png 3x" class="advantage-img">
+        <h3 class="advantage-title">On the go. Any device</h3>
+        <p class="advantage-description">
+          Don’t let top talent slip away, engage instantly anytime, anywhere and on any device.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section features-section">
+    <h2 class="section-title">Features</h2>
+
+    <!--<a [routerLink]="['/', 'login', {outlets: {'login-slider': ['cross-platform']}}]" skipLocationChange>Cross Platform</a>-->
+    <!--<a [routerLink]="['/', 'login', {outlets: {'login-slider': ['data-driven-recruitment']}}]" skipLocationChange>Data-driven Recruitment</a>-->
+    <!--<a [routerLink]="['/', 'login', {outlets: {'login-slider': ['emplyee-referral-culture']}}]" skipLocationChange>Emplyee Referral Culture</a>-->
+    <!--<a [routerLink]="['/', 'login', {outlets: {'login-slider': ['hire']}}]" skipLocationChange>Hire</a>-->
+    <!--<a [routerLink]="['/', 'login', {outlets: {'login-slider': ['reach-and-manage-candidates']}}]" skipLocationChange>Reach and Manage candidates</a>-->
+
+    <div class="tabs-links">
+      <a class="tab-link" [routerLink]="[{outlets: {'login-slider': ['reach-and-manage-candidates']}}]" routerLinkActive="active" skipLocationChange>Reach and Manage candidates</a>
+      <a class="tab-link" [routerLink]="[{outlets: {'login-slider': ['hire']}}]" routerLinkActive="active" skipLocationChange>Hire as a Team</a>
+      <a class="tab-link" [routerLink]="[{outlets: {'login-slider': ['emplyee-referral-culture']}}]" routerLinkActive="active" skipLocationChange>Employee Referral Culture</a>
+      <a class="tab-link" [routerLink]="[{outlets: {'login-slider': ['data-driven-recruitment']}}]" routerLinkActive="active" skipLocationChange>Data-driven Recruitment</a>
+      <a class="tab-link" [routerLink]="[{outlets: {'login-slider': ['cross-platform']}}]" routerLinkActive="active" skipLocationChange>Cross Platform</a>
+    </div>
+
+    <router-outlet name="login-slider"></router-outlet>
+
+  </section>
+
+  <section class="section feedback-section">
+    <h2 class="section-title">Why companies love SwipeIn</h2>
+
+    <div class="feedback-wrap">
+      <div class="feedback-block" *ngFor="let review of feedback">
+        <img src="{{review.avatarUrl}}" class="avatar">
+        <div class="name">
+          {{review.name}}
+        </div>
+        <div class="position">
+          {{review.position}}
+        </div>
+        <div class="review">
+          {{review.feedback}}
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="section mobile-section">
+    <h2 class="section-title">Run Your Business From Anywhere</h2>
+    <div class="blocks-wrap">
+
+      <div class="mobile-content">
+        <p class="content">
+          Keep track of your applications and jobs no matter where you are. With the SwipeIn mobile app, you can chat to candidates and colleagues and post jobs, all from the palm of your hand.
+        </p>
+        <div class="buttons-wrap">
+          <a class="button apple" href="https://itunes.apple.com/gb/app/swipein-tech-digital-jobs-and-talent/id1069929825?mt=8" target="_blank"><img src="../../assets/img/pre-login/download-app-store.svg"/></a>
+          <a  class="button android" href="https://play.google.com/store/apps/details?id=com.swipein" target="_blank"><img src="../../assets/img/pre-login/download-google-play.svg"/></a>
+        </div>
+      </div>
+
+      <div class="mobile-image">
+        <img class="phones" src="../../assets/img/pre-login/phones.png" />
+      </div>
+    </div>
+
+  </section>
+
+  <section class="section footer-section">
+    <div class="logo-wrap">
+      <img class="logo" src="../../assets/img/swipe_in_hr.png" alt="logo"/>
+    </div>
+    <div class="buttons-wrap">
+      <a class="footer-menu-link" routerLink="/terms-conditions">Terms & Conditions</a>
+      <a class="footer-menu-link" routerLink="/privacy-policy">Privacy Policy</a>
+    </div>
+  </section>
+
+</section>

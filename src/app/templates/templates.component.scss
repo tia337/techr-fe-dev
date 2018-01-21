@@ -1,0 +1,85 @@
+@import '../../styles/variables';
+@import '../../styles/inputs';
+@import '../../styles/mixins';
+@import '../../styles/typography';
+.title {
+    font-size: $font-size-24;
+    line-height: $font-size-36;
+    padding: 0 15px;
+}
+
+.templates {
+    margin: 2% 5%;
+    @include displayFlex;
+    @include flex-justify-content(space-around);
+    @include flex-wrap(wrap);
+    &-type {
+        @include flex-basis(45%);
+        // @include flex-grow(1);
+        @include flex-shrink(1);
+        border: 3px solid whitesmoke;
+        margin: 15px;
+        .type-name {
+            margin: 5%;
+            font-size: $font-size-24;
+            font-weight: bold;
+        }
+        .type {
+            // overflow: -moz-scrollbars-none;
+            max-height: 100vw;
+            // overflow-y: scroll;
+            overflow-y: auto;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            margin: 5%;
+            &-templates {
+                font-size: $font-size-16;
+            }
+        }
+    }
+}
+
+.templates-custom {
+    @include displayFlex;
+    @include flex-direction(column);
+    @include flex-wrap(nowrap);
+    &-type {
+        @include flex-basis(80%);
+    }
+}
+
+.feedback_triangle {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-bottom: 80px solid #007ab6;
+	border-left: 80px solid transparent;
+  z-index: 999999;
+  cursor: pointer;
+	.feedback_text {
+		@include transform-rotate(-45deg);
+		position: absolute;
+		right: -1px;
+		top: 38px;
+		color: rgb(255, 255, 255);
+		font-weight: bold;
+    opacity: 1;
+    cursor: pointer;
+	}
+  }
+  .triangle-wrap{
+    position: relative;
+  }
+  .speaker{
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 20px;
+    transform: rotate(-45deg);
+  }
+  .main-wrap{
+      min-height: 100%;
+  }

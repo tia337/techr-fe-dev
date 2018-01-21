@@ -1,0 +1,46 @@
+@import './variables';
+@import './mixins';
+@import '../theme.scss';
+
+.button {
+  @include border-radius(5px);
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  width: 100%;
+  font-size: $font-size-14;
+}
+
+.primary-button {
+  font-family: 'Open Sans', sans-serif;
+  @extend .button;
+  background-color: $water-blue;
+  color: $white;
+  @include animation-transition(background-color, .6s);
+  &:hover {
+    background-color: darken($water-blue, 10%);
+    @include animation-transition(background-color, .6s);
+  }
+}
+
+.warn-button {
+  @extend .button;
+  background-color: $warn;
+  color: $white;
+  @include animation-transition(background-color, .6s);
+  &:hover {
+    background-color: darken($warn, 10%);
+    @include animation-transition(background-color, .6s);
+  }
+}
+
+.secondary-button {
+  @extend .button;
+  background-color: transparent;
+  color: $blue;
+  @include animation-transition(background-color, .6s);
+  &:hover {
+    color: darken($blue, 10%);
+    @include animation-transition(color, .6s);
+  }
+}

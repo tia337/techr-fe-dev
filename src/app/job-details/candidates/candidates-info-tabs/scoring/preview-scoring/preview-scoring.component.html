@@ -1,0 +1,74 @@
+<div *ngIf = "loaded == true" class="preview-scorecard-overlay" (click)="closePreviewModal()">
+
+  <div class="preview-wrap" (click)="$event.stopPropagation()">
+
+    <div class="top-block">
+      <div class="name">
+        {{candidate.get('firstName')}} {{candidate.get('lastName')}}
+      </div>
+      <div class="stage" [ngSwitch]="scorecard.get('Scorecard_type')">
+        <span *ngSwitchCase="1">Phone Interview stage</span>
+        <span *ngSwitchCase="2">F2F Interview stage</span>
+      </div>
+    </div>
+    <div class="position-title">
+      {{scorecard.get('ScorecardTitle')}}
+    </div>
+    <div class="areas" *ngIf="areas && groupedQuestions && notes && areaScorings">
+      <div class="area" *ngFor="let area of areas">
+        <div class="area-title forscalling">
+          <span>{{area.get('AreaTitle')}}</span>
+          <star-rating class="area-rating" [ngModel]="areaScorings[area.id].get('Scoring')" size="m" [disabled]="true"></star-rating>
+        </div>
+        <div class="question forscalling" *ngFor="let question of groupedQuestions[area.id]; let qIndex = index">
+          <div>Q{{qIndex + 1}}: {{question.get('Question')}}</div>
+          <i>{{notes[question.id].get('QuestionNote')}}</i>
+        </div>
+      </div>
+    </div>
+    <div class="scorecard-footer forscalling">
+      <div class="weighted-score-wrap">
+        Weighted score: <star-rating [ngModel]="scorecardWeightedScore.get('WeightedScore')" class="rating-stars" size="m" [disabled]="true" ></star-rating>
+      </div>
+      <div class="scorecard-summary-wrap">
+        <div class="scorecard-summary-header">
+          <div class="scorecard-summary-label">Should we move this candidate to the next stage?</div>
+          <div class="scorecard-summary-buttons-wrap">
+
+            <div class="move-button">
+              <div class="mark-button" [class.active]="scorecardWeightedScore.get('FinalVerdict') === FinalVerdict.definitely">
+                <mat-icon class="print-tick">check</mat-icon>
+                Definitely
+              </div>
+            </div>
+            <div class="move-button">
+              <div class="mark-button" [class.active]="scorecardWeightedScore.get('FinalVerdict') === FinalVerdict.yes">
+                <mat-icon class="print-tick">check</mat-icon>
+                Yes
+              </div>
+            </div>
+            <div class="move-button">
+              <div class="mark-button" [class.active]="scorecardWeightedScore.get('FinalVerdict') === FinalVerdict.notSure">
+                <mat-icon class="print-tick">check</mat-icon>
+                Not Sure
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="scorecard-summary-final-thoughts-wrap">
+          <div class="scorecard-summary-final-thoughts">
+            {{scorecardWeightedScore.get('FinalVerdictNotes')}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!forMail" class="buttons-wrap" id="buttons_block">
+      <button *ngIf="isMyScoring" class="primary-button preview-button" (click)="editScorecard()">Edit scorecard</button>
+      <button *ngIf="isMyScoring" class="primary-button preview-button" (click)="print()">Print scorecard</button>
+      <button *ngIf="isMyScoring" class="primary-button preview-button" (click)="mailIt()">E-mail scorecard</button>
+    </div>
+  </div>
+</div>
+
+

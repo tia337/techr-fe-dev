@@ -1,0 +1,43 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/inputs';
+
+.subform-inner {
+  background-color: $white;
+  padding-bottom: 5px;
+  .area-input-field {
+    border: none;
+    border-bottom: 1px solid $dark-grey;
+    margin-bottom: 15px;
+    padding-right: calc(#{$font-size-16} + 10px);
+    font-size: $font-size-16;
+  }
+  .question-textfields {
+    // border: 1px dashed #f00;
+
+  }
+}
+
+.validation-animation {
+  animation: shake 0.9s both;
+  // animation: shake 0.9s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate(0, 0);
+  // backface-visibility: hidden;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate(-2px, 0);
+  }
+  
+  20%, 80% {
+    transform: translate(4px, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate(-8px, 0);
+  }
+
+  40%, 60% {
+    transform: translate(8px, 0);
+  }
+}

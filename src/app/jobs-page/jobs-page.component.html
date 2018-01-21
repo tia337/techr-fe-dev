@@ -1,0 +1,195 @@
+<section class="jobs-inner-page">
+  <div class="filters_search_block">
+    <div class="filters">
+      <mat-form-field class="filters-form"> <!-- select-jobs-full-width -->
+        <mat-select placeholder="Select a category" [(ngModel)]="filters" (change)="updateContracts()" multiple>
+          <mat-option [value]="JobsToShow.myJobs">My jobs</mat-option>
+          <mat-option [value]="JobsToShow.companyJobs">All company jobs</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    <!--</div>-->
+    <!--<div class="search">-->
+      <form class="example-form job filters-form">
+        <mat-form-field class="example-full-width">
+          <input type="text" placeholder="Job search" aria-label="Job" matInput [formControl]="jobSearchControl" [matAutocomplete]="jobSearch"
+                 (keyup.enter)="selectJobsFilters($event)">
+          <!--<button *ngIf="(offers && jobSearchControl && jobSearchControl.value)" class="clear_button" aria-label="Clear" (click)="clearButton(1)">-->
+            <!--X-->
+          <!--</button>-->
+          <mat-autocomplete #jobSearch="matAutocomplete">
+            <mat-option *ngIf="jobSearchControl.value && jobSearchControl.value.length > 0" [value]="jobSearchControl.value" (click)="selectJobsFilters($event)"
+                        style="background-color: rgba(0, 44, 126, 0.05);">
+              {{ jobSearchControl.value }}
+            </mat-option>
+            <mat-option *ngFor="let job of filteredJobsOptions | async" [value]="job.get('title')" (click)="selectJobsFilters($event)">
+              {{ job.get('title') }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+
+
+      <form class="example-form recruiters filters-form">
+        <mat-form-field class="example-full-width">
+          <mat-select placeholder="Search recruiter" [formControl]="recruiterSearchControl">
+            <mat-option *ngFor="let recruiter of clientRecruiters" [value]="recruiter.name"  (click)="selectJobsByRecruiterFilter($event)">
+              {{ recruiter.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+
+      <mat-form-field class="filters-form">
+        <mat-select placeholder="Sort by" [(ngModel)]="sortBy">
+          <mat-option class="select-option" [value]="1">Posted date</mat-option>
+          <mat-option class="select-option" [value]="2">Close to Fill</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- <form class="example-form recruiters">
+        <mat-form-field class="example-full-width">
+          <input type="text" placeholder="Search recruiter" aria-label="Recruiter" matInput [formControl]="recruiterSearchControl"
+            [matAutocomplete]="recruiterSearch" (keyup.enter)="selectJobsFilters($event)">
+          <button *ngIf="(offers && recruiterSearchControl && recruiterSearchControl.value)" class="clear_button" aria-label="Clear" (click)="clearButton(3)">
+            X
+          </button>
+          <mat-autocomplete #recruiterSearch="matAutocomplete">
+            <mat-option *ngFor="let recruiter of filteredRecruitersOptions | async" [value]="recruiter.name" (click)="selectJobsFilters($event)">
+              {{ recruiter.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+	  </form> -->
+
+      <form class="example-form skill filters-form">
+        <mat-form-field class="example-full-width">
+          <input type="text" placeholder="Skills search" aria-label="Skill" matInput [formControl]="skillSearchControl" [matAutocomplete]="skillsMenu"
+                 (keyup.enter)="selectJobsFilters($event)">
+          <!--<button *ngIf="(offers && skillSearchControl && skillSearchControl.value)" class="clear_button" aria-label="Clear" (click)="clearButton(2)">-->
+            <!--X-->
+          <!--</button>-->
+          <mat-autocomplete #skillsMenu="matAutocomplete">
+            <mat-option *ngIf="skillSearchControl.value && skillSearchControl.value.length > 0" [value]="skillSearchControl.value" (click)="selectJobsFilters($event)"
+                        style="background-color: rgba(0, 44, 126, 0.05);">
+              {{ skillSearchControl.value }}
+            </mat-option>
+            <mat-option *ngFor="let skill of filteredSkillsOptions | async" [value]="skill" (click)="selectJobsFilters($event)">
+              {{ skill }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+
+
+      <form class="example-form roles filters-form">
+        <mat-form-field class="example-full-width">
+          <mat-select placeholder="Roles search" [formControl]="roleSearchControl">
+            <mat-option *ngFor="let role of rolesArray" [value]="role"  (click)="selectJobsFilters($event)">
+              {{ role }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button *ngIf="roleSearchControl.value && roleSearchControl.value.length > 0" mat-raised-button (click)="resetAllFilter()" class="reset_button">Reset roles</button>
+      </form>
+      <!-- <form class="example-form role">
+        <mat-form-field class="example-full-width">
+          <input type="text" placeholder="Roles search" aria-label="Role" matInput [formControl]="roleSearchControl" [matAutocomplete]="rolesMenu"
+            (keyup.enter)="selectJobsFilters($event)">
+          <button *ngIf="(offers && roleSearchControl && roleSearchControl.value)" class="clear_button" aria-label="Clear" (click)="clearButton(4)">
+            X
+          </button>
+          <mat-autocomplete #rolesMenu="matAutocomplete">
+            <mat-option *ngFor="let role of filteredRolesOptions | async" [value]="role" (click)="selectJobsFilters($event)">
+              {{ role }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form> -->
+    </div>
+  </div>
+
+  <div class="buttons-wrap">
+    <mat-button-toggle-group [(ngModel)]="contractStatus" (change)="updateContracts()" [disabled]="isDataLoaded == Loading.loading">
+      <mat-button-toggle [value]="ContractStatus.active">
+        Published
+      </mat-button-toggle>
+      <mat-button-toggle [value]="ContractStatus.archived">
+        Archived
+      </mat-button-toggle>
+      <mat-button-toggle [value]="ContractStatus.draft">
+        Drafts
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+  <div *ngIf="isDataLoaded == Loading.success" style="min-height: 50vh;">
+    <div *ngIf="separatedOffers.length > 11" class="pagination_block">
+      <button mat-raised-button (click)="decreaseIndex()">
+        <</button>
+      <button mat-raised-button [disabled]="ind == 0" (click)="changePage(0)">1</button>
+      <button mat-raised-button [disabled]="ind == first || first != 1" (click)="changePage(first)">{{ first != 1 ? '...' : (first + 1) }}</button>
+      <button mat-raised-button [disabled]="ind == second" (click)="changePage(second)">{{ second + 1 }}</button>
+      <button mat-raised-button [disabled]="ind == third" (click)="changePage(third)">{{ third + 1 }}</button>
+      <button mat-raised-button [disabled]="ind == fourth" (click)="changePage(fourth)">{{ fourth + 1 }}</button>
+      <button mat-raised-button [disabled]="ind == fifth" (click)="changePage(fifth)">{{ fifth + 1}}</button>
+      <button mat-raised-button [disabled]="ind == sixth" (click)="changePage(sixth)">{{ sixth + 1}}</button>
+      <button mat-raised-button [disabled]="ind == seventh" (click)="changePage(seventh)">{{ seventh + 1 }}</button>
+      <button mat-raised-button [disabled]="ind == eighth" (click)="changePage(eighth)">{{ eighth + 1}}</button>
+      <button mat-raised-button [disabled]="ind == ninth || ninth != (separatedOffers.length - 2)" (click)="changePage(ninth)">{{ ninth != (separatedOffers.length - 2) ? '...' : (ninth + 1)}}</button>
+      <button mat-raised-button [disabled]="ind == (separatedOffers.length - 1)" (click)="changePage(separatedOffers.length - 1)">{{ separatedOffers.length }}</button>
+      <button mat-raised-button (click)="increaseIndex()">></button>
+    </div>
+    <div *ngIf="separatedOffers.length <= 11" class="pagination_block">
+      <button mat-raised-button (click)="decreaseIndex()">
+        <</button>
+      <button *ngFor="let count of separatedOffers" mat-raised-button (click)="changePage(separatedOffers.indexOf(count))" [disabled]="ind == separatedOffers.indexOf(count)">{{ separatedOffers.indexOf(count) + 1 }}</button>
+      <button mat-raised-button (click)="increaseIndex()">></button>
+    </div>
+    <div class="jobs-wrap" *ngFor="let offer of separatedOffers[ind]">
+      <div class="job-box-wrap">
+        <job-box [contract]="offer" (statusChange)="removeContractFromList($event)"></job-box>
+      </div>
+    </div>
+    <div *ngIf="separatedOffers.length > 11 && separatedOffers[ind].length > 2" class="pagination_block">
+      <button mat-raised-button (click)="decreaseIndex()">
+        <</button>
+      <button mat-raised-button [disabled]="ind == 0" (click)="changePage(0)">1</button>
+      <button mat-raised-button [disabled]="ind == first || first != 1" (click)="changePage(first)">{{ first != 1 ? '...' : (first + 1) }}</button>
+      <button mat-raised-button [disabled]="ind == second" (click)="changePage(second)">{{ second + 1 }}</button>
+      <button mat-raised-button [disabled]="ind == third" (click)="changePage(third)">{{ third + 1 }}</button>
+      <button mat-raised-button [disabled]="ind == fourth" (click)="changePage(fourth)">{{ fourth + 1 }}</button>
+      <button mat-raised-button [disabled]="ind == fifth" (click)="changePage(fifth)">{{ fifth + 1}}</button>
+      <button mat-raised-button [disabled]="ind == sixth" (click)="changePage(sixth)">{{ sixth + 1}}</button>
+      <button mat-raised-button [disabled]="ind == seventh" (click)="changePage(seventh)">{{ seventh + 1 }}</button>
+      <button mat-raised-button [disabled]="ind == eighth" (click)="changePage(eighth)">{{ eighth + 1}}</button>
+      <button mat-raised-button [disabled]="ind == ninth || ninth != (separatedOffers.length - 2)" (click)="changePage(ninth)">{{ ninth != (separatedOffers.length - 2) ? '...' : (ninth + 1)}}</button>
+      <button mat-raised-button [disabled]="ind == (separatedOffers.length - 1)" (click)="changePage(separatedOffers.length - 1)">{{ separatedOffers.length }}</button>
+      <button mat-raised-button (click)="increaseIndex()">></button>
+    </div>
+    <div *ngIf="separatedOffers.length <= 11 && separatedOffers[ind].length > 2" class="pagination_block">
+      <button mat-raised-button (click)="decreaseIndex()">
+        <</button>
+      <button *ngFor="let count of separatedOffers" mat-raised-button (click)="changePage(separatedOffers.indexOf(count))" [disabled]="ind == separatedOffers.indexOf(count)">{{ separatedOffers.indexOf(count) + 1 }}</button>
+      <button mat-raised-button (click)="increaseIndex()">></button>
+    </div>
+  </div>
+
+  <div *ngIf="isDataLoaded == Loading.loading" style="min-height: 50vh;">
+    Loading...
+  </div>
+
+  <div *ngIf="isDataLoaded == Loading.error" style="min-height: 50vh;">
+    <div [ngSwitch]="contractStatus">
+      <span *ngSwitchCase="ContractStatus.active">You don't have published jobs</span>
+      <span *ngSwitchCase="ContractStatus.archived">You don't have archived jobs</span>
+      <span *ngSwitchCase="ContractStatus.draft">You don't have drafts</span>
+      <span *ngSwitchDefault>You don't have contracts on this stage yet</span>
+    </div>
+  </div>
+</section>
+<!-- <div class = "triangle-wrap">
+  <div class="feedback_triangle" (click)="feedbackCreation()">
+      <div class="feedback_text">
+        FeedBack+
+      </div>
+  </div>
+</div> -->

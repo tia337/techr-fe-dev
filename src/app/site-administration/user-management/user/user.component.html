@@ -1,0 +1,45 @@
+<section class="user-inner">
+    <div class="back-button-wrap">
+        <a class="back-button" [routerLink]="['/', 'administration', 'user-management',{ outlets: {'user-management-sections': ['team-members']} }]">Back to users</a>
+    </div>
+    <div class="content-wrap">
+        <div *ngIf="user" class="user-info">
+            <div class="general-info">
+                <div class="name">{{user.get('firstName')}} {{user.get('lastName')}}</div>
+                <div *ngIf="user.get('email')" class="email">Email address: {{user.get('email')}}</div>
+            </div>
+            <div class="access-level">
+                Application rights
+                <div>
+                    <div class="access-level-label">{{accessLevel}}</div>
+                    <!-- </div>[ngSwitch]="user.get('HR_Access_Level')">
+          <div class="access-level-label" *ngSwitchCase="1">Site-admin</div>
+          <div class="access-level-label" *ngSwitchCase="2">Admin</div>
+          <div class="access-level-label" *ngSwitchCase="3">Contributor</div> -->
+                </div>
+            </div>
+            <!-- <div class="followers">
+
+                People following {{user.get('firstName')}}'s job activity
+                <table class="followers-table">
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Status</th>
+                        <th>E-mail address</th>
+                    </tr>
+                    <tr>
+                        <td>Test</td>
+                        <td>test</td>
+                        <td>Test</td>
+                    </tr>
+                </table>
+
+            </div> -->
+        </div>
+        <div class="edit-buttons">
+            <button *ngIf="user && userId != currentUser.id" class="edit-button deactivate" (click)="deactivateUser()">Deactivate</button>
+            <button class="edit-button access-level" (click)="openModal()" *ngIf="userId != currentUser.id">Edit access level</button>
+        </div>
+    </div>
+
+</section>

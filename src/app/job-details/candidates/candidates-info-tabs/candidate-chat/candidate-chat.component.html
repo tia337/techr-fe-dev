@@ -1,0 +1,38 @@
+<!-- <div class="controls" *ngIf="isCanWrite"> -->
+<div class="chat">
+    <div class="chat-controls">
+        <!-- <input class="input-message" type="text" [(ngModel)]="message" (keypress)="keypressHandler($event)" placeholder="Type your message here..."> -->
+        <textarea #textarea autosize class="input-message" type="text" [(ngModel)]="message" placeholder="Type your message here… ctrl+Enter or click send" (keypress)="keypressHandler($event)">Type your message here… ctrl+Enter or click send</textarea>
+    </div>
+    <div class="buttons">
+        <div class="buttons-upload">
+            <!-- <input type="file" class="upload" (change)="sendValue($event)" #uploadBtn/> -->
+            <button mat-icon-button (click)="upload()">
+                    <i class="material-icons">attach_file</i>
+			</button>
+            <input type="file" class="upload" (change)="sendValue($event)" #uploadBtn/>
+        </div>
+        <button mat-button class="buttons-send" (click)="sendMessage()" type="submit" name="action">Send</button>
+    </div>
+    <!-- <div class="email-thread-info" *ngIf="threadIds">
+        <app-thread-gmail *ngFor=" let threadId of threadIds " [userId]='userId' [contractId]='contractId' [threadId]='threadId'></app-thread-gmail>
+    </div> -->
+
+    <div class="chat-container" *ngIf="hasMessages === Loading.success">
+        <span *ngFor="let msg of chat; let i = index ">
+            <app-chat-message *ngIf = "!msg.threadId" [msg]='msg'></app-chat-message>
+            <app-thread-gmail *ngIf = "msg.threadId" [userId]='userId' [contractId]='contractId' [threadId]='msg.threadId' [msg]='msg' ></app-thread-gmail>
+            <!-- <p>test {{msg.threadId}}</p> -->
+        </span>
+    </div>
+    <div class="chat-container" *ngIf="hasMessages === Loading.loading">
+        <!-- <app-preloader></app-preloader> -->
+        <div class="loading">
+            <div>Loading...</div>
+        </div>
+    </div>
+
+    <div class="chat-container" *ngIf="hasMessages === Loading.error">
+        There are no messages.
+    </div>
+</div>

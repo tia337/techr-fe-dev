@@ -1,0 +1,38 @@
+<div class = "size-box" *ngIf = "scorings">
+  <div *ngFor= "let scor of scorings">
+    <div class = "flex-container">
+      <div class = "photo-container">
+        <img src = "{{scor.get('Author').get('avatarURL')}}">
+      </div>
+      <div class = "description-container">
+        <p>
+          <strong *ngIf = "scor.get('Author').id != curUserId">{{scor.get("Author").get("firstName")}} {{scor.get("Author").get("lastName")}}</strong>
+          <strong *ngIf = "scor.get('Author').id == curUserId">Me</strong>
+          <star-rating [ngModel] = "scor.get('WeightedScore')" size = "m" [disabled]="true"></star-rating>
+          <span *ngIf = "scor.get('FinalVerdict') === FinalVerdict.definitely"><img class="verdict-icon" src="../../../../../assets/icons/definitely.svg" alt="Definitely"/></span>
+          <span *ngIf = "scor.get('FinalVerdict') === FinalVerdict.yes"><img class="verdict-icon" src="../../../../../assets/icons/yes.svg" alt="Yes"/></span>
+          <span *ngIf = "scor.get('FinalVerdict') === FinalVerdict.notSure"><img class="verdict-icon" src="../../../../../assets/icons/not-sure.svg" alt="Not Sure"/></span>
+        </p>
+        <p *ngIf = "scorings">
+          {{scor.get("FinalVerdictNotes")}}
+        </p>
+        <button *ngIf="isMyScoring(scor)" mat-button (click)="editScorecard(scor)" class="matButtons edit-btn">
+          <mat-spinner *ngIf = "editLoader.indexOf(scor.id) !== -1"  [diameter] = '25' [strokeWidth] = '3' class = "spinner-edit"></mat-spinner> 
+          <span *ngIf = "editLoader.indexOf(scor.id) === -1" >Edit Scoring</span>
+        </button>
+        <button mat-button (click)="mailIt(scor)" class="matButtons">
+            <mat-spinner *ngIf = "emailLoader.indexOf(scor.id) !== -1"  [diameter] = '25' [strokeWidth] = '3' class = "spinner-edit"></mat-spinner> 
+          <span *ngIf = "emailLoader.indexOf(scor.id) === -1" >E-mail scoring</span>
+        </button>
+        <button mat-button (click)="previewScoring(scor)" class="matButtons">
+            <mat-spinner *ngIf = "previewLoader.indexOf(scor.id) !== -1"  [diameter] = '25' [strokeWidth] = '3' class = "spinner-edit"></mat-spinner> 
+          <span *ngIf = "previewLoader.indexOf(scor.id) === -1" >See Scoring</span>
+        </button>
+        <p *ngIf = "scorings && scor"><strong>Scorecard: </strong>{{scor.get("Scorecard").get("ScorecardTitle")}}</p>
+      </div>
+      <div class = "time-container">
+        <p *ngIf = "scorings">{{scor.get("updatedAt") | date }}</p>
+      </div>
+    </div>
+  </div>
+</div>

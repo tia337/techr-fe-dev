@@ -1,0 +1,104 @@
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/mixins';
+@import '../../../../../../styles/inputs';
+@import '../../../../../../styles/buttons';
+
+.update-card-overlay {
+  @include overlay;
+
+  .update-card-inner {
+    max-width: 40%;
+    border: 1px solid $black;
+    @include border-radius(5px);
+    margin: 20px auto;
+    background-color: $white;
+    padding: $default-padding;
+    min-width: 30%;
+
+
+    .update-card-form {
+
+      .update-card-form-wrap {
+
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-justify-content(space-between);
+        @include flex-align-items(flex-start);
+
+        .card-info {
+          @include flex(1, 0, auto);
+          max-width: 50%;
+          padding: 0 15px;
+
+          .card-number {
+            border: 1px solid $dark-grey;
+            padding: 0 6px;
+            font-size: $font-size-16;
+            height: 32px;
+            line-height: 30px;
+            @include border-radius(5px);
+            color: $dark-grey;
+            //margin: 5px 0;
+            box-sizing: border-box;
+          }
+
+          .expiration-date {
+            margin: 5px 0;
+            @include displayFlex;
+            @include flex-direction(row);
+            @include flex-align-items(center);
+            .separator {
+              margin: 0 3px;
+              font-weight: 100;
+              font-size: $font-size-24;
+              color: $dark-grey;
+            }
+
+          }
+
+          .card-exp-date {
+            width: auto !important;
+
+          }
+
+          .card-exp-year {
+            width: auto !important;
+          }
+        }
+
+        .billing-address-info {
+          @include flex(1, 0, auto);
+          max-width: 50%;
+          padding: 0 15px;
+
+        }
+
+        .update-card-input-label {
+          font-size: $font-size-16;
+          padding: 5px 0;
+          width: 100%;
+          display: inline-block;
+        }
+
+        .update-card-input {
+          @include border-radius(5px);
+        }
+
+      }
+
+      .submit-button-wrap {
+        width: 100%;
+        margin-top: 15px;
+        @include displayFlex;
+        @include flex-justify-content(center);
+        @include flex-align-items(center);
+        .submit-button {
+          min-width: 150px;
+          width: 30%;
+        }
+      }
+
+    }
+
+  }
+}

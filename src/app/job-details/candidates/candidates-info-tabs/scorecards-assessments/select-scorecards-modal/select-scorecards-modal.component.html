@@ -1,0 +1,28 @@
+<div class="select-scorecards-overlay" (click)="close()">
+  <div class="select-scorecards-wrap" (click)="$event.stopPropagation()">
+
+    <table class="scorecards-assessments-table">
+      <tr class="scorecard-table-headers">
+        <th>Title</th>
+        <th>Interview Stage</th>
+        <th>Created On</th>
+        <th>Created By</th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr *ngFor="let scorecard of scorecards" class="scorecard-row">
+        <td class="scorecard-row-cell">{{scorecard.get('ScorecardTitle')}}</td>
+        <td class="scorecard-row-cell" [ngSwitch]="scorecard.get('Scorecard_type')">
+          <span *ngSwitchCase="1">Phone Screening</span>
+          <span *ngSwitchCase="2">F2F Interview</span>
+        </td>
+        <td class="scorecard-row-cell">{{scorecard.get('createdAt') | date:'shortDate'}}</td>
+        <td class="scorecard-row-cell">{{scorecard.get('Author').get('firstName')}} {{scorecard.get('Author').get('lastName')}}</td>
+        <td *ngIf = "attachedScorecards.indexOf(scorecard.id) === -1" class="scorecard-row-cell scorecard-buttons" (click)="attachScorecard(scorecard)">Attach</td>
+        <td *ngIf = "attachedScorecards.indexOf(scorecard.id) !== -1" class="scorecard-row-cell">Attached</td>
+        <td class="scorecard-row-cell scorecard-buttons" (click)="previewScorecard(scorecard)">Preview</td>
+      </tr>
+    </table>
+
+  </div>
+</div>

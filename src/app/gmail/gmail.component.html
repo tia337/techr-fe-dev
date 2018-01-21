@@ -1,0 +1,269 @@
+<div class="wrap">
+    <button class="area" (click)="closePopup()"></button>
+    <div class="template-details">
+        <section class="template">
+            <div class="template-body">
+                <div class="template-title">From:</div>
+                <mat-form-field class="template-body-value">
+                    <input #eFrom matInput placeholder="From" disabled [(ngModel)]="userEmail">
+                </mat-form-field>
+            </div>
+            <div #eTo class="template-body">
+                <div class="template-title">To:</div>
+                <mat-form-field class="template-body-value" *ngIf="userId">
+                    <input matInput placeholder="To" [(ngModel)]="candidateEmail" disabled>
+                </mat-form-field>
+                <div class="template-copy-form" *ngIf="!userId">
+                    <mat-form-field class="template-body-value">
+                        <input #eTo2 matInput placeholder="To" [(ngModel)]="queryTO" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'TO')" (blur)="activeTOUnSet()" (keyup)="keyRnIPressing($event, 'TO',eTo2)">
+                    </mat-form-field>
+                    <div class="suggestions suggestions-to" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activatedDropdown == 'TO'">
+                        <div class="suggestions-cc-wrap">
+                            <div class="inner-area" #scrollpanel>
+                                <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectTO(item, eTo2)">
+                                    <td class="name">
+                                        <a *ngIf="i != selectionRnICounter" class="item">{{item}}</a>
+                                        <a *ngIf="i == selectionRnICounter" class="item-selected">{{item}}</a>
+                                    </td>
+                                </tr>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="selected-items-container" [ngClass]="{'selected-no-display': selectedTO.length <= 0}">
+                        <div class="selected-items" *ngFor="let item of selectedTO">
+                            <div class="selected-skill">
+                                <div class="selected" (click)="TORemove(item)">
+                                    <div class="sel-skill-cont">
+                                        <span>{{item}}</span>
+                                    </div>
+                                    <div class="delete-title">Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="template-body">
+                <div class="template-title">CC:</div>
+                <div class="template-copy-form">
+                    <mat-form-field class="template-body-value">
+                        <input #eCc matInput placeholder="CC" [(ngModel)]="queryCC" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'CC')" (blur)="activeCCUnSet()" (keyup)="keyRnIPressing($event, 'CC',eCc)">
+                    </mat-form-field>
+                    <div class="suggestions suggestions-cc" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activatedDropdown =='CC'">
+                        <div class="suggestions-cc-wrap">
+                            <div class="inner-area" #scrollpanel>
+                                <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectCC(item, eCc)">
+                                    <td class="name">
+                                        <a *ngIf="i != selectionRnICounter" class="item">{{item}}</a>
+                                        <a *ngIf="i == selectionRnICounter" class="item-selected">{{item}}</a>
+                                    </td>
+                                </tr>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="selected-items-container" [ngClass]="{'selected-no-display': selectedCC.length <= 0}">
+                        <div class="selected-items" *ngFor="let item of selectedCC">
+                            <div class="selected-skill">
+                                <div class="selected" (click)="CCRemove(item)">
+                                    <div class="sel-skill-cont">
+                                        <span>{{item}}</span>
+                                    </div>
+                                    <div class="delete-title">Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="template-body">
+                <div class="template-title">BCC:</div>
+                <div class="template-copy-form">
+                    <mat-form-field class="template-body-value">
+                        <input #eBcc matInput placeholder="BCC" [(ngModel)]="queryBCC" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'BCC')" (blur)="activeBCCUnSet()" (keyup)="keyRnIPressing($event, 'BCC',eBcc)">
+                    </mat-form-field>
+                    <div class="suggestions suggestions-cc" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activatedDropdown =='BCC'">
+                        <div class="suggestions-cc-wrap">
+                            <div class="inner-area" #scrollpanel>
+                                <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectBCC(item, eBcc)">
+                                    <td class="name">
+                                        <a *ngIf="i != selectionRnICounter" class="item">{{item}}</a>
+                                        <a *ngIf="i == selectionRnICounter" class="item-selected">{{item}}</a>
+                                    </td>
+                                </tr>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="selected-items-container" [ngClass]="{'selected-no-display': selectedBCC.length <= 0}">
+                        <div class="selected-items" *ngFor="let item of selectedBCC">
+                            <div class="selected-skill">
+                                <div class="selected" (click)="BCCRemove(item)">
+                                    <div class="sel-skill-cont">
+                                        <span>{{item}}</span>
+                                    </div>
+                                    <div class="delete-title">Remove</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="template-body" [style.display]="!(reply) ? 'flex' : 'none'">
+                <div class="template-title">Subject:</div>
+                <mat-form-field class="template-body-value">
+                    <input type="text" #eSubject placeholder="Subject" matInput>
+                </mat-form-field>
+            </div>
+            <div class="template-body" *ngIf="isSaving">
+                <div class="template-title">Title:</div>
+                <mat-form-field class="template-body-value">
+                    <input [(ngModel)]="templateTitle" type="text" class="isActive" placeholder="Title" matInput>
+                </mat-form-field>
+            </div>
+            <div class="template-body" *ngIf="isSaving">
+                <div class="template-title">Type:</div>
+                <div class="template-body">
+                    <section class="select-predefined template-body-value">
+                        <button mat-button [matMenuTriggerFor]="types">{{savingTemplateType}}</button>
+                        <mat-menu #types="matMenu">
+                            <button #one mat-menu-item (click)="selectTemplateType(one)">Job offer Templates</button>
+                            <button #two mat-menu-item (click)="selectTemplateType(two)">Employee Referral Templates</button>
+                            <button #three mat-menu-item (click)="selectTemplateType(three)">Job Interview Templates</button>
+                            <button #four mat-menu-item (click)="selectTemplateType(four)">Rejection Templates</button>
+                        </mat-menu>
+                    </section>
+                </div>
+            </div>
+            <div class="template-body" *ngIf="!isSaving && needTemplates">
+                <div class="template-title">Template:</div>
+                <section class="select-predefined template-body-value" *ngIf="!isSaving">
+                    <!-- Menu templates -->
+                    <button mat-button [matMenuTriggerFor]="categories">{{selectedText}}
+                    </button>
+                    <mat-menu #categories="matMenu">
+                        <button *ngIf="(templates_standard[0] && templates_standard[0].length>0) || (templates_standard[1] && templates_standard[1].length>0) || (templates_standard[2] && templates_standard[2].length>0) || (templates_standard[3] && templates_standard[3].length>0)"
+                            mat-menu-item [matMenuTriggerFor]="standard">Standard</button>
+                        <button *ngIf="(templates_custom[0] && templates_custom[0].length>0) || (templates_custom[1] && templates_custom[1].length>0) || (templates_custom[2] && templates_custom[2].length>0) || (templates_custom[3] && templates_custom[3].length>0)" mat-menu-item
+                            [matMenuTriggerFor]="custom">{{companyName}}</button>
+                    </mat-menu>
+                    <!-- Standard  -->
+                    <mat-menu #standard="matMenu">
+                        <button *ngIf="templates_standard[0] ? (templates_standard[0].length>0) : null" mat-menu-item [matMenuTriggerFor]="jobOfferStd">Job offer Templates</button>
+                        <button *ngIf="templates_standard[1] ? (templates_standard[1].length>0) : null" mat-menu-item [matMenuTriggerFor]="employeeReferralStd">Employee Referral Templates</button>
+                        <button *ngIf="templates_standard[2] ? (templates_standard[2].length>0) : null" mat-menu-item [matMenuTriggerFor]="jobInterviewStd">Job Interview Templates</button>
+                        <button *ngIf="templates_standard[3] ? (templates_standard[3].length>0) : null" mat-menu-item [matMenuTriggerFor]="rejectionStd">Rejection Templates</button>
+                    </mat-menu>
+                    <mat-menu #jobOfferStd="matMenu">
+                        <button *ngFor='let template of templates_standard[0]' (click)="loadTemplate(template,eSubject,eBody)" mat-menu-item>{{template.get('Title')}}</button>
+                    </mat-menu>
+                    <mat-menu #employeeReferralStd="matMenu">
+                        <button *ngFor='let template of templates_standard[1]' (click)="loadTemplate(template,eSubject,eBody)" mat-menu-item>{{template.get('Title')}}</button>
+                    </mat-menu>
+                    <mat-menu #jobInterviewStd="matMenu">
+                        <button *ngFor='let template of templates_standard[2]' (click)="loadTemplate(template,eSubject,eBody)" mat-menu-item>{{template.get('Title')}}</button>
+                    </mat-menu>
+                    <mat-menu #rejectionStd="matMenu">
+                        <button *ngFor='let template of templates_standard[3]' (click)="loadTemplate(template,eSubject,eBody)" mat-menu-item>{{template.get('Title')}}</button>
+                    </mat-menu>
+                    <!-- Custom  -->
+                    <mat-menu #custom="matMenu">
+                        <button *ngIf="templates_custom[0] ? (templates_custom[0].length>0) : null" mat-menu-item [matMenuTriggerFor]="jobOfferC">Job offer Templates</button>
+                        <button *ngIf="templates_custom[1] ? (templates_custom[1].length>0) : null" mat-menu-item [matMenuTriggerFor]="employeeReferralC">Employee Referral Templates</button>
+                        <button *ngIf="templates_custom[2] ? (templates_custom[2].length>0) : null" mat-menu-item [matMenuTriggerFor]="jobInterviewC">Job Interview Templates</button>
+                        <button *ngIf="templates_custom[3] ? (templates_custom[3].length>0) : null" mat-menu-item [matMenuTriggerFor]="rejectionC">Rejection Templates</button>
+                    </mat-menu>
+                    <mat-menu #jobOfferC="matMenu">
+                        <button *ngFor='let template of templates_custom[0]' (click)="loadTemplate(template,eSubject,eBody)" mat-menu-item>{{template.get('Title')}}</button>
+                    </mat-menu>
+                    <mat-menu #employeeReferralC="matMenu">
+                        <button *ngFor='let template of templates_custom[1]' (click)="loadTemplate(template,eSubject,eBody)" mat-menu-item>{{template.get('Title')}}</button>
+                    </mat-menu>
+                    <mat-menu #jobInterviewC="matMenu">
+                        <button *ngFor='let template of templates_custom[2]' (click)="loadTemplate(template,eSubject,eBody)" mat-menu-item>{{template.get('Title')}}</button>
+                    </mat-menu>
+                    <mat-menu #rejectionC="matMenu">
+                        <button *ngFor='let template of templates_custom[3]' (click)="loadTemplate(template,eSubject,eBody)" mat-menu-item>{{template.get('Title')}}</button>
+                    </mat-menu>
+                </section>
+                <section class="save-template">
+                    <button mat-button (click)='savingAsTemplate()'>Save as template</button>
+                </section>
+                <section class="select-predefined template-body-value" *ngIf="!isSaving">
+                    <button mat-button [matMenuTriggerFor]="drafts" *ngIf="isSignedIn">Select Draft
+                    </button>
+                    <mat-menu #drafts="matMenu">
+                        <button *ngFor='let draft of allDrafts' mat-menu-item (click)="loadDraft(draft,eSubject,eBody)">[{{draft.date}}] {{draft.placeholder}}</button>
+                    </mat-menu>
+                </section>
+            </div>
+            <div class="template-body">
+                <div class="template-title">Email:</div>
+                <div class="template-body-value"><textarea #eBody class="isActive"></textarea></div>
+            </div>
+        </section>
+        <div class="buttons">
+            <div class="template-title"></div>
+            <div class="privatness">
+                <mat-form-field *ngIf="!isSaving">
+                    <mat-select placeholder="" [(ngModel)]="isPrivate">
+                        <mat-option value="false">Visible to your team</mat-option>
+                        <mat-option value="true">Private (Only visible to you)
+                            <mat-icon class="fa fa-lock"></mat-icon>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="icon-lock" *ngIf="isPrivate==='true'">
+                    <i class="fa fa-lock" aria-hidden="true"></i>
+                </div>
+            </div>
+            <button mat-icon-button (click)="upload()" *ngIf="!isSaving">
+                <i class="material-icons">attach_file</i>
+                </button>
+            <div class="filesUploaded" *ngIf="!isSaving">
+                <div *ngFor="let file of uploadedFiles"><a target="_blanc" href="{{file && file.documentFile && file.documentFile._url?file.documentFile._url : ''}}">{{file && file.fileName ? file.fileName : ''}}</a></div>
+            </div>
+            <!-- dsfg   -->
+            <button class="send" (click)="sendEmail({from: eFrom, to:eTo, cc: eCc, bcc: eBcc, sub: eSubject, body: eBody})" *ngIf="!isSaving">
+                <span *ngIf = "emailSending">
+                    <mat-spinner  [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+                </span>
+                Send
+            </button>
+            <input type="file" multiple="multiple" class="upload" (change)="sendValue($event)" #uploadBtn/>
+        </div>
+        <div class="saving-buttons" *ngIf="isSaving">
+            <button class="goback" mat-button (click)="goBack()">Go Back</button>
+            <button class="save" (click)="saveTemplate({sub: eSubject, body: eBody})" mat-button>Save</button>
+        </div>
+        <div class="singIn-info" *ngIf="!isSignedIn">
+            <div class="mail-info">
+                <p>Send personalised e-mail to candidates from your Bussiness email accounts</p>
+                <p>What service you want to integrate?</p>
+            </div>
+            <div class="mail-provider">
+                <div><img src="../../assets/img/gmail-logo.png" alt="Gmail"></div>
+                <div>Gmail</div>
+                <div>
+                    <label class="switch"> 
+					<div>
+						<input *ngIf = 'isSignedIn' type = "checkbox"  checked disabled>
+						<input *ngIf = '!isSignedIn' type = "checkbox" (click)="signInGapi()">
+						<span class = "slider round"></span>  
+					</div>
+				</label>
+                </div>
+            </div>
+            <!-- <div class="mail-provider">
+                <div><img src="../../assets/img/outlook-logo.ico" alt="Outlook"></div>
+                <div>Outlook</div>
+                <div>
+                    <label class="switch"> 
+					<div>
+						<input type = "checkbox"   [checked] = "isIntegrated_outlook"  disabled>
+						<span class = "slider round"></span>  
+					</div>
+				</label>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>

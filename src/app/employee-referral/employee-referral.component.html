@@ -1,0 +1,138 @@
+<div class="empl-ref-main">
+	<div class="employee-header">
+		<img src="./../../assets/images/EmployeeReferralsProgram/referral.png" alt="">
+		<div class="text">
+			<h1>Employee Referral Programs</h1>
+			<h2>
+				Creating company cultures in which employees takes responsibility for recruitment and appreciate its importance to the company
+			</h2>
+		</div>
+	</div>
+	<div class="tabs">
+		<button class="tab" [class.active]="tab == 1" (click)="samples()">Samples</button>
+		<button class="tab" [class.active]="tab == 2" (click)="company()">{{ companyName }}</button>
+		<button class="extra_tab" [class.active]="tab == 3" (click)="rfActivity()">Referral Activity</button>
+	</div>
+	<div *ngIf="tab == 1" class="samples_block">
+		<div class="just_tooltips">
+			<div class="title">
+				Title
+			</div>
+			<div class="type">
+				Type
+			</div>
+			<div class="author">
+				Author
+			</div>
+			<div class="edit">
+				Create from Sample
+			</div>
+		</div>
+		<div *ngFor="let er of empRefsSamplesArray" class="samples">
+			<div class="sample_title" [routerLink]="['/empref_create', er.id]">
+				{{ er.title }}
+			</div>
+			<div class="sample_type">
+				{{ er.type.name }}
+			</div>
+			<div class="sample_author">
+				{{ er.author }}
+			</div>
+			<div class="edit">
+				<a [routerLink]="['/empref_create', er.id]">Create</a>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="tab == 2" class="client_emp_refs">
+		<div class="just_tooltips">
+			<div class="title">
+				Title
+			</div>
+			<div class="type">
+				Type
+			</div>
+			<div class="author">
+				Author
+			</div>
+			<div class="last_edited">
+				Last Edited
+			</div>
+			<div class="edit">
+				Edit
+			</div>
+		</div>
+		<div *ngFor="let er of empRefsArray" class="samples">
+			<div class="sample_title" [routerLink]="['/empref_custom', er.id]">
+				{{ er.title }}
+			</div>
+			<div class="sample_type">
+				{{ er.type.name }}
+			</div>
+			<div class="sample_author">
+				<div class="name">{{ er.author }}</div>
+				<div class="date">{{ er.postedAt.toLocaleDateString() }}</div>
+			</div>
+			<div class="last_edited">
+				<div class="name">{{ er.whoUpdateLast }}</div>
+				<div class="date">{{ er.updatedAt.toLocaleDateString() }}</div>
+			</div>
+			<div class="edit">
+				<button [routerLink]="['/empref_custom', er.id]">Edit</button>
+			</div>
+			<div class="remove">
+				<button (click)="removeProgram(er)">Remove</button>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="tab == 3 && empRefActivityArray != undefined" class="referral_activity">
+		<div class="activity_tooltips">
+			<div class="title">
+				<button (click)="sortByName()">Job title</button>
+			</div>
+			<div class="location">
+				<button>Job Location</button>
+			</div>
+			<div class="erp">
+				<button (click)="sortByProgram()">Program</button>
+			</div>
+			<div class="createdOn">
+				<button (click)="sortByCreationDate()">Created on</button>
+			</div>
+			<div class="filter">
+				<button (click)="sortByActivity()">On/Off</button>
+			</div>
+			<div class="number">
+				<button (click)="sortByReferrals()">Number of Referrals</button>
+			</div>
+		</div>
+		<div *ngFor="let ea of empRefActivityArray" class="activity_info">
+			<div class="title" [routerLink]="['/jobs', ea.id]">
+				<span matTooltip="Click for details...">{{ ea.get('title') }}</span>
+			</div>
+			<div class="location">
+				{{ ea.get('JobLocationFEinput') }}
+			</div>
+			<div class="erp">
+				<span *ngIf="ea.get('employeeReferralProgram')" matTooltip="{{ea.get('employeeReferralProgram').get('Description')}}">{{ ea.get('employeeReferralProgram').get('Title') }}</span>
+				<span *ngIf="!(ea.get('employeeReferralProgram'))" matTooltip="No Info">No ERP</span>
+			</div>
+			<div class="createdOn">
+				{{ ea.createdAt.toLocaleDateString() }}
+			</div>
+			<div class="filter">
+				{{ ea.get('isActiveForReferralPage') ? 'Active' : 'Inactive' }}
+			</div>
+			<div class="number">
+				{{ ea.count }}
+			</div>
+		</div>
+	</div>
+</div>
+<div class = "triangle-wrap">
+	<div class="feedback_triangle" (click)="feedbackCreation()">
+		<div class="feedback_text">
+			FeedBack+
+		</div>
+		<img class = "speaker" src = "../../../assets/icons/speaker.png">
+	</div>
+</div>

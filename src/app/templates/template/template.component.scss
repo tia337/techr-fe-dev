@@ -1,0 +1,35 @@
+@import '../../../styles/variables';
+@import '../../../styles/inputs';
+@import '../../../styles/mixins';
+@import '../../../styles/typography';
+.template {
+    &-name {
+        line-height: 2rem;
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.customEmail {
+    padding: 2%;
+    margin: 3% 0;
+    .template-name {
+        .email {
+            @include displayFlex();
+            @include flex-justify-content(space-between);
+            @include flex-align-items(baseline);
+            // &-title{
+            // }
+            &-author,
+            &-modification {
+                @include flex-basis(25%);
+                font-size: $font-size-12;
+                text-align: center;
+            }
+        }
+    }
+    &:hover {
+        background-color: whitesmoke;
+    }
+}

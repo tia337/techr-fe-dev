@@ -1,0 +1,35 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/inputs';
+
+:host {
+  margin: 0;
+  padding: 0;
+}
+.question-wrap {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  .question-index {
+    position: absolute;
+    top: 0;
+    left: 5px;
+    font-size: $font-size-16;
+  }
+  .question-field {
+    font-size: $font-size-14;
+    width: 100%;
+    display: block;
+    resize: none;
+    border: none;
+    margin: 0;
+    padding: 0 5px 0 calc(#{$font-size-16} + 25px);
+    // &:before {
+    //   content: 'Q:';
+    //   display: inline-block;
+    //   width: 100px;
+    //   height: 100px;
+    //   background-color: #f00;
+    // }
+
+  }
+}

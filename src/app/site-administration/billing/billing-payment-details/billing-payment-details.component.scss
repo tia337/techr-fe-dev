@@ -1,0 +1,56 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../../../../styles/typography';
+
+.payment-details-inner {
+  padding: $default-padding;
+  min-height: 100%;
+  @include displayFlex;
+  @include flex-direction(row);
+  .cards-wrap {
+    @include flex(1, 0, auto);
+    padding-right: 20px;
+
+    .payment-details-header {
+      width: 100%;
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-justify-content(flex-start);
+      @include flex-align-items(center);
+      padding: 10px 0;
+      margin-bottom: 30px;
+      border-bottom: 1px solid $x-dark-grey;
+    }
+
+    .card-wrap {
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-align-items(center);
+      @include flex-justify-content(flex-start);
+      padding: 5px 0;
+
+      .card {
+
+      }
+      .billing-block {
+        margin-left: 10px;
+        @include displayFlex;
+        @include flex-direction(column);
+        @include flex-align-items(flex-start);
+        @include flex-justify-content(space-around);
+        .billing-information {
+          margin-bottom: 5px;
+        }
+        .billing-contact {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+  .pci-logo-wrap {
+    @include flex(0, 0, 10%);
+    .pci-logo {
+      width: 100%;
+    }
+  }
+}

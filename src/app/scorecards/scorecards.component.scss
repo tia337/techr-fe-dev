@@ -1,0 +1,332 @@
+@import '../../styles/variables';
+@import '../../styles/inputs';
+@import '../../styles/mixins';
+@import '../../styles/typography';
+
+.scorecards-inner-page {
+  margin-bottom: 50px;
+  min-height: 100%;
+  padding: 20px;
+
+
+  .scorecards-header-wrap {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(center);
+    @include flex-justify-content(flex-start);
+    margin: 20px 0 30px 0;
+    .scorecard-header-icon {
+      font-size: $font-size-36;
+      margin-right: 10px;
+    }
+    .scorecards-header {
+
+    }
+  }
+  .scorecards-content {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    margin-bottom: 50px;
+
+    .scorecards-content-left-bar {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+
+      justify-content: space-between;
+
+      .scorecards-stages-wrap {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        margin-right: 10px;
+        .scorecards-stages-block {
+          flex: 1 0 auto;
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          height: 331px;
+
+
+          .scorecards-stage {
+            .icon-scorecard{
+              margin-top: 30px;
+              font-size: 1.1em;
+              text-align: center;
+            }
+            flex: 1 0 calc(100% / 3);
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px $dark-grey solid;
+            border-bottom: none;
+            background-color: $light-grey;
+            &.active {
+              background-color: darken($light-grey, 5%);
+            }
+            &:not(:last-child) {
+              border-right: none;
+            }
+            &.active:after {
+              content: '';
+              display: inline-block;
+              position: absolute;
+              transform-origin: center bottom;
+              // transform: translate(-50%, 100%);
+              transform: rotate(45deg) translate(-50%, 100%);
+              bottom: 0;
+              left: 50%;
+              width: 25px;
+              height: 25px;
+              background-color: darken($light-grey, 5%);
+
+              // border-top: 1px solid transparent;
+              border-bottom: 2px solid $dark-grey;
+              border-top: 2px solid transparent;
+              border-right: 2px solid $dark-grey;
+              border-left: 2px solid transparent;
+              // transform: rotate(45deg) translate(-50%, calc(141.5% - 3px));
+            }
+          }
+        }
+
+        .stages-forms {
+          padding-top: 25px;
+          background-color: $light-grey;
+          border: 2px solid $dark-grey;
+        }
+
+      }
+
+      .scorecards-filter-wrap {
+        margin-top: 20px;
+        // max-width: 60px;
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-justify-content(flex-start);
+        @include flex-align-items(center);
+        font-size: $font-size-16;
+        .scorecards-filter-dropdown {
+          margin-left: 10px;
+          width: auto;
+          max-width: 100px;
+          min-width: 80px;
+        }
+      }
+
+    }
+
+
+
+    .scorecards-preview {
+      margin-left: 10px;
+      flex: 1 0 auto;
+      max-width: 450px;
+
+      .scorecard-preview-sign {
+        padding: 5px 35px;
+        margin-bottom: 10px;
+        font-size: $font-size-16;
+        color: $x-dark-grey;
+        background-color: $light-grey;
+        display: inline-flex;
+        @include flex-direction(row);
+        @include flex-align-items(flex-start);
+        .scorecard-preview-arrow {
+          margin: 10px 0 0 10px;
+          transform: rotate(90deg);
+          width: 30px;
+          height: 30px;
+          background-repeat: no-repeat;
+          background-image: url('data:image/svg+xml;utf8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g><path fill="%23666666" stroke="none" d="m63.386,16.193l.002-.002c0.002-0.003 0.004-0.006 0.006-0.01 0.172-0.195 0.298-0.43 0.399-0.678 0.032-0.076 0.053-0.148 0.076-0.225 0.058-0.191 0.094-0.389 0.106-0.596 0.006-0.076 0.018-0.148 0.016-0.226 0-0.04 0.01-0.076 0.008-0.115-0.014-0.239-0.062-0.47-0.136-0.687-0.006-0.023-0.022-0.041-0.03-0.064-0.088-0.239-0.214-0.451-0.363-0.645-0.021-0.027-0.028-0.063-0.05-0.09l-10.311-12.146c-0.789-0.93-2.084-0.948-2.894-0.037-0.808,0.91-0.823,2.402-0.032,3.334l5.558,6.549c-8.121-1.076-16.104,0.633-16.481,0.717-24.646,4.467-42.087,27.227-38.88,50.736 0.159,1.164 1.028,1.992 2.019,1.992 0.106,0 0.212-0.009 0.32-0.027 1.116-0.203 1.878-1.409 1.704-2.696-2.857-20.94 13.056-41.282 35.537-45.358 0.103-0.024 8.351-1.794 16.117-0.574l-8.577,5.093c-1.005,0.598-1.398,2.02-0.881,3.177 0.516,1.159 1.748,1.608 2.756,1.017l13.52-8.028c0.183-0.111 0.347-0.25 0.491-0.411z"/></g></svg>');
+        }
+      }
+
+      .scorecard-preview-inner {
+        background-color: $white;
+        border-radius: 5px;
+        padding: 10px 7px;
+        border: 2px solid $dark-grey;
+        .top-block {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          font-size: $font-size-12;
+          .name {
+
+          }
+          .stage {
+
+          }
+        }
+        .position-title {
+          font-size: $font-size-16;
+          font-weight: 100;
+          display: flex;
+          justify-content: center;
+          padding: 10px 0 5px 0;
+        }
+        .areas {
+          .area {
+            font-size: $font-size-12;
+
+            border: 1px solid $dark-grey;
+
+            .area-header {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+              .area-title {
+                font-weight: bold;
+                padding: 7px;
+              }
+              .area-rating {
+
+              }
+            }
+
+
+            .question {
+              // font-size: $font-size-14;
+              padding: 2px 7px 2px 10px;
+              font-weight: 100;
+              border-top: 1px solid $dark-grey;
+              // border-bottom: 1px solid $dark-grey;
+            }
+          }
+        }
+        .weighted-score-wrap {
+          font-size: $font-size-12;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          align-items: center;
+          margin: 7px 0;
+          .weighted-score /deep/ .rating {
+            margin-bottom: 0;
+          }
+        }
+
+        .scorecard-summary-wrap {
+          border: 1px solid $dark-grey;
+          font-size: $font-size-12;
+          .scorecard-summary-header {
+            border-bottom: 1px solid $dark-grey;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            // padding: 7px;
+            .scorecard-summary-label {
+              flex: 1 0 50%;
+              padding: 3px;
+              font-weight: bold;
+
+            }
+            .scorecard-summary-buttons-wrap {
+              flex: 1 0 50%;
+              display: flex;
+              flex-direction: row;
+              .move-button {
+                flex: 1 0 auto;
+                border-left: 1px solid $dark-grey;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              }
+            }
+          }
+
+          .scorecard-summary-final-thoughts-wrap {
+            padding: 5px;
+            .scorecard-summary-final-thoughts {
+              display: block;
+              border: none;
+              width: 100%;
+              resize: none;
+              margin: 0;
+              font-size: $font-size-12;
+              color: $dark-grey;
+
+            }
+
+          }
+        }
+
+      }
+
+    }
+  }
+
+  .existing-scorecards-wrap {
+    width: 100%;
+    margin-top: 35px;
+
+    .existing-scorecards-table {
+      width: 100%;
+      border: none;
+      .column-header {
+        text-align: left;
+      }
+      .scorecard-row {
+        td {
+          cursor: pointer;
+        }
+        .edit-button {
+          color: transparent;
+          //cursor: pointer;
+        }
+        &:hover {
+          background-color: $light-grey;
+          .edit-button {
+            color: $black;
+          }
+        }
+      }
+    }
+  }
+
+
+}
+
+@media print {
+  .scorecards-inner-page {
+    visibility: hidden;
+  }
+}
+
+.feedback_triangle {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-bottom: 80px solid #007ab6;
+	border-left: 80px solid transparent;
+  z-index: 999999;
+  cursor: pointer;
+	.feedback_text {
+		@include transform-rotate(-45deg);
+		position: absolute;
+		right: -1px;
+		top: 38px;
+		color: rgb(255, 255, 255);
+		font-weight: bold;
+    opacity: 1;
+    cursor: pointer;
+	}
+  }
+  .triangle-wrap{
+    position: relative;
+  }
+  .speaker{
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 20px;
+    transform: rotate(-45deg);
+  }

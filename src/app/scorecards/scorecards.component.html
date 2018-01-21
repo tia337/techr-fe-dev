@@ -1,0 +1,263 @@
+<section class="scorecards-inner-page">
+
+  <div class="scorecards-header-wrap">
+    <i class="fa fa-address-card-o scorecard-header-icon" aria-hidden="true"></i>
+    <span class="header">
+      <span class="bold">Scorecards:</span>
+      Standardise candidate assessment across your business
+    </span>
+  </div>
+
+  <div class="scorecards-content">
+    <div class="scorecards-content-left-bar">
+      <div class="scorecards-stages-wrap">
+        <div class="scorecards-stages-block">
+          <div class="scorecards-stage" [class.active]="currentStage === 1" ><i class="fa fa-check-square-o fa-5x" aria-hidden="true"></i>
+            <a class = "icon-scorecard">Select interview stage</a></div>
+          <div class="scorecards-stage" [class.active]="currentStage === 2" >
+              <i class="fa fa-pencil-square-o fa-5x" aria-hidden="true"></i>
+              <a class = "icon-scorecard">Create areas to assess</a>
+            </div>
+          <div class="scorecards-stage" [class.active]="currentStage === 3" ><i class="fa fa-clipboard fa-5x" aria-hidden="true"></i>
+            <a class = "icon-scorecard">Preview and create scorecard</a>
+          </div>
+        </div>
+        <div class="stages-forms">
+          <router-outlet name="scorecard-stage" (activate)="scorecardCreated($event)"></router-outlet>
+        </div>
+      </div>
+
+
+      <!-- #existing-scorecards-filters -->
+      <div *ngIf="currentStage === 1 && scorecards && scorecards.length > 0" class="scorecards-filter-wrap">
+      Your scorecard kit:
+        <mat-select class="scorecards-filter-dropdown input-dropdown" [(ngModel)]="scorecardsFilter">
+          <mat-option [value]="1">Active</mat-option>
+          <mat-option [value]="0">Archived</mat-option>
+        </mat-select>
+      </div>
+
+
+    </div>
+
+
+    <div class="scorecards-preview">
+
+      <div class="scorecard-preview-sign">
+        This is how a scorecard looks like
+        <div class="scorecard-preview-arrow" ></div>
+
+      </div>
+
+
+      <div class="scorecard-preview-inner">
+        <div class="top-block">
+          <div class="name">
+            Candidate Name
+          </div>
+          <div class="stage">
+            Phone Interview stage
+          </div>
+        </div>
+        <div class="position-title">
+          Scorecard for Senior CRM Developer
+        </div>
+        <div class="areas">
+
+          <!--edit-areaarea -->
+          <div class="area">
+            <div class="area-header">
+              <div class="area-title">Willingness to find a new role</div>
+              <div class="area-rating">
+                <star-rating [disabled]="true" size="s"></star-rating>
+                <!-- <star-rating-comp size="small" starType="svg" staticColor="default" [labelVisible]="false"  [step]="0.5" [rating]="5" [showHalfStars]="true"></star-rating-comp> -->
+              </div>
+
+            </div>
+
+            <!-- question -->
+            <div class="question">
+              What is your current situtation? Why did you applied to our company?
+            </div>
+            <!-- /question -->
+
+          </div>
+          <!--edit-areaarea -->
+
+          <!--edit-areaarea -->
+          <div class="area">
+
+            <div class="area-header">
+              <div class="area-title">Role fit</div>
+              <div class="area-rating">
+                <star-rating [disabled]="true" size="s"></star-rating>
+                <!-- <star-rating-comp size="small" starType="svg" staticColor="default" [labelVisible]="false"  [step]="0.5" [rating]="3.5" [showHalfStars]="true"></star-rating-comp> -->
+              </div>
+
+            </div>
+
+            <!-- question -->
+            <div class="question">
+              What is the main work that you have done on your previous company as Sitecore Architect?
+            </div>
+            <!-- /question -->
+
+            <!-- question -->
+            <div class="question">
+              How big was the team?
+            </div>
+            <!-- /question -->
+
+          </div>
+          <!--edit-areaarea -->
+
+          <!--edit-areaarea -->
+          <div class="area">
+
+            <div class="area-header">
+              <div class="area-title">Location/Work balance fit</div>
+              <div class="area-rating">
+                <star-rating [disabled]="true" size="s"></star-rating>
+                <!-- <star-rating-comp size="small" starType="svg" staticColor="default" [labelVisible]="false"  [step]="0.5" [rating]="4" [showHalfStars]="true"></star-rating-comp> -->
+              </div>
+
+            </div>
+
+
+
+            <!-- question -->
+            <div class="question">
+              How much normally do you commute to your current job?
+            </div>
+            <!-- /question -->
+
+            <!-- question -->
+            <div class="question">
+              Would you be willing to commute a bit extra for the right opportunity?
+            </div>
+            <!-- /question -->
+
+          </div>
+          <!--edit-areaarea -->
+
+          <!--edit-areaarea -->
+          <div class="area">
+
+            <div class="area-header">
+              <div class="area-title">Technical fit</div>
+              <div class="area-rating">
+                <star-rating [disabled]="true" size="s"></star-rating>
+                <!-- <star-rating-comp size="small" starType="svg" staticColor="default" [labelVisible]="false"  [step]="0.5" [rating]="3" [showHalfStars]="true"></star-rating-comp> -->
+              </div>
+
+            </div>
+
+
+
+            <!-- question -->
+            <div class="question">
+              How long have you worked with Microsoft Dynamics?
+            </div>
+            <!-- /question -->
+
+            <!-- question -->
+            <div class="question">
+              What versions you have more experience with?
+            </div>
+            <!-- /question -->
+
+            <!-- question -->
+            <div class="question">
+              Have you integrated Dynamics with other platforms in the past?
+            </div>
+            <!-- /question -->
+
+          </div>
+          <!--edit-areaarea -->
+
+
+
+        </div>
+
+        <div class="weighted-score-wrap">
+          Weighted Score
+          <star-rating [disabled]="true" size="s"></star-rating>
+          <!-- <star-rating-comp class="weighted-score" size="small" starType="svg" staticColor="default" [labelVisible]="false"  [step]="0.5" [rating]="4.5" [showHalfStars]="true"></star-rating-comp> -->
+        </div>
+
+        <div class="scorecard-summary-wrap">
+          <div class="scorecard-summary-header">
+            <div class="scorecard-summary-label">Should we move this candidate to the next stage?</div>
+            <div class="scorecard-summary-buttons-wrap">
+
+              <div class="move-button">Definitely</div>
+              <div class="move-button">Yes</div>
+              <div class="move-button">Not Sure</div>
+
+            </div>
+          </div>
+          <div class="scorecard-summary-final-thoughts-wrap">
+            <div class="scorecard-summary-final-thoughts">
+              Give your final thoughts on whatever you think this candidate should move to the next stage or not. Tag colleagues by using @
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- /preview -->
+
+  </div>
+
+  <div *ngIf="currentStage === 1 && scorecards && scorecards.length > 0" class="existing-scorecards-wrap">
+    <table class="existing-scorecards-table" matSort (matSortChange)="sortData($event)">
+      <tr>
+        <th class="column-header" mat-sort-header="title">Title</th>
+        <th class="column-header" mat-sort-header="type">Scorecard Type</th>
+        <th class="column-header" mat-sort-header="createdAt">Created On</th>
+        <th class="column-header" mat-sort-header="author">Created By</th>
+        <!-- -->
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr *ngFor="let scorecard of sortedScorecards | filterScorecards:scorecardsFilter" class="scorecard-row">
+        <td (click)="previewScorecard(scorecard)">{{scorecard.get('ScorecardTitle')}}</td>
+        <td [ngSwitch]="scorecard.get('Scorecard_type')" (click)="previewScorecard(scorecard)">
+          <span *ngSwitchCase="1">Phone Screening</span>
+          <span *ngSwitchCase="2">F2F Interview</span>
+        </td>
+        <td (click)="previewScorecard(scorecard)">{{scorecard.get('createdAt') | date:'shortDate'}}</td>
+        <td *ngIf="scorecard.has('Author') && scorecard.get('Author').has('firstName') && scorecard.get('Author').has('lastName')" (click)="previewScorecard(scorecard)">
+          {{scorecard.get('Author').get('firstName')}} {{scorecard.get('Author').get('lastName')}}
+        </td>
+
+        <td *ngIf="!scorecard.has('Author') || !scorecard.get('Author').has('firstName') || !scorecard.get('Author').has('lastName')" (click)="previewScorecard(scorecard)">
+          UNKNOWN USER
+        </td>
+        <!-- -->
+        <td class="edit-button" (click)="previewScorecard(scorecard)">Preview</td>
+        <td *ngIf="isMyScorecard(scorecard)" class="edit-button" (click)="editScorecard(scorecard)">Edit</td>
+        <td *ngIf="isMyScorecard(scorecard) && scorecard.get('Status') == ScorecardStatus.active" class="edit-button" (click)="archiveScorecard(scorecard)">Archive</td>
+        <td *ngIf="isMyScorecard(scorecard) && scorecard.get('Status') == ScorecardStatus.archived" class="edit-button" (click)="activateScorecard(scorecard)">Activate</td>
+        <td *ngIf="isMyScorecard(scorecard)" class="edit-button" (click)="deleteScorecard(scorecard)">Delete</td>
+      </tr>
+    </table>
+  </div>
+
+
+
+</section>
+
+<div class = "triangle-wrap">
+    <div class="feedback_triangle" (click)="feedbackCreation()">
+        <div class="feedback_text">
+            FeedBack+
+        </div>
+        <img class = "speaker" src = "../../../assets/icons/speaker.png">
+    </div>
+</div>
+
+<!--<edit-scorecard [scorecardId]="scorecardId"></edit-scorecard>-->

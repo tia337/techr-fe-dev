@@ -1,0 +1,156 @@
+@import '../../../../../styles/mixins';
+@import '../../../../../styles/variables';
+@import '../../../../../styles/typography';
+@import '../../../../../styles/buttons';
+
+.scorecards-assessments-inner {
+  padding: 10px;
+  .scorecards-title {
+
+  }
+
+  .scorecards-wrap {
+    background-color: #FFFFFF;
+    border-radius: 5px;
+    padding: 10px 7px;
+    border: 2px solid #C0C0C0;
+    .scorecard-wrap:not(:first-child){
+      margin-top: 10px;
+    }
+    .scorecard-wrap {
+      @include displayFlex;
+      @include flex-justify-content(space-between);
+      @include flex-align-items(center);
+      .scorecard-title {
+        width: 25%;
+      }
+      .scorecard-stage {
+        width: 20%;
+        text-align: right;
+      }
+      .scorecard-button {
+        width: 18%;
+        cursor: pointer;
+        text-align: right;
+      }
+      .edit-button:hover{
+        font-weight: bold;
+      }
+      .score-button:hover{
+        font-weight: bold;
+      }
+      .preview-button:hover{
+        font-weight: bold;
+      }
+      .remove-wrap{
+        cursor: pointer;
+        background: #e3e5e6;
+        background-image: -webkit-linear-gradient(top, #e3e5e6, #d1d2d3);
+        background-image: -moz-linear-gradient(top, #e3e5e6, #d1d2d3);
+        background-image: -ms-linear-gradient(top, #e3e5e6, #d1d2d3);
+        background-image: -o-linear-gradient(top, #e3e5e6, #d1d2d3);
+        background-image: linear-gradient(to bottom, #e3e5e6, #d1d2d3);
+        -webkit-border-radius: 6;
+        -moz-border-radius: 6;
+        border-radius: 6px;
+        font-family: Arial;
+        color: #000000;
+        font-size: 14px;
+        padding: 5px 8px 5px 8px;
+        text-decoration: none;
+        outline:none;
+      }
+      .remove-wrap:hover{
+        background-image: -webkit-linear-gradient(top, #c5c6c7, #9b9d9e);
+        background-image: -moz-linear-gradient(top, #c5c6c7, #9b9d9e);
+        background-image: -ms-linear-gradient(top, #c5c6c7, #9b9d9e);
+        background-image: -o-linear-gradient(top, #c5c6c7, #9b9d9e);
+        background-image: linear-gradient(to bottom, #c5c6c7, #9b9d9e);
+        text-decoration: none;
+      }
+      .remove-wrap:active{
+        box-shadow: 0 4px 8px 0 rgb(103, 105, 107), 0 6px 20px 0 rgb(103, 105, 107);
+      }
+    }
+  }
+}
+.select-scorecard-btn{
+
+}
+
+.select-scorecard-btn {
+  cursor: pointer;
+  background: #e3e5e6;
+  background-image: -webkit-linear-gradient(top, #e3e5e6, #d1d2d3);
+  background-image: -moz-linear-gradient(top, #e3e5e6, #d1d2d3);
+  background-image: -ms-linear-gradient(top, #e3e5e6, #d1d2d3);
+  background-image: -o-linear-gradient(top, #e3e5e6, #d1d2d3);
+  background-image: linear-gradient(to bottom, #e3e5e6, #d1d2d3);
+  -webkit-border-radius: 6;
+  -moz-border-radius: 6;
+  border-radius: 6px;
+  font-family: Arial;
+  color: #000000;
+  font-size: 16px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+}
+
+.select-scorecard-btn:hover {
+  background: #c5c6c7;
+  background-image: -webkit-linear-gradient(top, #c5c6c7, #9b9d9e);
+  background-image: -moz-linear-gradient(top, #c5c6c7, #9b9d9e);
+  background-image: -ms-linear-gradient(top, #c5c6c7, #9b9d9e);
+  background-image: -o-linear-gradient(top, #c5c6c7, #9b9d9e);
+  background-image: linear-gradient(to bottom, #c5c6c7, #9b9d9e);
+  text-decoration: none;
+}
+
+.select-scorecard-btn:active{
+  box-shadow: 0 4px 8px 0 rgb(103, 105, 107), 0 6px 20px 0 rgb(103, 105, 107);
+}
+
+.create-scorecard-btn {
+  margin-left: 20px;
+  cursor: pointer;
+  background: #e3e5e6;
+  background-image: -webkit-linear-gradient(top, #e3e5e6, #d1d2d3);
+  background-image: -moz-linear-gradient(top, #e3e5e6, #d1d2d3);
+  background-image: -ms-linear-gradient(top, #e3e5e6, #d1d2d3);
+  background-image: -o-linear-gradient(top, #e3e5e6, #d1d2d3);
+  background-image: linear-gradient(to bottom, #e3e5e6, #d1d2d3);
+  -webkit-border-radius: 6;
+  -moz-border-radius: 6;
+  border-radius: 6px;
+  font-family: Arial;
+  color: #000000;
+  font-size: 16px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  outline:none;
+}
+
+.create-scorecard-btn:hover {
+  background: #c5c6c7;
+  background-image: -webkit-linear-gradient(top, #c5c6c7, #9b9d9e);
+  background-image: -moz-linear-gradient(top, #c5c6c7, #9b9d9e);
+  background-image: -ms-linear-gradient(top, #c5c6c7, #9b9d9e);
+  background-image: -o-linear-gradient(top, #c5c6c7, #9b9d9e);
+  background-image: linear-gradient(to bottom, #c5c6c7, #9b9d9e);
+  text-decoration: none;
+}
+.create-scorecard-btn:active{
+  box-shadow: 0 4px 8px 0 rgb(103, 105, 107), 0 6px 20px 0 rgb(103, 105, 107);
+}
+
+.buttons-container{
+  margin-top: 10px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.nowrap{
+  white-space: nowrap;
+}

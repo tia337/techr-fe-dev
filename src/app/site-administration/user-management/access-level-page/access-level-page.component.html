@@ -1,0 +1,36 @@
+<section class="access-level-inner">
+
+
+    <div class="back-button-wrap">
+        <a class="back-button" [routerLink]="['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['permissions'] } }]" skipLocationChange>Back to permissions home</a>
+    </div>
+
+    <div class="access-level-info">
+        <div class="access-level-names">
+            <div class="al-name">{{currentAccessLevel.name}}</div>
+            <div class="al-label">{{currentAccessLevel.name}}</div>
+        </div>
+        <div class="access-level-description">{{currentAccessLevel.rights}}</div>
+    </div>
+
+    <div class="members-section" *ngIf="users && users.length != 0">
+        <h3>Memebers <span class="members-count">{{users.length}}</span></h3>
+
+
+        <table>
+            <tr>
+                <th>Full Name</th>
+                <th>E-mail address</th>
+                <th></th>
+            </tr>
+            <tr *ngFor="let user of users">
+                <td class="name">{{user.get('firstName')}} {{user.get('lastName')}}</td>
+                <td>{{user.get('Work_email')}}</td>
+                <td>
+                    <div class="edit-access" (click)="openModal(user.id)" *ngIf="user.id != currentUser.id">Edit access</div>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</section>

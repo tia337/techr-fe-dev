@@ -1,0 +1,88 @@
+<header>
+  <img class="logo" routerLink="/" src="../../assets/img/swipe_in_hr.png" />
+
+  <div class="logo-wrap">
+    <img *ngIf="currentUser && clientLogo" class="client-logo" routerLink="/" src="{{clientLogo._url}}"/>
+  </div>
+
+  <div class="buttons-wrap">
+    <div *ngIf="!currentUser" class="linkedin-signin-button" (click)="signIn()">
+      <img src="../../assets/img/linkedin-logo-icon.png"/>
+      <a class="sign-in" style="white-space:nowrap">Sign In</a>
+      <a style="white-space:nowrap">with LinkedIn</a>
+    </div>
+
+    <div *ngIf="currentUser" class="profile-icons-wrap">
+      <span class="cart-span" [ngClass]="{'animation-cart': animationActive === true}" (click)="redirect()">
+        <!-- <i class="fa fa-shopping-cart" aria-hidden="true" (click) = "redirect()" ></i> -->
+        <i class="shopping-cart-icon material-icons ">shopping_cart</i>
+        <!-- <img class = "" (click) = "redirect()" src = "../../assets/icons/sh-cart.png"> -->
+        <p class="cartamount">
+          <a style="white-space:nowrap">{{cartAmount}} items</a>
+          <br>
+          <a *ngIf="currency == ''" style="white-space:nowrap">
+            total: {{CartTotal}}
+          </a>
+          <a *ngIf="currency!= ''" style="white-space:nowrap">
+            total: {{ CartTotal | currency:currency:true:'1.2-2'}}
+          </a>
+        </p>
+      </span>
+      <span class="option-span">
+        <!-- <span class = "bell-span">
+          <mat-icon class="top-bar-button fa fa-bell-o bell-icon" routerLink="/" ></mat-icon>
+        </span> -->
+        <span class="settings-span" (mouseenter)="openAdminMenu()" (mouseleave)="closeAdminMenu($event)" [ngClass]="{'settings-span-hovered': menuOpened == true}">
+          <mat-icon class="top-bar-button fa fa-cog settings-icon"></mat-icon>
+        </span>
+        <!-- <span class = "chat-span">
+          <i class="material-icons sms-icon top-bar-button">chat</i>
+        </span> -->
+      </span>
+      <span class="profile-span">
+        <img *ngIf="currentUser.get('avatarURL')" routerLink="/" class="profile-pic" src="{{currentUser.get('avatarURL')}}" />
+        <img *ngIf="!currentUser.get('avatarURL')" routerLink="/" class="profile-pic" src="../../assets/img/default-userpic.png"
+        />
+        <p class="user-name">{{currentUser.get('firstName')}}</p>
+        <button class="sign-out-btn" (click)="signOut()">
+          <a style="white-space:nowrap">Sign Out</a>
+        </button>
+      </span>
+    </div>
+
+  </div>
+
+
+  <div class="menu-wrap" (mouseleave)='closeAdminMenu()' [ngClass]="{'fade-out': closeAnim == true, 'menu-open': menuOpened == true}">
+    <section class="menu-section site-administration">
+      <div class="section-header">
+        <a routerLink="/administration">Site Administration</a>
+      </div>
+      <ul>
+        <li>
+          <a routerLink="/administration/company-settings" routerLinkActive="active-link" (click)="closeAdminMenu()">Company settings</a>
+        </li>
+        <li>
+          <a routerLink="/administration/user-management" routerLinkActive="active-link" (click)="closeAdminMenu()">User management & Permissions</a>
+        </li>
+        <!-- <li><a routerLink="/administration/jobs-settings" routerLinkActive="active-link" (click) = "closeForLinks()">Jobs settings</a></li> -->
+        <li>
+          <a routerLink="/administration/subscriptions" routerLinkActive="active-link" (click)="closeAdminMenu()">Subscriptions</a>
+        </li>
+        <li>
+          <a routerLink="/administration/billing" routerLinkActive="active-link" (click)="closeAdminMenu()">Billing</a>
+        </li>
+        <li>
+          <a routerLink="/administration/app-integrations" routerLinkActive="active-link" (click)="closeAdminMenu()">App Integrations</a>
+        </li>
+        <!--  -->
+
+
+      </ul>
+    </section>
+    <!-- <section class="menu-section site-administration">
+    <div class="section-header">Import Candidates</div>
+  </section> -->
+  </div>
+  <!-- *ngIf="currentUser" -->
+</header>

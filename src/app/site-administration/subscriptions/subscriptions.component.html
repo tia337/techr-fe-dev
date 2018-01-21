@@ -1,0 +1,270 @@
+<h1 class = "subsctiptions-title" > Pricing Subscriptions </h1>
+<!-- <table>
+  <thead>
+    <tr>
+      <th>test th</th> 
+      <th>test th</th> 
+    </tr>
+  </thead>
+  <tr>
+    <td>test td</td>
+    <td>test td</td>
+  </tr>
+  
+</table> -->
+<!-- <p class = "sticky-cont">test</p> -->
+
+<table>
+  <tr>
+    <th class = "our-plans"><img class = "our-plans-img" src = "../../assets/icons/our-plans.PNG"></th>
+    <th class = "free-trial-plan"><div class = "sticky"><img *ngIf = "trialActive" class = "chosed-tick" src = "../../assets/icons/tick.png">free</div></th>
+    <th class = "standard-plan"><div class = "sticky"><img *ngIf = "activePlan == 'standard'" class = "chosed-tick" src = "../../assets/icons/tick.png">standard</div></th>
+    <th class = "professional-plan"><div class = "sticky"><img *ngIf = "activePlan == 'professional'" class = "chosed-tick" src = "../../assets/icons/tick.png">professional</div></th>
+    <th class = "last enterprise-plan"><div class = "sticky">enterprise</div></th>
+  </tr>
+  <tr>
+    <td></td>
+    <td class = "" valign="top"><div class = ""><a class = "prices">{{standardPrice[1]}}0</a><br><span class = "price-description"> user/month </span></div></td>
+    <td class = "top-td" valign="top"><div class = "top-td-div"><a class = "prices">{{standardPrice[1]}}{{standardPrice[0]/12}}</a>
+      <span class = "price-description">Per user/month when billed annualy. <i>{{standardPrice[1]}}{{standardMonthPrice[0]}} when billed monthly</i></span></div>
+    </td>  
+    <td class = "top-td" valign="top">
+      <div class = "top-td-div">
+      <a class = "prices">{{professionalPrice[1]}}{{professionalPrice[0]/12}}</a>
+      <span class = "price-description">Per user/month when billed annualy. <i>{{professionalPrice[1]}}{{professionalMonthPrice[0]}} when billed monthly</i></span>
+      </div>
+    </td>
+    <td class = "last contact-sales-title" ><i><strong>Contact Sales</strong></i></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td class="text-description" valign="top">Try SwipeIn <strong>fully featured at no cost</strong> during 15 days.
+    </td>
+    <td class="text-description" valign="top">
+      For Small and Medium tech businesses with <strong>recruitment teams <a style = "white-space:nowrap">of 1 or 2 consultant</a></strong>.
+    </td>
+    <td class="text-description" valign="top">
+      Ideal for <strong>recruitment teams of 2 or more consultants.</strong> Benefit from Team features.
+    </td>
+    <td class = "last text-description" valign="top">
+      Ideal for <strong>Enterprises</strong>. Import your talent database into SwipeIn. 
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><button *ngIf = "trialActive" class = "buy-trial">On Free plan</button></td> 
+    <td>
+      <button *ngIf = "!activeSubscription" (click) = "redirect(); setNewTarif('standard', standardPrice[0])" class = "buy">Buy standard</button>
+      <button *ngIf = "activePlan == 'standard'" class = "buy-green">On Plan</button>
+      <button *ngIf = "activePlan == 'professional'" (click) = "redirectUpgrade('standard')" class = "buy-dark">Downgrade</button>
+    </td>
+    <td>
+      <button *ngIf = "!activeSubscription" (click) = "redirect(); setNewTarif('professional', professionalPrice[0])" class = "buy">Buy professional</button>
+      <button *ngIf = "activePlan == 'professional'" class = "buy-green">On Plan</button>
+      <button *ngIf = "activePlan == 'standard'" (click) = "redirectUpgrade('professional')" class = "buy-dark">Upgrade</button>
+    </td>
+    <td class = "last"><button class = "contact-sales" (click) = "contactUs()">Contact Sales</button></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+        <p *ngIf = "trialActive" class = "text-under-btn"><strong><i>
+          <a *ngIf = "trialPeople"> {{trialPeople}}</a> users<br>    
+          {{client.get('DaysTrialLeft')}} days trial left<br>  
+          <a [routerLink] = "['/', 'administration', 'billing']" class = "billing-link">Go to billing information</a></i></strong>
+        </p>
+    </td>
+    <td>
+      <p *ngIf = "activePlan == 'standard'" class = "text-under-btn"><strong><i>
+        {{activeSubscription.get("PaidUsers")}} users<br>
+        Paid <a *ngIf="activeSubscription.get('PlanInterval') == 'month'"> Monthly </a>
+             <a *ngIf="activeSubscription.get('PlanInterval') == 'year'"> Annualy </a>
+             <br>
+             <a class = "blue" *ngIf="activeSubscription.get('PlanInterval') == 'month'" (click) = "setNewPayingPlan('standard', 'year')"> Upgrade to Annual (get 2 month free)</a> 
+             <a class = "blue" *ngIf="activeSubscription.get('PlanInterval') == 'year'" (click) = "setNewPayingPlan('standard', 'month')"> Downgrade to Monthly </a></i></strong>
+      </p>
+    </td>
+    <td>
+      <p *ngIf = "activePlan == 'professional'" class = "text-under-btn"><strong><i>
+        {{activeSubscription.get("PaidUsers")}} users<br>
+        Paid <a *ngIf="activeSubscription.get('PlanInterval') == 'month'"> Monthly </a>
+             <a *ngIf="activeSubscription.get('PlanInterval') == 'year'"> Annualy </a>
+             <br>
+             <a class = "blue" *ngIf="activeSubscription.get('PlanInterval') == 'month'" (click) = "setNewPayingPlan('professional', 'year')"> Upgrade to Annual (get 2 month free)</a>
+             <a class = "blue" *ngIf="activeSubscription.get('PlanInterval') == 'year'" (click) = "setNewPayingPlan('professional', 'month')"> Downgrade to Monthly </a></i></strong>
+      </p>
+    </td>
+    <td class = "last"></td>
+  </tr>
+  <tr class = "black-line">
+    <td class = "black"><h4>Integrations</h4></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+  </tr>
+  <tr>
+    <td class = "categories">Job Boards Integration</td>
+    <td></td>
+    <td>Up to 4 integrations</td>
+    <td>Unlimited</td>
+    <td class = "last">Unlimited</td>
+  </tr>
+  <tr>
+    <td class = "categories">Candidate screening tools</td>
+    <td></td>
+    <td>Up to 2 integrations</td>
+    <td>Unlimited</td>
+    <td class = "last">Unlimited</td>
+  </tr>
+  <tr>
+    <td class = "categories">Programming & IT skills assessment tools</td>
+    <td></td>
+    <td>1 integration</td>
+    <td>Unlimited</td>
+    <td class = "last">Unlimited</td>
+  </tr>
+  <tr>
+    <td class = "categories">Psychometric assessment tools</td>
+    <td></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td class = "last"><img class = "done" src = "../../assets/icons/done.png"></td>
+  </tr>
+  <tr class = "black-line">
+    <td class = "black"><h4>Team features</h4></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+  </tr>
+  <tr>
+    <td class = "categories">Follow teem member activities</td>
+    <td></td>
+    <td></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td class = "last"><img class = "done" src = "../../assets/icons/done.png"></td>
+  </tr>
+  <tr>
+    <td class = "categories">Tag colleagues on candidate notes @</td>
+    <td></td>
+    <td></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td class = "last"><img class = "done" src = "../../assets/icons/done.png"></td>
+  </tr>
+  <tr>
+    <td class = "categories">E-mail candidate Scorecard results  to members outside of SwipeIn</td>
+    <td></td>
+    <td></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td class = "last"><img class = "done" src = "../../assets/icons/done.png"></td>
+  </tr>
+  <tr class = "black-line">
+    <td class = "black" nowrap><h4>Sourcing Inteliegence</h4></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+  </tr>
+  <tr>
+    <td class = "categories">Automated candidate suggestion</td>
+    <td></td>
+    <td></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td class = "last"><img class = "done" src = "../../assets/icons/done.png"></td>
+  </tr>
+  <tr>
+    <td class = "categories">International resultsach</td>
+    <td></td>
+    <td></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td class = "last"><img class = "done" src = "../../assets/icons/done.png"></td>
+  </tr>
+  <tr class = "black-line">
+    <td class = "black"><h4>Operational</h4></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+  </tr>
+  <tr>
+    <td class = "categories">Scorecards</td>
+    <td></td>
+    <td>Up to 5</td>
+    <td>Up to 15</td>
+    <td class = "last">Unlimited<td>
+  </tr>
+  <tr class = "black-line">
+    <td class = "black"><h4>Cross Platform</h4></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+  </tr>
+  <tr>
+    <td class = "categories">The SwipeIn App</td>
+    <td></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td><img class = "done" src = "../../assets/icons/done.png"></td>
+    <td class = "last"><img class = "done" src = "../../assets/icons/done.png"></td>
+  </tr>
+  <tr class = "black-line">
+    <td class = "black"><h4>Others</h4></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+    <td class = "black"></td>
+  </tr>
+  <tr>
+    <td class = "categories">File storage</td>
+    <td></td>
+    <td>5GB per team member</td>
+    <td>10GB per team member</td>
+    <td class = "last">20GB per team member</td>
+  </tr>
+  <tr>
+    <td class = "categories">Audit</td>
+    <td></td>
+    <td>Not Included</td>
+    <td>Full system audit</td>
+    <td class = "last">Full system audit</td>
+  </tr>
+  <tr>
+    <td class = "categories">Request an archive of your data</td>
+    <td></td>
+    <td>2 archive copies annually</td>
+    <td>4 archive copies annually</td>
+    <td class = "last">1 archive copy monthly</td>
+  </tr>
+  <tr>
+    <td class = "categories">Support</td>
+    <td></td>
+    <td>9x5 standard</td>
+    <td>9x5 priority</td>
+    <td class = "last">12x7 priority</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><button *ngIf = "trialActive" class = "buy-trial">On Free plan</button></td>
+    <td>
+      <button *ngIf = "!activeSubscription" (click) = "redirect(); setNewTarif('standard', standardPrice[0])" class = "buy">Buy standard</button>
+      <button *ngIf = "activePlan == 'standard'" class = "buy-green">On Plan</button>
+      <button *ngIf = "activePlan == 'professional'" (click) = "redirectUpgrade('standard')" class = "buy-dark">Downgrade</button>
+    </td>
+    <td>
+      <button *ngIf = "!activeSubscription" (click) = "redirect(); setNewTarif('professional', professionalPrice[0])" class = "buy">Buy professional</button>
+      <button *ngIf = "activePlan == 'professional'" class = "buy-green">On Plan</button>
+      <button *ngIf = "activePlan == 'standard'" (click) = "redirectUpgrade('professional')" class = "buy-dark">Upgrade</button>
+    </td>
+    <td class = "last"><button class = "contact-sales" (click) = "contactUs()">Contact Sales</button></td>
+  </tr>
+</table>
+<div class = "triangle-wrap">
+    <div class="feedback_triangle" (click)="feedbackCreation()">
+        <div class="feedback_text">
+            FeedBack+
+        </div>
+        <img class = "speaker" src = "../../../assets/icons/speaker.png">
+    </div>
+</div>
+

@@ -1,0 +1,69 @@
+<!-- <div class="controls" *ngIf="isCanWrite"> -->
+<div class="notes">
+    <div class="notes-controls">
+        <!-- <textarea [mention]="teammates" [mentionConfig]="{labelKey: 'name'}" rows="3" class="input-message" type="text" [(ngModel)]="note" placeholder="Type to create a candidate note..." (keypress)="keypressHandler($event)" (input)="entering_text(note)">Type to create a candidate note...</textarea> -->
+        <!-- <div mwlTextInputHighlightContainer>
+
+            <textarea mwlTextInputElement [mention]="teammates" [mentionConfig]="{labelKey: 'name'}" rows="3" class="input-message" [(ngModel)]="note" placeholder="Type to create a candidate note..." (keypress)="keypressHandler($event)" #textarea>Type to create a candidate note...
+				</textarea>
+            <mwl-text-input-highlight [tags]="tags" [textInputElement]="textarea">
+            </mwl-text-input-highlight>
+        </div> -->
+        <!-- <div class="input-message" mwlTextInputHighlightContainer> -->
+        <textarea autosize class="input-message" [mention]="teammates" [mentionConfig]="{labelKey: 'name'}" placeholder="Type your note here… ctrl+Enter or click send" [(ngModel)]="note" #textarea (keypress)="keypressHandler($event)">
+			Type your note here… ctrl+Enter or click send</textarea>
+        <!-- <mwl-text-input-highlight #textareaHighlight [tags]="tags" [tagCssClass]="'bg-blue'" [textInputElement]="textarea"> -->
+        <!-- (tagMouseEnter)="addDarkClass($event.target)" (tagMouseLeave)="removeDarkClass($event.target)"  (tagClick)="tagClicked = $event.tag"-->
+        <!-- </mwl-text-input-highlight> -->
+        <!-- </div> -->
+        <!-- (keypress)="keypressHandler($event)" -->
+        <br>
+        <!-- <div class="alert alert-info" *ngIf="tagClicked">
+            Tag clicked! {{ tagClicked.data }}
+        </div> -->
+        <!-- #textArea (ngModelChange)="checkInputText($event)" -->
+        <!-- <div class="suggested_teammates" *ngIf="tagging"> -->
+        <!-- <div class="teammate" *ngFor="let teammate of teammates">
+                <div (mouseenter)="userOnFocusFunction(teammate,textArea)" class="user" id="{{teammate.id}}">{{teammate.get('firstName')}} {{teammate.get('lastName')}}</div>
+            </div> -->
+        <!-- </div> -->
+    </div>
+    <!-- replace(/@([^ ]+)/g, '<span class="atsign">@$1</span>'); -->
+    <div class="buttons">
+        <div class="buttons-left">
+            <mat-form-field>
+                <mat-select placeholder="" [(ngModel)]="isPrivate">
+                    <mat-option value="false">Visible to your team</mat-option>
+                    <mat-option value="true">Private (Only visible to you)
+                        <mat-icon class="fa fa-lock"></mat-icon>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="icon-lock" *ngIf="isPrivate==='true'">
+                <i class="fa fa-lock" aria-hidden="true"></i>
+            </div>
+        </div>
+        <div class="buttons-right">
+            <div class="buttons-right-upload">
+                <button mat-icon-button (click)="upload()">
+                        <i class="material-icons">attach_file</i>
+                </button>
+                <input type="file" class="upload" (change)="sendValue($event)" #uploadBtn/>
+            </div>
+            <button mat-button class="buttons-right-send" (click)="sendNote()" type="submit" name="action">Send</button>
+        </div>
+    </div>
+    <div class="notes-container" *ngIf="hasMessages === Loading.success">
+        <app-note-message id="note-{{note.objectId}}" *ngFor="let note of notes" [note]='note' [room]='room'></app-note-message>
+    </div>
+    <div class="notes-container" *ngIf="hasMessages === Loading.loading">
+        <!-- <app-preloader></app-preloader> -->
+        <div class="loading">
+			<div>Loading...</div>			
+        </div>
+    </div>
+
+    <div class="notes-container" *ngIf="hasMessages === Loading.error">
+        There are no notes.
+    </div>
+</div>

@@ -1,0 +1,191 @@
+<div class="billing-overview-inner" *ngIf="loader == Loading.success; else loading">  <!--*ngIf="upcomingInvoice && subscription"-->
+  <!--<div class="billing-info-wrap">-->
+
+    <div *ngIf="!isTrial" class="current-subscription">
+      <div class="current-subscription-header">
+        <div class="current-subscription-title header">
+          Next Billing period
+        </div>
+        <div class="current-subscription-date subheader" *ngIf="upcomingSubscriptionItem">
+          {{toDate(upcomingSubscriptionItem.period.start) | date:'shortDate'}} - {{toDate(upcomingSubscriptionItem.period.end) | date:'shortDate'}}
+        </div>
+      </div>
+
+      <div class="current-subscription-prices-wrap" *ngIf="upcomingInvoice && upcomingInvoice.total > 0 && upcomingInvoice.lines.data.length > 0">
+        <div *ngFor="let item of upcomingInvoice.lines.data" class="current-subscription-price">
+
+          <div class="subscription-name" *ngIf="item.description; else noDescription">
+            {{item.description}}
+          </div>
+
+          <ng-template #noDescription>
+            <div class="subscription-name">
+              {{item.plan.name}} subscription x {{item.quantity}} user(s)
+            </div>
+          </ng-template>
+
+
+
+          <div class="subscription-price">
+            {{item.amount / 100 | currency:item.currency:true:'1.0-2'}}
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="subscription && upcomingInvoice && upcomingInvoice.discount" class="subscriptions-summary">
+        <div class="summary-header bold">
+          <div class="discount-label" *ngIf="subscription.plan.interval === 'month'">
+            Next month free - offer redeemed
+          </div>
+          <div class="discount-label" *ngIf="subscription.plan.interval === 'year'">
+            2 months free on your renewal
+          </div>
+          <div class="discount">
+            - {{upcomingInvoice.discount.coupon.percent_off}}%
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <div *ngIf="upcomingInvoice && upcomingInvoice.total > 0" class="subscriptions-summary">
+        <div class="summary-header bold">
+          <div class="end-date">
+            <!--Total due on {{getLatestEndDate(addons) | date:'longDate'}}-->
+            Total due on {{toDate(upcomingInvoice.period_end) | date:'longDate'}}
+          </div>
+          <div class="total-price">
+            {{upcomingInvoice.total / 100 | currency:upcomingInvoice.currency:true:'1.0-2'}}
+          </div>
+        </div>
+
+        <div class="summary-description">
+          This estimate is based on your current users and add-ons, excluding tax.
+        </div>
+
+      </div>
+
+
+
+
+      <div *ngIf="(!upcomingInvoice || upcomingInvoice.total == 0) && subscription && subscription.cancel_at_period_end" class="subscriptions-summary canceled-subscription">
+        <div class="summary-header bold">
+          Your {{client.get('ClientName')}} SwipeIn subscription has been Cancelled.
+        </div>
+
+        <div class="summary-description">
+          Your subscription will end on {{toDate(subscription.current_period_end) | date:'shortDate'}}.
+          <br/>
+          You can still use SwipeIn until that date.
+        </div>
+
+        <div class="summary-description">
+          You can <a (click)="reactivateSubscription()">reactivate</a> your subscription before {{toDate(subscription.current_period_end) | date:'shortDate'}}.
+        </div>
+
+      </div>
+
+      <div *ngIf="subscription && subscription.plan.interval === 'month'" class="subscriptions-summary canceled-subscription">
+        <div class="summary-header bold">
+          <a class = 'save-button' (click) = "setNewPayingPlan()">Save 2 months by moving to Annual billing</a>
+          <!-- <a class = "save-button" (click) = "setNewPayingPlan()">Save Now!</a> -->
+        </div>
+      </div>
+
+      <div class="current-subscription-prices-wrap" *ngIf="!upcomingInvoice && !subscription && !upcomingSubscriptionItem">
+        <div class="summary-header bold">
+          You don't have an active subscription. <a>Subscribe now</a>
+        </div>
+      </div>
+
+      <img *ngIf="unpaidInvoice" class="watermark unpaid" src="../../../../assets/img/unpaid.svg">
+
+    </div>
+
+
+    <div *ngIf="isTrial" class="current-subscription">
+      <div class="current-subscription-header">
+        <div class="current-subscription-title header">
+          Billing Estimate
+        </div>
+      </div>
+
+      <div class="current-subscription-price">
+        <div class="subscription-name">Free trial. Hurray!</div>
+        <div class="subscription-price">{{0 | currency:'GBP':true:'1.0-2'}}</div>
+      </div>
+
+      <div class="trial-description">
+        Your Free Trial expires in {{client.get('DaysTrialLeft')}} days ({{client.get('TrialExpiresOn') | date:'shortDate'}})
+        <br/><br/>
+        Continue building your talent pipeline and posting jobs with SwipeIn.
+        <br/>
+        <a [routerLink]="['/', 'administration', 'subscriptions']"><b>Subscribe now</b></a> to one of our monthly or annual plans!
+      </div>
+
+    </div>
+
+
+    <div *ngIf="!isTrial" class="manage-subscriptions">
+      <div class="manage-subscriptions-menu">
+
+        <div *ngIf="dafaultCard && subscription && upcomingInvoice && upcomingInvoice.total > 0" class="card-description">
+          Your {{dafaultCard.brand}} ending in {{dafaultCard.last4}} will be charged on {{toDate(subscription.current_period_end) | date:'longDate'}}. You can track your usage on this page.
+        </div>
+
+        <div *ngIf="dafaultCard && (!upcomingInvoice || upcomingInvoice.total == 0)" class="card-description">
+          Your {{dafaultCard.brand}} ending in {{dafaultCard.last4}} will not be charged
+        </div>
+
+        <a class="menu-item" *ngIf="upcomingInvoice && upcomingInvoice.total > 0" (click) = "contactUs()">
+          Contact us about your bill
+        </a>
+        <div *ngIf="subscription" class="subscription-id-wrap">
+          Subscription ID is: {{subscription.id}}
+        </div>
+        <hr/>
+        <a *ngIf="upcomingInvoice && upcomingInvoice.total > 0 && parsePlan" class="menu-item" [routerLink]="['/', 'administration', 'subscriptions']" [ngSwitch]="parsePlan.get('NameSwipeIn')">
+          <span *ngSwitchCase="'professional'">
+            Downgrade
+          </span>
+          <span *ngSwitchCase="'standard'">
+            Upgrade
+          </span>
+        </a>
+        <a *ngIf="upcomingInvoice" class="menu-item" (click)="cancelSubscription()">
+          Cancel Subscription
+        </a>
+
+        <a *ngIf="subscription && (!upcomingInvoice || upcomingInvoice.total == 0)" class="menu-item">
+          Reactivate
+        </a>
+
+      </div>
+    </div>
+
+    <div *ngIf="isTrial" class="manage-subscriptions">
+      <div class="manage-subscriptions-menu">
+
+        <a class="menu-item" [routerLink]="['/', 'administration', 'subscriptions']">
+          Subscribe to a plan
+        </a>
+        <hr/>
+        <a class="menu-item" (click) = "contactUsSales()">
+          Contact us about our plans
+        </a>
+
+      </div>
+    </div>
+
+  <!--</div>-->
+
+</div>
+
+<div *ngIf="unpaidInvoice" class="unpaid-invoice">
+  You have unpaid invoice! <a (click)="payAnUnpaidInvoice()">pay now</a>
+</div>
+
+<ng-template #loading>
+  Loading...
+</ng-template>

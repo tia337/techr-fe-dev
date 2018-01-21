@@ -1,0 +1,18 @@
+<span (click)="showModal()">
+  <ng-content select="[modal-button]"></ng-content>
+</span>
+
+<div class="modal-back-screen hidden" (click)="hideModal()">
+  <div class="modal-wrap" (click)="$event.stopPropagation()">
+
+    <div class="modal-container">
+
+        <div class="cross" (click)="hideModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10.15 10.15"><line x1="0.4" y1="0.4" x2="9.8" y2="9.8"></line><line x1="9.8" y1="0.4" x2="0.4" y2="9.8"></line></svg>
+        </div>
+
+      <ng-content select="[modal-content]"></ng-content>
+
+    </div>
+  </div>
+</div>

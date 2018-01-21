@@ -1,0 +1,18 @@
+<fieldset class="rating" [disabled]="disabled === true">
+
+  <ng-template ngFor let-star [ngForOf]="starsValues" let-index="index">
+    <label class="full star {{size}}" [class.active]="value === numberOfStars - index" >
+      <input [ngModel]="value" (ngModelChange)="updateData($event)" type="radio" name="rating" [value]="numberOfStars - index" />
+    </label>
+
+    <label class="half star" [ngClass]="size" [class.active]="value === numberOfStars - index - 0.5" >
+      <input [ngModel]="value" (ngModelChange)="updateData($event)" type="radio" name="rating" [value]="numberOfStars - index - 0.5" />
+    </label>
+
+  </ng-template>
+
+  <label class="zero-star" >
+    <input [ngModel]="value" (ngModelChange)="updateData($event)" type="radio" name="rating" [value]="0" />
+  </label>
+
+</fieldset>

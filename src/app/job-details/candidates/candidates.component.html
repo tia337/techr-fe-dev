@@ -1,0 +1,54 @@
+<section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
+    <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
+        <div class="candidate-block" *ngFor="let candidate of candidates.results" (click)="userProfile(candidate.id, getPercentageMatch(candidate))" [class.active]="userId == candidate.id">
+            <!-- (click)="userProfile(candidate.id, getPercentageMatch(candidate))" -->
+            <div class="candidate-info-top-section">
+                <div class="avatar-wrap">
+                    <img [src]="candidate.get('avatarURL')" (error)="errorHandler($event)" class="avatar">
+                </div>
+                <div class="candidate-general-info">
+                    <div class="candidate-name">{{candidate.get('firstName')}} {{candidate.get('lastName')}}</div>
+                    <div class="candidate-position">{{candidate.get('headline')}}</div>
+                    <div class="candidate-company-name"><span class="company-title" *ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span></div>
+                </div>
+
+
+                <div class="logo"><img style="width: auto; height: 30px;" src="{{candidate.source ? candidate.source : 'http://swipeinmlabtest.herokuapp.com/parse/files/dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ/90fc2f3d63b7192696b413b2d829b846_SwipeIn%20Logo%202.jpg'}}"
+                        alt="logo"></div>
+            </div>
+            <div class="candidate-info-bottom-section">
+                <div class="candidate-location-match">
+                    <div class="location">
+                        {{candidate.get('location')}}
+                    </div>
+                    <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit</div>
+                    <div class="match" *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit</div>
+                    <div class="match" *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit</div>
+                </div>
+                <div *ngIf="candidate.get('developer').get('skills')" class="candidate-skills">
+                    <div *ngFor="let skill of limitArray(candidate.get('developer').get('skills'))" class="skill-wrap">
+                        <div class="skill-label">
+                            {{skill.get('skill').get('title')}}
+                        </div>
+                    </div>
+                </div>
+                <div class="skills-count"><span *ngIf="candidate.get('developer').get('skills') && candidate.get('developer').get('skills').length > 6">+{{candidate.get('developer').get('skills').length - limitArray(candidate.get('developer').get('skills')).length}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="candidate-profile">
+        <app-candidate-profile [userId]="userId" [weight]="candidateWeight" [contractId]="contractId"></app-candidate-profile>
+    </div>
+</section>
+
+<section *ngIf="hasCandidates === Loading.loading">
+    <!-- <app-preloader></app-preloader> -->
+    <div class="loading">
+        <img src="./../../../assets/preloader/Loader7.gif" alt="">
+    </div>
+</section>
+
+<section *ngIf="hasCandidates === Loading.error">
+    There are no candidates on this stage
+</section>

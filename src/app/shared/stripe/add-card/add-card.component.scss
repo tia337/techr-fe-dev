@@ -1,0 +1,122 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+@import '../../../../styles/inputs';
+@import '../../../../styles/buttons';
+@import '../../../../styles/typography';
+
+.add-card-overlay {
+  @include overlay;
+
+    .add-card-inner {
+      @include border-radius(5px);
+      background-color: $white;
+      border: 1px solid $black;
+      margin: 20px auto;
+      min-width: 200px;
+      width: 40%;
+      padding: 10px;
+
+      .form-section {
+
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-justify-content(space-between);
+        @include flex-align-items(stretch);
+
+        .card-info-wrap {
+          @include displayFlex;
+          @include flex-direction(column);
+          @include flex-justify-content(space-between);
+          @include flex(1, 0, auto);
+          max-width: 50%;
+
+          .card-inputs {
+            padding: 5px 10px;
+
+            .card-input-label {
+              display: block;
+              margin-top: 10px;
+              height: 50px;
+              .card-input {
+                height: 30px;
+                @include border-radius(5px);
+                border: 1px solid $dark-grey;
+                padding: 0 6px;
+                margin: 3px 0;
+              }
+            }
+
+            .cvc-expiry-wrap {
+              @include displayFlex;
+              @include flex-direction(row);
+              @include flex-justify-content(space-between);
+              .card-input-label {
+                @include flex(1, 0, auto);
+                max-width: 50%;
+                &.card-input-cvc {
+                  padding-right: 15px;
+                }
+                &.card-input-expiry {
+                  padding-left: 15px;
+                }
+              }
+            }
+
+            .default-card-checkbox {
+              display: block;
+              margin-top: 10px;
+            }
+          }
+
+          .submit-button-wrap {
+            width: 50%;
+            margin: 5px 10px;
+            .submit-button {
+
+            }
+          }
+
+        }
+
+        .billing-address-wrap {
+          @include flex(1, 0, auto);
+          max-width: 50%;
+          padding: 5px 10px;
+
+          .address-input-label {
+            display: block;
+            margin-top: 10px;
+            height: 50px;
+            .address-input {
+              display: block;
+              @include border-radius(5px);
+              margin: 3px 0;
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+    .add-card-button{
+      position: relative;
+    }
+    .spinner{
+      position: absolute;
+      left: 3px;
+      bottom: 6px;
+      color: white;
+      height: 20px;
+      width: 20px;
+    }
+    .spinner /deep/{
+      svg{
+        circle{
+          stroke: white !important;
+        }
+      }
+    }
+
+}

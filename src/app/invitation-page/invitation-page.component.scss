@@ -1,0 +1,111 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+@import '../../styles/typography';
+
+.invitation-page-inner {
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../../assets/img/invitation/background.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  font-size: $font-size-14;
+  position: relative;
+  overflow: hidden;
+  .invitation-page-wrap {
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .invitation-wrap {
+      padding: 35px 40px;
+      margin-bottom: 20px;
+      width: 40vw;
+      top: 15%;
+      left: 10%;
+      position: absolute;
+      background-color: $pale-grey-three;
+      @include border-radius(4px);
+      @include displayFlex;
+      @include flex-direction(column);
+      @include flex-align-items(center);
+
+      .invitation-header {
+        text-align: center;
+      }
+
+      .separator {
+        height: 2px;
+        width: 100px;
+        background-color: $butterscotch;
+        margin-top: 18px;
+      }
+
+      .invitation-content {
+        margin: 35px 0 49px 0;
+        padding: 45px 35px 50px 35px;
+        @include border-radius(4px);
+        background-color: $white;
+        width: 100%;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-justify-content(space-between);
+        .content-block {
+          @include displayFlex;
+          @include flex-direction(column);
+          @include flex-justify-content(space-between);
+          .logo-wrap {
+            @include displayFlex;
+            @include flex-direction(row);
+            @include flex-align-items(center);
+            @include flex(0, 0, auto);
+            .swipein-label {
+              font-size: $font-size-16;
+              font-family: SFUIDisplay, sans-serif;
+              color: $water-blue;
+              margin-left: 16px;
+            }
+          }
+          .content-wrap {
+            @include displayFlex;
+            @include flex-align-items(center);
+            @include flex(1, 0, auto);
+            font-size: $font-size-16;
+            color: $dark-indigo-two;
+            font-family: 'Open Sans', sans-serif;
+
+          }
+        }
+        .img-wrap {
+          @include flex(0, 0, auto);
+          height: 100%;
+          .bird-img {
+            max-height: 100%;
+          }
+        }
+      }
+
+      .signup-button {
+        @include border-radius(4px);
+        font-family: 'Open Sans', sans-serif;
+        font-size: $font-size-16;
+        color: $white;
+        background-color: $water-blue;
+        border: none;
+        padding: 16px 30px;
+        cursor: pointer;
+        @include animation-transition(background-color);
+        &:hover {
+          background-color: lighten($water-blue, 10%);
+          @include animation-transition(background-color);
+        }
+      }
+    }
+  }
+}
+
+@font-face {
+  font-family: SFUIDisplay;
+  src: url('../../assets/fonts/SFUIDisplay-Regular.otf');
+}

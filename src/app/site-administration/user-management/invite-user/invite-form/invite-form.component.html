@@ -1,0 +1,96 @@
+<!-- <div class="invite-user-block">
+  <div class="invite-header">Invite User to your team</div> -->
+
+  <div class="invite-form">
+
+  <div class="remove-form-button" *ngIf="getViewRefIndex() >= 1" (click)="deleteForm()" >Remove form</div>
+  <!-- <div class="cross-button" *ngIf="_inviteVCR.getIndex(viewRef) >= 1" ><mat-icon (click)="deleteForm()">close</mat-icon></div> -->
+
+    <div class="form-group">
+      <label class="input-form-label">
+        Email address
+        <input class="input-form" type="email" [(ngModel)]="email" (ngModelChange)="emailErrorMessage = ''" />
+      </label>
+    </div>
+    <div *ngIf="emailErrorMessage" class="error-message">
+      {{emailErrorMessage}}
+    </div>
+
+    <div class="form-group">
+      <label class="input-form-label">
+        Full Name
+        <input class="input-form" type="text" [(ngModel)]="fullName" />
+      </label>
+    </div>
+
+   <!--  <div class="form-group">
+      <label class="input-form-label">
+        User Permissions
+        <input class="input-form" type="text" />
+      </label>
+      <mat-icon>info_outline</mat-icon>
+    </div> -->
+
+    <div class="form-group">
+      <label class="input-form-label">
+        Invite Message
+        <textarea class="input-form invite-message-text" [(ngModel)]="inviteMessage" ></textarea>
+      </label>
+    </div>
+
+
+    <div class="form-group">
+    <label class="input-form-label dropdown-label">User Permissions</label>
+      <div class="al-dropdown">
+        <div class="al-dropdown-overlay hidden" (click)="closeDropdown()"></div>
+        <div class="current-permission" (click)="showDropdown()" >{{checkedPermission.name}}<mat-icon class="down-arrow">keyboard_arrow_down</mat-icon></div>
+        <div class="al-select hidden">
+
+          <!-- <div *ngFor="let option of permissions"> -->
+
+            <!-- <input type="radio" id="permission-type-{{option.value}}" class="permission-radio-button" name="access-level" value="{{option.value}}" [(ngModel)]="accessLevel" [disabled]="option.disabled" (change)="setCheckedPermission()" />  -->
+            <!-- (change)="setCheckedPermission()" -->
+
+            <label (click)="closeDropdown()" *ngFor="let option of permissions" class="permission-label"> <!-- for="permission-type-{{option.value}}" -->
+              <input type="radio" class="permission-radio-button" name="access-level-{{formIndex}}" value="{{option.value}}" [(ngModel)]="accessLevel" [disabled]="option.disabled" (change)="setCheckedPermission()" />
+              <!-- {{option.disabled}} -->
+
+              <div class="permission-label-block">
+                <div class="permission-dropdown-section">
+                  <div class="permission-name">{{option.name}}</div>
+                </div>
+                <div class="permission-dropdown-section">
+                  <div class="permission-name-label">{{option.name}}</div>
+                </div>
+                <div class="permission-dropdown-section">
+                  <mat-icon class="info-icon" [matTooltip]="option.tooltip" matTooltipPosition="above">info_outline</mat-icon>
+                </div>
+              </div>
+            </label>
+
+          <!-- </div> -->
+
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <hr/>
+
+    <!-- <div class="form-group form-standalone">
+      <label>
+      <input type="checkbox" [(ngModel)]="anotherInvitation" (change)="createAnotherForm()" />
+      Create Another
+      </label>
+    </div>
+
+    <div class="buttons-wrap">
+      <button class="">Create User</button>
+      <button>Cancel</button>
+    </div> -->
+
+  </div>
+
+<!-- </div> -->

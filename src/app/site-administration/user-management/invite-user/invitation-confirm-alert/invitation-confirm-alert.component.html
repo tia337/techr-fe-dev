@@ -1,0 +1,16 @@
+<div class="overlay" (click)="closeAlert()"></div>
+
+<div class="modal-wrap">
+  <div class="modal-header">
+    Invitation sent!
+  </div>
+  
+  <div class="modal-content">
+    Congratulations! Your invitation<span class="plural" *ngIf="numberOfInvitations > 1">s were</span>
+    <span class="singular" *ngIf="numberOfInvitations == 1"> was </span> successfully sent!
+  </div>
+  
+  <div class="modal-footer">
+    <button class="button ok" (click)="closeAlert()">OK</button>
+  </div>
+</div>

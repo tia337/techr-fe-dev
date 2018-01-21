@@ -1,0 +1,286 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+
+.arrow-button-group {
+  .arrow-checkbox { 
+      display: none; 
+    }
+  .arrow-checkbox + .arrow-button {
+    display: inline-block;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .arrow-checkbox:checked + .arrow-button {
+    background-color: rgb(194, 193, 193);
+  }
+}
+
+.dropdown-roles{
+  margin-left: 230px;
+}
+
+.dropdown-industries{
+  margin-left: 480px;
+}
+
+.dropdown-wrap {
+  position: absolute;
+  z-index: 10;
+  min-width: 400px;
+  .roles-wrap {
+    max-height: 400px;
+    overflow-y: auto;
+    position: absolute;
+    border: 1px solid $dark-grey;
+    padding: 15px 10px;
+    background-color: $white;
+    z-index: 99;
+
+    .role-wrap{
+      cursor:pointer;
+      .item-title {
+        padding: 5px;
+        &:not(:last-child) {
+          border-bottom: 1px solid $dark-grey;
+        }
+      }
+    }
+  }
+
+  .categories-wrap {
+    position: absolute;
+    border: 1px solid $dark-grey;
+    padding: 15px 10px;
+    background-color: $white;
+    z-index: 99;
+
+    .category-wrap {
+        cursor: pointer;
+      .category-title {
+        padding: 5px;
+        &:not(:last-child) {
+          border-bottom: 1px solid $dark-grey;
+        }
+      }
+
+      .skills-wrap {
+        padding-left: 20px;
+        overflow: hidden;
+        height: auto;
+        max-height: 0;
+        overflow-y: auto;
+        @include animation-transition(max-height, .5s);
+
+        &.opened {
+          max-height: 100vh !important;
+          @include animation-transition(max-height, .5s);
+        }
+
+        .skill-row {
+          @include displayFlex;
+          @include flex-direction(row);
+          @include flex-justify-content(space-between);
+          @include flex-align-items(center);
+          padding: 3px 0;
+
+          .skill-title {
+            @include flex(1, 0, auto);
+          }
+
+          .experience-wrap {
+            @include flex(0, 0, auto);
+            @include displayFlex;
+            @include flex-direction(row);
+            @include flex-justify-content(space-between);
+            @include flex-align-items(center);
+
+            .experience-button {
+              @include displayFlex;
+              @include flex-direction(row);
+              @include flex-justify-content(center);
+              @include flex-align-items(center);
+              width: 30px;
+              height: 30px;
+              font-size: $font-size-10;
+              margin: 0 5px;
+              cursor: pointer;
+              border-radius: 2px;
+              color: white;
+              background-color: rgb(59, 137, 240);
+              @include animation-transition(background-color, .4s);
+              &:hover {
+                background-color: $blue;
+                @include animation-transition(background-color, .4s);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+// ______________________________________________________________________
+
+.selected{
+
+}
+
+.selected a{
+  cursor:pointer;
+  font-weight:bold;
+}
+
+
+.suggestions{
+  position: absolute !important;
+  z-index: 10;
+  background: white;
+  display: block;
+  padding: 5px;
+  border: 1px solid rgb(219, 217, 217);
+  width: 800px;
+  table{
+    table-layout: fixed;
+  }
+  table{
+    padding: 5px;
+    word-wrap: break-word;
+  }
+  .header{
+      position: sticky;
+    //   top:0;
+  }
+  .skill-header{
+      width: 300px;
+      padding: 10px;
+      background: rgb(170, 197, 231);
+      font-weight: normal;
+  }
+  .experience-header{
+    width: 200px;
+    padding: 10px;
+    background: rgb(193, 212, 236);
+    font-weight: normal;
+  }
+  .category-header{
+    width: 300px;
+    padding: 10px;
+    background: rgb(235, 235, 235);
+    font-weight: normal;
+  }
+  
+  .name{
+    padding: 10px 0px;
+    width: 800px;
+  }
+  .experience{
+    text-align: center;
+    width: 200px;
+  }
+  .category{
+    text-align: center;
+    width: 300px;
+  }
+  .inner-area{
+    
+    max-height: 434px;
+    overflow-y: auto;
+
+  }
+  .items-container{
+    padding: 3px;
+    cursor:pointer;
+    .item{
+      padding-left: 10px;
+      width: 100%;
+      margin-top: 20px;
+      color: rgb(131, 130, 130);
+    }
+    .item-selected{
+      padding-left: 10px;
+      width: 100%;
+      color: black;
+      background-color: rgb(228, 226, 226);
+    }
+  }
+  .container-selected{
+    color: black;
+    background-color: rgb(228, 226, 226);
+  }
+}
+.selected-title{
+  font-weight: bold;
+}
+.selected-items-container{
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  .selected-items{
+    .selected{
+      height: 100%;
+      width: 100%;
+      margin: 3px;
+      border:solid rgb(59, 137, 240) 1px;
+      position: relative;
+      .sel-skill-cont{
+        height: 100%;
+        width: 100%;
+        padding:12px 15px;
+        color: rgb(131, 130, 130);
+        float:left;
+      }
+      .delete-title{
+        height: 100%;
+        width: 100%;
+        visibility: hidden;
+        position: absolute;
+      }
+      
+    }
+    .selected:hover{
+      cursor: pointer;
+      color: black;
+      background: rgba(196, 193, 193, 0.596) ;
+      .sel-skill-cont{
+        span{
+          visibility: hidden;
+        }
+      }
+      .selected-exp{
+        visibility: hidden;
+        background-color: rgba(87, 86, 86, 0.719) !important;
+        color: rgb(196, 192, 192);
+      }
+      .delete-title{
+        visibility: visible;
+        color: rgb(83, 82, 82);
+        font-size: 16px;
+        margin-top: 11px;
+        text-align: center;
+      }
+    }
+  }
+}
+.exp{
+    margin-top:5px;
+    margin-bottom:5px;
+    padding: 10px;
+    background-color: rgb(199, 196, 196);
+    border-radius: 2px;
+    color: white;
+    font-size: $font-size-10;
+}
+.selected-exp{
+    background-color: rgb(59, 137, 240) !important;
+}
+.selected-skill{
+  vertical-align: text-top;
+}
+.skills-adding-title-container{
+  margin-top:12px;
+}

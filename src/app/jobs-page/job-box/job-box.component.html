@@ -1,0 +1,87 @@
+<div class="job-offer" #jobBox>
+  <div class="job-offer-header">
+    <div class="job-header-info" (click)="goToJobDetails(contract.id, DeveloperListType.suggested)">
+      <div class="job-title">
+        {{contract.get('title')}}
+        <span class="location" *ngIf="contract.get('jobCountry')">
+          {{contract.get('jobCountry').get('Country')}}
+        </span>
+      </div>
+      <div *ngIf="!contract.get('salaryHidden') && contract.get('jobType')" class="job-type">
+        <span [ngSwitch]="contract.get('jobType')">
+          <span *ngSwitchCase=2>Contract</span>
+          <span *ngSwitchCase=1>Permanent</span>
+          <span *ngSwitchCase=3>Urgent/Freelance</span>
+          <span *ngSwitchDefault>Permanent or Contract</span>
+        </span>
+        — {{(contract.get('jobType') == 1 ? contract.get('minAnnualRate') : contract.get('isRatedHourly') ? contract.get('Min_hourly') : contract.get('minRate')) | currency:contract.get('SalaryCurrency').get('Currency'):true:'1.0-0'}} - {{(contract.get('jobType')
+        == 1 ? contract.get('maxAnnualRate') : contract.get('isRatedHourly') ? contract.get('Max_hourly') : contract.get('maxRate')) | currency:contract.get('SalaryCurrency').get('Currency'):true:'1.0-0'}}
+
+      </div>
+      <div *ngIf="contract.get('salaryHidden')" class="job-type">{{contract.get('jobType')}} — Negotiable</div>
+    </div>
+
+    <div class="job-offer-buttons">
+
+      <button *ngIf="contract.get('status') != 3" class="job-header-button icon-button" (click)="uploadCvFunc($event)"><i class="fa fa-upload icon" aria-hidden="true"></i></button>
+      <!--<button *ngIf="contract.get('status') == 1" class="job-header-button" share="qeqweqwe">Social Media Share</button>-->
+      <button *ngIf="contract.get('status') == 1" class="job-header-button" [routerLink]="['/jobs', contract.id, 'job-boards']" skipLocationChange>Advertise Job</button>
+
+      <button class="job-header-button icon-button" (click)="openMenu()"><i class="fa fa-cog icon" aria-hidden="true"></i></button>
+      <div class="menu-popup popup hidden" #menu (mouseleave)="closeMenu()">
+        <ul>
+          <li *ngIf="contract.get('status') == 1" class="blue-link info" [routerLink]="['/jobs', contract.id, 'job-boards']" skipLocationChange>
+            <mat-icon class="menu-icon">open_in_browser</mat-icon>Advertise on job boards</li>
+          <!--<li *ngIf="contract.get('status') == 1" class="blue-link info" share="test">-->
+            <!--<mat-icon class="menu-icon">share</mat-icon>Share on social networks</li>-->
+          <li *ngIf="contract.get('status') != 3" class="blue-link" [routerLink]="['/jobs', contract.id]">
+            <mat-icon class="menu-icon">description</mat-icon>Open job details</li>
+          <li  *ngIf="contract.get('status') == 3" class="blue-link" [routerLink]="['/jobs', contract.id, 'job-overview']">
+            <mat-icon class="menu-icon">description</mat-icon>Open job details</li>
+          <li *ngIf="contract.get('status') != 3" class="yellow-link" (click)="uploadCvFunc($event)">
+            <mat-icon class="menu-icon">file_upload</mat-icon>Upload candidates</li>
+          <li *ngIf="contract.get('status') == 1" (click)="archiveContract()">
+            <mat-icon class="menu-icon">archive</mat-icon>Archive</li>
+          <li class="red-link" (click)="deleteContract()">
+            <mat-icon class="menu-icon">delete</mat-icon>Delete</li>
+
+
+          <!--For testing-->
+          <li class="red-link" (click)="activateContract()">Activate</li>
+
+
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="job-offer-stages">
+
+    <div class="job-stage" *ngFor="let stage of stages" (click)="goToJobDetails(contract.id, stage.type)">
+      <div class="job-stage-inner">
+        <div *ngIf="stage.value !== 0" class="property-value">{{stage.value}}</div>
+        <div *ngIf="stage.value === 0" class="property-value">—</div>
+        <div class="property-title">{{stage.title}}</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="job-offer-footer">
+    <div class="posted-on" *ngIf="contract.get('status') === ContractStatus.active">
+      Published on
+      <span class="bold">The SwipeIn App</span>
+      <span class="bold" *ngFor="let jobBoardPush of jobBoardPushes.slice(0, 4)">, {{jobBoardPush.get('Name')}}</span>
+    </div>
+    <div class="more-jobboards" *ngIf="jobBoardPushes.length > 4" [matTooltip]="jobBoardPushesString">
+      ... and more
+    </div>
+    <div class="post-date" *ngIf="(contract.get('postedAt') && contract.get('status') != ContractStatus.draft)">
+      Posted on {{contract.get('postedAt') | date:'d.M.y'}}
+    </div>
+    <div *ngIf="contract.get('status') == ContractStatus.draft" class="post-date">
+      Draft saved on {{contract.get('updatedAt') | date:'d.M.y'}}
+    </div>
+  </div>
+</div>

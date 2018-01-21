@@ -1,0 +1,169 @@
+@import '../../../styles/variables';
+@import '../../../styles/buttons';
+
+$dashed-border: 1px dashed #ccc;
+
+.billing-title{
+    margin-top: 60px;
+    margin-left: 70px;
+}
+.flex-container{
+    width:60%;
+    margin: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    .container-checkbox-inf{
+        margin-left: 40px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 18px;
+    }
+}
+.par-details{
+    margin-left: 70px;
+}
+
+.strike{
+    text-decoration:line-through;
+    font-weight: bold;
+}
+.checkbox{
+    margin-right: 10px;
+    color: $blue;
+}
+.link {
+    text-decoration: none;
+    cursor: pointer;
+    color: $dark-blue;
+}
+.upgrade-title{
+    margin-left: 70px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.bottom-block{
+    margin: 30px;
+}
+.confirm{
+ position: relative;
+ width: 70%;
+ margin-top: 10px;
+ margin-bottom: 10px;
+}
+.refund-p{
+    width: 70%;
+    color: grey;
+    margin-bottom: 20px;
+}
+.top-button{
+    margin-bottom: 20px;
+    width: 70%;
+}
+.policy-bold{
+    font-weight: bold;
+    color: black;
+}
+
+// STRIPE FORM STYLING
+
+.flex-container-stripe{
+    width:60%;
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .left-container{
+        flex: 1 0 auto;
+        .card-thumbnail{
+            width:40px;
+        }
+        .left-input{
+        text-align: left;
+        width: 100%;
+        border: 1px solid #b9cae5;
+        border-radius: 4px;
+        height: 30px;
+        }
+        .left-input-small{
+        min-width: 90px;
+        flex: 1 0 auto;
+        text-align: left;
+        border: 1px solid #b9cae5;
+        border-radius: 4px;
+        height: 30px;
+        }
+        .form-row{
+            margin: 5px;
+        }
+        margin-right: 10px;
+    }
+    .cvc-zip-container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        h6{
+            margin-top: 2px;
+        }
+    .input-img-container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    }
+    .right-container{
+        flex: 1 0 auto;
+        input{
+            width: 100%;
+            border: 1px solid #b9cae5;
+            border-radius: 4px;
+            height: 30px;
+            margin:3px;
+            text-align:left;
+        }
+        span{
+            margin:3px;
+        }
+    }
+    span{
+        margin-bottom: 5px;
+    }
+}
+.purchase{
+    margin-left: 25px;
+    width: 20%;
+    margin-bottom: 10%;
+}
+.field{
+    padding-left: 5px;
+}
+.tick-wrap{
+    @include displayFlex();
+    @include flex-direction(column);
+    // @include flex-align-items(center);
+    @include flex-justify-content(center);
+}
+.spinner{
+    position: absolute;
+    left: 80px;
+    bottom: 6px;
+    color: white;
+    height: 20px;
+    width: 20px;
+}
+.spinner /deep/{
+svg{
+    circle{
+    stroke: white !important;
+    }
+}
+}
+.integration{
+    background-color: $dark-blue; 
+}
+.integration:hover{
+    cursor: not-allowed;
+    background-color: $dark-blue !important; 
+}

@@ -1,0 +1,197 @@
+@import '../../../../../../styles/variables';
+@import '../../../../../../styles/mixins';
+@import '../../../../../../styles/buttons';
+
+button {
+  margin: 5px;
+}
+
+.preview-scorecard-overlay {
+  @include overlay;
+
+  .preview-wrap {
+    padding: 15px 10px;
+    margin: 25px auto;
+    background-color: $white;
+    border: 1px solid $black;
+    @include border-radius(5px);
+    width: 60vw;
+    height: auto;
+    .top-block {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      font-size: $font-size-12;
+      .name {
+
+      }
+      .print-name-placeholder {
+        display: none;
+      }
+      .stage {
+
+      }
+    }
+    .position-title {
+      font-size: $font-size-24;
+      font-weight: 100;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0 10px 0;
+    }
+    .areas {
+      .area {
+        font-size: $font-size-14;
+
+        border: 1px solid $dark-grey;
+
+        .area-title {
+          font-weight: bold;
+          padding: 10px;
+          @include displayFlex;
+          @include flex-direction(row);
+          @include flex-justify-content(space-between);
+          @include flex-align-items(center);
+        }
+        .question {
+          position: relative;
+          padding: 5px 10px 5px 15px;
+          font-weight: 100;
+          border-top: 1px solid $dark-grey;
+
+          .question-note {
+            width: 100%;
+            resize: none;
+            border: 1px solid transparent;
+            padding: 5px;
+            &:focus {
+              border: 1px solid $light-grey;
+              @include border-radius(5px);
+            }
+          }
+        }
+      }
+    }
+
+    .scorecard-footer {
+      @include displayFlex;
+      @include flex-direction(column);
+
+
+
+      .weighted-score-wrap {
+        margin: 10px 0;
+        @include displayFlex;
+        @include flex-direction(row);
+        @include flex-align-items(center);
+        @include flex-justify-content(flex-end);
+        .rating-stars {
+          margin-left: 10px;
+        }
+      }
+
+      .scorecard-summary-wrap {
+        border: 1px solid $dark-grey;
+
+        .scorecard-summary-header {
+          border-bottom: 1px solid $dark-grey;
+          display: flex;
+          flex-direction: row;
+          align-items: stretch;
+          .scorecard-summary-label {
+            flex: 1 0 50%;
+            padding: 8px;
+            font-weight: bold;
+          }
+          .scorecard-summary-buttons-wrap {
+            flex: 1 0 50%;
+            display: flex;
+            flex-direction: row;
+            .move-button {
+              flex: 1 0 auto;
+              border-left: 1px solid $dark-grey;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              .mark-button {
+                opacity: 0.4;
+                width: 100%;
+                height: 100%;
+                @include displayFlex;
+                @include flex-align-items(center);
+                @include flex-justify-content(center);
+                .print-tick {
+                  display: none;
+                  margin-right: 5px;
+                }
+              }
+
+              .mark-button.active {
+                opacity: 1;
+              }
+
+            }
+          }
+        }
+
+        .scorecard-summary-final-thoughts-wrap {
+          padding: 15px;
+          .scorecard-summary-final-thoughts {
+            resize: none;
+            display: block;
+            border: none;
+            width: 100%;
+            margin: 0;
+            color: $black;
+            font-size: $font-size-14;
+          }
+        }
+      }
+    }
+
+    .buttons-wrap {
+      padding: 5px 15px;
+      @include displayFlex;
+      @include flex-direction(row);
+      @include flex-justify-content(flex-end);
+      @include flex-align-items(center);
+      .edit-button {
+        max-width: 200px;
+      }
+    }
+
+  }
+}
+
+@media print {
+  .preview-scorecard-overlay {
+    visibility: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  .preview-wrap {
+    width: 100vw !important;
+    border: none !important;
+    margin: 0;
+    padding: 0;
+    visibility: visible;
+    height: 99%;
+
+    .position-title {
+      margin-bottom: 20px;
+    }
+
+
+    .mark-button.active {
+      .print-tick {
+        display: inline-block !important;
+      }
+    }
+
+    .buttons-wrap {
+      display: none !important;
+    }
+  }
+}

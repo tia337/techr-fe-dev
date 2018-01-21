@@ -1,0 +1,42 @@
+<div *ngIf="template != undefined">
+    <div class="main_block">
+        <div class="header_block">
+            <button [routerLink]="['/empref']">Back to Employee Referral Programs</button>
+            <h2>{{ template.type.name }} Referral Program</h2>
+        </div>
+        <div class="creation_button">
+            <button *ngIf="!isEditable" (click)="makeEditable()">Edit</button>
+            <button *ngIf="isEditable" (click)="saveClientERP()">Save</button>
+        </div>
+        <div class="title_block">
+            <div class="option_name">
+                <h3>Title:</h3>
+                <p>Internal reference only</p>
+            </div>
+            <textarea name="" id="" cols="*" rows="1"  [(ngModel)]="template.title" [disabled]="!isEditable" [class.active]="isEditable"></textarea>
+        </div>
+        <div class="type_block">
+            <div class="option_name">
+                <h3>Type:</h3>
+                <p>Internal reference only</p>
+            </div>
+            <button class="chose_type" mat-menu-item [matMenuTriggerFor]="standard" [disabled]="!isEditable"  [class.active]="isEditable">{{ template.type.name }}</button>
+            <mat-menu #standard="matMenu">
+                <button *ngFor='let type of types' (click)="choseType(type)" mat-menu-item>{{ type.name }}</button>
+            </mat-menu>
+        </div>
+        <div class="descr_block">
+            <div class="option_name">
+                <h3>Description:</h3>
+                <p>Internal reference only</p>
+            </div>
+            <textarea name="" id="" cols="*" rows="10" [(ngModel)]="template.descr" [disabled]="!isEditable" [class.active]="isEditable"></textarea>
+        </div>
+        <div class="el_block">
+            <div class="option_name">                
+                <h3>Eligibility:</h3>
+            </div>
+            <textarea name="" id="" cols="*" rows="10"  [(ngModel)]="template.eleg" [disabled]="!isEditable" [class.active]="isEditable"></textarea>
+        </div>
+    </div>
+</div>

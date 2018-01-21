@@ -1,0 +1,122 @@
+.user-inner {
+  padding: 20px;
+  min-height: 100vh;
+  .back-button-wrap {
+    display: block;
+    padding: 10px 0;
+    margin-bottom: 10px;
+    .back-button {
+      background-color: #F2F2F2;
+      width: auto;
+      color: #000;
+      padding: 5px;
+      text-decoration: none;
+      font-size: 0.7em;
+      &:before {
+        content: 'keyboard_arrow_left';
+        vertical-align: middle;
+        font-family: 'Material Icons';
+      }
+    }
+  }
+
+  .content-wrap {
+    display: flex;
+    flex-direction: row;
+    padding: 0 30px;
+    .user-info {
+      flex: 1 0 auto;
+      // border: 1px dashed #f00;
+      // display: flex;
+      // flex-direction: column;
+
+      .general-info {
+        display: flex;
+        flex-direction: row;
+
+        .name {
+          font-size: 1.5em;
+          font-weight: 100;
+          // margin-right: 10%;
+        }
+        .email {
+          display: flex;
+          align-items: center;
+          font-size: 1.1em;
+          margin: 0 auto;
+        }
+      }
+      .access-level {
+        // display: flex;
+        // flex-direction: column;
+        margin-top: 20px;
+        font-weight: 800;
+        text-align: center;
+        display: inline-block;
+        .access-level-label {
+          margin-top: 10px;
+          display: inline-block;
+          border: 1px solid #000;
+          font-size: 0.9em;
+          font-weight: 300;
+          padding: 3px 20px;
+        }
+      }
+      .followers {
+        margin-top: 35px;
+        font-size: 1.1em;
+        font-weight: 100;
+        table.followers-table {
+          margin-top: 15px;
+          border: none;
+          font-size: 0.8em;
+          // width: 100%;
+          th {
+            text-align: left;
+            padding-bottom: 10px;
+
+            &:not(:last-child) {
+              padding-right: 2vw;
+              
+            }
+
+          }
+          tr {
+            cursor: pointer;
+            td {
+              width: auto;
+              padding: 10px 0;
+              &:not(:last-child) {
+                padding-right: 2vw;
+                
+              }
+            }
+          }
+        }
+      }
+    }
+    .edit-buttons {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      // border: 1px dashed #0f0;
+      .edit-button {
+        display: block;
+        color: #fff;
+        font-size: 0.9em;
+        padding: 10px 15px;
+        border: none;
+
+        &.deactivate {
+          background-color: #D9D9D9;
+          color: #012060;
+        }
+        &.access-level {
+          background-color: #4372C4;
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+}

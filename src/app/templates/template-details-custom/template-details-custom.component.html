@@ -1,0 +1,34 @@
+<div class="template-details" *ngIf="template">
+    <section class="title">
+        <div class="button-return">
+            <button class="button-back" [routerLink]="['/templates']"> <-- Back to templates</button>
+        </div>
+        <div class="template-type">{{template.get('Type').get('Name')}}</div>
+    </section>
+    <section class="edit-buttons">
+        <button class="edit-button" *ngIf="!isEditable" (click)="editTemplate()">Edit</button>
+        <button class="save-button" *ngIf="isEditable" (click)="updateTemplate(tTitle,tSubject,tBody)">Save template</button>
+    </section>
+    <section class="info" *ngIf="isEditable">
+        <p><b><i>Note:</i></b> When editing a template you can use the “%“ command to link your template to candidate, job and client data so that sending individual or bulk application acknowledgment e-mails are personalised for each candidate.</p>
+    </section>
+    <section class="template">
+        <div class="template-name">
+            <div class="template-title">Template Name:</div>
+            <div class="template-name-value">
+                <input #tTitle type="text" value="{{template.get('Title')}}" [disabled]="!isEditable" [class.isActive]="isEditable">
+            </div>
+        </div>
+        <div class="template-subject">
+            <div class="template-title">Email Subject:</div>
+            <div class="template-subject-value">
+                <input #tSubject type="text" [mention]="mentions" [mentionConfig]="{triggerChar:'%'}" value="{{template.get('EmailSubject')}}" [disabled]="!isEditable" [class.isActive]="isEditable">
+            </div>
+        </div>
+        <div class="template-body">
+            <div class="template-title">Email Body:</div>
+            <div *ngIf = "bodyText" class="template-body-value"><textarea #tBody [mention]="mentions" [mentionConfig]="{triggerChar:'%'}" value="{{bodyText}}" (click) = "preventDefault($event)" [disabled] = "!isEditable" autosize [class.isActive]="isEditable"></textarea></div>
+        </div>
+        <!-- <input type="text" [mention]="mentions" [mentionConfig]="{triggerChar:'%'}"> -->
+    </section>
+</div>

@@ -1,0 +1,177 @@
+<section class="job-boards-inner-page" >
+  <div (scroll)="onScroll($event)">
+  <div class="switch-buttons">
+
+    <div class="board-type">
+      <input id="premium-boards-section-button" type="radio" [value]="true" [(ngModel)]="isPremium" (change)="filterBoards()">
+      <label for="premium-boards-section-button" class="section-button">
+        Premium Boards
+      </label>
+      <div class="board-count">{{paidPushesId.length}}/{{premiumBoadsAmount}}</div>
+    </div>
+
+    <div class="board-type">
+      <input id="free-boards-section-button" type="radio" [value]="false" [(ngModel)]="isPremium" (change)="filterBoards()">
+      <label for="free-boards-section-button" class="section-button">
+        Free Boards
+      </label>
+      <div class="board-count">{{freePushesId.length}}/{{freeBoadsAmount}}</div>
+    </div>
+
+
+  </div>
+  <div class="boards-wrap">
+
+    <div *ngFor="let board of boardsToShow; let s = index" (mouseenter)="addCartButton($event)" (mouseleave) = "hideCartButton($event)"  class="job-board-wrap">
+      <div (mouseenter)="$event.stopPropagation()" (mouseleave) = "$event.stopPropagation()">
+      <div [ngClass]="{'red': inCart.indexOf(board.jobBoard.id) !== -1 && freePushesId.indexOf(board.jobBoard.id) == -1 &&
+      paidPushesId.indexOf(board.jobBoard.id) == -1 }" class="job-board">
+        <!-- <div *ngIf="board.prices.length > 0"  [ngClass]="{'red': inCart.indexOf({'board':board.jobBoard.id, 'price':board.prices[board.currentPrice].get('Price')})}" class="job-board">   -->
+        <!-- <mat-icon class="info-icon" [info]="{}">info_outline</mat-icon> -->
+        <p *ngIf="freePushesId.indexOf(board.jobBoard.id) !== -1 || paidPushesId.indexOf(board.jobBoard.id) !== -1 || contractStatus == 1 && board.jobBoard.get('Name') == 'SwipeIn'" class = "integrated">Active</p>
+        <mat-icon 
+          #infoButton class="info-icon" 
+          [ngClass]="{'white-info': freePushesId.indexOf(board.jobBoard.id) !== -1 || paidPushesId.indexOf(board.jobBoard.id) !== -1 || contractStatus == 1 && board.jobBoard.get('Name') == 'SwipeIn'}" 
+          (click) = "createInfoTab(s, $event, board.jobBoard)">
+          info_outline
+        </mat-icon>
+        <div #element class = "info-tab" (clickOutside) = "hideInfo(element, $event)" [ngClass]="{'last-board': ((s+1)%3) == 0, 'first-board': (s%3) == 0}">
+          <div class = "info-wrap">
+          <img class = "info-img" src= "{{board.jobBoard.get('Logo').url()}}">
+          <a class = "info-site" href="http://{{board.jobBoard.get('URL')}}" >{{board.jobBoard.get('URL')}}</a>
+          <div class = "info-description">
+            <p></p>
+            <p class = "info-target"></p>
+          </div>
+           </div>
+        </div>
+        <div *ngIf="board.jobBoard.get('Logo')" class="board-logo">
+          <img src="{{board.jobBoard.get('Logo').url()}}" alt="{{board.jobBoard.get('Name')}}" />
+        </div>
+        <div *ngIf="!board.jobBoard.get('Logo')" class="board-logo">
+          <h3>{{board.jobBoard.get('Name')}}</h3>
+        </div>
+
+        <div *ngIf="board.prices.length > 0" class="price price-div">
+          <div *ngIf = "board.prices[board.currentPrice].get('Price')" class="price-wrap">
+            {{board.prices[board.currentPrice].get('Price') | currency:board.prices[board.currentPrice].get('Currency'):true:'1.0-0'}}
+          </div>
+          <div *ngIf = "!board.prices[board.currentPrice].get('Price')" class="price-wrap">
+              {{board.prices[board.currentPrice].get('priceVariant')}}
+            </div>
+          <div class="price-dropdown-arrow" [ngClass]="{'arrow-locked': inCart.indexOf(board.jobBoard.id) !== -1 || freePushesId.indexOf(board.jobBoard.id) !== -1 ||
+          paidPushesId.indexOf(board.jobBoard.id) !== -1 }">
+            <mat-icon *ngIf = "inCart.indexOf(board.jobBoard.id) == -1 " (click)="showDropdown(board.jobBoard.id)">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf = "inCart.indexOf(board.jobBoard.id) !== -1 ">keyboard_arrow_down</mat-icon>
+          </div>
+        </div>
+
+        <div *ngIf="board.prices.length > 0" class="prices-list prices-list-{{board.jobBoard.id}} hidden price-div" (click)="hideDropdown(board.jobBoard.id)">
+          <div  *ngFor="let price of board.prices; let i = index">
+            <input type="radio" name="{{board.jobBoard.id}}" id="radio-{{board.jobBoard.id}}-{{i}}" [(ngModel)]="board.currentPrice" [value]="i" />
+            <label for="radio-{{board.jobBoard.id}}-{{i}}" class="price-item">
+              <div *ngIf = "price.get('Price')" class="item-price">{{price.get('Price') | currency:price.get('Currency'):true:'1.0-0'}}</div>
+              <div *ngIf = "!price.get('Price')" class="item-price-text">{{price.get('priceVariant')}}</div>
+              <div class="item-description"><pre><span class = "price-desc">{{price.get('PriceDescription')}}</span></pre></div>
+            </label>
+          </div>
+        </div>
+
+        <div class = "add-to-cart-div">
+        <div>
+          <p class = "in-cart-title" *ngIf="inCart.indexOf(board.jobBoard.id) !== -1 && freePushesId.indexOf(board.jobBoard.id) == -1 &&
+          paidPushesId.indexOf(board.jobBoard.id) == -1"><i class="shopping-cart-icon material-icons ">shopping_cart</i><br>Added To Cart</p>
+          <a class = "remove-title" *ngIf="inCart.indexOf(board.jobBoard.id) !== -1 && freePushesId.indexOf(board.jobBoard.id) == -1 &&
+          paidPushesId.indexOf(board.jobBoard.id) == -1" (click) = "deleteFromCart(board.jobBoard.id, board.prices.length > 0, s)">
+            <i *ngIf="activeDeleteProccess.indexOf(s) === -1" class="fa fa-2x fa-times cross" aria-hidden="true"></i>
+            <span *ngIf="activeDeleteProccess.indexOf(s) != -1">
+              <mat-spinner  [diameter] = '25' [strokeWidth] = '3' class = "spinner-remove"></mat-spinner>
+            </span>
+            <a class = "remove-text">Remove from cart</a>
+          </a>
+          <div class = "relative" *ngIf = "contractStatus !== 1 || contractStatus === 1 && board.jobBoard.get('Name') != 'SwipeIn'">
+          <button *ngIf="inCart.indexOf(board.jobBoard.id) == -1 &&
+            (freePushesId.indexOf(board.jobBoard.id) == -1 &&
+            paidPushesId.indexOf(board.jobBoard.id) == -1)" 
+           class = "addtocart" (click) = "addToCart(board.prices[board.currentPrice], board, s)"> 
+            <a class = "nowrap">
+              <span *ngIf="activeSpinners.indexOf(s) != -1">
+                <mat-spinner  [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+              </span>
+            <a>Add To Cart</a></a>
+          </button>
+          <button *ngIf="freePushesId.indexOf(board.jobBoard.id) !== -1 ||
+            paidPushesId.indexOf(board.jobBoard.id) !== -1" 
+            class = "unpublish" (click) = "showAlert(board.jobBoard.id, board.jobBoard.get('Name'))"> 
+            Unpublish
+          </button>
+        </div>
+        </div>
+        </div>
+
+        <div *ngIf="inCart.indexOf(board.jobBoard.id) == -1 && paidPushesId.indexOf(board.jobBoard.id) == -1 && freePushesId.indexOf(board.jobBoard.id) == -1">
+          <div *ngIf="board.prices.length > 0">
+            <p class = "listing-days" *ngIf = 'board.prices[board.currentPrice].get("listingDays")'>
+              {{board.prices[board.currentPrice].get('listingDays')}} days listing
+            </p>
+            <p class = "listing-days-free" *ngIf = '!board.prices[board.currentPrice].get("listingDays")'>
+                unlimited time listing
+            </p>
+          </div>
+          <div class = "listing-days-free" *ngIf="!(board.prices.length > 0)">
+              unlimited time listing
+          </div>
+        </div>
+        <div *ngIf="flagIds.indexOf(board.jobBoard.id) !== -1 && inCart.indexOf(board.jobBoard.id) == -1" class = "flags-wrap">
+          <div *ngFor = "let flag of flags | reverse" class = "flags-container">
+            <!-- <p>{{flag.id}}</p> -->
+             <img *ngIf = "flag.id == board.jobBoard.id" class = "flag" src = "{{flag.flag}}">
+          </div>
+        </div>
+
+        <div *ngIf="flagIds.indexOf(board.jobBoard.id) == -1 && inCart.indexOf(board.jobBoard.id) == -1" class = "flags-wrap">
+          <img src = "../../../assets/img/world.png" class = "flag">
+        </div>
+
+        <div *ngIf="paidPushesId.indexOf(board.jobBoard.id) !== -1" class = "published-on">
+          <div *ngFor = "let pp of paidPushes">
+              <p *ngIf="pp.get('PushOnBoard').id === board.jobBoard.id">
+                  Published on {{pp.createdAt | date: 'dd/MM/yyyy'}}</p>
+          </div>
+          <p *ngIf = 
+          "paidPushesId.indexOf(board.jobBoard.id) !== -1 && 
+          paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays') 
+          - ((todaysDate.getTime() - paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('createdAt'))
+          /(24*60*60*1000))>1">
+          {{paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays') 
+          - ((todaysDate.getTime() - paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get("createdAt"))
+          /(24*60*60*1000)) + 1 | round}} days left in listing
+          </p>
+          <p *ngIf = 
+          "paidPushesId.indexOf(board.jobBoard.id) !== -1 && 
+          paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays') 
+          - ((todaysDate.getTime() - paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('createdAt'))
+          /(24*60*60*1000))===0">
+            last day left in listing
+          </p>
+          <p *ngIf = "paidPushesId.indexOf(board.jobBoard.id) !== -1 && 
+          !paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays')">
+            unlimited time
+          </p>
+        </div>
+        <div *ngIf="freePushesId && freePushesId.indexOf(board.jobBoard.id) !== -1" class = "published-on">
+          <div *ngFor = "let fp of freePushes">
+              <p *ngIf="fp.get('PushOnBoard').id === board.jobBoard.id" >
+              Published on {{fp.createdAt | date: 'dd/MM/yyyy'}}</p>
+          </div>
+          <p>
+            unlimited time
+          </p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+</section>
+<div (click)="hideDropdown()" class="overlay hidden"></div>

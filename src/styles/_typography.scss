@@ -1,0 +1,21 @@
+@import './variables';
+
+hr {
+  height: 1px;
+  border: none;
+  background-color: $x-dark-grey;
+}
+
+.bold {
+  font-weight: bold !important;
+}
+
+.header {
+  font-size: $font-size-24;
+  font-weight: 300;
+}
+
+.subheader {
+  font-size: $font-size-16;
+  font-weight: 300;
+}

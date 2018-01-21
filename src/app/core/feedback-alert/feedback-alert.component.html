@@ -1,0 +1,47 @@
+<div class="feedback_main">
+  <div *ngIf="!isSent" class="feedback_panel">
+    <div class = "titles-wrap">
+      <div class="title">
+        We look forward to hearing from you
+      </div>
+      <div class="subtitle">
+        <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Do you want us to launch new feature?
+        <br>
+        <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Did you find a bug?
+        <br>
+        <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Do you want to give us a high five?
+        <!-- <br> -->
+        <!-- We look forward to hearing from you -->
+      </div>
+    </div>
+    <div class="type">
+      <form>
+        <mat-form-field class="type_select">
+          <mat-select placeholder="Select type of feedback" name="type">
+            <mat-option disabled>Select type of feedback</mat-option>
+            <mat-option *ngFor="let type of feedbackTypes" [value]="type.get('Type')" (click)="changeType(type)">
+              {{ type.get('Type') }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+    </div>
+    <div class="main_text">
+		<textarea *ngIf="feedbackType" [(ngModel)]="text"></textarea>
+    </div>
+    <div class="buttons_block">
+      <button *ngIf="text && text.length > 1" mat-raised-button (click)="saveSendFeedback()">Send feedback</button>
+      <button mat-raised-button (click)="exit()">Cancel</button>
+    </div>
+  </div>
+  <div *ngIf="isSent" class="bye_panel">
+	  <div class="title">
+			Feedback successfully sent
+	  </div>
+	  <div class="subtitle">
+			Thanks for your sending us your feedback. Our team will get in touch soon to update you regarding your feedback.
+	  </div>
+	<button mat-raised-button (click)="exit()">Close</button>
+  </div>
+  <button class="close_button" (click)="exit()"></button>
+</div>

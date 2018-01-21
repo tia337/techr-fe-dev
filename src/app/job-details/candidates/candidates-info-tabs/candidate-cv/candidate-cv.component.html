@@ -1,0 +1,7 @@
+<div *ngIf="pageurl;else elseBlock">
+    <iframe [src]="pageurl" type="application/pdf"></iframe>
+</div>
+<ng-template #elseBlock>
+    <div>This candidate does not have CV.</div>
+
+</ng-template>

@@ -1,0 +1,66 @@
+@import '../../../styles/mixins';
+
+.header-block {
+  border-bottom: 1px dashed #ccc;
+  padding: 20px;
+  width: 100%;
+  h2 {
+    font-weight: 400;
+    font-size: 1.8em;
+  }
+  .header-buttons-wrap {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    .header-button {
+      font-size: 1em;
+      padding: 10px 15px;
+      background-color: #F2F2F2;
+      border: none;
+      cursor: pointer;
+      font-weight: 100;
+      text-decoration: none;
+      color: #000;
+      &.active {
+        background-color: #D9D9D9;
+      }
+      &:not(:last-child) {
+        margin-right: 20px;
+        
+      }
+    }
+  }
+
+}
+
+.feedback_triangle {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-bottom: 80px solid #007ab6;
+	border-left: 80px solid transparent;
+  z-index: 999999;
+  cursor: pointer;
+	.feedback_text {
+		@include transform-rotate(-45deg);
+		position: absolute;
+		right: -1px;
+		top: 38px;
+		color: rgb(255, 255, 255);
+		font-weight: bold;
+    opacity: 1;
+    cursor: pointer;
+	}
+  }
+  .triangle-wrap{
+    position: relative;
+  }
+  .speaker{
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 20px;
+    transform: rotate(-45deg);
+  }

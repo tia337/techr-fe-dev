@@ -1,0 +1,72 @@
+@import '../../../../../../styles/mixins';
+.wrap {
+    @include displayFlex();
+    // display: flex;
+    @include flex-direction(column);
+    // flex-direction: column;
+    .message-send {
+        padding: 5px;
+        @include displayFlex();
+        width: 100%;
+        .sender {
+            &-avatar {
+                flex-grow: 0;
+                img {
+                    width: 35px;
+                    height: 35px;
+                }
+            }
+            &-name {
+                margin-top: -3px;
+                font-size: $font-size-12;
+                text-align: center;
+            }
+        }
+        .email{
+            margin-left: 0px !important;
+        }
+        .body {
+            width: 100%;
+            margin: 0 15px;
+            @include displayFlex();
+            @include flex-direction(column);
+            @include flex-justify-content(center);
+            &-info {
+                width: 100%;
+                @include displayFlex();
+                @include flex-direction(row);
+                @include flex-justify-content(space-between);
+                &-date {
+                    font-size: $font-size-12;
+                }
+            }
+            &-text {
+                width: 100%;
+                background-color: #F1EEEE;
+                overflow-x: hidden;
+                padding: 5px;
+                @include border-radius(5px);
+                pre {
+                    font-size: $font-size-16;
+                    word-wrap: break-word;
+                    white-space: pre-line;
+                }
+            }
+        }
+    }
+    .message-receive {
+        @extend .message-send;
+        @include flex-direction(row-reverse);
+        align-self: flex-end;
+        .body {
+            &-info {
+                @include flex-direction(row-reverse);
+            }
+            &-text {
+                text-align: right;
+                background-color: $blue;
+                color: white;
+            }
+        }
+    }
+}

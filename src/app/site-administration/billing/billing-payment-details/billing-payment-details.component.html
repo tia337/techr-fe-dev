@@ -1,0 +1,31 @@
+<div class="payment-details-inner">
+
+  <div class="cards-wrap">
+    <div class="payment-details-header header">
+      Payment Details
+    </div>
+    <div *ngFor="let card of cards">
+      <div class="card-wrap">
+        <card [card]="card" [isDefault]="checkIsCardDefault(card.id)" (cardUpdate)="getData()" class="card"></card>
+        <div class="billing-block">
+          <div class="billing-information">
+            <div class="subheader bold">Billing Address</div>
+            <div class="billing-item">Country: {{card.address_country}}</div>
+            <div class="billing-item">City: {{card.address_city}}</div>
+            <div class="billing-item">Address line 1: {{card.address_line1}}</div>
+            <div class="billing-item">Address line 2: {{card.address_line2}}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="card-wrap">
+      <card class="card" (onCreate)="getData()"></card>
+    </div>
+  </div>
+
+  <div class="pci-logo-wrap">
+    <img src="../../../../assets/img/pci_logo.png" class="pci-logo" alt="" />
+  </div>
+
+</div>

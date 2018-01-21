@@ -1,0 +1,46 @@
+<div class = "main-wrap">
+    <div class="title">
+        Candidate Email Templates</div>
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <p>Standard</p>
+            </ng-template>
+            <div class="templates">
+                <div class="templates-type" *ngFor='let type of types'>
+                    <div class="type-name">{{type.get('Name')}}</div>
+                    <div class="type">
+                        <div class="type-templates" *ngFor='let template of templates_standart'>
+                            <app-template class="template" [ngStyle]="(template.get('Type').get('Name')!==type.get('Name')) && {'display':'none', 'padding': '0'}" [template]='template'>
+                            </app-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <p>{{clientName}}</p>
+            </ng-template>
+            <div class="templates templates-custom">
+                <div class="templates-type" *ngFor='let type of types'>
+                    <div class="type-name">{{type.get('Name')}}</div>
+                    <div class="type">
+                        <div class="type-templates" *ngFor='let templateC of templates_custom'>
+                            <app-template class="template" [ngStyle]="(templateC.get('Type').get('Name')!==type.get('Name')) && {'display':'none', 'padding': '0'}" [templateC]='templateC'>
+                            </app-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+<div class = "triangle-wrap">
+    <div class="feedback_triangle" (click)="feedbackCreation()">
+        <div class="feedback_text">
+            FeedBack+
+        </div>
+        <img class = "speaker" src = "../../../assets/icons/speaker.png">
+    </div>
+</div>

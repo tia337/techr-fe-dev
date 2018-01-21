@@ -1,0 +1,16 @@
+<div class="sn-wrap">
+  <div class="sn-choose">
+    <div class="sn-header">
+      Share job on
+    </div>
+    <div class="sn-icons-wrap">
+
+      <a #linkedinButton (click)="shareWithLinkedin()" target="_blank" class="sn-icon linkedin"><img src="../assets/sn-icons/linkedin.svg" /></a>
+      <a (click)="shareWithFacebook()" class="sn-icon facebook"><img src="../assets/sn-icons/facebook.svg" /></a>
+      <a #twitterButton (click)="shareWithTwitter()" class="sn-icon twitter"><img src="../assets/sn-icons/twitter.svg" /></a>
+
+    </div>
+  </div>
+</div>
+
+<div class="overlay" #overlay (click)="destroyShareModal()"></div>

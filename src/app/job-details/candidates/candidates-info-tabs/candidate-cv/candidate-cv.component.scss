@@ -1,0 +1,11 @@
+div {
+    display: flex;
+    justify-content: center;
+    iframe {
+        flex-basis: 65vw;
+        height: 61vw;
+    }
+    p {
+        text-align: center;
+    }
+}

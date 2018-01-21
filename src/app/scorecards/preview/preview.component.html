@@ -1,0 +1,56 @@
+<div class="scorecard-preview-inner">
+  <div class="top-block">
+    <div class="name">
+      Candidate Name
+    </div>
+    <div class="print-name-placeholder">
+      Name: _____________________________
+    </div>
+    <div class="stage" [ngSwitch]="type">
+      <span *ngSwitchCase="1">Phone Interview stage</span>
+      <span *ngSwitchCase="2">F2F Interview stage</span>
+    </div>
+  </div>
+  <div *ngIf="questions">
+    <div class="position-title">
+      {{questions.role}}
+    </div>
+    <div class="areas" *ngIf="questions.questions">
+      <div class="area" *ngFor="let area of questions.questions">
+        <div class="area-title"><span>{{area.area}}</span> <star-rating size="m" [disabled]="true"></star-rating></div>
+        <div class="question" *ngFor="let question of area.questions; let i = index">
+          Q{{i+1}}: {{question.content}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="scorecard-footer">
+    <div class="weighted-score-wrap">
+      Weighted score: <star-rating class="rating-stars" size="m" [disabled]="true"></star-rating>
+    </div>
+
+    <div class="scorecard-summary-wrap">
+      <div class="scorecard-summary-header">
+        <div class="scorecard-summary-label">Should we move this candidate to the next stage?</div>
+        <div class="scorecard-summary-buttons-wrap">
+
+          <div class="move-button"><div class="print-checkbox"></div>Definitely</div>
+          <div class="move-button"><div class="print-checkbox"></div>Yes</div>
+          <div class="move-button"><div class="print-checkbox"></div>Not Sure</div>
+
+        </div>
+      </div>
+      <div class="scorecard-summary-final-thoughts-wrap">
+        <div class="scorecard-summary-final-thoughts">
+          Give your final thoughts on whatever you think this candidate should move to the next stage or not. Tag colleagues by using @
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+
+</div>

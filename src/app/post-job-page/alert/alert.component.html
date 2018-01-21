@@ -1,0 +1,42 @@
+<div class="overlay">
+    <div class="content-wrap">
+        <div class="header-wrap">Congratulations</div>
+        <a class="separator"></a>
+        <div class="main-wrap">
+            <div class="main-header">
+                <img class="logo" src="../../../../assets/img/logo.png">
+                <div class="text-wrap">
+                    <a class="top-title">Job successfully published</a><br>
+                    <a class="bottom-title"></a>
+                </div>
+                <img class="bird" src="../../../../assets/img/bird.png">
+            </div>
+            <div class="main-body">
+                <p class="body-text">Download the SwipeIn mobile App<br>Chat with Applicants and your colleagues on the Go!</p>
+                <div class="bottom-main">
+                    <div class="devices-container">
+                        <img class="devices" src="../../../../assets/img/devices.png">
+                    </div>
+                    <div class="right-bottom-main">
+                        <p class="right-bottom-title">Enter your phone number</p>
+                        <input class="right-bottom-input" placeholder="Phone number" [formControl]="numberCtrl" (input)="phonenumber()">
+                        <div class="buttons">
+                            <button class="button-text-app" (click)="sendSMS()" [disabled]="!isValid">Text me the app</button>
+                            <button class="close_button_2" (click)="close()">Close</button>
+                        </div>
+                        <a class="checkbox-wrap"><input type="checkbox" class="checkbox" (change)="isPostJobShowAlert = !isPostJobShowAlert"><a class="checkbox-title">Do not show this notification again</a></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="content-wrap">
+        <div class="header-wrap">Congratulations</div>
+        <a class="separator"></a>
+        <div class="main-wrap">
+            <div class="main-header">
+            </div>
+        </div>
+    </div> -->
+    <button class="close_button" (click)="close()"></button>
+</div>

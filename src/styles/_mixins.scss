@@ -1,0 +1,144 @@
+@import "variables";
+@import "../theme.scss";
+
+$transition-time-default: 0.3s;
+@mixin animation-transition($attribute, $duration: $transition-time-default, $timing-function: ease, $delay: 0s) {
+    -webkit-transition: $attribute $duration $timing-function $delay;
+    -moz-transition: $attribute $duration $timing-function $delay;
+    -ms-transition: $attribute $duration $timing-function $delay;
+    -o-transition: $attribute $duration $timing-function $delay;
+    transition: $attribute $duration $timing-function $delay;
+}
+
+@mixin border-radius($radius) {
+    border-radius: $radius;
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+}
+
+@mixin gradient-from-left ($color1, $color2) {
+    background: linear-gradient(to right, $color1, $color2);
+    background: -webkit-linear-gradient(left, $color1, $color2);
+    background: -o-linear-gradient(right, $color1, $color2);
+    background: -moz-linear-gradient(right, $color1, $color2);
+}
+
+@mixin position-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+@mixin displayFlex() {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
+@mixin flex($flex-grow: 0, $flex-shrink: 1, $flex-basis: auto) {
+    flex: $flex-grow $flex-shrink $flex-basis;
+    -webkit-flex: $flex-grow $flex-shrink $flex-basis;
+    -ms-flex: $flex-grow $flex-shrink $flex-basis;
+}
+
+@mixin flex-direction($direction) {
+    -webkit-flex-direction: $direction;
+    flex-direction: $direction;
+}
+
+@mixin flex-align-items($value) {
+    -webkit-align-items: $value;
+    align-items: $value;
+}
+
+@mixin flex-justify-content($value) {
+    justify-content: $value;
+    -webkit-justify-content: $value;
+    -moz-justify-content: $value;
+}
+
+@mixin flex-justify-self($value) {
+    justify-self: $value;
+    -webkit-justify-self: $value;
+    -moz-justify-self: $value;
+}
+
+@mixin flex-align-self($value) {
+    align-self: $value;
+    -webkit-align-self: $value;
+    -moz-align-self: $value;
+}
+
+@mixin overlay() {
+    position: fixed;
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(flex-start);
+    @include flex-justify-content(center);
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    overflow-y: auto;
+    z-index: 999;
+}
+
+
+@mixin flex-basis($value) {
+    flex-basis: $value;
+    -webkit-flex-basis: $value;
+    -moz-flex-basis: $value;
+}
+
+@mixin flex-grow($value) {
+    flex-grow: $value;
+    -webkit-flex-grow: $value;
+    -moz-flex-grow: $value;
+}
+
+@mixin flex-shrink($value) {
+    flex-shrink: $value;
+    -webkit-flex-shrink: $value;
+    -moz-flex-shrink: $value;
+}
+
+@mixin flex-wrap($value) {
+    flex-wrap: $value;
+    -webkit-flex-wrap: $value;
+    -moz-flex-wrap: $value;
+}
+
+//=================================
+
+@mixin preloaderSettings() {
+    @include flex-align-items(center);
+    position: fixed;
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(center);
+    @include flex-justify-content(center);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    overflow-y: auto;
+    z-index: 999;
+    background-color: rgba(245, 245, 245, 0.9);
+    img {
+        width: 85px;
+    }
+}
+@mixin transform-rotate($value) {
+	-o-transform: rotate($value);
+	-ms-transform: rotate($value);
+	-moz-transform: rotate($value);
+	-webkit-transform: rotate($value);
+	transform: rotate($value);
+}

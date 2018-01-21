@@ -1,0 +1,155 @@
+<section class="candidate-profile-inner-section" *ngIf="candidate">
+    <div class="profile-header">
+        <div class="header-candidate-general-info">
+            <!-- <img src="{{candidate.get('avatarURL')}}" alt="profile pic"> -->
+
+            <div class="candidate-scoring">
+                <div class="stars-wrap">
+                    <star-rating [disabled]="true" [(ngModel)]="this._candidateProfileService.scoreSum / this._candidateProfileService.scoreCount"></star-rating>
+                </div>
+                <!--<span>#emoji</span>-->
+                <div class="candidate-location">
+                    {{candidate.get('location')}}
+                </div>
+                <div class="icons">
+                    <div class="verdict-icon-wrap">
+                        <img class="verdict-icon" src="../../../../assets/icons/definitely.svg" alt="Definitely" />
+                        <span>{{_candidateProfileService.verdicts.definitely !== 0 ? _candidateProfileService.verdicts.definitely : '—'}}</span>
+                    </div>
+                    <div class="verdict-icon-wrap">
+                        <img class="verdict-icon" src="../../../../assets/icons/yes.svg" alt="Yes" />
+                        <span>{{_candidateProfileService.verdicts.yes !== 0 ? _candidateProfileService.verdicts.yes : '—'}}</span>
+                    </div>
+                    <div class="verdict-icon-wrap">
+                        <img class="verdict-icon" src="../../../../assets/icons/not-sure.svg" alt="Not Sure" />
+                        <span>{{_candidateProfileService.verdicts.notSure !== 0 ? _candidateProfileService.verdicts.notSure : '—'}}</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="candidate-info-top-block">
+                <div class="avatar-wrap">
+                    <img class="avatar" [src]="candidate.get('avatarURL')" (error)="errorHandler($event)" alt="profile pic">
+                </div>
+                <div class="candidate-name-position">
+                    <div class="candidate-name">
+                        {{candidate.get('firstName')}} {{candidate.get('lastName')}}
+                    </div>
+                    <div class="candidate-position">
+                        {{candidate.get('headline')}}
+                    </div>
+                    <div class="company-name">
+                        <span class="company-title" *ngFor="let companyName of candidate.get('companyNames')">
+                            {{companyName}}
+                        </span>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <div class="mail-button button" (click)="sendEmail()">
+                        <img class="mail" src="../../../assets/img/mail.png">
+                        <!-- <i class="fa fa-envelope-o" aria-hidden="true"></i> -->
+                    </div>
+                    <div class="move-candidate-button button" (click)="showMoveMenu()">
+                        <img class="move-to" src="../../../assets/img/move-forvard.svg">
+                        <!-- <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> -->
+                        <div class="move-candidate-dropdown" #moveCandidateMenu (mouseleave)="closeMoveMenu()">
+                            <div class="header">Move candidate to</div>
+                            <div class="inteview-stage" (click)=" moveCandidate(0)">Shortlist</div>
+                            <div class="inteview-stage" (click)=" moveCandidate(1)">Phone Interview</div>
+                            <div class="inteview-stage" (click)=" moveCandidate(2)">F2F Interview</div>
+                            <div class="inteview-stage" (click)=" moveCandidate(3)">Job Offered</div>
+                            <div class="inteview-stage" (click)=" moveCandidate(4)">Hired</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="candidate-info-bottom-block"> -->
+            <!-- <div class="candidate-location">
+                    {{candidate.get('location')}}
+                </div> -->
+
+            <!-- <div class="candidate-match">
+                    <div *ngIf="weight <= 30">Potential fit</div>
+                    <div *ngIf="weight > 30 && weight <= 70">Good fit</div>
+                    <div *ngIf="weight > 70 && weight <= 100">Great fit</div>
+                </div> -->
+
+            <!--<div class="distance">-->
+
+            <!--</div>-->
+
+            <!--<div class="share-button">-->
+            <!--<mat-icon>share</mat-icon>-->
+            <!--</div>-->
+            <!--<div class="send-email-button">-->
+            <!--<button (click)="sendEmail(true)">Send</button>-->
+            <!--</div>-->
+            <!-- </div> -->
+        </div>
+        <div class="header-candidate-summary">
+            <div class="candidate-roles-wrap">
+                <span class="candidate-role" *ngFor="let role of roles; let index = index">
+                    {{role.get('title')}}
+                    <span class="separator" *ngIf="index < (roles.length - 1)">—</span>
+                </span>
+            </div>
+            <ul class="summary-list">
+                <li *ngIf="developer.get('jobType')" [ngSwitch]="developer.get('jobType')">
+                    Interested on
+                    <span *ngSwitchCase="1">Permanent jobs</span>
+                    <span *ngSwitchCase="2">Contract jobs</span>
+                    <span *ngSwitchCase="3">Permanent and Contract jobs</span>
+                </li>
+                <li *ngIf="developer.get('jobStatuses')" [ngSwitch]="developer.get('jobStatuses')[0]">
+                    <span *ngSwitchCase="2">Actively looking</span>
+                    <span *ngSwitchCase="1">Passively looking</span>
+                </li>
+                <li *ngIf="developer.get('minDailyRate')">
+                    Min daily rate {{developer.get('minDailyRate')}}
+                </li>
+                <li *ngIf="developer.get('minAnnualSalary')">
+                    Min annual salary {{developer.get('minAnnualSalary')}}
+                </li>
+                <li *ngIf="developer.get('CommutingUpTo')">
+                    Willing to commute up to {{developer.get('CommutingUpTo')}} miles
+                </li>
+                <li *ngIf="developer.get('LookingOnlyHomebasedWork')">
+                    Only looking for home/remote work
+                </li>
+                <li *ngIf="developer.get('IsNationalRelocate')">
+                    Willing to relocate Nationally
+                </li>
+                <li *ngIf="developer.get('IsInternationalRelocate')">
+                    Willing to relocate Internationally
+                </li>
+                <li *ngIf="developer.get('IsInternationalRelocate')">
+                    Willing to relocate Internationally
+                </li>
+                <li *ngIf="developer.get('postCode')">
+                    Home post code {{developer.get('postCode')}}
+                </li>
+                <li *ngIf="developer.get('IsNoticePeriod')">
+                    Available on notice period
+                </li>
+                <li *ngIf="developer.get('availableDate')">
+                    Available on {{availabilityDate | date:'shortDate'}}
+                </li>
+                <li *ngIf="developer.get('isAsap')">
+                    Available Now!
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</section>
+<!-- <app-gmail [sendingEmail]='sendingEmail' [userId]='userId' [contractId]='contractId'></app-gmail> -->
+
+<div class="candidate-tabs">
+    <a class="candidate-tab" [routerLink]="['/', 'jobs', contractId, 'candidates', 'notes']" routerLinkActive="active" skipLocationChange>Candidate Notes</a>
+    <a class="candidate-tab" [routerLink]="['/', 'jobs', contractId, 'candidates', 'scorecards-assessments']" routerLinkActive="active" skipLocationChange>Scorecards & Assessments</a>
+    <a class="candidate-tab" [routerLink]="['/', 'jobs', contractId, 'candidates', 'scoring']" routerLinkActive="active" skipLocationChange>Scoring</a>
+    <a class="candidate-tab" [routerLink]="['/', 'jobs', contractId, 'candidates', 'chat']" routerLinkActive="active" skipLocationChange>Candidate Communications</a>
+    <a class="candidate-tab" [routerLink]="['/', 'jobs', contractId, 'candidates', 'skills']" routerLinkActive="active" skipLocationChange>Skills</a>
+    <a class="candidate-tab" [routerLink]="['/', 'jobs', contractId, 'candidates', 'cv']" routerLinkActive="active" skipLocationChange>CV</a>
+</div>
+<router-outlet></router-outlet>

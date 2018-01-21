@@ -1,0 +1,184 @@
+@import '../../../styles/mixins';
+
+.overlay {
+  @include overlay();
+  @include flex-align-items(center);
+  width: 100%;
+  height: 100vh;
+  .close_button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background-color: rgba(128, 128, 128, 0.5);
+    border: 0;
+  }
+  .content-wrap {
+    @include displayFlex();
+    @include flex-direction(column);
+    @include flex-align-items(center);
+    @include flex-justify-content(center);
+    background-color: #f4f6f9;
+    width: 60vw;
+    height: 90vh;
+    overflow: hidden;
+    border-radius: 4px;
+    z-index: 1111;
+    position: relative;
+    .header-wrap {
+      margin-top: 8vh;
+      font-family: 'Playfair Display', sans-serif;
+      font-size: $font-size-28;
+      letter-spacing: 1px;
+      text-align: center;
+      color: #081431;
+    }
+    .separator {
+      margin-top: 3vh;
+      margin-bottom: 7vh;
+      text-align: center;
+      height: 2px;
+      width: 7vw;
+      background-color: #ffaf41;
+    }
+    .main-wrap {
+      width: 49vw;
+      background-color: #ffffff;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+      margin-bottom: 10vh;
+      padding-bottom: 5vh;
+      .main-header {
+        width: 100%;
+        border-bottom: solid 1px #dde2f5;
+        @include displayFlex();
+        @include flex-direction(row);
+        @include flex-align-items(center);
+        padding: 3vh 2vw;
+        .logo {
+          margin-right: 3vw;
+          width: 56px;
+          height: 56px;
+        }
+        .text-wrap {
+          .top-title {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 20px;
+            line-height: 1.4;
+            color: #081431;
+            text-align: left;
+          }
+          .bottom-title {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 16px;
+            line-height: 1.75;
+            text-align: left;
+            color: rgba(13, 28, 64, 0.8);
+          }
+        }
+        .bird {
+          margin-left: auto;
+          height: 80.7px;
+          width: 50.7px;
+        }
+      }
+      .main-body {
+        @include displayFlex();
+        @include flex-direction(column);
+        .body-text {
+          margin-top: 3vh;
+          margin-left: 2vw;
+          font-family: 'Open Sans', sans-serif;
+          font-size: 18px;
+          line-height: 1.39;
+          text-align: left;
+          color: #0d1c40;
+          margin-bottom: 2vh;
+        }
+        .bottom-main {
+          @include displayFlex();
+          @include flex-direction(row);
+          .devices-container {
+            width: 50%;
+            .devices {
+              margin: 0.5vh 0.5vw;
+              max-width: 270px;
+              max-height: 193px;
+            }
+          }
+          .right-bottom-main {
+            width: 50%;
+            @include displayFlex();
+            @include flex-direction(column);
+            .right-bottom-title {
+              font-family: 'Open Sans', sans-serif;
+              font-size: 12px;
+              color: rgba(13, 28, 64, 0.5);
+              margin-bottom: 2vh;
+            }
+            .right-bottom-input {
+              width: 70%;
+              height: 6vh;
+              min-height: 30px;
+              border-radius: 4px;
+              background-color: #ffffff;
+              border: solid 1.3px #d5d9e7;
+              font-family: 'Open Sans', sans-serif;
+              font-size: 16px;
+              text-align: left;
+              padding-left: 10px;
+              color: rgba(13, 28, 64, 0.5);
+              margin-bottom: 5vh;
+            }
+            .buttons {
+              @include displayFlex();
+              @include flex-direction(row);
+              @include flex-justify-content(space-around);
+              width: 100%;
+              .button-text-app {
+                width: 40%;
+                min-width: 147px;
+                cursor: pointer;
+                padding: 8px 12px;
+                font-family: 'Open Sans', sans-serif;
+                font-size: 16px;
+                color: white;
+                text-align: center;
+                border-radius: 4px;
+                background-color: #75b7ef;
+                border: 0;
+                &:disabled {
+                  background-color: lightgrey;
+                }
+              }
+              .close_button_2 {
+                width: 40%;
+                min-width: 147px;
+                cursor: pointer;
+                padding: 8px 12px;
+                font-family: 'Open Sans', sans-serif;
+                font-size: 16px;
+                color: white;
+                text-align: center;
+                border-radius: 4px;
+                background-color: #75b7ef;
+                border: 0;
+              }
+            }
+            .checkbox-title {
+              margin-left: 0.5vw;
+              font-family: 'Open Sans', sans-serif;
+              font-size: 12px;
+              text-align: left;
+              color: rgba(12, 21, 50, 0.8);
+            }
+            .checkbox-wrap {
+              margin-top: 7vh;
+            }
+          }
+        }
+      }
+    }
+  }
+}

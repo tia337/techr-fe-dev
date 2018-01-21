@@ -1,0 +1,127 @@
+<h2 *ngIf = "(newTarifName == 'standard' && (upgradingAnnual != true && upgradingAnnual != false)) || upgradingAnnual === false" class = "upgrade-title">Downgrade summary</h2>
+<h2 *ngIf = "(newTarifName == 'professional' && (upgradingAnnual != true &&  upgradingAnnual != false)) || upgradingAnnual === true" class = "upgrade-title">Upgrade summary</h2>
+
+<div *ngIf = "(newTarifName == 'standard' || newTarifName == 'professional') && (upgradingAnnual != true &&  upgradingAnnual != false)" class = "flex-container">
+  <div class = "container-checkbox-inf">
+    <div class = "tick-wrap">
+        <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a>You are <a *ngIf = "newTarifName == 'standard'">downgrading</a> <a *ngIf = "newTarifName == 'professional'">upgrading</a> to the <strong *ngIf = "newTarif">{{newTarif.get("NameSwipeIn")}}</strong> plan</a>
+  </div>
+  <div class = "container-checkbox-inf">
+    <div class = "tick-wrap">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a>You will pay <strong *ngIf = "newTarif && newTarif.get('IntervalString') == 'year'">annually</strong>
+      <strong *ngIf = "newTarif && newTarif.get('IntervalString') == 'month'">monthly</strong>
+       <h6 class = "link" *ngIf = "newTarif && newTarif.get('IntervalString') == 'month'" (click) = "switchPayment('year')">Switch to annually</h6>
+       <h6 class = "link" *ngIf = "newTarif && newTarif.get('IntervalString') == 'year'" (click) = "switchPayment('month')">Switch to monthly</h6></a>
+  </div>
+  <div class = "container-checkbox-inf">
+    <div class = "tick-wrap">
+        <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a *ngIf = "newTarif && opositPayingPlan && newTarif.get('IntervalString') == 'year'">Your price per seat per month will be <strong>{{newTarif.get("Amount")/12 | currency:newTarif.get("Currency"):true:'1.2-2'}}. </strong> <h6>({{opositPayingPlan.get("Amount") | currency:newTarif.get("Currency"):true:'1.2-2'}} if monthly)  </h6></a>
+    <a *ngIf = "newTarif && opositPayingPlan && newTarif.get('IntervalString') == 'month'">Your price per seat per month will be <strong>{{newTarif.get("Amount") | currency:newTarif.get("Currency"):true:'1.2-2'}}.</strong> <h6>({{opositPayingPlan.get("Amount")/12 | currency:newTarif.get("Currency"):true:'1.2-2'}} if you switch to annually)  </h6></a>
+  </div>
+  <div class = "container-checkbox-inf" *ngIf = "newTarif && curSubscription && newTarif.get('IntervalString') == curSubscription.get('IntervalString')">
+    <div class = "tick-wrap">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a *ngIf = "newTarif && newTarif.get('IntervalString') == 'year'">On your renewal date ({{endPeriod | date}}) you will be charged <strong>{{newTarif.get("Amount")* client.get("TeamMembers").length | currency:newTarif.get("Currency"):true:'1.2-2'}}</strong> (plus taxes) for {{client.get("TeamMembers").length}} users for 12 month</a>
+    <a *ngIf = "newTarif && newTarif.get('IntervalString') == 'month'">On your renewal date ({{endPeriod | date}}) you will be charged <strong>{{newTarif.get("Amount")* client.get("TeamMembers").length | currency:newTarif.get("Currency"):true:'1.2-2'}} per month for {{client.get("TeamMembers").length}} users</strong> (plus taxes) <br> <h6>(2 month free by switching to annual plan)</h6></a>
+  </div>
+  <!-- {{endPeriod | date}} -->
+  <div class = "container-checkbox-inf" *ngIf = "newTarif && curSubscription && newTarif.get('IntervalString') != curSubscription.get('IntervalString')">
+    <div class = "tick-wrap">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a *ngIf = "newTarif && newTarif.get('IntervalString') == 'year'">You will be charged <strong>{{newTarif.get("Amount")* client.get("TeamMembers").length | currency:newTarif.get("Currency"):true:'1.2-2'}}</strong> (plus taxes) for {{client.get("TeamMembers").length}} users for 12 month</a>
+    <a *ngIf = "newTarif && newTarif.get('IntervalString') == 'month'">You will be charged <strong>{{newTarif.get("Amount")* client.get("TeamMembers").length | currency:newTarif.get("Currency"):true:'1.2-2'}} per month for {{client.get("TeamMembers").length}} users</strong> (plus taxes) <br> <h6>(2 month free by switching to annual plan)</h6></a>
+  </div>
+  <div class = "container-checkbox-inf" *ngIf = "newTarif && curSubscription && newTarif.get('IntervalString') != curSubscription.get('IntervalString')">
+    <div class = "tick-wrap">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a *ngIf = "newTarif && newTarif.get('IntervalString') == 'month'" >Your new monthly billing cycle will start today ({{today | date}})</a>
+    <a *ngIf = "newTarif && newTarif.get('IntervalString') == 'year'" >Your new billing cycle for the annual plan will start today ({{today | date}})</a>
+  </div>
+  <div class = "bottom-block">
+    <p>You are
+      <strong>
+        <a *ngIf = "newTarifName == 'standard'">downgrading {{client.get("TeamMembers").length}} users to Standard now.</a>
+        <a *ngIf = "newTarifName == 'professional'">upgrading {{client.get("TeamMembers").length}} users to Professional now.</a>
+        
+      </strong>
+    </p>
+    <button *ngIf = "newTarifName == 'standard'" class = "primary-button confirm" (click)="updatePlan()">
+      <mat-spinner *ngIf = 'upgradingInProgress == true'  [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+      Confirm Downgrade</button>
+    <button *ngIf = "newTarifName == 'professional'" class = "primary-button confirm" (click)="updatePlan()">
+      <mat-spinner *ngIf = 'upgradingInProgress == true'  [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+      Confirm Upgrade</button>
+    <p class = "refund-p">Is not possible to issue refunds, so please read this instructions carefully</p>
+    <p class = "refund-p">
+      <a class = "policy-bold">Fair billing policy: </a>Your monthly
+       billing will be credited when new team members are removed or
+       become inactive and charged when new members are added or become active. <a class = "link">See details.</a></p>
+  </div>
+</div>
+
+<div *ngIf = "(upgradingAnnual === true || upgradingAnnual === false)" class = "flex-container">
+  <div class = "container-checkbox-inf">
+    <div class = "tick-wrap">
+        <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a>You will stay on the <strong *ngIf = "newTarif">{{newTarif.get("NameSwipeIn")}}</strong> plan</a>
+  </div>
+  <div class = "container-checkbox-inf">
+    <div class = "tick-wrap">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a>You <strong *ngIf = "upgradingAnnual === true">will upgrade now to annual billing</strong>
+      <strong *ngIf = "upgradingAnnual === false">will downgrade now to monthly billing</strong>
+    </a>
+  </div>
+  <div class = "container-checkbox-inf">
+    <div class = "tick-wrap">
+        <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a *ngIf = "newTarif && opositPayingPlan && newTarif.get('IntervalString') == 'year'">Your price per seat per month will be <strong>{{newTarif.get("Amount")/12 | currency:newTarif.get("Currency"):true:'1.2-2'}}. </strong></a>
+    <a *ngIf = "newTarif && opositPayingPlan && newTarif.get('IntervalString') == 'month'">Your price per seat per month will be <strong>{{newTarif.get("Amount") | currency:newTarif.get("Currency"):true:'1.2-2'}}.</strong></a>
+  </div>
+  <div class = "container-checkbox-inf">
+    <div class = "tick-wrap">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a>Your new billing cycle will start <strong>today</strong> ({{today | date}})</a>
+  </div>
+  <div class = "container-checkbox-inf" *ngIf = "newTarif && curSubscription && newTarif.get('IntervalString') != curSubscription.get('IntervalString')">
+    <div class = "tick-wrap">
+      <i class="fa fa-check-square-o fa-2x checkbox" aria-hidden="true"></i>
+    </div>
+    <a *ngIf = "newTarif && newTarif.get('IntervalString') == 'year'">You will be charged <strong>{{newTarif.get("Amount")* client.get("TeamMembers").length | currency:newTarif.get("Currency"):true:'1.2-2'}}</strong> (plus taxes) for {{client.get("TeamMembers").length}} users for 12 month</a>
+    <a *ngIf = "newTarif && newTarif.get('IntervalString') == 'month'">You will be charged <strong>{{newTarif.get("Amount")* client.get("TeamMembers").length | currency:newTarif.get("Currency"):true:'1.2-2'}} per month for {{client.get("TeamMembers").length}} users</strong> (plus taxes) <br></a>
+  </div>
+  <div class = "bottom-block">
+    <p>You are
+      <strong>
+        <a *ngIf = "upgradingAnnual === false">downgrading {{client.get("TeamMembers").length}} users to monthly paying plan now.</a>
+        <a *ngIf = "upgradingAnnual === true">upgrading {{client.get("TeamMembers").length}} users to annual paying plan now.</a>
+        
+      </strong>
+    </p>
+    <button *ngIf = "upgradingAnnual === false" [ngClass]="{'integration': upgradingInProgress == true}" class = "primary-button confirm" (click)="updatePlan()">
+      <mat-spinner *ngIf = 'upgradingInProgress == true'  [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+      Confirm Downgrade</button>
+    <button *ngIf = "upgradingAnnual === true" [ngClass]="{'integration': upgradingInProgress == true}" class = "primary-button confirm" (click)="updatePlan()">
+      <mat-spinner *ngIf = 'upgradingInProgress == true' [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
+      Confirm Upgrade</button>
+    <p class = "refund-p">Is not possible to issue refunds, so please read this instructions carefully</p>
+    <p class = "refund-p">
+      <a class = "policy-bold">Fair billing policy: </a>Your monthly
+       billing will be credited when new team members are removed or
+       become inactive and charged when new members are added or become active. <a class = "link">See details.</a></p>
+  </div>
+</div>
+

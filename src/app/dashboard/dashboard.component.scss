@@ -1,0 +1,205 @@
+@import './../../styles/mixins';
+.login-page-content {
+  padding: 25px;
+  position: relative;
+  .days-left {
+    display: inline-block; // float: right;
+    position: absolute;
+    top: 5px;
+    right: 50px;
+    width: 180px;
+    text-align: center;
+    .days-left-labels {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      font-size: 0.7em;
+      color: #999999;
+      .trial-label {}
+      .buy-button {
+        color: #4186EC;
+        cursor: pointer;
+        text-decoration: none;
+      }
+    }
+    .days-left-indicator-wrap {
+      display: inline-block;
+      overflow: hidden;
+      height: 80px;
+      margin-top: 15px;
+      .days-left-indicator {
+        // transform: translateY(50%);
+        height: 130px;
+        width: 130px; //transform: rotate(-90deg);
+        /deep/ svg {
+          circle {
+            transform: rotate(-90deg);
+          }
+          background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path style="stroke-width: 5; stroke: #ccc; fill: none;" d="M50,5A45,45 0 0,1 50.003926990812005,94.9999998286527"></path></svg>');
+        }
+      }
+    }
+    .days-left-label {
+      color: #999999;
+      text-align: center;
+      margin-top: -50px;
+      margin-bottom: 15px;
+      .days-left-value {
+        font-size: 1.7em;
+        font-weight: 500;
+      }
+    }
+    .expires-on-label {
+      font-size: 0.7em;
+      color: #999999;
+    }
+  }
+
+  .plan-name {
+    display: inline-block;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: $font-size-12;
+    color: $steel;
+  }
+
+  .top-block {
+    text-align: center;
+    margin: 5px 0;
+    img.egret-logo {
+      max-height: 15vh;
+    }
+    .greeting {
+      font-size: 1.3em;
+      font-weight: 100;
+    } // .swipein-header {
+    //   font-size: 26px;
+    //   font-weight: 300;
+    //   margin: 10px 0 5px 0;
+    //   .blue {
+    //     color: #003186;
+    //   }
+    //   .black {
+    //     color: #000;
+    //   }
+    // }
+  }
+  .chart-wrap {
+    padding: 20px;
+    position: relative;
+    .mock-chart {
+      width: 100%;
+    }
+    .lock-holder {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      position: absolute;
+      top: calc(20px + 5%);
+      left: 25%;
+      .lock-message {
+        font-size: 1.2em;
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.mock {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  .main_container_for_mock {
+    @include displayFlex();
+    @include flex-direction(column);
+    @include flex-align-items(center);
+    @include flex-justify-content(center);
+    width: 100%;
+    height: 100%;
+    position: relative;
+    box-shadow: 1px 1px 4px grey;
+    .middle_img {
+      width: 40%;
+      z-index: 99;
+      img {
+        width: 100%;
+        z-index: 99;
+      }
+    }
+    .welcome-onboard-lau {
+      width: 35%;
+      margin-top: 1%;
+      margin-bottom: 1%;
+      font-family: OpenSans;
+      font-size: $font-size-24;
+      font-weight: 600;
+      // line-height: 2.08;
+      text-align: center;
+      z-index: 100;
+    }
+    .unlock-your-dashboar {
+      width: 25%;
+      font-family: OpenSans;
+      font-size: $font-size-18;
+      text-align: center;
+      margin-top: 1%;
+      margin-bottom: 1%;
+      z-index: 100;
+    }
+    .blue-button-hover {
+      min-width: 140px;
+      margin-top: 15px;
+      font-size: $font-size-16;
+      border-radius: 4px;
+      font-weight: 500;
+      font-family: OpenSans;
+      color: white;
+      background-color: #1081de;
+      z-index: 100;
+      margin-bottom: 10%;
+    }
+    .bottom_image {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 89;
+      border: 0;
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
+.feedback_triangle {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-bottom: 80px solid #007ab6;
+	border-left: 80px solid transparent;
+  z-index: 999999;
+  cursor: pointer;
+	.feedback_text {
+		@include transform-rotate(-45deg);
+		position: absolute;
+		right: -1px;
+		top: 38px;
+		color: rgb(255, 255, 255);
+		font-weight: bold;
+    opacity: 1;
+    cursor: pointer;
+	}
+  }
+  .triangle-wrap{
+    position: relative;
+  }
+  .speaker{
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    width: 20px;
+    transform: rotate(-45deg);
+  }

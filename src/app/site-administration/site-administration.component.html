@@ -1,0 +1,23 @@
+<section class="site-administration-inner-page">
+
+  <div class="left-side-bar">
+    <div class="menu-block">
+      <nav>
+        <ul>
+          <li><a routerLink="company-settings" [routerLinkActive]="['active']">Company settings</a></li>
+          <li><a routerLink="user-management" [routerLinkActive]="['active']">User management & Permissions</a></li>
+          <!-- <li><a routerLink="jobs-settings" [routerLinkActive]="['active']">Jobs settings</a></li> -->
+          <li><a routerLink="subscriptions" [routerLinkActive]="['active']">Subscriptions</a></li>
+          <li><a routerLink="billing" [routerLinkActive]="['active']">Billing</a></li>
+          <li><a routerLink="app-integrations" [routerLinkActive]="['active']">App Integrations</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+
+
+</section>

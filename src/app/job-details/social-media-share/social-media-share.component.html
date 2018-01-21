@@ -1,0 +1,28 @@
+<div class = "share-title-container">
+  <p class = "share-title">
+    Leverage your Networks’ Likes and Shares to source top talent
+  </p>
+</div>
+<div class = "social-networks-container">
+  <div class = "linkedin-share social-network">
+    <img class = "social-network-logo" src = "../../assets/images/LinkedIn_Logo.svg">
+    <br>
+    <div class = "share-button-container">
+      <a #linkedinButton (click)="shareWithLinkedin()" class = "button share-button">Share on LinkedIn</a>
+    </div>
+  </div>
+  <div class = "social-network">
+    <img class = "social-network-logo" src = "../../assets/images/facebook_logo.png">
+    <br>
+    <div class = "share-button-container">
+      <a (click) = "shareWithFacebook()" class = "button share-button facebook"><a color = 'warn'>Share on Facebook</a></a>
+    </div>
+  </div>
+  <div class = "social-network">
+    <img class = "social-network-logo" src = "../../assets/images/Twitter_logo.png">
+    <br>
+    <div class = "share-button-container">
+      <a #twitterButton (click) = "shareWithTwitter()" class = "button share-button">Share on Twitter</a>
+    </div>
+  </div>
+</div>

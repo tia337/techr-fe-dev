@@ -1,0 +1,72 @@
+<div class="contact_main">
+    <div *ngIf="!isSent" class="contact_panel">
+      <div class = "titles-wrap">
+        <div class="title">
+          How can we help?
+        </div>
+        <!-- <div class="subtitle">
+          <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Do you want us to launch new feature?
+          <br>
+          <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Did you find a bug?
+          <br>
+          <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Do you want to give us a high five?
+          <!-- <br> -->
+          <!-- We look forward to hearing from you -->
+        <!-- </div> -->
+      </div>
+      <div class="type">
+        <form>
+          <mat-form-field class="type_select">
+            <mat-select placeholder="Select enquiry type" name="type" [(ngModel)] = 'contactType'>
+              <mat-option disabled>Select enquiry type</mat-option>
+              <mat-option *ngFor="let type of contactTypes" [value]="type.id">
+                {{ type.get('type') }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+      <div *ngIf="contactType && contactType === 'beVsGdTy1P'" class = 'inputs-wrap'>
+        <div class = 'recruiters-num'>
+          <p>Enter Number of Recruiters</p>
+          <mat-form-field>
+            <input matInput class = 'recruiters-input' [(ngModel)] = 'numOfRecruiters' type = "number" min = "1" placeholder = 'Enter'>
+          </mat-form-field>
+        </div>
+        <div class = 'online-platform' *ngIf = "contactType === 'beVsGdTy1P'">
+          <p>Are you currently using an Online recruitment platform?</p>
+          <!-- <input class = 'online-platform-input'> -->
+          <mat-form-field class="online-platform-input">
+            <mat-select placeholder="Select" [(ngModel)] = 'usingPlatform' name="platform">
+              <mat-option [value] = "true">Yes</mat-option>
+              <mat-option [value] = "false">No</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class = 'phone-num' *ngIf = "contactType === 'beVsGdTy1P'">
+          <p>Please leave your phone number if you want us to contact you by phone</p>
+          <mat-form-field>
+            <input matInput class = 'phone-num-input' [(ngModel)] = 'phoneNumber' placeholder = 'Enter'>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="main_text">
+        <textarea *ngIf="contactType" [(ngModel)]="text"></textarea>
+      </div>
+      <div class="buttons_block">
+        <button *ngIf="text && text.length > 1" mat-raised-button (click)="saveSendContact()">Send form</button>
+        <button mat-raised-button (click)="close()">Cancel</button>
+      </div>
+    </div>
+    <div *ngIf="isSent" class="bye_panel">
+      <div class="title">
+        Form successfully submited
+      </div>
+      <div class="subtitle">
+        Thanks for contacting us. Our team will get in touch soon regarding your inquiry.
+      </div>
+    <button mat-raised-button (click)="close()">Close</button>
+    </div>
+    <button class="close_button" (click)="close()"></button>
+  </div>
+  

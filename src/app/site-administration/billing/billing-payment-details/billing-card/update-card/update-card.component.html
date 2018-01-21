@@ -1,0 +1,75 @@
+<div class="update-card-overlay" (click)="close()">
+
+  <div class="update-card-inner" (click)="$event.stopPropagation()">
+
+    <form class="update-card-form" [formGroup]="updateCardForm" (ngSubmit)="updateCard()">
+
+      <div class="update-card-form-wrap">
+        <div class="card-info">
+
+          <label class="update-card-input-label">
+            Card Number:
+            <div class="card-number">
+              XXX-XXX-XXX-{{card.last4}}
+            </div>
+          </label>
+
+
+          <label class="update-card-input-label">
+            Name:
+            <input type="text" class="input-text update-card-input update-card-input card-name" placeholder="Name" formControlName="name" />
+          </label>
+
+          <label class="update-card-input-label">
+            Card Expiry:
+            <div class="expiration-date">
+              <input type="text" class="input-text update-card-input card-exp-date" placeholder="12" formControlName="exp_month" size="2" maxlength="2" />
+              <span class="separator">/</span>
+              <input type="text" class="input-text update-card-input card-exp-year" placeholder="2000" formControlName="exp_year" size="4" maxlength="4" />
+            </div>
+          </label>
+
+        </div>
+
+        <div class="billing-address-info">
+
+          <label class="update-card-input-label">
+            Country:
+            <input type="text" class="input-text update-card-input address_country" placeholder="Country" formControlName="address_country" />
+          </label>
+          <label class="update-card-input-label">
+            City:
+            <input type="text" class="input-text update-card-input address_city" placeholder="City" formControlName="address_city" />
+          </label>
+          <label class="update-card-input-label">
+            State:
+            <input type="text" class="input-text update-card-input address_state" placeholder="State" formControlName="address_state" />
+          </label>
+          <label class="update-card-input-label">
+            Address Line 1:
+            <input type="text" class="input-text update-card-input address_line1" placeholder="Address Line 1" formControlName="address_line1" />
+          </label>
+          <label class="update-card-input-label">
+            Address Line 2:
+            <input type="text" class="input-text update-card-input address_line2" placeholder="Address Line 2" formControlName="address_line2" />
+          </label>
+          <label class="update-card-input-label">
+            ZIP Code:
+            <input type="text" class="input-text update-card-input address_zip"  placeholder="ZIP Code" formControlName="address_zip" />
+          </label>
+        </div>
+      </div>
+
+      <div class="submit-button-wrap">
+        <button class="primary-button submit-button" type="submit">Update</button>
+      </div>
+
+
+    </form>
+
+
+
+
+
+  </div>
+</div>

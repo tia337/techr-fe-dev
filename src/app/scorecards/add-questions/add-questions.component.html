@@ -1,0 +1,29 @@
+<div class="add-questions-inner-section">
+
+  <div class="stage-title" *ngIf="type" [ngSwitch]="type">
+    <span *ngSwitchCase="1"><mat-icon class="interview-type-icon">phone</mat-icon>Phone Interview</span>
+    <span *ngSwitchCase="2"><mat-icon class="interview-type-icon">face</mat-icon>F2F Interview</span>
+  </div>
+
+  <form class="questions-form" [formGroup]="questionsForm" (ngSubmit)="submitForm()" (keydown.enter)="$event.preventDefault()">
+
+    <input type="text" class="role-input-field input-text" formControlName="role" placeholder="Role: e.g. 'SAP Project Manager' " />
+
+
+    <div class="questions-forms-array" formArrayName="questions">
+      <div class="questions-block" *ngFor="let form of toFormArray(questionsForm.controls['questions']).controls; let i = index">
+        <subform [questionsForm]="questionsForm.controls.questions.controls[i]"></subform>
+        <div *ngIf="questionsForm.controls['questions'].controls.length > 1" class="remove-button" (click)="removeArea(i)"><mat-icon class="remove-area-button">close</mat-icon></div>
+      </div>
+    </div>
+
+    <div class="buttons-wrap">
+      <button type="button" class="back-button add-question-button secondary-button" (click)="goBack()">Back</button>
+      <button type="button" class="add-form-button add-question-button secondary-button" (click)="addForm()">Add area</button>
+      <button type="submit" class="continue-button add-question-button primary-button">Continue</button>
+
+    </div>
+
+  </form>
+
+</div>

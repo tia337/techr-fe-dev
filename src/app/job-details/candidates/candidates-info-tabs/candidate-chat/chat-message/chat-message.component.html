@@ -1,0 +1,24 @@
+<div class="wrap" *ngIf="message && !isLoading">
+    <div [class.message-send]="isSender" [class.message-receive]="!isSender">
+        <div class="sender" *ngIf = "email != true">
+            <div class="sender-avatar">
+                <img src={{message.sender.avatar}} alt="Sender avatar">
+            </div>
+            <div class="sender-name">{{message.sender.name}}</div>
+        </div>
+        <div class="body" [class.email] = "email === true">
+            <div class="body-info">
+                <div *ngIf = "email != true" class="body-info-date">{{message.date}}</div>
+                <div *ngIf = "email === true" class="body-info-date">Emails</div>
+            </div>
+            <div *ngIf="!message.atatchedFileURL;else attached" class="body-text">
+                <pre>{{message.text}}</pre>
+            </div>
+            <ng-template #attached class="body-text">
+                <div class="body-text">
+                    <pre><a href={{message.atatchedFileURL}} target="_blank">{{message.text}}</a></pre>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

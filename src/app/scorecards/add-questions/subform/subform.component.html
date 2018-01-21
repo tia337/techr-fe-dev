@@ -1,0 +1,8 @@
+<div class="subform-inner" [formGroup]="questionsForm">
+  <input type="text" class="input-text area-input-field" formControlName="area" placeholder="Area to be asessed" />
+
+    <div class="question-textfields" *ngFor="let question of toFormArray(questionsForm.controls['questions']).controls; let i = index">
+      <question [question]="questionsForm.controls.questions.controls[i]" [parentFormGroup]="questionsForm" #questionsList></question>
+    </div>
+
+</div>

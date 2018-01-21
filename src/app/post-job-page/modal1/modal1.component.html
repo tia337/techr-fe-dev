@@ -1,0 +1,28 @@
+
+
+
+<div class="modal-back-screen" (click)="close()">
+  <div class="modal-wrap" (click)="$event.stopPropagation()">
+
+    <div class="modal-container">
+
+        <div class="cross" (click)="close()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10.15 10.15"><line x1="0.4" y1="0.4" x2="9.8" y2="9.8"></line><line x1="9.8" y1="0.4" x2="0.4" y2="9.8"></line></svg>
+        </div>
+
+        <div>
+            <h4 (click) = "test()">Add Countries</h4>
+            <div class="modal-search-wrap">
+                <input type="search" class="modal-search" (input)="updateFilter($event.target.value)" />
+            </div>
+            <div *ngFor="let countryObj of countries | SearchCountryPipe: countriesFilter" class="modal-option-wrap">
+            <!-- <div *ngFor="let countryObj of countries" class="modal-option-wrap"> -->
+                <input id="{{ countryObj.country.id }}" type="checkbox" [(ngModel)]="countryObj.checked" [ngModelOptions]="{standalone: true}" />
+                <label for="{{ countryObj.country.id }}">{{ countryObj.country.get("Country") }}</label>
+            </div>
+        </div>
+
+    </div>
+  </div>
+</div>
+  

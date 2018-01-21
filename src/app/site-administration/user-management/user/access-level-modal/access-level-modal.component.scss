@@ -1,0 +1,185 @@
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 98;
+}
+
+.modal-wrap {
+  // padding: 20px;
+  background-color: #fff;
+  z-index: 99;
+  border-radius: 5px;
+  border: 1px solid #999999;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  // overflow: hidden;
+  transform: translate(-50%, -50%);
+  .modal-header {
+    background-color: #F5F5F5;
+    border-bottom: 1px solid #999999;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 15px;
+    font-size: 1.3em;
+    font-weight: 100;
+    border-radius: 5px 5px 0 0;
+    .lock-icon {
+      font-size: 1.2em;
+      margin-right: 20px;
+    }
+  }
+  .modal-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px 30px;
+    font-weight: 100;
+    font-size: 1.1em;
+
+    .al-dropdown {
+
+      .al-dropdown-overlay {
+        top: 0;
+        left: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: transparent;
+        &.hidden {
+          display: none;
+        }
+      }
+    
+      .current-permission {
+        margin-left: 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        cursor: pointer;
+        .down-arrow {
+          margin-top: 5px;
+        }
+      }
+      .al-select {
+        // margin-left: 20px;
+        background-color: #fff;
+        // padding: 10px 20px;
+        z-index: 100;
+        border: 1px solid #999999;
+        position: absolute;
+
+        // min-width: 100%;
+
+        input.permission-radio-button {
+          display: none;
+          & + label.permission-label {
+            display: block;
+            padding: 5px 15px;
+            font-size: 0.9em;
+            cursor: pointer;
+            display: flex;
+            flex-direction: row;
+            // justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
+            margin: 5px 0;
+
+            .permission-dropdown-section {
+              flex: 1 0 auto;
+
+              .permission-name {
+                // flex: 1 0 auto;
+                width: 100px;
+              }
+              .permission-name-label {
+                // flex: 1 0 auto;
+                border: 1px solid #000;
+                font-size: 0.8em;
+                padding: 5px auto;
+                text-align: center;
+                width: 100px;
+              }
+
+              .info-icon {
+                width: 100%;
+                min-width: 50px;
+                text-align: right;
+                // font-size: 0.8em;
+              }
+
+            }
+
+          }
+          &:checked + label.permission-label {
+            background-color: #3572B0;
+            color: #fff;
+
+            .permission-dropdown-section .permission-name-label {
+              border: 1px solid #fff;
+            }
+          }
+          &:disabled + label.permission-label{
+            color: #ccc;
+            cursor: not-allowed;
+            .permission-dropdown-section .permission-name-label {
+              border: 1px solid #ccc;
+            }
+          }
+        }
+        &.hidden {
+          display: none;
+        }
+      }
+
+    }
+
+    &.alert-message {
+      .bird-icon {
+        max-height: 7vw;
+        margin: 5px 20px 5px 5px;
+      }
+      .alert-text {
+        font-size: 0.9em;
+      }
+    }
+    
+  }
+  .modal-footer {
+    background-color: #F5F5F5;
+    border-top: 1px solid #999999;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    border-radius: 0 0 5px 5px;
+
+    .button {
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 0 5px;
+      border: none;
+      font-size: 0.8em;
+    }
+    .cancel {
+      background-color: transparent;
+      color: #3572B0;
+    }
+    .accept {
+      background-color: #3572B0;
+      color: #fff;
+      &.ok {
+        padding: 8px 30px;
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+<div class="scorecards-assessments-inner">
+  <!-- <div class="scorecards-title">
+    Scorecards
+  </div> -->
+  <div class = "buttons-container">
+    <!-- <button type="button" class = "select-scorecard-btn" (click)="test()"> -->
+    <button type="button" class = "select-scorecard-btn" (click)="selectScorecard()">
+      <i class="fa fa-clipboard" aria-hidden="true"></i>
+      Select Scorecard
+    </button>
+    <button type="button" class = "create-scorecard-btn" [routerLink]="['/', 'scorecards']">
+      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+      Create Scorecard
+    </button>
+  </div>
+  <div class="scorecards-wrap" *ngIf="scorecardRelationships.length > 0;else noscorecard">
+    <div *ngFor="let scorecardRelationship of scorecardRelationships" class="scorecard-wrap">
+      <div class="scorecard-title">{{scorecardRelationship.get('Scorecard').get('ScorecardTitle')}}</div>
+      <div class="scorecard-stage" [ngSwitch]="scorecardRelationship.get('Scorecard').get('Scorecard_type')">
+        <span *ngSwitchCase="1">Phone Interview</span>
+        <span *ngSwitchCase="2">F2F Interview</span>
+      </div>
+      <div *ngIf="scored[scorecardRelationship.get('Scorecard').id]" class="scorecard-button edit-button nowrap" (click)="scoreCandidate(scorecardRelationship.get('Scorecard'))">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        Edit Scoring
+      </div>
+      <div *ngIf="!scored[scorecardRelationship.get('Scorecard').id]" class="scorecard-button score-button nowrap" (click)="scoreCandidate(scorecardRelationship.get('Scorecard'))">
+        <i class="fa fa-star" aria-hidden="true"></i>
+        Score Candidate
+      </div>
+      <div class="scorecard-button preview-button" (click)="previewScorecard(scorecardRelationship.get('Scorecard'))">
+        <i class="fa fa-eye" aria-hidden="true"></i>
+        Preview
+      </div>
+      <div class="scorecard-button" (click)="removeScorecard(scorecardRelationship)">
+        <button class = "remove-wrap">
+          <i class="fa fa-times" aria-hidden="true"></i>
+          Remove
+        </button>
+      </div>
+    </div>
+  </div>
+  <ng-template #noscorecard>
+    <div>
+      Select a scorecard to assess the candidate's skills during interviews
+    </div>
+  </ng-template>
+</div>

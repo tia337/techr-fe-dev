@@ -1,0 +1,81 @@
+<h2>Test Stripe Form</h2>
+
+<form action="" method="POST" id="payment-form" (submit)="getToken()">
+  <span class="payment-message">{{message}}</span>
+  <div class = "flex-container">
+  <div class = "left-container">
+  <div class="form-row">
+    <label>
+      <span>Name on card</span><br>
+      <input [(ngModel)]="nameCard" name="name" type="text" class = "left-input" data-stripe="name">
+    </label>
+  </div>
+
+  <div class="form-row">
+    <label>
+      <span>Card Number</span><br>
+      <input [(ngModel)]="cardNumber" name="card-number" type="text" class = "left-input" data-stripe="number">
+    </label>
+  </div>
+
+  <div class="form-row">
+    <label>
+      <span>Expiration (MM/YY)</span><br>
+      <input [(ngModel)]="expiryMonth" name="expiry-month" type="text" class = "left-input-small" data-stripe="exp_month">
+    </label>
+    <span> / </span>
+    <input [(ngModel)]="expiryYear" name="expiry-year" type="text" class = "left-input-small" data-stripe="exp_year">
+  </div>
+
+  <div class = "cvc-zip-container">
+  <div class="form-row">
+    <label>
+      <span>CVC</span><br>
+      <div class = "input-img-container">
+      <input [(ngModel)]="cvc" name="cvc" type="text" class = "left-input-small" data-stripe="cvc">
+      <img src = "../../../assets/icons/card-icon.png" class="card-thumbnail">
+      </div>
+      <h6>3 digits on back</h6>
+    </label>
+  </div>
+
+
+  <div class="form-row">
+    <label>
+      <span>ZIP code</span><br>
+      <input [(ngModel)]="zip" name="zip" type="text" class = "left-input-small" data-stripe="address_zip">
+      <h6>for US cards only</h6>
+    </label>
+  </div>
+  </div>
+  </div>
+
+  <div class = "right-container">
+  <div class="form-row">
+    <label>
+      <span>Billing information</span><br>
+      <input [(ngModel)]="address1" name="address1" type="text"  data-stripe="address_line1" placeholder="Address 1"><br>
+      <input [(ngModel)]="address2" name="address2" type="text"  data-stripe="address_line2" placeholder="Address 2"><br>
+      <input [(ngModel)]="city" name="city" type="text"  data-stripe="address_city" placeholder="City"><br>
+      <input [(ngModel)]="country" name="country" list="country" type="text" data-stripe="address_country" placeholder="Country">
+        <datalist id="country">
+          <option value="United States">
+          <option value="Spain">
+          <option value="Ukraine">
+          <option value="Canada">
+          <option value="United Kindom">
+        </datalist><br>
+      <input [(ngModel)]="state" name="state" list="state" type="text"  data-stripe="address_state" placeholder="State/Province">
+        <datalist id="state">
+          <option value="test">
+        </datalist><br>
+      <input [(ngModel)]="zip" name="zip" type="text" data-stripe="address_zip" placeholder="Zip/Postal code"><br>
+      <!-- <input [(ngModel)]="phone" name="phone" type="text" sistripe-to-be-deletedripe-to-be-deletedta-stripe="phone" placeholder="Phone"><br>
+      <input [(ngModel)]="company" name="company" type="text" size="20" data-stripe="account_holder_name" placeholder="Company name/Account holder name"><br> -->
+    </label>
+  </div>
+  </div>
+  </div>
+
+  <input class = "primary-button purchase" type="submit" value="Complete your purchase">
+</form>

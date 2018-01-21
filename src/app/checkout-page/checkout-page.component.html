@@ -1,0 +1,166 @@
+
+<div class = "main-container">
+<div class = "emptycart-container" *ngIf="!tosell[0] && !freetosell[0] && (emptyFree == true && emptyPaid == true)">
+  <div class = "emptycart">
+    <img class = "empty-img" src = "../../assets/img/pussy.png" alt = "You don't have items in cart">
+    <p class = "first-empty-title">Your shopping cart is really</p>
+    <p class = "second-empty-title">empty</p>
+    <br>
+    <p class = "go-to">Go to: <a class = "my-jobs" (click) = "goJobs()">My Jobs</a><a class = "home-button" (click) = "goDashboard()">Home</a></p>
+  </div>
+</div>
+<mat-tab-group *ngIf="tosell[0] || freetosell[0] " class = "mat-header" [(selectedIndex)]="selectedIndex">
+  <mat-tab label="1.Your Cart">
+    <table *ngIf="tosell[0] || freetosell[0]" class = "checkouttable">
+    <tr>
+      <th class = "title-th jt">JOB TITLE</th>
+      <th class = "location-th jb">JOB LOCATION</th>
+      <th class = "board-th jb">JOB BOARD</th>
+      <th class = "details-th det">DETAILS</th>
+      <th class = "price-th">PRICE</th>
+      <th class = "del">DELETE</th>
+    </tr>
+    <tr *ngFor="let freesell of freetosell; let i = index" class = "freesell">
+      <td class = "border job-title">{{freesell.title}}</td>
+      <td class = "border job-location">{{freesell.location}}</td>
+      <td class = "border logoimg"><img class="logointeg" src ="{{freesell.JobBoard.get('Logo')._url}}" alt = "{{freesell.JobBoard.get('Name')}}"></td>
+      <td class = "description-text border" ></td>
+      <td class = "border"><p class = "freepar">FREE <p></td>
+      <td class = "cross-img border"><img src = "../../assets/icons/cross.png" class = "cross" (click) = "deleteFreeItem(freesell);animation($event)"></td>
+    </tr>
+    <tr *ngFor="let sell of tosell; let i = index" class = "sell">
+      <td class = "border job-title">{{sell.title}}</td>  
+      <td class = "border job-location">{{sell.location}}</td>       
+      <td class = "border logoimg"><img class="logointeg" src ="{{sell.JobBoardPrice.get('JobBoard').get('Logo')._url}}" alt = "{{sell.JobBoardPrice.get('JobBoard').get('Name')}}"></td>
+      <td class = "description-text border ">{{sell.JobBoardPrice.get("PriceDescription")}}</td>
+      <td *ngIf = "sell.JobBoardPrice.get('Price')" class = "price border">{{sell.JobBoardPrice.get("Price") | currency:sell.JobBoardPrice.get("Currency"):true:'1.2-2'}}</td>
+      <td *ngIf = "!sell.JobBoardPrice.get('Price')" class = "border">
+        <span class = "price-text">
+          <span class = "plan-price-type">
+            {{sell.JobBoardPrice.get("priceVariant")}}
+          </span>
+          <span class = "plan-price-text">
+            *credit comes out of your {{sell.JobBoardPrice.get('JobBoard').get('Name')}} account
+          </span>
+        </span>
+      </td>
+      <td class = "cross-img border"><img #deleteCross src = "../../assets/icons/cross.png" class = "cross" (click) = "deleteItem(sell);animation($event)"></td>
+    </tr>
+    <tr class = "total-tr">
+      <td></td>
+      <td></td>
+      <td></td>      
+      <td class = "total-products" >Total products:<br>Taxes:<br>Total: </td>
+      <td class = "price-btm" >{{total | currency:currentcurrency:true:'1.2-2'}}<br>{{0 | currency:currentcurrency:true:'1.2-2'}}<br>{{total | currency:currentcurrency:true:'1.2-2'}} </td>
+      <td class = "checkout-border">
+      </td>
+    </tr>
+    </table>
+  </mat-tab>
+  <mat-tab label="2.Payment & Distribution">
+  <div class = "checkout-container">
+    <div class = "checkout-block">
+      <div class = "checkoutform" >
+        <div *ngIf = "hasStripeId != false && cards.length > 0">
+          <div class="checkout-header">
+            <p class = "payment-method"><strong>Chose a secure payment method</strong></p>
+            <p class = "payment-selected">Payment selected:
+            </p>
+            <p class = "selected-cart">{{selectedCard}} <span class = "gef-pay-title" *ngIf = "defaultCardObject === selectedCardObj && cards.length > 0">default payment method</span><p>
+          </div>
+          <form *ngIf = "defaultCardObject">
+            <!-- <mat-button-toggle (change)="cardtype = !cardtype" [checked] = "cardtype" class="default-card" name = "default" >
+              Pay with deafult card: {{defaultCardObject.country}} {{defaultCardObject.brand}}  **** **** **** {{defaultCardObject.last4}}
+            </mat-button-toggle> -->
+            <!-- <br> -->
+          <div class = "optional-card" *ngIf = "optionalCards">
+          <mat-form-field>
+          <mat-select [(ngModel)] = "dropdownValue" name = "material-dropdown" placeholder = "Select another card" shouldPlaceholderFloat = 'false' class = "othercard">
+            <mat-option *ngIf = "defaultCardObject === selectedCardObj" class = "option-card-option"  (click) = "cardChange(defaultCardObject)">{{defaultCardObject.brand}} {{defaultCardObject.last4}} Exp. {{defaultCardObject.exp_month}}/{{this.defaultCardObject.exp_year}}</mat-option>
+            <mat-option *ngIf = "defaultCardObject != selectedCardObj" class = "option-card-option"  (click) = "cardChange(defaultCardObject)">{{defaultCardObject.brand}} {{defaultCardObject.last4}} Exp. {{defaultCardObject.exp_month}}/{{this.defaultCardObject.exp_year}}</mat-option>
+            <a  *ngFor = "let card of optionalCards">
+                <mat-option *ngIf = "card === selectedCardObj" class = "option-card-option" (click) = "cardChange(card)" >{{card.brand}} {{card.last4}} Exp. {{card.exp_month}}/{{card.exp_year}}</mat-option>
+                <mat-option *ngIf = "card !== selectedCardObj" class = "option-card-option" (click) = "cardChange(card)" >{{card.brand}} {{card.last4}} Exp. {{card.exp_month}}/{{card.exp_year}}</mat-option>
+            </a>
+          </mat-select>
+        </mat-form-field>
+          </div>
+          <button mat-raised-button class = "new-card" (click) = "AddNewPaymentMethod()">Add a new card</button>
+          <!-- <button class = "primary-button new-card" (click) = "AddNewPaymentMethod()">Add a new card</button> -->
+          </form>
+        </div>
+        <div *ngIf = "hasStripeId === false || (cards.length === 0 && hasStripeId === true)">
+          <p class = "payment-method"><strong>Add a secure payment method</strong></p>
+          <p class = "payment-selected">SwipeIn accepts all major credit cards</p>
+          <div class = "card-icon-wrap">
+            <span class = "card-icon-container">
+              <img class = 'card-icon' src = "../../assets/icons/mastercard.svg">
+              <img class = 'card-icon' src = "../../assets/icons/american-express.png">
+              <img class = 'card-icon' src = "../../assets/icons/visa.png">
+            </span>
+          </div>
+          <button mat-raised-button class = "new-card without-s-id" (click) = "AddNewPaymentMethod()">Add a new card</button>
+        </div>
+      </div>
+    </div>
+    <div class = "items-list">
+      <table class = "items-list-table">
+        <ng-container *ngIf = "freetosell">
+          <th class = "items-list-th">
+            <strong>You are buying:</strong>
+          </th>
+            <tr  *ngFor = "let free of freetosell" class = "bill-tr">
+              <td *ngIf = "free.JobBoard.get('Logo')._url" class= "items-list-td"><img class = "items-list-img" src = "{{free.JobBoard.get('Logo')._url}}" alt = "{{free.JobBoard.get('Name')}}"></td>
+              <td class= "items-list-td">{{free.title}}</td>
+              <td class= "items-list-td">{{free.location}}</td>
+              <td class= "items-list-td"><a class = "price-amount">FREE</a></td>
+            </tr>
+        </ng-container>
+        <ng-container *ngIf = "tosell">
+          <tr *ngFor = "let sel of tosell" class = "bill-tr">
+            <td class= "items-list-td"><img class = "items-list-img" src = "{{sel.JobBoardPrice.get('JobBoard').get('Logo')._url}}" alt = "{{sel.JobBoardPrice.get('JobBoard').get('Name')}}"></td>
+            <td class= "items-list-td">{{sel.title}}</td>
+            <td class= "items-list-td">{{sel.location}}</td>
+            <td class= "items-list-td"><a class = "price-amount">{{sel.JobBoardPrice.get("Price") | currency:sel.JobBoardPrice.get("Currency"):true:'1.2-2'}}</a></td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf = "tosell">
+          <tr class = "bill-tr">
+            <td class= "items-list-td"></td>
+            <td class= "items-list-td"></td>
+            <td class= "items-list-td">
+              Total products:<br>
+              Taxes:<br>
+              Total:<br>
+            </td>
+            <td class= "items-list-td"><a class = "price-amount">
+              {{total | currency:currentcurrency:true:'1.2-2'}}<br>
+              {{0 | currency:currentcurrency:true:'1.2-2'}}<br>
+              {{total | currency:currentcurrency:true:'1.2-2'}}</a>
+            </td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
+  </div>
+  </mat-tab>
+</mat-tab-group>
+<div *ngIf="tosell[0] || freetosell[0]" class = "footer-container">
+  <a  *ngIf = "selectedIndex == 0" class = "go-checkout back" (click) = "back()">
+    <span>Back To Services</span>
+  </a>
+  <a  *ngIf = "selectedIndex == 1" class = "go-checkout back" (click) = "changeIndex(0)">
+    Back To Cart
+  </a>
+  <!-- <a class = "footer-total">Total: {{total | currency:currentcurrency:true:'1.2-2'}}</a> -->
+  <!-- <a *ngIf = "selectedIndex == 0" class = "go-checkout" (click) = "changeIndex(1)" class="checkout_button">Checkout</a>
+  <a *ngIf = "selectedIndex ==1" class = "go-checkout" (click) = "completeCheckout()"  class="checkout_button">Process Payment</a> -->
+  <a *ngIf = "selectedIndex == 0" (click) = "changeIndex(1)" class="checkout_button">Checkout</a>
+  <a *ngIf = "selectedIndex ==1" (click) = "completeCheckout()"  class="checkout_button">
+      <!-- <mat-spinner *ngIf = "checkoutProcess == true" [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner> -->
+      <mat-spinner *ngIf = "checkoutProcess == true" [diameter] = '40' [strokeWidth] = '4' class = "spinner"></mat-spinner>
+      <!-- <span [ngClass] = "{'hidden': checkoutProcess == true}">Process Payment</span> -->
+      <span [ngClass] = "{'payment-process': checkoutProcess == true}">Process Payment</span>
+  </a>
+</div>
+</div>

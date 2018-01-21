@@ -1,0 +1,23 @@
+<div class="scorecard-select-stage-inner">
+
+  <span class="bold get-started-title">Get started by selecting the interview stage:</span>
+
+  <div class="forms-wrap">
+
+    <mat-select class="stage-dropdown input-dropdown" [(ngModel)]="interviewStage">
+      <mat-option [value]="0" disabled>Select a stage</mat-option>
+      <mat-option [value]="1">Phone Interview</mat-option>
+      <mat-option [value]="2">F2F Interview</mat-option>
+    </mat-select>
+
+    <div class="continue-button-wrap">
+      <button type="button" class="primary-button continue-button" (click)="setType()">Continue</button>
+    </div>
+
+  </div>
+
+  <div class="description">
+    Interview screen can be built for F2F Interview and Phone Interview only.
+  </div>
+
+</div>
