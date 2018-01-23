@@ -68,15 +68,12 @@ export class CompanySettingsComponent implements OnInit {
 	saveErpPageStyle(val: number) {
 		this._CompanySettingsService.setErpPageStyle(val);
 		this.erpPageStyle = val;
-		console.log(this.erpPageStyle);
 	}
 
 	ngOnInit() {
 		this._CompanySettingsService.getAccessLevel().then(res => {
 			this.accessLevel = res;
 			if (res > 1) {
-				// console.log("disabled");
-				// console.log(res);
 				this.disabled = true;
 			}
 			return this._CompanySettingsService.getAdmins();
@@ -88,8 +85,6 @@ export class CompanySettingsComponent implements OnInit {
 		} else {
 			this.getCurLogo();
 			this._CompanySettingsService.getCompany().then(result => {
-				// console.log("test");
-				// console.log(result);
 				this.company = result;
 				this.isSafe = result.get('passwordSecured');
 				this.isSafeDef = result.get('passwordSecured');
@@ -111,15 +106,12 @@ export class CompanySettingsComponent implements OnInit {
 			this.companyBenefits = '';
 
 		}
-		console.log(this.disabled);
 	}
 
 	saveSettings() {
 	}
 
 	setChanges() {
-		console.log(this.picUrlDef);
-		console.log(this.picUrl);
 		if (this.website != this.websiteDef || this.careers != this.careersDef || this.picUrlDef != this.picUrl ||
 			this.companyBenefits != this.companyBenefitsDef || this.companyDescription != this.companyDescriptionDef ||
 			this.isSafeDef != this.isSafe || this.erpPageStyleDef != this.erpPageStyle || this.erpPageGreetingDef != this.erpPageGreeting) {

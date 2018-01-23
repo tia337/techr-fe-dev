@@ -27,25 +27,25 @@
                     <div class="company-name-block relative">
                         <h4>Company name</h4>
                         <input *ngIf="company" value="{{company.get('ClientName')}}" class="" (click)="accessCheck()" disabled>
-                        <div class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="website-block relative">
                         <h4>Website</h4>
-                        <input [(ngModel)]="website" placeholder="your website" [disabled]="disabled">
-                        <div class = "access-check-div" (click)="accessCheck()"></div>
+                        <input [(ngModel)]="website" placeholder="your website" [disabled]="disabled === true">
+                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="careers-page relative" (click)="accessCheck()">
                         <h4>Careers page</h4>
-                        <input [(ngModel)]="careers" placeholder="your careers page" [disabled]="disabled">
-                        <div class = "access-check-div" (click)="accessCheck()"></div>
+                        <input [(ngModel)]="careers" placeholder="your careers page" [disabled]="disabled === true">
+                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="logo-input-wrap relative">
                         <span class="nowrap">
-              <label class = "upload" for="logo">Upload a new logo</label>
-              <label class = "upload-name">{{filename}}</label>
-            </span>
-                        <input #logo id="logo" (change)="getNewLogo(logo)" type="file" [disabled]="disabled">
-                        <div class = "access-check-div" (click)="accessCheck()"></div>
+                            <label class = "upload" for="logo">Upload a new logo</label>
+                            <label class = "upload-name">{{filename}}</label>
+                        </span>
+                        <input #logo id="logo" (change)="getNewLogo(logo)" type="file" [disabled]="disabled === true">
+                        <div *ngIf = "disabled"  class = "access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="remove_logo" *ngIf="picUrl"><button (click)="removeLogo()">Remove logo</button></div>
                 </div>
@@ -54,17 +54,17 @@
             <h3 class="title-text">Company description</h3>
             <div>
                 <div class = "relative" (click)="accessCheck()">
-                    <textarea [(ngModel)]="companyDescription" (click)="accessCheck()" class="textpannel" [disabled]="disabled">
+                    <textarea [(ngModel)]="companyDescription" (click)="accessCheck()" class="textpannel" [disabled]="disabled === true">
                     </textarea>
-                    <div class = "access-check-div" (click)="accessCheck()"></div>
+                    <div *ngIf = "disabled"  class = "access-check-div" (click)="accessCheck()"></div>
                 </div>
             </div>
             <h3 class="title-text">Company benefits</h3>
             <div>
                 <div class = "relative" (click)="accessCheck()">
-                    <textarea [(ngModel)]="companyBenefits" (click)="accessCheck()" class="textpannel" [disabled]="disabled">
+                    <textarea [(ngModel)]="companyBenefits" (click)="accessCheck()" class="textpannel" [disabled]="disabled === true">
                     </textarea>
-                    <div class = "access-check-div" (click)="accessCheck()"></div>
+                    <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                 </div>
             </div>
 
@@ -90,27 +90,27 @@
                 </div>
                 <div class="headerrrz relative">
                     <input *ngIf="company" value="{{ erpBaseLink + company.get('employeeReferralURL')}}" disabled>
-                    <div class = "access-check-div" (click)="accessCheck()"></div>
+                    <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                     <section class="toggled-section relative">
-                        <mat-slide-toggle [(ngModel)]="isSafe" (click)="savePasswordState()" [disabled]="disabled">
+                        <mat-slide-toggle [(ngModel)]="isSafe" (click)="savePasswordState()" [disabled]="disabled === true">
                         </mat-slide-toggle>
-                        <div class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                     </section>
                 </div>
                 <div class="passwordChange">
                     <div class="pwdInput relative">
                         <input *ngIf="company" value="{{company.get('erpPagePwd')}}" disabled>
-                        <div class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="changeButton relative">
                         <button (click)="changePassword(this)">Change ERP page password</button>
-                        <div class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                     </div>
                 </div>
                 <div class="style_block">
                     <div class="page_style relative">
                         Page style:
-                        <mat-radio-group [(ngModel)]="erpPageStyle" [disabled]="disabled">
+                        <mat-radio-group [(ngModel)]="erpPageStyle" [disabled]="disabled === true">
                             <mat-radio-button [value]="1" (change)="saveErpPageStyle(1)">
                                 <span>Option 1</span>
                             </mat-radio-button>
@@ -120,7 +120,7 @@
                             <mat-radio-button [value]="3" (change)="saveErpPageStyle(3)">
                                 <span>Option 3</span>
                             </mat-radio-button>
-                            <div class = "access-check-div" (click)="accessCheck()"></div>
+                            <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                         </mat-radio-group>
                     </div>
                     <div *ngIf="erpPageStyle && erpPageStyle == 1" class="view_img">
@@ -135,8 +135,8 @@
                 </div>
                 <div class="erp_page_greetings relative">
                     <h3 style="margin-bottom: 10px;">ERP Page Header Greeting</h3>
-                    <textarea cols="*" rows="*" class="textpannel textpannel-referal" [(ngModel)]="erpPageGreeting" [disabled]="disabled"></textarea>
-                    <div class = "access-check-div" (click)="accessCheck()"></div>
+                    <textarea cols="*" rows="*" class="textpannel textpannel-referal" [(ngModel)]="erpPageGreeting" [disabled]="disabled === true"></textarea>
+                    <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
                 </div>
             </div>
         </mat-expansion-panel>
