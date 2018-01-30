@@ -69,6 +69,7 @@ import { TermsConditionsComponent } from './info-pages/terms-conditions/terms-co
 import { PrivacyPolicyComponent } from './info-pages/privacy-policy/privacy-policy.component';
 import { InvitationPageComponent } from './invitation-page/invitation-page.component';
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
+import {UserSettingsComponent} from "./user-settings/user-settings.component";
 
 const routes: Routes = [
 	// { path: 'logout', component: LogoutComponent },
@@ -322,6 +323,11 @@ const routes: Routes = [
 			{
 				path: 'empref_create/:id',
 				component: EmployeeReferralCreateComponent,
+				canActivate: [ActiveSubscriptionGuard]
+			},
+			{
+				path: 'user-settings',
+				component: UserSettingsComponent,
 				canActivate: [ActiveSubscriptionGuard]
 			}
 		]
