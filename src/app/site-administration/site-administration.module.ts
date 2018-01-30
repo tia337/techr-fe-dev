@@ -132,6 +132,7 @@ import {
 import {
 	ChangePasswordComponent
 } from './company-settings/change-password/change-password.component';
+import {UserSettingsComponent} from "../user-settings/user-settings.component";
 
 
 @NgModule({
@@ -139,6 +140,7 @@ import {
 		SiteAdministrationComponent,
 		CompanySettingsComponent,
 		UserManagementComponent,
+        UserSettingsComponent,
 		JobsSettingsComponent,
 		SubscriptionsComponent,
 		AppIntegrationsComponent,
