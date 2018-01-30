@@ -1,10 +1,10 @@
-<div class="user-settings-title">
-  <h1>User settings</h1>
-</div>
 <div id="first">
 
 </div>
 <div class="main-wrap">
+  <div class="user-settings-title">
+    <h1>User settings</h1>
+  </div>
   <mat-accordion class="mat-extention">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -12,6 +12,11 @@
           General settings
         </mat-panel-title>
       </mat-expansion-panel-header>
+      <div class="panel-container">
+        <ul>
+          <li> <h3 class="bold">Display candidate distance :</h3>  <div class="km-mile-switch"> Kilometers  <mat-slide-toggle [(ngModel)]="isChecked">Slide Toggle Checked: {{ isChecked }}</mat-slide-toggle>  Miles</div></li>
+        </ul>
+      </div>
     </mat-expansion-panel>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -19,6 +24,20 @@
           My Personal API keys
         </mat-panel-title>
       </mat-expansion-panel-header>
+      <div class="panel-container">
+        <form class="reed-form">
+          <mat-form-field>
+            <input matInput placeholder="Reed Posting API key" value="dkfgldfjgldfkgj">
+          </mat-form-field>
+          <br/>
+          <mat-form-field>
+            <input matInput placeholder="Reed Email Address" [formControl]="emailFormControl" [errorStateMatcher]="matcher">
+            <mat-error *ngIf="emailFormControl.hasError('email')">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+        </form>
+      </div>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
