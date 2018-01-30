@@ -40,6 +40,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	private _clientLogo: string;
 
 	private _menuOpened = false;
+	private _userMenuOpened = false;
+	private _closeUserAnim = false;
 
 	constructor(
 		private router: Router,
@@ -118,7 +120,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			this._closeAnim = true;
 			// console.log(this.closeAnim);
 			setTimeout(() => {
-				console.log(this._closeAnim);
+				// console.log(this._closeAnim);
 				if (this.closeAnim === true) {
 					this._menuOpened = false;
 					this._closeAnim = false;
@@ -126,6 +128,33 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			}, 450);
 		}
 	}
+
+    closeUserMenu(event?) {
+        if (event) {
+            // console.log(event.clientY);
+            if (event.clientY < 55) {
+                this._closeUserAnim= true;
+                console.log('_closeUserAnim',this._closeUserAnim);
+                setTimeout(() => {
+                    // console.log(this.closeAnim);
+                    if (this._closeUserAnim === true) {
+                        this._userMenuOpened = false;
+                        this._closeUserAnim = false;
+                    }
+                }, 450);
+            }
+        } else {
+            this._closeUserAnim = true;
+            // console.log(this.closeAnim);
+            setTimeout(() => {
+                console.log('_closeUserAnim',this._closeUserAnim);
+                if (this.closeUserAnim === true) {
+                    this._userMenuOpened = false;
+                    this._closeUserAnim = false;
+                }
+            }, 450);
+        }
+    }
 
 
 	getLogo() {
@@ -158,6 +187,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		// const menu = this._vcr.createComponent(this._cfr.resolveComponentFactory(AdministrationMenuComponent)).instance;
 		// menu.containerRef = this._vcr;
 	}
+
+    openUserMenu() {
+        this._closeUserAnim = false;
+        this._userMenuOpened = true;
+    }
 
 	redirect() {
 		this.router.navigate(['checkout']);
@@ -220,6 +254,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	get closeAnim() {
 		return this._closeAnim;
 	}
+
+	get closeUserAnim() {
+		return this._closeUserAnim;
+	}
 	get clientLogo() {
 		return this._clientLogo;
 	}
@@ -227,4 +265,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	get menuOpened() {
 		return this._menuOpened;
 	}
+    get userMenuOpened() {
+        return this._userMenuOpened;
+    }
 }
