@@ -20,7 +20,8 @@ import {
 	MatInputModule,
 	MatSelectModule,
 	MatSlideToggleModule,
-	MatExpansionModule
+	MatExpansionModule,
+	MatButtonModule
 } from '@angular/material';
 import {
 	MatRadioModule
@@ -174,7 +175,8 @@ import {UserSettingsComponent} from "../user-settings/user-settings.component";
 		UserModule,
 		MatInputModule,
 		MatRadioModule,
-		MatExpansionModule
+		MatExpansionModule,
+		MatButtonModule
 	],
 	providers: [
 

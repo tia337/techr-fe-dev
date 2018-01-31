@@ -6,6 +6,11 @@ import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/form
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatListModule} from '@angular/material/list';
 import {Parse} from "../parse.service";
+import {MatButtonModule} from '@angular/material';
+import {RootVCRService} from "../root_vcr.service";
+import { DomSanitizer } from '@angular/platform-browser';
+import { AlertComponent} from "../shared/alert/alert.component";
+
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -20,12 +25,17 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent implements OnInit {
+    isCheckedInitial;
     isChecked;
-    emailFormControl = new FormControl('', [
-        Validators.email,
-    ]);
+    isButtonDisabled:boolean = true;
     matcher = new MyErrorStateMatcher();
-  constructor(private _parse: Parse) {
+    reedPostKey:string;
+    reedPostEmail:string;
+    reedPostKeyInitial:string;
+    reedPostEmailInitial:string;
+  constructor(private _parse: Parse,
+              private sanitizer: DomSanitizer,
+              private _root_vcr: RootVCRService) {
   }
 
   ngOnInit() {
@@ -33,20 +43,64 @@ export class UserSettingsComponent implements OnInit {
           if (partner.has("candidateDistanceUnitPreferrences")){
              let codeOfUnit =  partner.get("candidateDistanceUnitPreferrences");
               if(codeOfUnit == 1) {
-                  this.isChecked = false;
+                  this.isCheckedInitial = false;
               }
               else if (codeOfUnit == 2) {
-                  this.isChecked = true;
+                  this.isCheckedInitial = true;
               }
           }
           else {
               partner.set("candidateDistanceUnitPreferrences",1);
               partner.save();
           }
-      })
+          if (partner.has("reedPostingKey")){
+              this.reedPostKeyInitial = partner.get("reedPostingKey");
+              this.reedPostKey = partner.get("reedPostingKey");
+          }
+          else {
+              this.reedPostKeyInitial = '';
+          }
+          if (partner.has('reedPostEmail')) {
+              this.reedPostEmailInitial = partner.get("reedPostEmail");
+              this.reedPostEmail = partner.get("reedPostEmail");
+          }
+          else {
+              this.reedPostEmailInitial = '';
+          }
+      });
   }
     getCurrentPartner() {
         return this._parse.getPartner(this._parse.Parse.User.current());
+    }
+
+    saveChanges() {
+        if (this.reedPostEmail != this.reedPostEmailInitial || this.reedPostKey != this.reedPostKeyInitial || this.isChecked != this.isCheckedInitial){
+            this.getCurrentPartner().then(partner => {
+                this.reedPostKeyInitial = this.reedPostKey;
+                this.reedPostEmailInitial = this.reedPostEmail;
+                partner.set('reedPostingKey', this.reedPostKey);
+                partner.set('reedPostEmail', this.reedPostEmail);
+                partner.save();
+                const alert = this._root_vcr.createComponent(AlertComponent);
+                alert.title = 'Saved';
+                alert.icon = 'thumbs-o-up';
+                alert.type = 'simple';
+                alert.contentAlign = 'left';
+                alert.content = `<a style = "white-space:nowrap">Changes successfully saved.</a>`;
+                alert.addButton({
+                    title: 'Ok',
+                    type: 'primary',
+                    onClick: () => this._root_vcr.clear()
+                });
+            })
+        }
+    }
+    checkEmailStatus(){
+        return this.reedPostEmailInitial == this.reedPostEmail;
+    }
+
+    checkKeyStatus() {
+        return this.reedPostKeyInitial== this.reedPostKey;
     }
 
     changeKmAndMiles(value) {
@@ -59,7 +113,7 @@ export class UserSettingsComponent implements OnInit {
               curPartner.set("candidateDistanceUnitPreferrences",1);
               curPartner.save();
           }
-      })
+      });
 
 }
 }

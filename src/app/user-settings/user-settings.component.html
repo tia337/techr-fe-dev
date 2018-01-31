@@ -1,10 +1,10 @@
-<div id="first">
-
-</div>
 <div class="main-wrap">
+<div class="top-page-content">
   <div class="user-settings-title">
     <h1>User settings</h1>
   </div>
+  <button mat-raised-button color="primary" [disabled]="checkEmailStatus() && checkKeyStatus()" (click)="saveChanges()">Save changes</button>
+</div>
   <mat-accordion class="mat-extention">
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -26,15 +26,14 @@
       </mat-expansion-panel-header>
       <div class="panel-container">
         <form class="reed-form">
-          <mat-form-field>
-            <input matInput placeholder="Reed Posting API key" value="dkfgldfjgldfkgj">
+          <mat-form-field class="mat-form-field-text-size">
+            <input matInput id="name"
+                   name="name"
+                   #name placeholder="Reed Posting API key" [(ngModel)]="reedPostKey" (ngModelChange)="checkKeyStatus()">
           </mat-form-field>
           <br/>
-          <mat-form-field>
-            <input matInput placeholder="Reed Email Address" [formControl]="emailFormControl" [errorStateMatcher]="matcher">
-            <mat-error *ngIf="emailFormControl.hasError('email')">
-              Please enter a valid email address
-            </mat-error>
+          <mat-form-field class="mat-form-field-text-size">
+            <input matInput placeholder="Reed Email Address" [errorStateMatcher]="matcher" name="reedPostEmailName" [(ngModel)]="reedPostEmail" (ngModelChange)="checkEmailStatus()">
           </mat-form-field>
         </form>
       </div>

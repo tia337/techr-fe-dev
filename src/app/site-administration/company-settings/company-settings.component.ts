@@ -79,7 +79,7 @@ export class CompanySettingsComponent implements OnInit {
 			return this._CompanySettingsService.getAdmins();
 		}).then(admins=>{
 			this.admins = admins;
-		});
+		})
 		if (!this._CompanySettingsService.getCompany()) {
 			this.isInCompany = false;
 		} else {
