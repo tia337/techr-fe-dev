@@ -29,11 +29,6 @@ export class UserSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-      // this.getCurrentPartner().then(partnerResult=>{
-      //     console.log('Partner result --------------', partnerResult);
-      //     console.log('partnerResult.has(\'pingStatus\')',partnerResult.has('pingStatus'));
-      //     console.log('partnerResult.has(\'isActivated\')',partnerResult.has('isActivated'));
-      // });
       this.getCurrentPartner().then(partner=>{
           if (partner.has("candidateDistanceUnitPreferrences")){
              let codeOfUnit =  partner.get("candidateDistanceUnitPreferrences");
@@ -64,7 +59,6 @@ export class UserSettingsComponent implements OnInit {
               curPartner.set("candidateDistanceUnitPreferrences",1);
               curPartner.save();
           }
-          //curPartner.set("candidateDistanceUnitPreferrences",1);
       })
 
 }
