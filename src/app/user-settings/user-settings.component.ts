@@ -43,12 +43,10 @@ export class UserSettingsComponent implements OnInit {
               else if (codeOfUnit == 2) {
                   this.isChecked = true;
               }
-           console.log('123123123123123partner',partner.get("candidateDistanceUnitPreferrences"));
           }
           else {
               partner.set("candidateDistanceUnitPreferrences",1);
               partner.save();
-              console.log('partner.set("candidateDistanceUnitPreferrences",1);', partner.set("candidateDistanceUnitPreferrences",1));
           }
       })
   }
@@ -56,9 +54,18 @@ export class UserSettingsComponent implements OnInit {
         return this._parse.getPartner(this._parse.Parse.User.current());
     }
 
-    changeKmAndMiles() {
+    changeKmAndMiles(value) {
       this.getCurrentPartner().then(curPartner=>{
+          if (value.checked == true) {
+              curPartner.set("candidateDistanceUnitPreferrences",2);
+              curPartner.save();
+          }
+          else {
+              curPartner.set("candidateDistanceUnitPreferrences",1);
+              curPartner.save();
+          }
           //curPartner.set("candidateDistanceUnitPreferrences",1);
       })
-    }
+
+}
 }
