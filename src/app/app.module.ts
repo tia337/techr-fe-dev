@@ -50,6 +50,7 @@ import { PrivacyPolicyModule } from './info-pages/privacy-policy/privacy-policy.
 import { InvitationPageModule } from './invitation-page/invitation-page.module';
 import { ContactUsModule } from "app/contact-us/contact-us.module";
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
+// import { UserSettingsComponent } from './user-settings/user-settings.component';
 // import { GoogleAuthComponent } from './google-auth/google-auth.component';
 const config: SocketIoConfig = {
 	url: 'https://swipeinmlabtest.herokuapp.com/', options: {
@@ -64,6 +65,7 @@ const config: SocketIoConfig = {
 @NgModule({
 	declarations: [
 		AppComponent,
+		// UserSettingsComponent,
 	],
 	imports: [
 		BrowserModule,

@@ -20,7 +20,8 @@ import {
 	MatInputModule,
 	MatSelectModule,
 	MatSlideToggleModule,
-	MatExpansionModule
+	MatExpansionModule,
+	MatButtonModule
 } from '@angular/material';
 import {
 	MatRadioModule
@@ -132,6 +133,7 @@ import {
 import {
 	ChangePasswordComponent
 } from './company-settings/change-password/change-password.component';
+import {UserSettingsComponent} from "../user-settings/user-settings.component";
 
 
 @NgModule({
@@ -139,6 +141,7 @@ import {
 		SiteAdministrationComponent,
 		CompanySettingsComponent,
 		UserManagementComponent,
+        UserSettingsComponent,
 		JobsSettingsComponent,
 		SubscriptionsComponent,
 		AppIntegrationsComponent,
@@ -172,7 +175,8 @@ import {
 		UserModule,
 		MatInputModule,
 		MatRadioModule,
-		MatExpansionModule
+		MatExpansionModule,
+		MatButtonModule
 	],
 	providers: [
 

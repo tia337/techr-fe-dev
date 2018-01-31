@@ -1,0 +1,42 @@
+<div class="main-wrap">
+<div class="top-page-content">
+  <div class="user-settings-title">
+    <h1>User settings</h1>
+  </div>
+  <button mat-raised-button color="primary" [disabled]="(isChecked == isCheckedInitial) && checkEmailStatus() && checkKeyStatus()" (click)="saveChanges()">Save changes</button>
+</div>
+  <mat-accordion class="mat-extention">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          General settings
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="panel-container">
+        <ul>
+          <li> <h3 class="bold">Display candidate distance :</h3>  <div class="km-mile-switch"> Kilometers  <mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>  Miles</div></li>
+        </ul>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          My Personal API keys
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="panel-container">
+        <form class="reed-form">
+          <mat-form-field class="mat-form-field-text-size">
+            <input matInput id="name"
+                   name="name"
+                   #name placeholder="Reed Posting API key" [(ngModel)]="reedPostKey" (ngModelChange)="checkKeyStatus()">
+          </mat-form-field>
+          <br/>
+          <mat-form-field class="mat-form-field-text-size">
+            <input matInput placeholder="Reed Email Address" [errorStateMatcher]="matcher" name="reedPostEmailName" [(ngModel)]="reedPostEmail" (ngModelChange)="checkEmailStatus()">
+          </mat-form-field>
+        </form>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
