@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatInputModule} from '@angular/material/input';
-import {FormControl, FormGroupDirective, NgForm, Validators} from '@angular/forms';
+import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatListModule} from '@angular/material/list';
 import {Parse} from "../parse.service";
 import {MatButtonModule} from '@angular/material';
 import {RootVCRService} from "../root_vcr.service";
-import { DomSanitizer } from '@angular/platform-browser';
 import { AlertComponent} from "../shared/alert/alert.component";
 
 
@@ -34,7 +33,6 @@ export class UserSettingsComponent implements OnInit {
     reedPostKeyInitial:string;
     reedPostEmailInitial:string;
   constructor(private _parse: Parse,
-              private sanitizer: DomSanitizer,
               private _root_vcr: RootVCRService) {
   }
 
@@ -67,6 +65,7 @@ export class UserSettingsComponent implements OnInit {
           else {
               this.reedPostEmailInitial = '';
           }
+          this.isChecked = this.isCheckedInitial;
       });
   }
     getCurrentPartner() {
@@ -76,8 +75,17 @@ export class UserSettingsComponent implements OnInit {
     saveChanges() {
         if (this.reedPostEmail != this.reedPostEmailInitial || this.reedPostKey != this.reedPostKeyInitial || this.isChecked != this.isCheckedInitial){
             this.getCurrentPartner().then(partner => {
+                console.log('ISCHECKED',this.isChecked);
+                console.log('ISCHECKEDINITIAL',this.isCheckedInitial);
                 this.reedPostKeyInitial = this.reedPostKey;
                 this.reedPostEmailInitial = this.reedPostEmail;
+                if (this.isChecked == true) {
+                    partner.set("candidateDistanceUnitPreferrences",2);
+                }
+                else {
+                    partner.set("candidateDistanceUnitPreferrences",1);
+                }
+                this.isCheckedInitial = this.isChecked;
                 partner.set('reedPostingKey', this.reedPostKey);
                 partner.set('reedPostEmail', this.reedPostEmail);
                 partner.save();
@@ -103,17 +111,4 @@ export class UserSettingsComponent implements OnInit {
         return this.reedPostKeyInitial== this.reedPostKey;
     }
 
-    changeKmAndMiles(value) {
-      this.getCurrentPartner().then(curPartner=>{
-          if (value.checked == true) {
-              curPartner.set("candidateDistanceUnitPreferrences",2);
-              curPartner.save();
-          }
-          else {
-              curPartner.set("candidateDistanceUnitPreferrences",1);
-              curPartner.save();
-          }
-      });
-
-}
 }

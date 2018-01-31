@@ -3,7 +3,7 @@
   <div class="user-settings-title">
     <h1>User settings</h1>
   </div>
-  <button mat-raised-button color="primary" [disabled]="checkEmailStatus() && checkKeyStatus()" (click)="saveChanges()">Save changes</button>
+  <button mat-raised-button color="primary" [disabled]="(isChecked == isCheckedInitial) && checkEmailStatus() && checkKeyStatus()" (click)="saveChanges()">Save changes</button>
 </div>
   <mat-accordion class="mat-extention">
     <mat-expansion-panel>
@@ -14,7 +14,7 @@
       </mat-expansion-panel-header>
       <div class="panel-container">
         <ul>
-          <li> <h3 class="bold">Display candidate distance :</h3>  <div class="km-mile-switch"> Kilometers  <mat-slide-toggle [(ngModel)]="isChecked" (change)="changeKmAndMiles($event)"></mat-slide-toggle>  Miles</div></li>
+          <li> <h3 class="bold">Display candidate distance :</h3>  <div class="km-mile-switch"> Kilometers  <mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>  Miles</div></li>
         </ul>
       </div>
     </mat-expansion-panel>
