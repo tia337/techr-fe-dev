@@ -23,7 +23,8 @@
         <mat-option>Best location match</mat-option>
     </mat-select>
 </mat-form-field>
-<button mat-button>Select all</button>
+<button *ngIf="!selectedAll" mat-button (click)="selectedAll = true">Select all</button>
+<button *ngIf="selectedAll" mat-button (click)="selectedAll = false">Unselect all</button>
 
 <section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
     <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
@@ -71,7 +72,7 @@
                         *ngIf="candidate.get('developer').get('skills') && candidate.get('developer').get('skills').length > 6">+{{candidate.get('developer').get('skills').length - limitArray(candidate.get('developer').get('skills')).length}}</span>
                 </div>
             </div>
-            <mat-checkbox class="bulk-checkbox" [checked]="false"></mat-checkbox>
+            <mat-checkbox class="bulk-checkbox" id="{{candidate.id}}" [(ngModel)]="selectedAll"></mat-checkbox>
         </div>
     </div>
     <div class="candidate-profile">

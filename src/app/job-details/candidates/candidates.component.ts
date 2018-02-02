@@ -24,7 +24,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	sortSelect:string = "skillsMatch";
 	skillMatchSelect:string;
 	contractId: string;
-	checked:false;
+	selectedAll:false;
 	candidateWeight: number;
 	candidates;
 	userId: string;
