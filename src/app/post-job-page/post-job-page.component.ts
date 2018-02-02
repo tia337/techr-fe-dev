@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Input, Renderer2, ElementRef, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
-import { FormBuilder, FormGroup, Validator } from '@angular/forms';
+import { FormBuilder, FormGroup} from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/debounceTime';
 import { MatDatepicker } from '@angular/material';
@@ -19,11 +18,9 @@ import { QueryList, ViewChildren } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
-import { MatAutocompleteTrigger } from '@angular/material';
 import * as _ from 'underscore';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
 import { RootVCRService } from '../root_vcr.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { DashboardService } from 'app/dashboard/dashboard.service';
 import { ContractStatus } from 'app/shared/utils';
 import { MatSnackBar } from '@angular/material';
@@ -73,9 +70,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	private countriesSourcing: Array<any> = [];
 
 	private programingSkills: Array<any> = [];
-	private skillCategories: Array<any> = [];
-	private optionalSkills: Array<any> = [];
-	private finalRoles: Array<any> = [];
 	private currentContract: any;
 	private formSubscription: any;
 	private formSkillsSubscription: any;
@@ -85,7 +79,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	// private selectedHourly = false;
 	countriesFilter;
 	salaryCurrencies;
-	activeSkillsCategory;
 	activeLine = 0;
 	@ViewChild('rangeSlider') rangeSlider;
 	@ViewChild('companyLogo') companyLogo;
@@ -95,9 +88,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	rangeConfig: any;
 	rangeLabel: string;
 	asap: string;
-
-	minhourly;
-	maxhourly;
 
 	jobVal = 0;
 
@@ -120,8 +110,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 
 	jobDescriptionMaxLength = 4000;
 	jobBenefitsMaxLength = 500;
-
-	sponsoringBool = false;
 
 	alertHappend = false;
 
@@ -189,8 +177,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		private _renderer: Renderer2,
 		private _elementRef: ElementRef,
 		private _postJobService: PostJobService,
-		private _vcr: ViewContainerRef,
-		private _cfr: ComponentFactoryResolver,
 		private _root_vcr: RootVCRService,
 		private _dashboard: DashboardService,
 		public snackBar: MatSnackBar
@@ -1334,7 +1320,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			for (const item of notFilledFields) {
 				list += '- ' + item + '<br>';
 			}
-			alert.content = list + '<a style = "font-size: 12px; margin-top: 10px;">Mandatory fields help you maximize reaching the right talent.</a>';
+			alert.content = list + '<a style = "font-size:12px;margin-top:10px;">Mandatory fields help you maximize reaching the right talent.</a>';
 			alert.addButton({
 				title: 'Close',
 				type: 'primary',
@@ -1456,5 +1442,12 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		addCount.closeModal.subscribe(() => {
 			this._root_vcr.clear();
 		});
+	}
+	changeSliderValue(index, value) {
+		let changedValueArray = [this.range[0],this.range[1]];
+		changedValueArray[index] = value;
+		if (changedValueArray[0] <= changedValueArray[1] && this.rangeSlider) {
+            this.range = changedValueArray;
+		}
 	}
 }
