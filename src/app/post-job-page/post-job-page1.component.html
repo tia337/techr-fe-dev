@@ -317,11 +317,11 @@
                             <div class="value-container salary-container">
                                 <p class="min-max-title">min:</p>
                                 <div class="wrap-content">
-                                    <input [(ngModel)]="range[0]" type="text" class="min-salary" formControlName="minRate" placeholder="MIN" (keydown)="prevDefGeneral($event, 'min')" />
+                                    <input #minInput [(ngModel)]="range[0]" type="text" class="min-salary" (change)="changeSliderValue(0,minInput?.value)" formControlName="minRate" placeholder="MIN" (keydown)="prevDefGeneral($event, 'min')" />
                                 </div>
                                 <p class="min-max-title">max:</p>
                                 <div class="wrap-content">
-                                    <input #maxInput [(ngModel)]="range[1]" type="text" class="min-salary" formControlName="maxRate" placeholder="MAX" (keydown)="prevDefGeneral($event, 'max')" />
+                                    <input #maxInput [(ngModel)]="range[1]" type="text" class="min-salary" (change)="changeSliderValue(1,maxInput?.value)" formControlName="maxRate" placeholder="MAX" (keydown)="prevDefGeneral($event, 'max')" />
                                 </div>
                                 <div *ngIf="editable" class="salary-input salary-slider" [class.smallrange]="hideSalaryTips">
                                     <nouislider #rangeSlider id="noui-range" [config]="rangeConfig" [(ngModel)]="range" [ngModelOptions]="{standalone: true}"></nouislider>
