@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScoringModule } from './candidates-info-tabs/scoring/scoring.module';
 
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { CandidatesComponent } from './candidates.component';
 import { CandidatesService } from './candidates.service';
 import { Parse } from '../../parse.service';
@@ -34,7 +34,8 @@ import { DashboardModule } from 'app/dashboard/dashboard.module';
     FormsModule,
     RouterModule,
     MatTabsModule,
-    ScorecardsAssessmentsModule,
+      MatCheckboxModule,
+      ScorecardsAssessmentsModule,
     ScoringModule,
     SkillsModule,
     CandidateCvModule,

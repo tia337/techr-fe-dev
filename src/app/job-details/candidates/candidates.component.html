@@ -35,6 +35,7 @@
                 <div class="skills-count"><span *ngIf="candidate.get('developer').get('skills') && candidate.get('developer').get('skills').length > 6">+{{candidate.get('developer').get('skills').length - limitArray(candidate.get('developer').get('skills')).length}}</span>
                 </div>
             </div>
+            <mat-checkbox class="bulk-checkbox" checked="false"></mat-checkbox>
         </div>
     </div>
     <div class="candidate-profile">

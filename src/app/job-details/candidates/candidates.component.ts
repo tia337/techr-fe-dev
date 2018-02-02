@@ -4,6 +4,8 @@ import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { JobDetailsService } from '../job-details.service';
 import { Router } from '@angular/router';
 import { DeveloperListType, Loading } from '../../shared/utils';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {FormsModule} from "@angular/forms";
 
 @Component({
 	selector: 'app-candidates',
@@ -13,7 +15,7 @@ import { DeveloperListType, Loading } from '../../shared/utils';
 export class CandidatesComponent implements OnInit, OnDestroy {
 
 	contractId: string;
-
+	checked:false;
 	candidateWeight: number;
 	candidates;
 	userId: string;
