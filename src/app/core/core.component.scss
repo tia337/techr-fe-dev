@@ -130,7 +130,7 @@ $menu-height: calc(100vh - #{$header-height});
 .main-nav {
 	position: relative;
     .sidenav {
-        width: 16vw;
+        width: 14vw;
         overflow: visible;
         @include background-gradient;
         min-height: $menu-height;
@@ -181,7 +181,7 @@ $menu-height: calc(100vh - #{$header-height});
             }
             .logo-wrap {
                 width: 100%;
-                padding: 0px 10px 10px 0px;
+                padding: 0 10px 10px 0;
                 margin: 20px 0 40px 0;
                 margin-left: 15% !important;
                 text-align: left;
@@ -195,7 +195,7 @@ $menu-height: calc(100vh - #{$header-height});
             .side-nav {
                 // margin: 50px 50px;
                 // padding: 0 5vw;
-                width: 14vw;
+                width: 12vw;
                 margin: 50px 0;
                 font-size: 1em;
                 .func-buttons {
