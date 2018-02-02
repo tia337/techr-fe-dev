@@ -1,6 +1,34 @@
+<mat-form-field>
+    <mat-select placeholder="Sort by" [(value)]="sortSelect">
+        <mat-option value="skillsMatch">Best skills match</mat-option>
+        <mat-option value="locationMatch">Best location match</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <mat-select placeholder="Skills fit" [(value)]="skillMatchSelect">
+        <mat-option>None</mat-option>
+        <mat-option value="greatFit">Great fit</mat-option>
+        <mat-option value="goodFit">Good fit</mat-option>
+        <mat-option value="potentialFit">Potential fit</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <mat-select placeholder="Add country" multiple>
+        <mat-option *ngFor="let country of countryArray" [value]="country">{{country}}</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <mat-select disabled placeholder="Bulk actions">
+        <mat-option>Best skills match</mat-option>
+        <mat-option>Best location match</mat-option>
+    </mat-select>
+</mat-form-field>
+<button mat-button>Select all</button>
+
 <section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
     <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
-        <div class="candidate-block" *ngFor="let candidate of candidates.results" (click)="userProfile(candidate.id, getPercentageMatch(candidate))" [class.active]="userId == candidate.id">
+        <div class="candidate-block" *ngFor="let candidate of candidates.results"
+             (click)="userProfile(candidate.id, getPercentageMatch(candidate))" [class.active]="userId == candidate.id">
             <!-- (click)="userProfile(candidate.id, getPercentageMatch(candidate))" -->
             <div class="candidate-info-top-section">
                 <div class="avatar-wrap">
@@ -9,12 +37,15 @@
                 <div class="candidate-general-info">
                     <div class="candidate-name">{{candidate.get('firstName')}} {{candidate.get('lastName')}}</div>
                     <div class="candidate-position">{{candidate.get('headline')}}</div>
-                    <div class="candidate-company-name"><span class="company-title" *ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span></div>
+                    <div class="candidate-company-name"><span class="company-title"
+                                                              *ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>
+                    </div>
                 </div>
 
 
-                <div class="logo"><img style="width: auto; height: 30px;" src="{{candidate.source ? candidate.source : 'http://swipeinmlabtest.herokuapp.com/parse/files/dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ/90fc2f3d63b7192696b413b2d829b846_SwipeIn%20Logo%202.jpg'}}"
-                        alt="logo"></div>
+                <div class="logo"><img style="width: auto; height: 30px;"
+                                       src="{{candidate.source ? candidate.source : 'http://swipeinmlabtest.herokuapp.com/parse/files/dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ/90fc2f3d63b7192696b413b2d829b846_SwipeIn%20Logo%202.jpg'}}"
+                                       alt="logo"></div>
             </div>
             <div class="candidate-info-bottom-section">
                 <div class="candidate-location-match">
@@ -22,8 +53,12 @@
                         {{candidate.get('location')}}
                     </div>
                     <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit</div>
-                    <div class="match" *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit</div>
-                    <div class="match" *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit</div>
+                    <div class="match"
+                         *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit
+                    </div>
+                    <div class="match"
+                         *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit
+                    </div>
                 </div>
                 <div *ngIf="candidate.get('developer').get('skills')" class="candidate-skills">
                     <div *ngFor="let skill of limitArray(candidate.get('developer').get('skills'))" class="skill-wrap">
@@ -32,14 +67,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="skills-count"><span *ngIf="candidate.get('developer').get('skills') && candidate.get('developer').get('skills').length > 6">+{{candidate.get('developer').get('skills').length - limitArray(candidate.get('developer').get('skills')).length}}</span>
+                <div class="skills-count"><span
+                        *ngIf="candidate.get('developer').get('skills') && candidate.get('developer').get('skills').length > 6">+{{candidate.get('developer').get('skills').length - limitArray(candidate.get('developer').get('skills')).length}}</span>
                 </div>
             </div>
-            <mat-checkbox class="bulk-checkbox" checked="false"></mat-checkbox>
+            <mat-checkbox class="bulk-checkbox" [checked]="false"></mat-checkbox>
         </div>
     </div>
     <div class="candidate-profile">
-        <app-candidate-profile [userId]="userId" [weight]="candidateWeight" [contractId]="contractId"></app-candidate-profile>
+        <app-candidate-profile [userId]="userId" [weight]="candidateWeight"
+                               [contractId]="contractId"></app-candidate-profile>
     </div>
 </section>
 

@@ -6,6 +6,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ScoringModule } from './candidates-info-tabs/scoring/scoring.module';
 
+import {MatButtonModule} from '@angular/material/button';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule, MatFormFieldControl} from "@angular/material";
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { CandidatesComponent } from './candidates.component';
 import { CandidatesService } from './candidates.service';
@@ -44,7 +47,11 @@ import { DashboardModule } from 'app/dashboard/dashboard.module';
     GmailModule,
     StarRatingModule,
     LoaderModule,
-    DashboardModule
+    DashboardModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatButtonModule
+
   ],
   exports: [CandidatesComponent],
   providers: [Parse, CandidatesService, CandidateProfileService],

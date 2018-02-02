@@ -1,11 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import { CandidatesService } from './candidates.service';
 import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { JobDetailsService } from '../job-details.service';
 import { Router } from '@angular/router';
 import { DeveloperListType, Loading } from '../../shared/utils';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material";
+import {MatSelectModule} from "@angular/material";
+import {MatButtonModule} from '@angular/material/button';
+import {Modal1Component} from "../../post-job-page/modal1/modal1.component";
+import {RootVCRService} from "../../root_vcr.service";
+import {Parse} from "../../parse.service";
+
 
 @Component({
 	selector: 'app-candidates',
@@ -13,15 +20,17 @@ import {FormsModule} from "@angular/forms";
 	styleUrls: ['./candidates.component.scss']
 })
 export class CandidatesComponent implements OnInit, OnDestroy {
-
+	countryArray:Array<any>;
+	sortSelect:string = "skillsMatch";
+	skillMatchSelect:string;
 	contractId: string;
 	checked:false;
 	candidateWeight: number;
 	candidates;
 	userId: string;
-
+    private countriesSourcing: Array<any> = [];
 	private _candidatesCount: number;
-
+    @Input() contractObj;
 	private _displayLoader;
 
 	private _from;
@@ -38,7 +47,9 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	constructor(
 		private _candidatesService: CandidatesService,
 		private _jobDetailsService: JobDetailsService,
-		private _router: Router
+		private _router: Router,
+        private _root_vcr: RootVCRService,
+		private _parse: Parse
 	) {
 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
 	}
@@ -166,6 +177,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			}
 
 		});
+		this.loadCountryList();
 	}
 
 	loadCandidatesAtTheEnd(event) {
@@ -246,6 +258,40 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			return index < 6;
 		});
 	}
+    loadCountries() {
+        if (this.countriesSourcing.length == 0) {
+            const query = this._parse.Query('Country');
+            query.ascending('Country');
+            query.find().then(res => {
+                res.forEach((country, index) => {
+                    this.countriesSourcing.push({
+                        country: country,
+                        checked: false
+                    });
+
+                    if (this.contractObj) {
+                        this.contractObj.get('countriesSourcing').forEach(countryObj => {
+                            if (country.id == countryObj.id) {
+                                this.countriesSourcing[index].checked = true;
+                            }
+                        });
+                    }
+                });
+            });
+        }
+        return 'success';
+    }
+    addCountries(){
+        const addCount = this._root_vcr.createComponent(Modal1Component);
+        this.loadCountries();
+        console.log(this.countriesSourcing);
+        setTimeout(() => {
+            addCount.countries = this.countriesSourcing;
+        }, 0);
+        addCount.closeModal.subscribe(() => {
+            this._root_vcr.clear();
+        });
+    }
 
 	getPercentageMatch(user: ParseUser): number {
 		const developerId = user.get('developer').id;
@@ -259,6 +305,18 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 	errorHandler(event) {
 		event.target.src = '../../../assets/img/default-userpic.png';
+	}
+    loadCountryList(){
+    	let countryQuery = this._parse.Query('Country');
+        let someArray = [];
+        countryQuery.ascending('Country');
+    	countryQuery.find('Country').then(item=>{
+    		item.forEach(i=>{
+    			someArray.push(i.get('Country'));
+			});
+		});
+    	console.log('SOMEARRAY', someArray);
+    	this.countryArray = someArray;
 	}
 
 	get Loading() {
