@@ -109,7 +109,9 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 							this.hasCandidates = Loading.error;
 							this._jobDetailsService.isStagesDisabled = Loading.error;
 						}
-					});
+                        console.log('CANDIDATES================', this.candidates);
+                        console.log('Suggestion results================', suggestions.results);
+                    });
 					break;
 
 				case DeveloperListType.applied:
@@ -317,19 +319,18 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 				for( let i in res) {
 					let obj = res[i];
                     let gotValue = obj.get('homeCountry').get('Country');
-					console.log('getHomeCountry2',obj.get('homeCountry').get('Country'));
+                    console.log('GOT VALUE=============', gotValue);
 					if (!someArray.includes(gotValue)) {
 						someArray.push(gotValue);
 					}
 
 				}
 		});
-        console.log('SOMEARRAY', someArray);
         this.countryArray = someArray;
 	}
 
-	checkIdOfDev(value,checked){
-        if (checked == true) {
+	checkIdOfDev(value,e){
+        if (e.checked) {
         console.log('Id of dev', value);
         this.arrayOfDevs.push(value);
         console.log('Array if true', this.arrayOfDevs);
@@ -359,6 +360,27 @@ export class CandidatesComponent implements OnInit, OnDestroy {
             onSendSubscription.unsubscribe();
         });
     }
+
+	sortBySkillFunc(){
+        this._candidatesService.getSuggestedCandidates(this.contractId, 0, 1000).then(suggestions => {
+            console.log('SUGGESTIONS: ', suggestions);
+            if (suggestions && suggestions.results.length > 0) {
+                suggestions.results.forEach(candidate=>{
+                    console.log('Candidate id ==============', candidate.id);
+                });
+            }
+            console.log('Suggestion results================', suggestions.results);
+        });
+	}
+
+    selectionFunc(selectedAllValue) {
+    	this.selectedAll = selectedAllValue;
+    	if(!selectedAllValue) {
+    		this.arrayOfDevs = [];
+    		console.log('ArraYOFDEVSS', this.arrayOfDevs);
+		}
+	}
+
 	get Loading() {
 		return Loading;
 	}

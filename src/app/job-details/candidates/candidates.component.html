@@ -19,13 +19,12 @@
 </mat-form-field>
 <mat-form-field>
     <mat-select placeholder="Bulk actions">
-        <mat-option (click)="sendEmail()">Send email</mat-option>
-        <mat-option>Move</mat-option>
-        <mat-option>Delete</mat-option>
+        <mat-option (click)="sendEmail()">Send email/templates</mat-option>
+        <mat-option>Send nudge</mat-option>
     </mat-select>
 </mat-form-field>
-<button *ngIf="!selectedAll" mat-button (click)="selectedAll = true">Select all</button>
-<button *ngIf="selectedAll" mat-button (click)="selectedAll = false">Unselect all</button>
+<button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button>
+<button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button>
 
 <section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
     <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
@@ -54,12 +53,12 @@
                     <div class="location">
                         {{candidate.get('location')}}
                     </div>
-                    <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit</div>
+                    <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit {{getPercentageMatch(candidate)}}</div>
                     <div class="match"
-                         *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit
+                         *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit {{getPercentageMatch(candidate)}}
                     </div>
                     <div class="match"
-                         *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit
+                         *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit{{getPercentageMatch(candidate)}}
                     </div>
                 </div>
                 <div *ngIf="candidate.get('developer').get('skills')" class="candidate-skills">
@@ -73,7 +72,7 @@
                         *ngIf="candidate.get('developer').get('skills') && candidate.get('developer').get('skills').length > 6">+{{candidate.get('developer').get('skills').length - limitArray(candidate.get('developer').get('skills')).length}}</span>
                 </div>
             </div>
-            <mat-checkbox #candidateCheckbox class="bulk-checkbox" value="{{candidate.id}}" (change)="checkIdOfDev(candidateCheckbox.value,$event.checked)"></mat-checkbox>
+            <mat-checkbox #candidateCheckbox class="bulk-checkbox" value="{{candidate.id}}" [ngModel]="selectedAll" (change)="checkIdOfDev(candidateCheckbox.value,$event)"></mat-checkbox>
 
         </div>
     </div>
