@@ -12,6 +12,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {Modal1Component} from "../../post-job-page/modal1/modal1.component";
 import {RootVCRService} from "../../root_vcr.service";
 import {Parse} from "../../parse.service";
+import {GmailComponent} from "../../gmail/gmail.component";
 
 
 @Component({
@@ -28,6 +29,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	candidateWeight: number;
 	candidates;
 	userId: string;
+	arrayOfDevs:Array<any> = [];
     private countriesSourcing: Array<any> = [];
 	private _candidatesCount: number;
     @Input() contractObj;
@@ -307,18 +309,56 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		event.target.src = '../../../assets/img/default-userpic.png';
 	}
     loadCountryList(){
-    	let countryQuery = this._parse.Query('Country');
+    	let countryQuery = this._parse.Query('Developer');
         let someArray = [];
-        countryQuery.ascending('Country');
-    	countryQuery.find('Country').then(item=>{
-    		item.forEach(i=>{
-    			someArray.push(i.get('Country'));
-			});
+		countryQuery.exists('homeCountry');
+		countryQuery.include('homeCountry.Country');
+		countryQuery.find().then(res=>{
+				for( let i in res) {
+					let obj = res[i];
+                    let gotValue = obj.get('homeCountry').get('Country');
+					console.log('getHomeCountry2',obj.get('homeCountry').get('Country'));
+					if (!someArray.includes(gotValue)) {
+						someArray.push(gotValue);
+					}
+
+				}
 		});
-    	console.log('SOMEARRAY', someArray);
-    	this.countryArray = someArray;
+        console.log('SOMEARRAY', someArray);
+        this.countryArray = someArray;
 	}
 
+	checkIdOfDev(value,checked){
+        if (checked == true) {
+        console.log('Id of dev', value);
+        this.arrayOfDevs.push(value);
+        console.log('Array if true', this.arrayOfDevs);
+        }
+        else {
+            let index = this.arrayOfDevs.indexOf(value);
+            if (index !== -1) {
+                this.arrayOfDevs.splice(index,1);
+            }
+            console.log('Array if false', this.arrayOfDevs);
+        }
+    }
+    sendEmail(){
+        const email = this._root_vcr.createComponent(GmailComponent);
+        email.userId = this.arrayOfDevs;
+        email.contractId = this.contractId;
+        email.saveNote = true;
+        email.saveChat = true;
+        email.needTemplates = true;
+        email.templateOptions = ['all'];
+        email.emailBody = '';
+        email.emailSubj = '';
+        email.attachments = [];
+        const onSendSubscription = email.onSend.subscribe(e => {
+            this._router.navigate(['/', 'jobs', this.contractId, 'candidates', 'chat'], {skipLocationChange: true});
+            console.log('onSend works');
+            onSendSubscription.unsubscribe();
+        });
+    }
 	get Loading() {
 		return Loading;
 	}

@@ -18,9 +18,10 @@
     </mat-select>
 </mat-form-field>
 <mat-form-field>
-    <mat-select disabled placeholder="Bulk actions">
-        <mat-option>Best skills match</mat-option>
-        <mat-option>Best location match</mat-option>
+    <mat-select placeholder="Bulk actions">
+        <mat-option (click)="sendEmail()">Send email</mat-option>
+        <mat-option>Move</mat-option>
+        <mat-option>Delete</mat-option>
     </mat-select>
 </mat-form-field>
 <button *ngIf="!selectedAll" mat-button (click)="selectedAll = true">Select all</button>
@@ -72,7 +73,8 @@
                         *ngIf="candidate.get('developer').get('skills') && candidate.get('developer').get('skills').length > 6">+{{candidate.get('developer').get('skills').length - limitArray(candidate.get('developer').get('skills')).length}}</span>
                 </div>
             </div>
-            <mat-checkbox class="bulk-checkbox" id="{{candidate.id}}" [(ngModel)]="selectedAll"></mat-checkbox>
+            <mat-checkbox #candidateCheckbox class="bulk-checkbox" value="{{candidate.id}}" (change)="checkIdOfDev(candidateCheckbox.value,$event.checked)"></mat-checkbox>
+
         </div>
     </div>
     <div class="candidate-profile">
