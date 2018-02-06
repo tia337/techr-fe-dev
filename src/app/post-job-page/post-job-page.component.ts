@@ -108,7 +108,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 
 	companyDescriptionMaxLength = 900;
 
-	jobDescriptionMaxLength = 4000;
+	jobDescriptionMaxLength = 8000;
 	jobBenefitsMaxLength = 500;
 
 	alertHappend = false;
