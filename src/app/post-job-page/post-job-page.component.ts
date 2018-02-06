@@ -1041,7 +1041,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 
 			setTimeout(() => {
 				this.filter();
-			}, 100);
+			}, 750);
 		}
 	}
 
