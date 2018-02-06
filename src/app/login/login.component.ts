@@ -41,14 +41,16 @@ export class LoginComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		if (this.getMobileOperatingSystem() == 'iOS') {
-			//redirect to App Store
-			document.getElementById('ios-wrap').style.display = 'none';
-            window.location.href = 'https://itunes.apple.com/ua/app/swipein-microsoft-contractors/id1069929825?l=ru&mt=8';
-		}
-		else if (this.getMobileOperatingSystem() == 'Android') {
-			//redirect to Play Market
-			window.location.href = "market://details?id=com.swipein";
+		switch (this.getMobileOperatingSystem()) {
+			case 'iOS':
+                document.getElementById('ios-wrap').style.display = 'none';
+                window.location.href = 'https://itunes.apple.com/ua/app/swipein-microsoft-contractors/id1069929825?l=ru&mt=8';
+                break;
+			case 'Android':
+                window.location.href = "https://play.google.com/store/apps/details?id=com.swipein";
+                break;
+			case 'Windows Phone':
+				alert('SwipeIn is only available on iOS/Android or https://swipein.hr for the web desktop version');
 		}
 	}
     getMobileOperatingSystem() {
@@ -67,7 +69,7 @@ export class LoginComponent implements OnInit {
         if (/iPad|iPhone|iPod/.test(userAgent)) {
             return "iOS";
         }
-        console.log('User Agent', userAgent);
+
         return "unknown";
     }
 
