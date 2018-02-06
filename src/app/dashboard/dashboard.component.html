@@ -1,36 +1,38 @@
 <section *ngIf="currentUser && isFirst > 0 && currentUser.get('Client_Pointer')" class="login-page-content">
-  <div class="days-left" *ngIf="onTrial;else planType">
-    <div class="days-left-labels">
-      <div class="trial-label">Trial Account</div>
-      <!-- <a class="buy-button" >Buy Now</a> -->
-      <a class="buy-button" [routerLink]="['/', 'administration', 'subscriptions']">Buy Now</a>
-    </div>
-    <div class="days-left-indicator-wrap">
-      <mat-progress-spinner class="days-left-indicator" mode="determinate" color="primary" [strokeWidth]="6" [value]="indicatorValue">
-      </mat-progress-spinner>
-    </div>
-    <div class="days-left-label">
-      <div class="days-left-value">
-        {{trialDaysLeft}}
-      </div>
-      Days Left
-    </div>
-    <div class="expires-on-label">
-      Expires {{expiresOn | date:'d.M.y'}}
-    </div>
-  </div>
-
-  <ng-template #planType>
-    <div class="plan-name">
-      {{currentPlan}}
-    </div>
-  </ng-template>
 
   <div class="top-block">
+    <div class="logo-name-container">
     <img class="egret-logo" src="../../assets/img/egret-logo-button.png" />
     <!-- <div class="swipein-header"><span class="blue">Swipe</span><span class="black">In</span></div>
     <div class="swipein-description">Discover and engagewith top tech & digital talent in less than 48 hours</div> -->
     <div *ngIf="currentUser" class="greeting">Welcome onboard, {{currentUser.get('firstName')}}!</div>
+    </div>
+    <div class="days-left" *ngIf="onTrial;else planType">
+      <div class="days-left-labels">
+        <div class="trial-label">Trial Account</div>
+        <!-- <a class="buy-button" >Buy Now</a> -->
+        <a class="buy-button" [routerLink]="['/', 'administration', 'subscriptions']">Buy Now</a>
+      </div>
+      <div class="days-left-indicator-wrap">
+        <mat-progress-spinner class="days-left-indicator" mode="determinate" color="primary" [strokeWidth]="6" [value]="indicatorValue">
+        </mat-progress-spinner>
+      </div>
+      <div class="days-left-label">
+        <div class="days-left-value">
+          {{trialDaysLeft}}
+        </div>
+        Days Left
+      </div>
+      <div class="expires-on-label">
+        Expires {{expiresOn | date:'d.M.y'}}
+      </div>
+    </div>
+
+    <ng-template #planType>
+      <div class="plan-name">
+        {{currentPlan}}
+      </div>
+    </ng-template>
   </div>
 
   <div class="chart-wrap">

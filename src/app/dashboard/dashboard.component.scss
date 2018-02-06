@@ -1,18 +1,18 @@
 @import './../../styles/mixins';
 .login-page-content {
-  padding: 25px;
+  padding: 10px 25px 25px 25px;
   position: relative;
   .days-left {
     display: inline-block; // float: right;
-    position: absolute;
     top: 5px;
     right: 50px;
     width: 180px;
     text-align: center;
     .days-left-labels {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: space-between;
+      align-items: flex-end;
       font-size: 0.7em;
       color: #999999;
       .trial-label {}
@@ -26,7 +26,8 @@
       display: inline-block;
       overflow: hidden;
       height: 80px;
-      margin-top: 15px;
+      margin-top: -15px;
+      margin-right: 25px;
       .days-left-indicator {
         // transform: translateY(50%);
         height: 130px;
@@ -43,7 +44,9 @@
       color: #999999;
       text-align: center;
       margin-top: -50px;
-      margin-bottom: 15px;
+      margin-bottom: 5px;
+      margin-right: 25px;
+
       .days-left-value {
         font-size: 1.7em;
         font-weight: 500;
@@ -52,6 +55,7 @@
     .expires-on-label {
       font-size: 0.7em;
       color: #999999;
+      margin-right: 25px;
     }
   }
 
@@ -65,13 +69,15 @@
   }
 
   .top-block {
-    text-align: center;
-    margin: 5px 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    margin: 0;
     img.egret-logo {
-      max-height: 15vh;
+      max-height: 10vh;
     }
     .greeting {
-      font-size: 1.3em;
+      font-size: 1em;
       font-weight: 100;
     } // .swipein-header {
     //   font-size: 26px;
@@ -84,9 +90,16 @@
     //     color: #000;
     //   }
     // }
+    .logo-name-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 10px;
+    }
   }
   .chart-wrap {
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
     position: relative;
     .mock-chart {
       width: 100%;
