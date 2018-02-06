@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
 	ngOnInit() {
 		if (this.getMobileOperatingSystem() == 'iOS') {
 			//redirect to App Store
+			document.getElementById('ios-wrap').style.display = 'none';
             window.location.href = 'https://itunes.apple.com/ua/app/swipein-microsoft-contractors/id1069929825?l=ru&mt=8';
 		}
 		else if (this.getMobileOperatingSystem() == 'Android') {
