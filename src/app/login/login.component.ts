@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
 		}
 		else if (this.getMobileOperatingSystem() == 'Android') {
 			//redirect to Play Market
-			window.location.href = 'https://play.google.com/store/apps/details?id=com.swipein';
+			window.location.href = "market://details?id=com.swipein";
 		}
 	}
     getMobileOperatingSystem() {
