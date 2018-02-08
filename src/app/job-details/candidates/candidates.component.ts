@@ -28,6 +28,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	selectedAll:false;
 	candidateWeight: number;
 	candidates;
+	viewCandidates;
 	allSuggestionsObject;
 	userId: string;
 	arrayOfDevs:Array<any> = [];
@@ -93,11 +94,13 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 			this.hasCandidates = Loading.loading;
 			this._jobDetailsService.isStagesDisabled = Loading.loading;
-
+			this._candidatesService.getSuggestedCandidatesWeb(this.contractId).then(resultOfGet => {
+				console.log('Result of WEB', resultOfGet);
+			});
 			switch (activeStage) {
 
 				case DeveloperListType.suggested:
-					this._candidatesService.getSuggestedCandidates(this.contractId, this._from, this._limit).then(suggestions => {
+					this._candidatesService.getSuggestedCandidates(this.contractId).then(suggestions => {
 						console.log('SUGGESTIONS NG ON INIT: ', suggestions);
 						if (suggestions && suggestions.results.length > 0) {
 							this.hasCandidates = Loading.success;
@@ -107,6 +110,13 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 							this.candidates.results = this.candidates.results.slice(this._from,this._limit);
 							this.candidates.weights = this.candidates.weights.slice(this._from,this._limit);
 							this.candidates.distances = this.candidates.distances.slice(this._from,this._limit);
+                            // let tempArray = [];
+                            // this.candidates.results.slice(0,10).forEach(devID => {
+                             //    tempArray.push(devID);
+                            // });
+                            // this._candidatesService.getDevelopersById(tempArray).then(result => {
+                             //    this.candidates.results = this.candidates.results.concat(result.results);
+                            // });
                             console.log('CANDIDATES================', this.candidates);
                             console.log('Suggestion results================', suggestions.results);
 							const firstUser = suggestions.results[0];

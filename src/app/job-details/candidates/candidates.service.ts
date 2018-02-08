@@ -19,7 +19,7 @@ export class CandidatesService {
 	constructor(private _parse: Parse, private _jobDetailsService: JobDetailsService) { }
 
 	// getSuggestedCandidates(contractId: string): ParsePromise {
-	getSuggestedCandidates(contractId: string, from: number, limit: number, sortBy?:string, skillsFit?:Array<string>, countries?:Array<string>): ParsePromise {
+	getSuggestedCandidates(contractId: string, from?: number, limit?: number, sortBy?:string, skillsFit?:Array<string>, countries?:Array<string>): ParsePromise {
 
         return this._parse.execCloud('searchSuggestionCandidates',
             {
@@ -30,6 +30,14 @@ export class CandidatesService {
                 sortBy: sortBy,
                 skillsFit: skillsFit,
                 countries: countries
+            });
+    }
+    getSuggestedCandidatesWeb(contractId: string): ParsePromise {
+
+        return this._parse.execCloud('searchSuggestionCandidatesWeb',
+            {
+                profileType: 2,
+                contractId: contractId
             });
     }
 
