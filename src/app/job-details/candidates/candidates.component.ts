@@ -28,6 +28,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	selectedAll:false;
 	candidateWeight: number;
 	candidates;
+	allSuggestionsObject;
 	userId: string;
 	arrayOfDevs:Array<any> = [];
     private countriesSourcing: Array<any> = [];
@@ -97,11 +98,17 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 				case DeveloperListType.suggested:
 					this._candidatesService.getSuggestedCandidates(this.contractId, this._from, this._limit).then(suggestions => {
-						console.log('SUGGESTIONS: ', suggestions);
+						console.log('SUGGESTIONS NG ON INIT: ', suggestions);
 						if (suggestions && suggestions.results.length > 0) {
 							this.hasCandidates = Loading.success;
 							this._jobDetailsService.isStagesDisabled = Loading.success;
-							this.candidates = suggestions;
+							this.candidates = Object.assign({},suggestions);
+							this.allSuggestionsObject= Object.assign({},suggestions);
+							this.candidates.results = this.candidates.results.slice(this._from,this._limit);
+							this.candidates.weights = this.candidates.weights.slice(this._from,this._limit);
+							this.candidates.distances = this.candidates.distances.slice(this._from,this._limit);
+                            console.log('CANDIDATES================', this.candidates);
+                            console.log('Suggestion results================', suggestions.results);
 							const firstUser = suggestions.results[0];
 							this._candidatesService.userId = firstUser.id;
 							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser));
@@ -109,8 +116,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 							this.hasCandidates = Loading.error;
 							this._jobDetailsService.isStagesDisabled = Loading.error;
 						}
-                        console.log('CANDIDATES================', this.candidates);
-                        console.log('Suggestion results================', suggestions.results);
                     });
 					break;
 
@@ -192,20 +197,32 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	}
 
 	loadMoreCandidates(candidatesBlock) {
-		if (this._from + this._limit < this._candidatesCount) {
+		if (this._from < this._candidatesCount) {
 			console.log('LOAD MORE......');
 			this._jobDetailsService.isStagesDisabled = Loading.loading;
-			this._from += this._limit;
+			this._from += 10;
+			this._limit += 10;
 			this._displayLoader = true;
+            let someArrayOfIds = [];
+            let suggestionsCut = Object.assign({},this.allSuggestionsObject);
+                suggestionsCut.results.slice(this._from,this._limit).forEach(dev => {
+                	someArrayOfIds.push(dev.id);
+				});
 			switch (this._activeStage) {
 				case DeveloperListType.suggested:
-					this._candidatesService.getSuggestedCandidates(this.contractId, this._from, this._limit).then(suggestions => {
-						this.candidates.weights = Object.assign({}, this.candidates.weights, suggestions.weights);
-						this.candidates.distances = Object.assign({}, this.candidates.distances, suggestions.distances);
-						this.candidates.results = this.candidates.results.concat(suggestions.results);
-						this.scrollTo(candidatesBlock, candidatesBlock.scrollTop + candidatesBlock.offsetHeight, 500);
-						this._jobDetailsService.isStagesDisabled = Loading.success;
-					});
+					// this._candidatesService.getSuggestedCandidates(this.contractId, this._from, this._limit).then(suggestions => {
+					// 	this.candidates.weights = Object.assign({}, this.candidates.weights, suggestions.weights);
+					// 	this.candidates.distances = Object.assign({}, this.candidates.distances, suggestions.distances);
+					// 	this.candidates.results = this.candidates.results.concat(suggestions.results);
+					// 	this.scrollTo(candidatesBlock, candidatesBlock.scrollTop + candidatesBlock.offsetHeight, 500);
+					// 	this._jobDetailsService.isStagesDisabled = Loading.success;
+					// });
+
+                    this._candidatesService.getDevelopersById(someArrayOfIds).then(result => {
+                        console.log('RESULT FROM GET DEVS BY ID',result);
+                        this.candidates.results = this.candidates.results.concat(result.results);
+                        this._jobDetailsService.isStagesDisabled = Loading.success;
+                    });
 					break;
 
 				case DeveloperListType.applied:
