@@ -30,6 +30,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	candidateWeight: number;
 	candidates;
 	viewCandidates;
+	copyOfResultingArray;
 	allSuggestionsObject;
 	userId: string;
 	arrayOfDevs:Array<any> = [];
@@ -103,16 +104,16 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 						if (resultingArray && resultingArray.developersSorted.length > 0) {
                             	this.hasCandidates = Loading.success;
                             	this._jobDetailsService.isStagesDisabled = Loading.success;
+                            	resultingArray.developersSorted = _.sortBy(resultingArray.developersSorted, 'weight');
                             	let tempArray = [];
+                            	this.copyOfResultingArray = Object.assign({},resultingArray);
                             	this.candidates = Object.assign({},resultingArray);
                             	this.candidates.results = [ ];
                             	this.candidates.weights = resultingArray.weights;
                             	this.candidates.distances = resultingArray.distances;
-                            	resultingArray.developersSorted = _.sortBy(resultingArray.developersSorted, 'weight');
                             	resultingArray.developersSorted.slice(this._from,this._limit).forEach(dev => {
                             		tempArray.push(dev.id);
 								});
-                            console.log('========',tempArray);
                             this._candidatesService.getDevelopersById(tempArray).then(response => {
                             		console.log('Response from server Get Developers', response.results);
                             		this.candidates.results = this.candidates.results.concat(response.results);
@@ -234,8 +235,9 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this._limit += 10;
 			this._displayLoader = true;
             let someArrayOfIds = [];
-            let suggestionsCut = Object.assign({},this.allSuggestionsObject);
-                suggestionsCut.results.slice(this._from,this._limit).forEach(dev => {
+            let suggestionsCut = Object.assign({},this.copyOfResultingArray);
+            console.log('Suggestions Cut', suggestionsCut);
+                suggestionsCut.developersSorted.slice(this._from,this._limit).forEach(dev => {
                 	someArrayOfIds.push(dev.id);
 				});
 			switch (this._activeStage) {
@@ -346,6 +348,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 	getPercentageMatch(user: ParseUser): number {
 		const developerId = user.get('developer').id;
+
+		console.log('getting Dev ID', developerId);
 		return this.candidates.weights[developerId] ? this.candidates.weights[developerId] : 0;
 	}
 
@@ -366,7 +370,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 				for( let i in res) {
 					let obj = res[i];
                     let gotValue = obj.get('homeCountry').get('Country');
-                    console.log('GOT VALUE=============', gotValue);
 					if (!someArray.includes(gotValue)) {
 						someArray.push(gotValue);
 					}
