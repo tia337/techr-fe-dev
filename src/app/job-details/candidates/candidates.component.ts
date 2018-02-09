@@ -4,6 +4,7 @@ import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { JobDetailsService } from '../job-details.service';
 import { Router } from '@angular/router';
 import { DeveloperListType, Loading } from '../../shared/utils';
+import { ChangeDetectorRef } from '@angular/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material";
@@ -29,6 +30,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	selectedAll:false;
 	candidateWeight: number;
 	candidates;
+	unitPreference;
 	viewCandidates;
 	copyOfResultingArray;
 	allSuggestionsObject;
@@ -63,7 +65,11 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this._candidatesService.contractId = this._jobDetailsService.contractId;
 		this.contractId = this._jobDetailsService.contractId;
+		this._parse.getPartner(this._parse.Parse.User.current()).then(result=>{
+			console.log('partner=============================', result);
+			this.unitPreference = result.get('candidateDistanceUnitPreferrences');
 
+		});
 		this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe(candidatesCounts => {
 			console.log('CANDIDATES COUNT: ', candidatesCounts);
 			if (candidatesCounts) {
@@ -120,9 +126,16 @@ export class CandidatesComponent implements OnInit, OnDestroy {
                             		console.log('Response from server Get Developers', response.results);
                             		this.candidates.results = this.candidates.results.concat(response.results);
 									console.log('This.candidate.results', this.candidates.results);
-								});
-						}
-					});
+								const firstUser = this.candidates.results[0];
+								this._candidatesService.userId = firstUser.id;
+								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser));
+								})
+
+							} else {
+								this.hasCandidates = Loading.error;
+								this._jobDetailsService.isStagesDisabled = Loading.error;
+							}
+						});
                     // this._candidatesService.getSuggestedCandidates(this.contractId).then(suggestions => {
 						// console.log('SUGGESTIONS NG ON INIT: ', suggestions);
 						// if (suggestions && suggestions.results.length > 0) {
@@ -238,6 +251,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this._displayLoader = true;
             let someArrayOfIds = [];
             let suggestionsCut = Object.assign({},this.copyOfResultingArray);
+            console.log('_this.from',this._from);
+            console.log('_this.limit',this._limit);
             console.log('Suggestions Cut', suggestionsCut);
                 suggestionsCut.developersSorted.slice(this._from,this._limit).forEach(dev => {
                 	someArrayOfIds.push(dev.id);
@@ -316,7 +331,33 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	}
 
 	changeSortMethod(value) {
-		this.candidates.results = _.sortBy(this.candidates.results,value);
+		console.log('METHOD STARTED');
+		let someArray = [];
+		let copyLength = this.candidates.results.length;
+		let newCopy = this.copyOfResultingArray;
+		if (value == 'weight') {
+			newCopy.developersSorted = _.sortBy(this.copyOfResultingArray.developersSorted, value).reverse();
+
+		}
+		else if (value == 'distance') {
+			newCopy.developersSorted = _.sortBy(this.copyOfResultingArray.developersSorted, value);
+
+		}
+		this._from = 0;
+		this._limit = 10;
+		newCopy.developersSorted.slice(this._from,this._limit).forEach(res => {
+			someArray.push(res.id);
+		});
+		this._candidatesService.getDevelopersById(someArray).then(getRes => {
+			console.log('GET RES',getRes);
+			this.candidates.results = this.candidates.results.concat(getRes.results);
+			console.log('This candidate results after concat',this.candidates.results);
+			return this.candidates.results;
+		}).then(resultOfGet=>{
+			console.log('ResultOfGet (2nd then)',resultOfGet);
+			this.candidates.results = this.candidates.results.slice(copyLength);
+			this.candidates.results = this.candidates.results.slice(0);
+		});
 		console.log('Candidates results', this.candidates.results);
 		console.log('CopyOfResultingArray results', this.copyOfResultingArray);
 	}
@@ -360,6 +401,11 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		const developerId = user.get('developer').id;
 
 		return this.candidates.weights[developerId] ? this.candidates.weights[developerId] : 0;
+	}
+
+	getLocationMatch(user: ParseUser): number {
+		const developerId = user.get('developer').id;
+		return this.candidates.distances[developerId] ? this.candidates.distances[developerId] : 0;
 	}
 
 	userProfile(userId: string, candidateWeight: number) {

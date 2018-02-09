@@ -1,7 +1,7 @@
 <mat-form-field *ngIf="_activeStage == -2">
     <mat-select placeholder="Sort by" [(value)]="sortSelect">
-        <mat-option value="skillsMatch">Best skills match</mat-option>
-        <mat-option value="locationMatch" (click)="changeSortMethod()">Best location match</mat-option>
+        <mat-option value="skillsMatch" (click)="changeSortMethod('weight')">Best skills match</mat-option>
+        <mat-option value="locationMatch" (click)="changeSortMethod('distance')">Best location match</mat-option>
     </mat-select>
 </mat-form-field>
 <!--<mat-form-field>-->
@@ -38,9 +38,9 @@
                 <div class="candidate-general-info">
                     <div class="candidate-name">{{candidate.get('firstName')}} {{candidate.get('lastName')}}</div>
                     <div class="candidate-position">{{candidate.get('headline')}}</div>
-                    <div class="candidate-company-name"><span class="company-title"
-                                                              *ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>
-                    </div>
+                    <!--<div class="candidate-company-name"><span class="company-title"-->
+                                                              <!--*ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>-->
+                    <!--</div>-->
                 </div>
 
 
@@ -53,13 +53,15 @@
                     <div class="location">
                         {{candidate.get('location')}}
                     </div>
-                    <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit {{getPercentageMatch(candidate)}}</div>
+                    <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit </div>
                     <div class="match"
-                         *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit {{getPercentageMatch(candidate)}}
+                         *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit
                     </div>
                     <div class="match"
-                         *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit{{getPercentageMatch(candidate)}}
+                         *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit
                     </div>
+                    <div *ngIf="unitPreference == 1" class="location-away">{{getLocationMatch(candidate)}} km away</div>
+                    <div *ngIf= "unitPreference ==2" class="location-away">{{getLocationMatch(candidate) * 0.67}} miles away</div>
                 </div>
                 <div *ngIf="candidate.get('developer').get('skills')" class="candidate-skills">
                     <div *ngFor="let skill of limitArray(candidate.get('developer').get('skills'))" class="skill-wrap">
