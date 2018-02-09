@@ -104,9 +104,11 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 						if (resultingArray && resultingArray.developersSorted.length > 0) {
                             	this.hasCandidates = Loading.success;
                             	this._jobDetailsService.isStagesDisabled = Loading.success;
-                            	resultingArray.developersSorted = _.sortBy(resultingArray.developersSorted, 'weight');
+                            	resultingArray.developersSorted = _.sortBy(resultingArray.developersSorted, 'weight').reverse();
                             	let tempArray = [];
-                            	this.copyOfResultingArray = Object.assign({},resultingArray);
+							console.log('Sorted developer sorted array', resultingArray.developersSorted);
+							console.log('Sorted developer sorted array', resultingArray);
+							this.copyOfResultingArray = Object.assign({},resultingArray);
                             	this.candidates = Object.assign({},resultingArray);
                             	this.candidates.results = [ ];
                             	this.candidates.weights = resultingArray.weights;
@@ -117,7 +119,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
                             this._candidatesService.getDevelopersById(tempArray).then(response => {
                             		console.log('Response from server Get Developers', response.results);
                             		this.candidates.results = this.candidates.results.concat(response.results);
-
+									console.log('This.candidate.results', this.candidates.results);
 								});
 						}
 					});
@@ -239,6 +241,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
             console.log('Suggestions Cut', suggestionsCut);
                 suggestionsCut.developersSorted.slice(this._from,this._limit).forEach(dev => {
                 	someArrayOfIds.push(dev.id);
+                	console.log('Slice array', dev.id, dev.weight);
 				});
 			switch (this._activeStage) {
 				case DeveloperListType.suggested:
@@ -311,6 +314,13 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			return index < 6;
 		});
 	}
+
+	changeSortMethod(value) {
+		this.candidates.results = _.sortBy(this.candidates.results,value);
+		console.log('Candidates results', this.candidates.results);
+		console.log('CopyOfResultingArray results', this.copyOfResultingArray);
+	}
+
     loadCountries() {
         if (this.countriesSourcing.length == 0) {
             const query = this._parse.Query('Country');
@@ -349,7 +359,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	getPercentageMatch(user: ParseUser): number {
 		const developerId = user.get('developer').id;
 
-		console.log('getting Dev ID', developerId);
 		return this.candidates.weights[developerId] ? this.candidates.weights[developerId] : 0;
 	}
 

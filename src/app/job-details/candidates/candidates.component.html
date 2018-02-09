@@ -1,30 +1,30 @@
-<mat-form-field>
+<mat-form-field *ngIf="_activeStage == -2">
     <mat-select placeholder="Sort by" [(value)]="sortSelect">
         <mat-option value="skillsMatch">Best skills match</mat-option>
-        <mat-option value="locationMatch">Best location match</mat-option>
+        <mat-option value="locationMatch" (click)="changeSortMethod()">Best location match</mat-option>
     </mat-select>
 </mat-form-field>
-<mat-form-field>
-    <mat-select placeholder="Skills fit" [(value)]="skillMatchSelect">
-        <mat-option>None</mat-option>
-        <mat-option value="greatFit">Great fit</mat-option>
-        <mat-option value="goodFit">Good fit</mat-option>
-        <mat-option value="potentialFit">Potential fit</mat-option>
-    </mat-select>
-</mat-form-field>
-<mat-form-field>
-    <mat-select placeholder="Add country" multiple>
-        <mat-option *ngFor="let country of countryArray" [value]="country">{{country}}</mat-option>
-    </mat-select>
-</mat-form-field>
-<mat-form-field>
-    <mat-select placeholder="Bulk actions">
-        <mat-option (click)="sendEmail()">Send email/templates</mat-option>
-        <mat-option>Send nudge</mat-option>
-    </mat-select>
-</mat-form-field>
-<button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button>
-<button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button>
+<!--<mat-form-field>-->
+    <!--<mat-select placeholder="Skills fit" [(value)]="skillMatchSelect">-->
+        <!--<mat-option>None</mat-option>-->
+        <!--<mat-option value="greatFit">Great fit</mat-option>-->
+        <!--<mat-option value="goodFit">Good fit</mat-option>-->
+        <!--<mat-option value="potentialFit">Potential fit</mat-option>-->
+    <!--</mat-select>-->
+<!--</mat-form-field>-->
+<!--<mat-form-field>-->
+    <!--<mat-select placeholder="Add country" multiple>-->
+        <!--<mat-option *ngFor="let country of countryArray" [value]="country">{{country}}</mat-option>-->
+    <!--</mat-select>-->
+<!--</mat-form-field>-->
+<!--<mat-form-field>-->
+    <!--<mat-select placeholder="Bulk actions">-->
+        <!--<mat-option (click)="sendEmail()">Send email/templates</mat-option>-->
+        <!--<mat-option>Send nudge</mat-option>-->
+    <!--</mat-select>-->
+<!--</mat-form-field>-->
+<!--<button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button>-->
+<!--<button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button>-->
 
 <section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
     <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">

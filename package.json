@@ -57,7 +57,7 @@
         "libphonenumber-js": "^0.4.47",
         "ng-click-outside": "^3.0.0",
         "ng-socket-io": "^0.1.11",
-        "ng2-ckeditor": "^1.1.9",
+        "ng2-ckeditor": "1.1.9",
         "ng2-nouislider": "^1.6.1",
         "ng2-pdf-viewer": "^1.2.6",
         "ngx-facebook": "^2.4.0",
