@@ -41,11 +41,11 @@ export class CandidatesService {
             });
     }
 
-    getDevelopersById(userIds:Array<string>): ParsePromise {
+    getDevelopersById(developerIds:Array<string>): ParsePromise {
 
-        return this._parse.execCloud('getDevelopersByUserId',
+        return this._parse.execCloud('getDevelopersById',
             {
-                userIds: userIds
+            	developerIds: developerIds
             });
     }
 
