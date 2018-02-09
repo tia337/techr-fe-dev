@@ -41,8 +41,38 @@ export class LoginComponent implements OnInit {
 	}
 
 	ngOnInit() {
-
+		switch (this.getMobileOperatingSystem()) {
+			case 'iOS':
+                document.getElementById('ios-wrap').style.display = 'none';
+                window.location.href = 'https://itunes.apple.com/ua/app/swipein-microsoft-contractors/id1069929825?l=ru&mt=8';
+                break;
+			case 'Android':
+                window.location.href = "https://play.google.com/store/apps/details?id=com.swipein";
+                break;
+			case 'Windows Phone':
+				alert('SwipeIn is only available on iOS/Android or https://swipein.hr for the web desktop version');
+		}
 	}
+    getMobileOperatingSystem() {
+        var userAgent = navigator.userAgent || navigator.vendor;
+
+        // Windows Phone must come first because its UA also contains "Android"
+        if (/windows phone/i.test(userAgent)) {
+            return "Windows Phone";
+        }
+
+        if (/android/i.test(userAgent)) {
+            return "Android";
+        }
+
+        // iOS detection from: http://stackoverflow.com/a/9039885/177710
+        if (/iPad|iPhone|iPod/.test(userAgent)) {
+            return "iOS";
+        }
+
+        return "unknown";
+    }
+
 	signIn() {
 		this._login.signIn().then(user => {
 			if (!user.get('Client_Pointer')) {

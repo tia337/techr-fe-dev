@@ -116,6 +116,7 @@ export class PostJobService {
 
   getCategories() {
     const skillCategoriesQuery = new this._parse.Parse.Query('SkillCategory');
+    skillCategoriesQuery.ascending('orderIndex');
     return skillCategoriesQuery.find();
   }
 
