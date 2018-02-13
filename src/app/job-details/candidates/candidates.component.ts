@@ -48,7 +48,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 	private _stageSubscription;
 	hasCandidates: number;
-	private _activeStage;
+	public _activeStage;
 
 	private _candidatesCountObject;
 	private _candidatesCountSubscription;
@@ -405,7 +405,9 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 	getLocationMatch(user: ParseUser): number {
 		const developerId = user.get('developer').id;
-		return this.candidates.distances[developerId] ? this.candidates.distances[developerId] : 0;
+		let unitCoefficient = 1;
+		if (this.unitPreference == 2) { unitCoefficient = 0.67; };
+		return this.candidates.distances[developerId] ? Math.round(this.candidates.distances[developerId] * unitCoefficient) : 0;
 	}
 
 	userProfile(userId: string, candidateWeight: number, candidateDistance: number) {
