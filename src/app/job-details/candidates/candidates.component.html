@@ -29,7 +29,7 @@
 <section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
     <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
         <div class="candidate-block" *ngFor="let candidate of candidates.results"
-             (click)="userProfile(candidate.id, getPercentageMatch(candidate))" [class.active]="userId == candidate.id">
+             (click)="userProfile(candidate.id, getPercentageMatch(candidate), getLocationMatch(candidate))" [class.active]="userId == candidate.id">
             <!-- (click)="userProfile(candidate.id, getPercentageMatch(candidate))" -->
             <div class="candidate-info-top-section">
                 <div class="avatar-wrap">
@@ -61,7 +61,7 @@
                          *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit
                     </div>
                     <div *ngIf="unitPreference == 1" class="location-away">{{getLocationMatch(candidate)}} km away</div>
-                    <div *ngIf= "unitPreference ==2" class="location-away">{{getLocationMatch(candidate) * 0.67}} miles away</div>
+                    <div *ngIf="unitPreference == 2" class="location-away">{{getLocationMatch(candidate) * 0.67}} miles away</div>
                 </div>
                 <div *ngIf="candidate.get('developer').get('skills')" class="candidate-skills">
                     <div *ngFor="let skill of limitArray(candidate.get('developer').get('skills'))" class="skill-wrap">

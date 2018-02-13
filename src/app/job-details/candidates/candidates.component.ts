@@ -22,6 +22,7 @@ import * as _ from 'underscore';
 	templateUrl: './candidates.component.html',
 	styleUrls: ['./candidates.component.scss']
 })
+
 export class CandidatesComponent implements OnInit, OnDestroy {
 	countryArray:Array<any>;
 	sortSelect:string = "skillsMatch";
@@ -29,16 +30,17 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	contractId: string;
 	selectedAll:false;
 	candidateWeight: number;
+	candidateDistance: number;
 	candidates;
 	unitPreference;
 	viewCandidates;
-	copyOfResultingArray;
+	SuggestedCandidates;
 	allSuggestionsObject;
 	userId: string;
 	arrayOfDevs:Array<any> = [];
-    private countriesSourcing: Array<any> = [];
+  private countriesSourcing: Array<any> = [];
 	private _candidatesCount: number;
-    @Input() contractObj;
+  @Input() contractObj;
 	private _displayLoader;
 
 	private _from;
@@ -49,14 +51,13 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	private _activeStage;
 
 	private _candidatesCountObject;
-
 	private _candidatesCountSubscription;
 
 	constructor(
 		private _candidatesService: CandidatesService,
 		private _jobDetailsService: JobDetailsService,
 		private _router: Router,
-        private _root_vcr: RootVCRService,
+    private _root_vcr: RootVCRService,
 		private _parse: Parse
 	) {
 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
@@ -65,61 +66,60 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this._candidatesService.contractId = this._jobDetailsService.contractId;
 		this.contractId = this._jobDetailsService.contractId;
-		this._parse.getPartner(this._parse.Parse.User.current()).then(result=>{
-			console.log('partner=============================', result);
-			this.unitPreference = result.get('candidateDistanceUnitPreferrences');
-
+		this._parse.getPartner(this._parse.Parse.User.current()).then( partner => {
+			this.unitPreference = partner.get('candidateDistanceUnitPreferrences');
 		});
-		this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe(candidatesCounts => {
-			console.log('CANDIDATES COUNT: ', candidatesCounts);
-			if (candidatesCounts) {
-				this._candidatesCountObject = candidatesCounts;
+
+		this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe( candidatesCount => {
+			if (candidatesCount) {
+				this._candidatesCountObject = candidatesCount;
 				if (this._activeStage) {
-					this._candidatesCount = this._candidatesCountObject.find(count => {
+					this._candidatesCount = this._candidatesCountObject.find( count => {
 						return count.type === this._activeStage;
 					}).value;
-					console.log('COOOOUNT: ', this._candidatesCount);
+					console.log('Subsribed for candidatesCount: ', this._candidatesCount);
 				}
 			}
 		});
 
-		this._stageSubscription = this._jobDetailsService.activeStage.subscribe(activeStage => {
+		this._stageSubscription = this._jobDetailsService.activeStage.subscribe( activeStage => {
 			this._activeStage = activeStage;
-
 			if (this._candidatesCountObject) {
-				console.log(activeStage);
-				this._candidatesCount = this._candidatesCountObject.find(count => {
+				this._candidatesCount = this._candidatesCountObject.find( count => {
 					return count.type === activeStage;
 				}).value;
-				console.log('COOOOUNT: ', this._candidatesCount);
+				console.log('Subscribed for stage. CandidatesCount: ', this._candidatesCount);
 			}
 			console.log('Active Stage: ', activeStage);
+
 			delete this.candidates;
 			delete this.userId;
 			delete this.candidateWeight;
+			delete this.candidateDistance;
+
 			this._from = 0;
 			this._limit = 10;
 
 			this.hasCandidates = Loading.loading;
 			this._jobDetailsService.isStagesDisabled = Loading.loading;
+
 			switch (activeStage) {
 
 				case DeveloperListType.suggested:
-					this._candidatesService.getSuggestedCandidatesWeb(this.contractId).then(resultingArray => {
-						console.log('ResultingArray', resultingArray);
-						if (resultingArray && resultingArray.developersSorted.length > 0) {
+					this._candidatesService.getSuggestedCandidatesWeb(this.contractId).then( SuggestedCandidates => {
+						console.log('SuggestedCandidates: ', SuggestedCandidates);
+						if (SuggestedCandidates && SuggestedCandidates.developersSorted.length > 0) {
                             	this.hasCandidates = Loading.success;
                             	this._jobDetailsService.isStagesDisabled = Loading.success;
-                            	resultingArray.developersSorted = _.sortBy(resultingArray.developersSorted, 'weight').reverse();
+                            	SuggestedCandidates.developersSorted = _.sortBy(SuggestedCandidates.developersSorted, 'weight').reverse();
                             	let tempArray = [];
-							console.log('Sorted developer sorted array', resultingArray.developersSorted);
-							console.log('Sorted developer sorted array', resultingArray);
-							this.copyOfResultingArray = Object.assign({},resultingArray);
-                            	this.candidates = Object.assign({},resultingArray);
+							console.log('Developers sorted: ', SuggestedCandidates.developersSorted);
+							this.SuggestedCandidates = Object.assign({},SuggestedCandidates);
+                            	this.candidates = Object.assign({},SuggestedCandidates);
                             	this.candidates.results = [ ];
-                            	this.candidates.weights = resultingArray.weights;
-                            	this.candidates.distances = resultingArray.distances;
-                            	resultingArray.developersSorted.slice(this._from,this._limit).forEach(dev => {
+                            	this.candidates.weights = SuggestedCandidates.weights;
+                            	this.candidates.distances = SuggestedCandidates.distances;
+                            	SuggestedCandidates.developersSorted.slice(this._from,this._limit).forEach(dev => {
                             		tempArray.push(dev.id);
 								});
                             this._candidatesService.getDevelopersById(tempArray).then(response => {
@@ -128,7 +128,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 									console.log('This.candidate.results', this.candidates.results);
 								const firstUser = this.candidates.results[0];
 								this._candidatesService.userId = firstUser.id;
-								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser));
+								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 								})
 
 							} else {
@@ -173,7 +173,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 							this.candidates = suggestions;
 							const firstUser = suggestions.results[0];
 							this._candidatesService.userId = firstUser.id;
-							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser));
+							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 						} else {
 							this.hasCandidates = Loading.error;
 							this._jobDetailsService.isStagesDisabled = Loading.error;
@@ -191,7 +191,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 							this.candidates = referrals;
 							const firstUser = referrals.results[0];
 							this._candidatesService.userId = firstUser.id;
-							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser));
+							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 							console.log('employeeReferrals Users: ', this.getPercentageMatch(firstUser));
 						} else {
 							this.hasCandidates = Loading.error;
@@ -222,7 +222,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 							});
 							const firstUser = res;
 							this._candidatesService.userId = firstUser.id;
-							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser));
+							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 						} else {
 							this.hasCandidates = Loading.error;
 							this._jobDetailsService.isStagesDisabled = Loading.error;
@@ -250,7 +250,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this._limit += 10;
 			this._displayLoader = true;
             let someArrayOfIds = [];
-            let suggestionsCut = Object.assign({},this.copyOfResultingArray);
+            let suggestionsCut = Object.assign({},this.SuggestedCandidates);
             console.log('_this.from',this._from);
             console.log('_this.limit',this._limit);
             console.log('Suggestions Cut', suggestionsCut);
@@ -334,13 +334,13 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		console.log('METHOD STARTED');
 		let someArray = [];
 		let copyLength = this.candidates.results.length;
-		let newCopy = this.copyOfResultingArray;
+		let newCopy = this.SuggestedCandidates;
 		if (value == 'weight') {
-			newCopy.developersSorted = _.sortBy(this.copyOfResultingArray.developersSorted, value).reverse();
+			newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, value).reverse();
 
 		}
 		else if (value == 'distance') {
-			newCopy.developersSorted = _.sortBy(this.copyOfResultingArray.developersSorted, value);
+			newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, value);
 
 		}
 		this._from = 0;
@@ -358,8 +358,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this.candidates.results = this.candidates.results.slice(copyLength);
 			this.candidates.results = this.candidates.results.slice(0);
 		});
-		console.log('Candidates results', this.candidates.results);
-		console.log('CopyOfResultingArray results', this.copyOfResultingArray);
+		console.log('Candidates results: ', this.candidates.results);
+		console.log('SuggestedCandidates: ', this.SuggestedCandidates);
 	}
 
     loadCountries() {
@@ -408,9 +408,10 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		return this.candidates.distances[developerId] ? this.candidates.distances[developerId] : 0;
 	}
 
-	userProfile(userId: string, candidateWeight: number) {
+	userProfile(userId: string, candidateWeight: number, candidateDistance: number) {
 		this.userId = userId;
 		this.candidateWeight = candidateWeight;
+		this.candidateDistance = candidateDistance;
 	}
 
 	errorHandler(event) {

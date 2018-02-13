@@ -63,7 +63,8 @@ export class CandidatesService {
 			// console.log('Result: ', res);
 			return {
 				results: res.list,
-				weights: this.getPercentageMatch(res.list, contract)
+				weights: this.getPercentageMatch(res.list, contract),
+				distances: this.getLocationMatch(res.list, contract)
 			};
 		});
 	}
@@ -86,7 +87,7 @@ export class CandidatesService {
 			return referrals.find();
 		}).then(referrals => {
 			// console.log(referrals);
-			const res = {results: [], weights: {}};
+			const res = { results: [], weights: {}, distances: {} };
 			const users = referrals.map(referral => {
 				// console.log(referral.get('candidate'));
 				const user = referral.get('candidate');
@@ -97,6 +98,7 @@ export class CandidatesService {
 			// console.log(users);
 			res.results = users;
 			res.weights = this.getPercentageMatch(users, contract);
+			res.distances = this.getLocationMatch(users, contract);
 			return res;
 		});
 	}
@@ -131,7 +133,7 @@ export class CandidatesService {
 			contractApplyQuery.limit(limit);
 
 		return contractApplyQuery.find().then(contractApplies => {
-			const res = {results: [], weights: {}};
+			const res = { results: [], weights: {}, distances: {} };
 
 			if (contractApplies && contractApplies.length > 0) {
 				const contract = contractApplies[0].get('contract');
@@ -144,6 +146,7 @@ export class CandidatesService {
 				});
 				res.results = users;
 				res.weights = this.getPercentageMatch(users, contract);
+				res.distances = this.getLocationMatch(users, contract);
 			}
 			// console.log(res);
 			return res;
@@ -236,6 +239,26 @@ export class CandidatesService {
 		}
 	}
 
+	private getLocationMatch(users: Array<ParseUser>, contract: ParseObject) {
+		var distances = {};
+		var location = contract.get('postLocation')
+		if (location) {
+				for (var i = users.length - 1; i >= 0; i--) {
+						var profile = users[i].get('developer');
+
+						var profileLocation = profile.get("postLocation");
+						if (profileLocation) {
+								var distance = profileLocation.kilometersTo(location);
+								distances[profile.id] = Math.round(distance);
+						} else {
+								distances[profile.id] = -1; // profile not filled postcode or is invalid
+						}
+						//users[i].distance = distances[profile.id];
+						//console.log("DEBUG: Distance for user: ", users[i].distance);
+				};
+		};
+		return distances;
+	}
 
 
 }
