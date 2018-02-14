@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class PostJobService {
 
-  private apiKey: string = 'AIzaSyBEzjvfWFCMtOiRo3CgcedQl2vtWG1I8MA';
+  private apiKey: string = 'AIzaSyBFfAIR1tt4-AOfcsGxc87y-yZMLdrMNbk';
 
   logoUpdate: EventEmitter<any> = new EventEmitter();
 
