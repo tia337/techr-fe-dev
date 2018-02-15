@@ -340,8 +340,13 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 		}
 		else if (value == 'distance') {
-			newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, value);
-
+			newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, function(item) {
+				if (item.distance === -1) {
+					return 99999;
+				}
+				return item.distance;
+			});
+			console.log(newCopy.developersSorted);
 		}
 		this._from = 0;
 		this._limit = 10;
@@ -405,8 +410,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 	getLocationMatch(user: ParseUser): number {
 		const developerId = user.get('developer').id;
-		let unitCoefficient = 1;
-		if (this.unitPreference == 2) { unitCoefficient = 0.67; };
+		let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;
+
 		return this.candidates.distances[developerId] ? Math.round(this.candidates.distances[developerId] * unitCoefficient) : 0;
 	}
 
