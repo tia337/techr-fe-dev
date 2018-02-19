@@ -323,7 +323,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		upload.selectedContract = { name: this.contract.get('title'), id: this.contract.id };
 		console.log(upload.selectedContract);
 	}
-
+	
 	ngOnDestroy() {
 		this._socket.removeAllListeners('pipelineMainCountUpdate');
 	}
