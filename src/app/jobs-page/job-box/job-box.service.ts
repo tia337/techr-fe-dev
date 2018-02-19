@@ -62,6 +62,7 @@ export class JobBoxService {
 		});
 	}
 
+
 	private unpublishJob(contract: ParseObject) {
 		const jobBoardPushQuery = new this._parse.Parse.Query('JobBoardPush');
 		jobBoardPushQuery.equalTo('Job', contract);
