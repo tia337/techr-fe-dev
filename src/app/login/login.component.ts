@@ -38,32 +38,24 @@ export class LoginComponent implements OnInit {
 
 	constructor(private _router: Router, private _root_vcr: RootVCRService, private _login: Login) {
 		this._router.navigate(['/', 'login', {outlets: {'login-slider': ['reach-and-manage-candidates']}}], {skipLocationChange: true});
+	}
+
+	ngOnInit() {
 		switch (this.getMobileOperatingSystem()) {
 			case 'iOS':
                 document.getElementById('ios-wrap').style.display = 'none';
                 window.location.href = 'https://itunes.apple.com/ua/app/swipein-microsoft-contractors/id1069929825?l=ru&mt=8';
                 break;
 			case 'Android':
-                window.location.href = "https://play.google.com/store/apps/details?id=com.swipein";
+				document.getElementById('ios-wrap').style.display = 'none';
+				window.location.href = "https://play.google.com/store/apps/details?id=com.swipein";
                 break;
 			case 'Windows Phone':
+				document.getElementById('ios-wrap').style.display = 'none';
 				alert('SwipeIn is only available on iOS/Android or https://swipein.hr for the web desktop version');
 		}
 	}
 
-	ngOnInit() {
-		// switch (this.getMobileOperatingSystem()) {
-		// 	case 'iOS':
-        //         document.getElementById('ios-wrap').style.display = 'none';
-        //         window.location.href = 'https://itunes.apple.com/ua/app/swipein-microsoft-contractors/id1069929825?l=ru&mt=8';
-        //         break;
-		// 	case 'Android':
-        //         window.location.href = "https://play.google.com/store/apps/details?id=com.swipein";
-        //         break;
-		// 	case 'Windows Phone':
-		// 		alert('SwipeIn is only available on iOS/Android or https://swipein.hr for the web desktop version');
-		// }
-	}
     getMobileOperatingSystem() {
         var userAgent = navigator.userAgent || navigator.vendor;
 
@@ -79,8 +71,8 @@ export class LoginComponent implements OnInit {
         // iOS detection from: http://stackoverflow.com/a/9039885/177710
         if (/iPad|iPhone|iPod/.test(userAgent)) {
             return "iOS";
-        }
-
+		}
+		
         return "unknown";
     }
 
