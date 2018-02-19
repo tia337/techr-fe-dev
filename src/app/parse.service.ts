@@ -11,6 +11,7 @@ import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import * as md5 from 'crypto-js/md5';
+import { environment } from './../environments/environment';
 
 // import * as env2 from 'env2';
 
@@ -39,8 +40,8 @@ export class Parse {
 		// this._Parse.initialize(process.env.APP_ID);
 		// this._Parse.serverURL = process.env.SERVER_URL;
 
-		this._Parse.initialize('dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ');
-		this._Parse.serverURL = 'https://swipeinmlabtest.herokuapp.com/parse';
+		this._Parse.initialize(environment.APP_ID);
+		this._Parse.serverURL = environment.SERVER_URL;
 
 		console.log('init parse');
 	}

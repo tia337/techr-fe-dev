@@ -52,8 +52,10 @@ import { ContactUsModule } from "app/contact-us/contact-us.module";
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
 // import { UserSettingsComponent } from './user-settings/user-settings.component';
 // import { GoogleAuthComponent } from './google-auth/google-auth.component';
+import { environment } from './../environments/environment';
+
 const config: SocketIoConfig = {
-	url: 'https://swipeinmlabtest.herokuapp.com/', options: {
+	url: environment.SOCKET_IO, options: {
 		reconnection: true,
 		reconnectionDelay: 1000,
 		reconnectionDelayMax: 5000,
@@ -111,7 +113,7 @@ const config: SocketIoConfig = {
 	exports: [
 		// AutosizeDirective
 	],
-	
+
 })
 export class AppModule {
 }

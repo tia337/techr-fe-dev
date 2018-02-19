@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from './../../../environments/environment';
 
 @Injectable()
 export class StripeService {
@@ -8,7 +9,7 @@ export class StripeService {
 
   constructor() {
     this._global = window as any;
-    this._stripe = this._global.Stripe('pk_test_DOxsBoIZIbzfu3y6EafzMDNU');
+    this._stripe = this._global.Stripe(environment.STRIPE_KEY);
   }
 
   get stripe() {
