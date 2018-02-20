@@ -63,8 +63,7 @@ export class JobBoxService {
 	}
 
 	duplicateAsDraft(contractId: string) {
-		const userId: string = this._parse.Parse.User.current().id;
-		return this._parse.Parse.Cloud.run('duplicateJobAsDraft', {contractId: contractId, userId: userId});
+		return this._parse.Parse.Cloud.run('duplicateJobAsDraft', {contractId: contractId});
 	}
 
 	private unpublishJob(contract: ParseObject) {
