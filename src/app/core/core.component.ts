@@ -12,6 +12,7 @@ import { CartAdding } from '../header/cartadding.service';
 import { CoreService } from './core.service';
 import { ActivatedRoute } from '@angular/router';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
+import {} from ''
 
 @Component({
 	selector: 'app-core',
@@ -31,6 +32,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 	teamMembers;
 	invitedMembers;
 	dialog = [];
+	private sessionId: string;
 	constructor(
 		private _sidenav: SidenavService,
 		private _coreService: CoreService,
@@ -48,7 +50,8 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
-
+		this.sessionId =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		sessionStorage.setItem('sessionId', this.sessionId);
 		// if (this._parse.getCurrentUser()) {
 		//   this._coreService.getClientLogo().then(logo => {
 		//     this.clientLogo = logo;
@@ -86,12 +89,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 
 		console.log(this._parse.Session());
-		console.log("First time", this._socket);
+		console.log('First time', this._socket);
 		if (this._parse.getCurrentUser()) {
 			this._socket.connect();
-			this._socket.emit('subscribe', this._parse.getCurrentUser().id);
+			this._socket.emit('subscribe', {userId: this._parse.getCurrentUser().id, sessionId: this.sessionId});
 			console.log('User ' + this._parse.getCurrentUser().id + ' is trying to subscribe!');
-			console.log("Second time",this._socket);
+			console.log('Second time', this._socket);
 		}
 		this._cartAdding.cartLoad();
 
@@ -170,4 +173,5 @@ export class CoreComponent implements OnInit, OnDestroy {
 	feedbackCreation() {
 		this._root_vcr.createComponent(FeedbackAlertComponent);
 	}
+
 }
