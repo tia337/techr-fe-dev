@@ -89,12 +89,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 
 		console.log(this._parse.Session());
-		console.log("First time", this._socket);
+		console.log('First time', this._socket);
 		if (this._parse.getCurrentUser()) {
 			this._socket.connect();
 			this._socket.emit('subscribe', {userId: this._parse.getCurrentUser().id, sessionId: this.sessionId});
 			console.log('User ' + this._parse.getCurrentUser().id + ' is trying to subscribe!');
-			console.log("Second time",this._socket);
+			console.log('Second time', this._socket);
 		}
 		this._cartAdding.cartLoad();
 
