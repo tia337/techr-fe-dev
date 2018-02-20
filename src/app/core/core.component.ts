@@ -12,6 +12,7 @@ import { CartAdding } from '../header/cartadding.service';
 import { CoreService } from './core.service';
 import { ActivatedRoute } from '@angular/router';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
+import {} from ''
 
 @Component({
 	selector: 'app-core',
@@ -48,7 +49,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
-
+		this.createSessionId();
 		// if (this._parse.getCurrentUser()) {
 		//   this._coreService.getClientLogo().then(logo => {
 		//     this.clientLogo = logo;
@@ -170,4 +171,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 	feedbackCreation() {
 		this._root_vcr.createComponent(FeedbackAlertComponent);
 	}
+
+
+	createSessionId () {
+		const sessionId =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+		console.log(sessionId);
+		sessionStorage.setItem('sessionId', sessionId);
+	}
+
 }
