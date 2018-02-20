@@ -10,6 +10,7 @@ import { UploadCvComponent } from 'app/upload-cv/upload-cv.component';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { Socket } from 'ng-socket-io';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { PreloaderComponent } from '../../shared/preloader/preloader.component';
 
 @Component({
 	selector: 'job-box',
@@ -93,7 +94,6 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		this._socket.emit('enterPipeLineGroup', {
 			'contract': 'm' + this.contract.id,
 		});
-		// console.log('Entered the room');
 		this._socket.on('pipelineMainCountUpdate', data => {
 			console.log('Received emit from server!', data);
 			const userListQuery = new this._parse.Parse.Query('UserList');
@@ -156,11 +156,9 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		const userListPromise = this._jobBoxService.getUserList(this.contract);
 		promises.push(userListPromise);
 		userListPromise.then(userList => {
-			// console.log('userList', userList);
 			const groupedUsers = _.groupBy(userList, userListObj => {
 				return userListObj.get('listType');
 			});
-			// console.log('groupedUsers', groupedUsers);
 			this._stages.push({
 				index: 3,
 				type: DeveloperListType.shortlist,
@@ -317,11 +315,45 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	//		AF
+	// AF
 	uploadCvFunc(event) {
 		const upload = this._root_vcr.createComponent(UploadCvComponent);
 		upload.selectedContract = { name: this.contract.get('title'), id: this.contract.id };
 		console.log(upload.selectedContract);
+	}
+
+	duplicateAsDraft(contractId: string) {
+		const preloader = this._root_vcr.createComponent(PreloaderComponent);
+		this._jobBoxService.duplicateAsDraft(contractId).then(res => {
+			this._root_vcr.clear();
+			const alert = this._root_vcr.createComponent(AlertComponent);
+			if (res) {
+				alert.title = 'Congratulations!';
+				alert.content = 'Job has been successfully duplicated. You can find it on your drafts!';
+				alert.addButton({
+					title: 'Close',
+					onClick: () => {
+						this._root_vcr.clear();
+					}
+				});
+			};
+		}).catch(error => {
+				const alert = this._root_vcr.createComponent(AlertComponent);
+				alert.title = 'Error';
+				alert.content = 'Sorry, an error occured';
+				alert.addButton({
+					title: 'Try again',
+					onClick: () => {
+						this.duplicateAsDraft(contractId);
+					}
+				});
+				alert.addButton({
+					title: 'Close',
+					onClick: () => {
+						this._root_vcr.clear();
+					}
+				})
+		} );
 	}
 
 	ngOnDestroy() {
