@@ -29,16 +29,16 @@
         <!-- <div *ngIf="board.prices.length > 0"  [ngClass]="{'red': inCart.indexOf({'board':board.jobBoard.id, 'price':board.prices[board.currentPrice].get('Price')})}" class="job-board">   -->
         <!-- <mat-icon class="info-icon" [info]="{}">info_outline</mat-icon> -->
         <p *ngIf="freePushesId.indexOf(board.jobBoard.id) !== -1 || paidPushesId.indexOf(board.jobBoard.id) !== -1 || contractStatus == 1 && board.jobBoard.get('Name') == 'SwipeIn'" class = "integrated">Active</p>
-        <mat-icon 
-          #infoButton class="info-icon" 
-          [ngClass]="{'white-info': freePushesId.indexOf(board.jobBoard.id) !== -1 || paidPushesId.indexOf(board.jobBoard.id) !== -1 || contractStatus == 1 && board.jobBoard.get('Name') == 'SwipeIn'}" 
+        <mat-icon
+          #infoButton class="info-icon"
+          [ngClass]="{'white-info': freePushesId.indexOf(board.jobBoard.id) !== -1 || paidPushesId.indexOf(board.jobBoard.id) !== -1 || contractStatus == 1 && board.jobBoard.get('Name') == 'SwipeIn'}"
           (click) = "createInfoTab(s, $event, board.jobBoard)">
           info_outline
         </mat-icon>
         <div #element class = "info-tab" (clickOutside) = "hideInfo(element, $event)" [ngClass]="{'last-board': ((s+1)%3) == 0, 'first-board': (s%3) == 0}">
           <div class = "info-wrap">
           <img class = "info-img" src= "{{board.jobBoard.get('Logo').url()}}">
-          <a class = "info-site" href="http://{{board.jobBoard.get('URL')}}" >{{board.jobBoard.get('URL')}}</a>
+          <a class = "info-site" href="https://{{board.jobBoard.get('URL')}}" >{{board.jobBoard.get('URL')}}</a>
           <div class = "info-description">
             <p></p>
             <p class = "info-target"></p>
@@ -92,8 +92,8 @@
           <div class = "relative" *ngIf = "contractStatus !== 1 || contractStatus === 1 && board.jobBoard.get('Name') != 'SwipeIn'">
           <button *ngIf="inCart.indexOf(board.jobBoard.id) == -1 &&
             (freePushesId.indexOf(board.jobBoard.id) == -1 &&
-            paidPushesId.indexOf(board.jobBoard.id) == -1)" 
-           class = "addtocart" (click) = "addToCart(board.prices[board.currentPrice], board, s)"> 
+            paidPushesId.indexOf(board.jobBoard.id) == -1)"
+           class = "addtocart" (click) = "addToCart(board.prices[board.currentPrice], board, s)">
             <a class = "nowrap">
               <span *ngIf="activeSpinners.indexOf(s) != -1">
                 <mat-spinner  [diameter] = '25' [strokeWidth] = '3' class = "spinner"></mat-spinner>
@@ -101,8 +101,8 @@
             <a>Add To Cart</a></a>
           </button>
           <button *ngIf="freePushesId.indexOf(board.jobBoard.id) !== -1 ||
-            paidPushesId.indexOf(board.jobBoard.id) !== -1" 
-            class = "unpublish" (click) = "showAlert(board.jobBoard.id, board.jobBoard.get('Name'))"> 
+            paidPushesId.indexOf(board.jobBoard.id) !== -1"
+            class = "unpublish" (click) = "showAlert(board.jobBoard.id, board.jobBoard.get('Name'))">
             Unpublish
           </button>
         </div>
@@ -138,23 +138,23 @@
               <p *ngIf="pp.get('PushOnBoard').id === board.jobBoard.id">
                   Published on {{pp.createdAt | date: 'dd/MM/yyyy'}}</p>
           </div>
-          <p *ngIf = 
-          "paidPushesId.indexOf(board.jobBoard.id) !== -1 && 
-          paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays') 
+          <p *ngIf =
+          "paidPushesId.indexOf(board.jobBoard.id) !== -1 &&
+          paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays')
           - ((todaysDate.getTime() - paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('createdAt'))
           /(24*60*60*1000))>1">
-          {{paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays') 
+          {{paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays')
           - ((todaysDate.getTime() - paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get("createdAt"))
           /(24*60*60*1000)) + 1 | round}} days left in listing
           </p>
-          <p *ngIf = 
-          "paidPushesId.indexOf(board.jobBoard.id) !== -1 && 
-          paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays') 
+          <p *ngIf =
+          "paidPushesId.indexOf(board.jobBoard.id) !== -1 &&
+          paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays')
           - ((todaysDate.getTime() - paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('createdAt'))
           /(24*60*60*1000))===0">
             last day left in listing
           </p>
-          <p *ngIf = "paidPushesId.indexOf(board.jobBoard.id) !== -1 && 
+          <p *ngIf = "paidPushesId.indexOf(board.jobBoard.id) !== -1 &&
           !paidPushes[paidPushesId.indexOf(board.jobBoard.id)].get('PriceSeleted').get('listingDays')">
             unlimited time
           </p>

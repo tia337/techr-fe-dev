@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ParseObject }  from 'parse';
 import { Parse } from '../parse.service';
 import * as _ from 'underscore';
+import { environment } from './../../environments/environment';
 
 @Injectable()
 export class CheckoutPageService {
@@ -11,7 +12,7 @@ export class CheckoutPageService {
 
   constructor(private _parse: Parse) {
     this._global = window as any;
-    this._stripe = this._global.Stripe('pk_test_DOxsBoIZIbzfu3y6EafzMDNU');
+    this._stripe = this._global.Stripe(environment.STRIPE_KEY);
    }
 
   get stripe() {
@@ -28,7 +29,7 @@ export class CheckoutPageService {
     query.equalTo("Currency", "GBP");
     query.equalTo("NameSwipeIn", tarifName);
     return query.first().then(results => {
-        return results.get("StripeIdPlan");  
+        return results.get("StripeIdPlan");
     });
   }
 
@@ -53,25 +54,25 @@ export class CheckoutPageService {
     return this._parse.Parse.Session.current().then(res=>{
       return res.get("Shopping_Cart").paid;
     }).then(result=>{
-      console.log("supertest3");      
+      console.log("supertest3");
       for (let res of result){
         if(res.contract === cont){
           if(res.JobBoardPrice.id){
             matched.push(res.JobBoardPrice.id);
           }else if(res.JobBoardPrice.objectId){
-            matched.push(res.JobBoardPrice.objectId);          
+            matched.push(res.JobBoardPrice.objectId);
           }
         }
       }
-      console.log("supertest4");   
-      console.log(matched);   
+      console.log("supertest4");
+      console.log(matched);
       return matched;
     }).then(match=>{
       console.log(match);
       let query = new this._parse.Parse.Query("JobBoardPrices");
       query.containedIn("objectId", match);
       query.include("JobBoard");
-      console.log(query.find());      
+      console.log(query.find());
       return query.find()}).then(rest=>{
       console.log(rest);
       return rest;
@@ -109,24 +110,24 @@ export class CheckoutPageService {
     return this._parse.Parse.Session.current().then(res=>{
       return res.get("Shopping_Cart").free;
     }).then(result=>{
-      console.log("supertest3");      
+      console.log("supertest3");
       for (let res of result){
         if(res.contract === cont){
           if(res.jobBoard.jobBoard.id){
             matched.push(res.jobBoard.jobBoard.id);
           }else if(res.jobBoard.jobBoard.objectId){
-            matched.push(res.jobBoard.jobBoard.objectId);          
+            matched.push(res.jobBoard.jobBoard.objectId);
           }
         }
       }
-      console.log("supertest4");   
-      console.log(matched);   
+      console.log("supertest4");
+      console.log(matched);
       return matched;
     }).then(match=>{
       console.log(match);
       let query = new this._parse.Parse.Query("JobBoards");
       query.containedIn("objectId", match);
-      console.log(query.find());      
+      console.log(query.find());
       return query.find()}).then(rest=>{
       console.log(rest);
       return rest;

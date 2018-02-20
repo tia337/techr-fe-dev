@@ -4,5 +4,10 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  APP_ID: 'dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ',
+  SERVER_URL: 'http://localhost:5000/parse',
+  SOCKET_IO: 'http://localhost:5000',
+  STRIPE_KEY: 'pk_test_DOxsBoIZIbzfu3y6EafzMDNU',
+  GOOGLE_API_KEY: 'AIzaSyBFfAIR1tt4-AOfcsGxc87y-yZMLdrMNbk'
 };
