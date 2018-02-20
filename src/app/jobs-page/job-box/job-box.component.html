@@ -40,7 +40,8 @@
             <mat-icon class="menu-icon">description</mat-icon>Open job details</li>
           <li *ngIf="contract.get('status') != 3" class="yellow-link" (click)="uploadCvFunc($event)">
             <mat-icon class="menu-icon">file_upload</mat-icon>Upload candidates</li>
-          <li class="blue-link" (click)="duplicateAsDraft(contract.id)">Duplicate as draft</li>
+          <li (click)="duplicateAsDraft(contract.id)">
+              <mat-icon class="menu-icon">content_copy</mat-icon>Duplicate as draft</li>
           <li *ngIf="contract.get('status') == 1" (click)="archiveContract()">
             <mat-icon class="menu-icon">archive</mat-icon>Archive</li>
           <li class="red-link" (click)="deleteContract()">
