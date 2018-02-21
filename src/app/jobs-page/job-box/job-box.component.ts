@@ -332,7 +332,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 				alert.content = 'Job has been successfully duplicated. You can find it on your drafts!';
 				alert.addButton({
 					title: 'Close',
-					type:'primary',
+					type: 'primary',
 					onClick: () => {
 						this._root_vcr.clear();
 					}
@@ -344,14 +344,14 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 				alert.content = 'Sorry, an error occured';
 				alert.addButton({
 					title: 'Try again',
-					type:'primary',
+					type: 'primary',
 					onClick: () => {
 						this.duplicateAsDraft(contractId);
 					}
 				});
 				alert.addButton({
 					title: 'Close',
-					type:'primary',
+					type: 'primary',
 					onClick: () => {
 						this._root_vcr.clear();
 					}

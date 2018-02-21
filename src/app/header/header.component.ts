@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, ComponentFactoryResolver, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, ComponentFactoryResolver, OnDestroy, ViewChild } from '@angular/core';
 import { Login } from '../login.service';
 import { Parse } from '../parse.service';
 import { CartAdding } from './cartadding.service';
@@ -14,6 +14,7 @@ import { Socket } from 'ng-socket-io';
 import { PostJobService } from 'app/post-job-page/post-job.service';
 
 import { ContactUsComponent } from "app/contact-us/contact-us.component";
+import { NotificationsComponent } from './notifications/notifications.component';
 
 
 
@@ -42,6 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	private _menuOpened = false;
 	private _userMenuOpened = false;
 	private _closeUserAnim = false;
+	public _notificationsOpened: boolean = false;
 
 	constructor(
 		private router: Router,
@@ -267,5 +269,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
     get userMenuOpened() {
         return this._userMenuOpened;
-    }
+	}
+	changeNotifications (notifications: boolean): void {
+		this._notificationsOpened = notifications;
+	}
 }

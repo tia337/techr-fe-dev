@@ -1,0 +1,49 @@
+<div class="notifications-wrap">
+  <div class="notifications-title">Notifications
+    <mat-icon class="clear-button" (click)="closeNotifications(notifications)">clear</mat-icon> 
+    <ng-content></ng-content> 
+  </div>
+  <div class="notifications-box">
+    <div class="notifications-box__today">
+       <p class="notifications-box__title">Today</p>
+        <div class="notification-item">
+          <span class="notification-item__icon">
+            <img src="../../../assets/icons/email-icon.png">
+          </span>
+          <div class="notification-item__data-box">
+            <p class="notification-item__data">Edward Ridgway left you a note about Peter Cavendish - Role: Senior CRM Developer</p>
+            <p class="notification-item__data-text">"Just spoke to him, what about shedule..."</p>
+          </div>
+          <span class="notification-item__time">11:38am</span>
+        </div>
+        <div class="notification-item">
+            <span class="notification-item__icon">
+              <mat-icon class="message-icon">message</mat-icon>
+            </span>
+            <div class="notification-item__data-box">
+              <p class="notification-item__data">New Candidate Message</p>
+              <p class="notification-item__data-text">"Hi, Vadim! How about 6pm..."</p>
+            </div>
+            <span class="notification-item__time">9:38am</span>
+        </div>
+        <div class="notification-item">
+            <span class="notification-item__icon">
+              <mat-icon class="application-icon">contacts</mat-icon>
+            </span>
+            <div class="notification-item__data-box">
+              <p class="notification-item__data">New Candidate Applied</p>
+            </div>
+            <span class="notification-item__time">9:38am</span>
+        </div>
+        <div class="notification-item">
+          <span class="notification-item__icon">
+            <mat-icon class="referrals-icon">supervisor_account</mat-icon>
+          </span>
+          <div class="notification-item__data-box">
+            <p class="notification-item__data">New Employee Referral from mail@mail.com</p>
+          </div>
+          <span class="notification-item__time">9:38am</span>
+      </div>
+    </div>
+  </div>
+</div>
