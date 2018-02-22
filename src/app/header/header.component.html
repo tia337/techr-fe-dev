@@ -37,7 +37,7 @@
             <mat-icon class="top-bar-button fa fa-cog settings-icon"></mat-icon>
           </span>
         </span>
-      <span class="notifications-span" (click)="_notificationsOpened = !_notificationsOpened">
+      <span class="notifications-span" (click)="_notificationsOpened = !_notificationsOpened" (click)="$event.stopPropagation()">
         <mat-icon class="top-bar-button notifications-icon">notifications_none</mat-icon>
         <span class="notifications-span-count">3</span>
       </span>
@@ -110,5 +110,5 @@
   </section> -->
   </div>
   <!-- *ngIf="currentUser" -->
-  <app-notifications [class.move]="_notificationsOpened" [notifications]="_notificationsOpened" (changeNotifications)="changeNotifications($event)"></app-notifications>
+  <app-notifications [class.move]="_notificationsOpened" [notifications]="_notificationsOpened" (notificationsStatus)="changeNotifications($event)"></app-notifications>
 </header>
