@@ -182,6 +182,8 @@
     }
 }
 
+
+
 .candidate-tabs {
     @include displayFlex;
     @include flex-direction(row);
@@ -226,3 +228,5 @@
 .move-to {
     height: 30px;
 }
+
+

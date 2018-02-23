@@ -4,28 +4,30 @@
         <mat-option value="locationMatch" (click)="changeSortMethod('distance')">Best location match</mat-option>
     </mat-select>
 </mat-form-field>
-<!--<mat-form-field>-->
-    <!--<mat-select placeholder="Skills fit" [(value)]="skillMatchSelect">-->
-        <!--<mat-option>None</mat-option>-->
-        <!--<mat-option value="greatFit">Great fit</mat-option>-->
-        <!--<mat-option value="goodFit">Good fit</mat-option>-->
-        <!--<mat-option value="potentialFit">Potential fit</mat-option>-->
-    <!--</mat-select>-->
-<!--</mat-form-field>-->
-<!--<mat-form-field>-->
-    <!--<mat-select placeholder="Add country" multiple>-->
-        <!--<mat-option *ngFor="let country of countryArray" [value]="country">{{country}}</mat-option>-->
-    <!--</mat-select>-->
-<!--</mat-form-field>-->
-<!--<mat-form-field>-->
-    <!--<mat-select placeholder="Bulk actions">-->
-        <!--<mat-option (click)="sendEmail()">Send email/templates</mat-option>-->
-        <!--<mat-option>Send nudge</mat-option>-->
-    <!--</mat-select>-->
-<!--</mat-form-field>-->
-<!--<button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button>-->
-<!--<button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button>-->
-
+<mat-form-field>
+    <mat-select placeholder="Skills fit" [(value)]="skillMatchSelect" multiple (change)="onChange($event.value)">
+        <!-- <mat-option>None</mat-option> -->
+        <mat-option value="greatFit">Great fit</mat-option>
+        <mat-option value="goodFit">Good fit</mat-option>
+        <mat-option value="potentialFit">Potential fit</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <mat-select placeholder="Add country" multiple>
+        <mat-option *ngFor="let country of countryArray" [value]="country">{{country}}</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <mat-select placeholder="Bulk actions">
+        <mat-option (click)="sendEmail()">Send email/templates</mat-option>
+        <mat-option>Send nudge</mat-option>
+    </mat-select>
+</mat-form-field>
+<div *ngIf="candidatesCount > 0">    
+Candidates found: {{candidatesCount}}
+</div>
+<button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button>
+<button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button>
 <section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
     <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
         <div class="candidate-block" *ngFor="let candidate of candidates.results"
@@ -39,11 +41,29 @@
                     <div class="candidate-name">{{candidate.get('firstName')}} {{candidate.get('lastName')}}</div>
                     <div class="candidate-position">{{candidate.get('headline')}}</div>
                     <!--<div class="candidate-company-name"><span class="company-title"-->
-                                                              <!--*ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>-->
+                        <!--*ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>-->
                     <!--</div>-->
+
                 </div>
-
-
+                <div class="candidate-fit-status-wrap">
+                    <div class="candidate-fit-status">
+                        <div class="match candidate-fit potential" 
+                            *ngIf="getPercentageMatch(candidate) <= 30"
+                            style="background-image:url('../../../../assets/icons/potential-fit-icon.png')">
+                            <span>Potential <br> fit</span>
+                        </div>
+                        <div class="match candidate-fit" 
+                            *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70"
+                            style="background-image:url('../../../../assets/icons/good-fit-icon.png')">
+                            <span>Good fit</span>
+                        </div>
+                        <div class="match candidate-fit"
+                            *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100"
+                            style="background-image:url('../../../../assets/icons/great-fit-icon.png')">
+                            <span>Great fit</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="logo"><img style="width: auto; height: 30px;"
                                        src="{{candidate.source ? candidate.source : 'https://swipeinmlabtest.herokuapp.com/parse/files/dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ/90fc2f3d63b7192696b413b2d829b846_SwipeIn%20Logo%202.jpg'}}"
                                        alt="logo"></div>
@@ -53,13 +73,13 @@
                     <div class="location">
                         {{candidate.get('location')}}
                     </div>
-                    <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit </div>
+                    <!-- <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit </div>
                     <div class="match"
                          *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit
                     </div>
                     <div class="match"
                          *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit
-                    </div>
+                    </div> -->
                     <div class="location-away"
                          *ngIf="getLocationMatch(candidate) !== -1">
                               <span>{{ getLocationMatch(candidate) }}</span>

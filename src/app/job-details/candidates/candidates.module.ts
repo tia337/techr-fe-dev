@@ -8,7 +8,7 @@ import { ScoringModule } from './candidates-info-tabs/scoring/scoring.module';
 
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
-import {MatFormFieldModule, MatFormFieldControl} from "@angular/material";
+import {MatFormFieldModule, MatFormFieldControl, MatProgressSpinnerModule} from '@angular/material';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { CandidatesComponent } from './candidates.component';
 import { CandidatesService } from './candidates.service';
@@ -50,8 +50,8 @@ import { DashboardModule } from 'app/dashboard/dashboard.module';
     DashboardModule,
       MatFormFieldModule,
       MatSelectModule,
-      MatButtonModule
-
+      MatButtonModule,
+      MatProgressSpinnerModule
   ],
   exports: [CandidatesComponent],
   providers: [Parse, CandidatesService, CandidateProfileService],
