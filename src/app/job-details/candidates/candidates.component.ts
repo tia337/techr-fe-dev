@@ -547,7 +547,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		this._jobDetailsService = null;
 	}
 
-	onChange(value: string) {
+	onChangeSkillsSelect(value: string) {
 		this.postLoader = true;
 		let copyLength = this.candidates.results.length;
 		let sortedIdArray = [];
@@ -624,5 +624,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this.postLoader = false;
 			return this.candidates.results;
 		});
+	}
+	relocateCandidatesFilter(value) {
+		
 	}
 }

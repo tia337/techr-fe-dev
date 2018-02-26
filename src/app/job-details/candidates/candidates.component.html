@@ -5,11 +5,17 @@
     </mat-select>
 </mat-form-field>
 <mat-form-field>
-    <mat-select placeholder="Skills fit" [(value)]="skillMatchSelect" multiple (change)="onChange($event.value)">
+    <mat-select placeholder="Skills fit" [(value)]="skillMatchSelect" multiple (change)="onChangeSkillsSelect($event.value)">
         <!-- <mat-option>None</mat-option> -->
         <mat-option value="greatFit">Great fit</mat-option>
         <mat-option value="goodFit">Good fit</mat-option>
         <mat-option value="potentialFit">Potential fit</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <mat-select placeholder="Relocation" (change)="relocateCandidatesFilter($event.value)" multiple>
+        <mat-option value="internationally">Willing to relocate Internationally</mat-option>
+        <mat-option value="nationally">Willing to relocate Nationally</mat-option>
     </mat-select>
 </mat-form-field>
 <mat-form-field>
@@ -38,19 +44,8 @@ Candidates found: {{candidatesCount}}
         <div class="candidate-block" *ngFor="let candidate of candidates.results"
              (click)="userProfile(candidate.id, getPercentageMatch(candidate), getLocationMatch(candidate))" [class.active]="userId == candidate.id">
             <!-- (click)="userProfile(candidate.id, getPercentageMatch(candidate))" -->
-            <div class="candidate-info-top-section">
-                <div class="avatar-wrap">
-                    <img [src]="candidate.get('avatarURL')" (error)="errorHandler($event)" class="avatar">
-                </div>
-                <div class="candidate-general-info">
-                    <div class="candidate-name">{{candidate.get('firstName')}} {{candidate.get('lastName')}}</div>
-                    <div class="candidate-position">{{candidate.get('headline')}}</div>
-                    <!--<div class="candidate-company-name"><span class="company-title"-->
-                        <!--*ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>-->
-                    <!--</div>-->
-
-                </div>
-                <div class="candidate-fit-status-wrap">
+            <div class="candidate-fit-status-wrap">
+                    <span class="candidate-fit-relocate" *ngIf="candidate.get('developer').get('IsInternationalRelocate')"><img src="../../../../assets/icons/relocate-icon.png" alt=""></span>
                     <div class="candidate-fit-status">
                         <div class="match candidate-fit potential" 
                             *ngIf="getPercentageMatch(candidate) <= 30"
@@ -68,10 +63,22 @@ Candidates found: {{candidatesCount}}
                             <span>Great fit</span>
                         </div>
                     </div>
+                    <div class="logo"><img style="width: auto; height: 30px;"
+                        src="{{candidate.source ? candidate.source : 'https://swipeinmlabtest.herokuapp.com/parse/files/dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ/90fc2f3d63b7192696b413b2d829b846_SwipeIn%20Logo%202.jpg'}}"
+                        alt="logo"></div>
                 </div>
-                <div class="logo"><img style="width: auto; height: 30px;"
-                                       src="{{candidate.source ? candidate.source : 'https://swipeinmlabtest.herokuapp.com/parse/files/dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ/90fc2f3d63b7192696b413b2d829b846_SwipeIn%20Logo%202.jpg'}}"
-                                       alt="logo"></div>
+            <div class="candidate-info-top-section">
+                <div class="avatar-wrap">
+                    <img [src]="candidate.get('avatarURL')" (error)="errorHandler($event)" class="avatar">
+                </div>
+                <div class="candidate-general-info">
+                    <div class="candidate-name">{{candidate.get('firstName')}} {{candidate.get('lastName')}}</div>
+                    <div class="candidate-position">{{candidate.get('headline')}}</div>
+                    <!--<div class="candidate-company-name"><span class="company-title"-->
+                        <!--*ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>-->
+                    <!--</div>-->
+                </div>
+               
             </div>
             <div class="candidate-info-bottom-section">
                 <div class="candidate-location-match">

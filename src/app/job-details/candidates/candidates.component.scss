@@ -33,6 +33,7 @@
                 align-items: center;
                 justify-content: space-between;
                 position: relative;
+                margin-top: -10px;
                 .avatar-wrap {
                     padding: 5px;
                     .avatar {
@@ -162,8 +163,8 @@
     height: 55px;
     background-size: cover;
     background-repeat: no-repeat;
-    // margin-left: 50px;
     transform: rotate(-45deg);
+    margin-top: -4px;
     span {
         transform: rotate(45deg);
         display: block;
@@ -183,9 +184,20 @@
         }
     }
     &-status-wrap {
-        position: absolute;
-        top: -18%;
-        right: 12%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: -4px;
+        .logo {
+            margin-left: 10px;
+        }
+    }
+    &-relocate {
+        margin-right: 10px;
+        img {
+            width: 35px;
+            margin-right: 10px;
+        }
     }
 }
 
