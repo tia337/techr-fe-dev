@@ -5,13 +5,13 @@ import { JobDetailsService } from '../job-details.service';
 import { Router } from '@angular/router';
 import { DeveloperListType, Loading } from '../../shared/utils';
 import { ChangeDetectorRef } from '@angular/core';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatButtonModule} from '@angular/material/button';
-import {Modal1Component} from "../../post-job-page/modal1/modal1.component";
-import {RootVCRService} from "../../root_vcr.service";
-import {Parse} from "../../parse.service";
-import {GmailComponent} from "../../gmail/gmail.component";
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatButtonModule } from '@angular/material/button';
+import {Modal1Component } from "../../post-job-page/modal1/modal1.component";
+import { RootVCRService } from "../../root_vcr.service";
+import { Parse } from "../../parse.service";
+import { GmailComponent}  from "../../gmail/gmail.component";
 import { LoaderDirective } from '../../shared/loader/loader.directive';
 import * as _ from 'underscore';
 import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
@@ -46,7 +46,11 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	sortedIdArray: Array<any> = [];
 	sortBySkills: boolean = false;
 	candidatesCount: number;
-	postLoader: boolean = true;
+	postLoader: boolean = false;
+	sortMethod: string = 'weight';
+	matSpinnerHeight = {
+		'height': '100%'
+	};
     private countriesSourcing: Array<any> = [];
 	private _candidatesCount: number;
   @Input() contractObj;
@@ -140,7 +144,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 									const firstUser = this.candidates.results[0];
 									this._candidatesService.userId = firstUser.id;
 									this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
-									this.postLoader = false;
 								})
 							} else {
 								this.hasCandidates = Loading.error;
@@ -185,7 +188,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 							const firstUser = suggestions.results[0];
 							this._candidatesService.userId = firstUser.id;
 							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
-							this.postLoader = false;							
 						} else {
 							this.hasCandidates = Loading.error;
 							this._jobDetailsService.isStagesDisabled = Loading.error;
@@ -248,24 +250,17 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		});
 		this.loadCountryList();
 		 this.copySuggestedCandidates = this.SuggestedCandidates;
-		 console.log(this.SuggestedCandidates,'this.SUGGESTED CANDIDATES');
 	}
 
 	loadCandidatesAtTheEnd(event) {
 		if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
-			console.log(event.target.scrollHeight, ' event.target.scrollHeight');
-			console.log(event.target.scrollTop, ' event.target.scrollTop');
-			console.log(event.target.offsetHeight, ' event.target.offsetHeight');
-			console.log('END');
 			this.loadMoreCandidates(event.target);
+			console.log('No more candidates to load');
 		}
 	}
 
 	loadMoreCandidates(candidatesBlock) {
-		console.log(this._candidatesCount, ' this._candidatesCount');
-		console.log(this._from, ' this._from,')
 		if (this._from < this._candidatesCount) {
-			this.postLoader = true;
 			console.log('LOAD MORE......');
 			this._jobDetailsService.isStagesDisabled = Loading.loading;
 			this._from += 10;
@@ -273,9 +268,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this._displayLoader = true;
             let someArrayOfIds = [];
             let suggestionsCut = Object.assign({},this.SuggestedCandidates);
-            console.log('_this.from',this._from);
-            console.log('_this.limit',this._limit);
-			console.log('Suggestions Cut', suggestionsCut);
+			this.postLoader = true;
 			if (this.sortBySkills === false) {
 				suggestionsCut.developersSorted.slice(this._from,this._limit).forEach(dev => {
 					someArrayOfIds.push(dev.id);
@@ -319,7 +312,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					});
 					break;
 			}
-
 		}
 	}
 
@@ -363,20 +355,22 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	}
 
 	changeSortMethod(value) {
-		console.log(this.SuggestedCandidates.developersSorted, ' changeSortMethod this.SuggestedCandidates.developersSorted')
 		this.postLoader = true;
-		console.log('METHOD STARTED');
+		console.log('CHANGE SKILLS-LOCATION METHOD STARTED');
 		let someArray = [];
 		let copyLength = this.candidates.results.length;
 		let newCopy = this.SuggestedCandidates;
+		console.log(this.sortedArrayBySkills, ' this.sortedArrayBySkills');
+		console.log(this.SuggestedCandidates.developersSorted, ' this.SuggestedCandidates.developersSorted');
 		if (value == 'weight') {
+			this.sortMethod = 'weight';
 			if (this.sortBySkills === true) {
 				newCopy.developersSorted = _.sortBy(this.sortedArrayBySkills, value).reverse();
 			} else if (this.sortBySkills === false) {
 				newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, value).reverse();
 			}
-		console.log('SuggestedCandidates: developers', this.SuggestedCandidates.developersSorted, this.SuggestedCandidates.developersSorted.length);		
 		} else if (value == 'distance') {
+			this.sortMethod = 'distance';
 			if (this.sortBySkills === true) {
 				newCopy.developersSorted = _.sortBy(this.sortedArrayBySkills, function(item) {
 					if (item.distance === -1) {
@@ -384,8 +378,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					}
 					return item.distance;
 				});
-			console.log('SuggestedCandidates: developers', this.SuggestedCandidates.developersSorted, this.SuggestedCandidates.developersSorted.length);
-				
 			} else if (this.sortBySkills === false) {
 				newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, function(item) {
 					if (item.distance === -1) {
@@ -393,32 +385,26 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					}
 					return item.distance;
 				});
-			console.log('SuggestedCandidates: developers', this.SuggestedCandidates.developersSorted, this.SuggestedCandidates.developersSorted.length);
 				
 			}
 			console.log(newCopy.developersSorted);
-			console.log('SuggestedCandidates: developers', this.SuggestedCandidates.developersSorted, this.SuggestedCandidates.developersSorted.length);
 		}
 		this._from = 0;
 		this._limit = 10;
 		newCopy.developersSorted.slice(this._from,this._limit).forEach(res => {
 			someArray.push(res.id);
-			console.log(someArray);
-			console.log('SuggestedCandidates: developers', this.SuggestedCandidates.developersSorted, this.SuggestedCandidates.developersSorted.length);
 		});
 		this._candidatesService.getDevelopersById(someArray).then(getRes => {
 			console.log('GET RES',getRes);
 			this.candidates.results = this.candidates.results.concat(getRes.results);
 			console.log('This candidate results after concat',this.candidates.results);
 			this.postLoader = false;	
-			console.log('SuggestedCandidates: developers', this.SuggestedCandidates.developersSorted, this.SuggestedCandidates.developersSorted.length);					
 			return this.candidates.results;
 		}).then(resultOfGet=>{
 			console.log('ResultOfGet (2nd then)',resultOfGet);
 			this.candidates.results = this.candidates.results.slice(copyLength);
 			this.candidates.results = this.candidates.results.slice(0);
 			this.postLoader = false;			
-			console.log('SuggestedCandidates: developers', this.SuggestedCandidates.developersSorted, this.SuggestedCandidates.developersSorted.length);			
 		});
 		console.log('Candidates results: ', this.candidates.results);
 		console.log('SuggestedCandidates: ', this.SuggestedCandidates);
@@ -563,15 +549,23 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 	onChange(value: string) {
 		this.postLoader = true;
-		console.log('Onchange method started');
 		let copyLength = this.candidates.results.length;
 		let sortedIdArray = [];
 		let sortedArrayBySkills = [];
-		this._from = 0; // setting new limit
-		this._limit = 10; // setting new limit
-		console.log('this.SuggestedCandidates.developersSorted 557', this.copySuggestedCandidates);
+		this._from = 0; // setting new limit for scroll load function
+		this._limit = 10; // setting new limit for scroll load function
+
+		if (this.sortMethod === 'weight') { // checking if the sort method changes
+			this.copySuggestedCandidates = _.sortBy(this.copySuggestedCandidates, 'weight').reverse();
+		} else if (this.sortMethod === 'distance') { // checking sort method for the correct distance === -1 visibility
+			this.copySuggestedCandidates = _.sortBy(this.copySuggestedCandidates, function(item) {
+				if (item.distance === -1) {
+					return 99999; // if distance === -1 returning it for 99999 to be item in the end
+				}
+				return item.distance;
+			});
+		};
 		sortedArrayBySkills = this.copySuggestedCandidates.filter(candidate => { // filtering the inital array and making a new sortedArrayBySkills
-			console.log(candidate);
 			if(value.length === 0 || value.length === 3) { //checking if no skills or all the skills are choosen
 				this.sortBySkills = false; // changing value for loading more function
 				this.candidatesCount = 0;
@@ -587,9 +581,11 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					return candidate.weight >= 30;
 				};
 				if (value.includes('potentialFit') && value.length === 2) { // case if 'Potential Fit' and 'Good Fit' are choosen
-					if (candidate.weight > 70 && candidate.weight !> 30) {
+					if (candidate.weight > 70) {
 						return candidate.weight;
-					};
+					} else if (candidate.weight < 30) {
+						return candidate.weight;
+					} 
 				};
 			};
 			if (value.includes('goodFit')) {
@@ -604,15 +600,15 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 				return candidate.weight <= 30;
 			};
 		});
+
 		this.sortedArrayBySkills = sortedArrayBySkills; // setting the global sortedArrayBySkills for loading more function
-		console.log('this.sortedArrayBySkills', this.sortedArrayBySkills);
-		console.log('sortedArrayBySkills', sortedArrayBySkills);
-
 		this._candidatesCount = sortedArrayBySkills.length; // making a new candidates count
-		this.candidatesCount = sortedArrayBySkills.length;
-		console.log('candidatesCount', this.candidatesCount);
-		console.log('_candidatesCount', this._candidatesCount);
 
+		if ((sortedArrayBySkills.length === this.copySuggestedCandidates.length) && value.length != 3) {
+			this.candidatesCount = 0;
+		} else {
+			this.candidatesCount = sortedArrayBySkills.length;
+		}
 		if (sortedArrayBySkills.length >= 10) { // checking if there are more than 10 sorted candidates, not to display more than 10
 			sortedArrayBySkills.slice(0,10).forEach(candidate => {
 				sortedIdArray.push(candidate.id);
@@ -627,13 +623,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this.candidates.results = getRes.results;
 			this.postLoader = false;
 			return this.candidates.results;
-		}).then(resultOfGet=>{
-			this.postLoader = false;			
-			this.candidates.results = this.candidates.results.slice();
-			this.candidates.results = this.candidates.results.slice(0);
 		});
-		console.log('Suggested Candidates 616 ', this.SuggestedCandidates.results);
 	}
-	
-
 }

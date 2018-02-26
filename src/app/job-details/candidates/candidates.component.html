@@ -17,19 +17,24 @@
         <mat-option *ngFor="let country of countryArray" [value]="country">{{country}}</mat-option>
     </mat-select>
 </mat-form-field>
-<mat-form-field>
+<!-- <mat-form-field>
     <mat-select placeholder="Bulk actions">
         <mat-option (click)="sendEmail()">Send email/templates</mat-option>
         <mat-option>Send nudge</mat-option>
     </mat-select>
-</mat-form-field>
-<div *ngIf="candidatesCount > 0">    
+</mat-form-field> -->
+<div class="candidates-count-block" *ngIf="candidatesCount > 0">    
 Candidates found: {{candidatesCount}}
 </div>
-<button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button>
-<button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button>
+<!-- <button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button> -->
+<!-- <button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button> -->
+
 <section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
-    <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
+    <div class="candidates-list-section-wrap">
+        <div class="mat-progress-spinner-layout" *ngIf="postLoader === true">
+            <mat-progress-spinner class="candidates-loader"  color="primary" mode="indeterminate"></mat-progress-spinner>
+        </div>
+        <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
         <div class="candidate-block" *ngFor="let candidate of candidates.results"
              (click)="userProfile(candidate.id, getPercentageMatch(candidate), getLocationMatch(candidate))" [class.active]="userId == candidate.id">
             <!-- (click)="userProfile(candidate.id, getPercentageMatch(candidate))" -->
@@ -100,6 +105,7 @@ Candidates found: {{candidatesCount}}
             </div>
             <mat-checkbox #candidateCheckbox class="bulk-checkbox" value="{{candidate.id}}" [ngModel]="selectedAll" (change)="checkIdOfDev(candidateCheckbox.value,$event)"></mat-checkbox>
 
+        </div>
         </div>
     </div>
     <div class="candidate-profile">
