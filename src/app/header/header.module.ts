@@ -19,9 +19,10 @@ import { RootVCRService } from '../root_vcr.service';
 import { HeaderService } from 'app/header/header.service';
 
 import { MatInputModule, MatProgressSpinnerModule } from '@angular/material';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 @NgModule({
-	declarations: [ HeaderComponent, ConfirmationAlertComponent, AdministrationMenuComponent ],
+	declarations: [ HeaderComponent, ConfirmationAlertComponent, AdministrationMenuComponent, NotificationsComponent ],
 	imports: [
 		BrowserModule,
 		CommonModule,

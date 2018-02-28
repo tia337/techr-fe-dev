@@ -43,7 +43,6 @@ export class Parse {
 		this._Parse.initialize(environment.APP_ID);
 		this._Parse.serverURL = environment.SERVER_URL;
 
-		console.log('init parse');
 	}
 
 	get Parse() {

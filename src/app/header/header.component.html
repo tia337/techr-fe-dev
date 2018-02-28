@@ -37,6 +37,10 @@
             <mat-icon class="top-bar-button fa fa-cog settings-icon"></mat-icon>
           </span>
         </span>
+      <span class="notifications-span" (click)="_notificationsOpened = !_notificationsOpened" (click)="$event.stopPropagation()">
+        <mat-icon class="top-bar-button notifications-icon">notifications_none</mat-icon>
+        <span class="notifications-span-count">3</span>
+      </span>
       <span class="profile-span">
           <span class="user-logo-name" (mouseenter)="openUserMenu()" (mouseleave)="closeUserMenu($event)"
                 [ngClass]="{'user-name-hovered': userMenuOpened == true}">
@@ -106,4 +110,5 @@
   </section> -->
   </div>
   <!-- *ngIf="currentUser" -->
+  <app-notifications [class.move]="_notificationsOpened" [notifications]="_notificationsOpened" (notificationsStatus)="changeNotifications($event)"></app-notifications>
 </header>
