@@ -15,6 +15,7 @@ import { GmailComponent}  from "../../gmail/gmail.component";
 import { LoaderDirective } from '../../shared/loader/loader.directive';
 import * as _ from 'underscore';
 import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
+import { element } from 'protractor';
 
 
 // tslint:disable
@@ -27,7 +28,7 @@ import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@
 })
 
 export class CandidatesComponent implements OnInit, OnDestroy {
-	countryArray:Array<any>;
+	countryArray:Array<any> = [];
 	sortSelect:string = "skillsMatch";
 	skillMatchSelect:string;
 	contractId: string;
@@ -42,15 +43,17 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	allSuggestionsObject;
 	userId: string;
 	arrayOfDevs: Array<any> = [];
-	sortedArrayBySkills: Array<any> = [];
+	sortedArray: Array<any> = [];
 	sortedIdArray: Array<any> = [];
 	sortBySkills: boolean = false;
+	sortByRelocation: boolean = false;
+	sortByCountry: boolean = false;
+	filtersParameters: Array<any> = [];
+	sortMethod: string = 'weight';
 	candidatesCount: number;
 	postLoader: boolean = false;
-	sortMethod: string = 'weight';
-	matSpinnerHeight = {
-		'height': '100%'
-	};
+	filterCount: number = 0;
+	countriesCount: number = 0;
     private countriesSourcing: Array<any> = [];
 	private _candidatesCount: number;
   @Input() contractObj;
@@ -145,6 +148,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 									this._candidatesService.userId = firstUser.id;
 									this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 								})
+								this.loadCountryList();
 							} else {
 								this.hasCandidates = Loading.error;
 								this._jobDetailsService.isStagesDisabled = Loading.error;
@@ -248,8 +252,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			}
 
 		});
-		this.loadCountryList();
-		 this.copySuggestedCandidates = this.SuggestedCandidates;
+		this.copySuggestedCandidates = this.SuggestedCandidates;
 	}
 
 	loadCandidatesAtTheEnd(event) {
@@ -260,6 +263,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	}
 
 	loadMoreCandidates(candidatesBlock) {
+		console.log(this._candidatesCount, ' this._candidatesCount IN LOAD MORE FNC');
+		console.log(this._from, ' THIS FROM IN LOAD MORE FNC');
 		if (this._from < this._candidatesCount) {
 			console.log('LOAD MORE......');
 			this._jobDetailsService.isStagesDisabled = Loading.loading;
@@ -269,17 +274,18 @@ export class CandidatesComponent implements OnInit, OnDestroy {
             let someArrayOfIds = [];
             let suggestionsCut = Object.assign({},this.SuggestedCandidates);
 			this.postLoader = true;
-			if (this.sortBySkills === false) {
+			if (this.sortBySkills === true || this.sortByRelocation === true || this.sortByCountry === true) {
+				this.sortedArray.slice(this._from,this._limit).forEach(dev => {
+					someArrayOfIds.push(dev.id);
+					console.log('Slice array', dev.id, dev.weight);
+				});
+			} else {
 				suggestionsCut.developersSorted.slice(this._from,this._limit).forEach(dev => {
 					someArrayOfIds.push(dev.id);
 					console.log('Slice array', dev.id, dev.weight);
 				});
-			} else if (this.sortBySkills === true) {
-				this.sortedArrayBySkills.slice(this._from,this._limit).forEach(dev => {
-					someArrayOfIds.push(dev.id);
-					console.log('Slice array', dev.id, dev.weight);
-				});
-			}
+			};
+			
             
 			switch (this._activeStage) {
 				case DeveloperListType.suggested:
@@ -354,62 +360,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	changeSortMethod(value) {
-		this.postLoader = true;
-		console.log('CHANGE SKILLS-LOCATION METHOD STARTED');
-		let someArray = [];
-		let copyLength = this.candidates.results.length;
-		let newCopy = this.SuggestedCandidates;
-		console.log(this.sortedArrayBySkills, ' this.sortedArrayBySkills');
-		console.log(this.SuggestedCandidates.developersSorted, ' this.SuggestedCandidates.developersSorted');
-		if (value == 'weight') {
-			this.sortMethod = 'weight';
-			if (this.sortBySkills === true) {
-				newCopy.developersSorted = _.sortBy(this.sortedArrayBySkills, value).reverse();
-			} else if (this.sortBySkills === false) {
-				newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, value).reverse();
-			}
-		} else if (value == 'distance') {
-			this.sortMethod = 'distance';
-			if (this.sortBySkills === true) {
-				newCopy.developersSorted = _.sortBy(this.sortedArrayBySkills, function(item) {
-					if (item.distance === -1) {
-						return 99999;
-					}
-					return item.distance;
-				});
-			} else if (this.sortBySkills === false) {
-				newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, function(item) {
-					if (item.distance === -1) {
-						return 99999;
-					}
-					return item.distance;
-				});
-				
-			}
-			console.log(newCopy.developersSorted);
-		}
-		this._from = 0;
-		this._limit = 10;
-		newCopy.developersSorted.slice(this._from,this._limit).forEach(res => {
-			someArray.push(res.id);
-		});
-		this._candidatesService.getDevelopersById(someArray).then(getRes => {
-			console.log('GET RES',getRes);
-			this.candidates.results = this.candidates.results.concat(getRes.results);
-			console.log('This candidate results after concat',this.candidates.results);
-			this.postLoader = false;	
-			return this.candidates.results;
-		}).then(resultOfGet=>{
-			console.log('ResultOfGet (2nd then)',resultOfGet);
-			this.candidates.results = this.candidates.results.slice(copyLength);
-			this.candidates.results = this.candidates.results.slice(0);
-			this.postLoader = false;			
-		});
-		console.log('Candidates results: ', this.candidates.results);
-		console.log('SuggestedCandidates: ', this.SuggestedCandidates);
-	}
-
     loadCountries() {
         if (this.countriesSourcing.length == 0) {
             const query = this._parse.Query('Country');
@@ -467,22 +417,43 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	errorHandler(event) {
 		event.target.src = '../../../assets/img/default-userpic.png';
 	}
-    loadCountryList(){
-    	let countryQuery = this._parse.Query('Developer');
-        let someArray = [];
-		countryQuery.exists('homeCountry');
-		countryQuery.include('homeCountry.Country');
-		countryQuery.find().then(res=>{
-				for( let i in res) {
-					let obj = res[i];
-                    let gotValue = obj.get('homeCountry').get('Country');
-					if (!someArray.includes(gotValue)) {
-						someArray.push(gotValue);
-					}
-
-				}
-		});
-        this.countryArray = someArray;
+    // loadCountryList(){
+    // 	let countryQuery = this._parse.Query('Developer');
+    //     let someArray = [];
+	// 	countryQuery.exists('homeCountry');
+	// 	countryQuery.include('homeCountry.Country');
+	// 	countryQuery.find().then(res=>{
+	// 		console.log(res);
+	// 			for( let i in res) {
+	// 				let obj = res[i];
+	// 				let gotValue = obj.get('homeCountry');
+	// 				console.log("COUNTRIES", gotValue);
+	// 				if (someArray.length === 0) {
+	// 					someArray.push({
+	// 						id: gotValue.id,
+	// 						name: gotValue.get('Country')
+	// 					})
+	// 				} else if (someArray[i].id != gotValue.id) {
+	// 					someArray.push({
+	// 						gotValue
+	// 					});
+	// 				}
+	// 			}
+	// 			this.countryArray = someArray;
+	// 	});
+	// 	this.countryArray = someArray;
+	// }
+	
+	loadCountryList () {
+		let countryArray = [];
+		this.copySuggestedCandidates.forEach(candidate => {
+			countryArray.push(candidate.country);
+		})
+		countryArray.forEach(country => {
+			if (this.countryArray.indexOf(country) == -1) {
+				this.countryArray.push(country);
+			}
+		})
 	}
 
 	checkIdOfDev(value,e){
@@ -547,11 +518,108 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		this._jobDetailsService = null;
 	}
 
-	onChangeSkillsSelect(value: string) {
+	changeSortMethod(value) {
 		this.postLoader = true;
+		console.log('CHANGE SKILLS-LOCATION METHOD STARTED');
+		let someArray = [];
 		let copyLength = this.candidates.results.length;
+		let newCopy = this.SuggestedCandidates;
+		console.log(this.sortedArray, ' this.sortedArray');
+		console.log(this.SuggestedCandidates.developersSorted, ' this.SuggestedCandidates.developersSorted');
+		if (value == 'weight') {
+			this.sortMethod = 'weight';
+			
+			if (this.sortBySkills === true || this.sortByRelocation === true || this.sortByCountry === true) {
+				newCopy.developersSorted = _.sortBy(this.sortedArray, value).reverse();
+			} else {
+				newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, value).reverse();
+			} 
+		} else if (value == 'distance') {
+			this.sortMethod = 'distance';
+			if (this.sortBySkills === true || this.sortByRelocation === true || this.sortByCountry === true) {
+				newCopy.developersSorted = _.sortBy(this.sortedArray, function(item) {
+					if (item.distance === -1) {
+						return 99999;
+					}
+					return item.distance;
+				});
+			} else {
+				newCopy.developersSorted = _.sortBy(this.SuggestedCandidates.developersSorted, function(item) {
+					if (item.distance === -1) {
+						return 99999;
+					}
+					return item.distance;
+				});
+				
+			}
+			console.log(newCopy.developersSorted);
+		}
+		this._from = 0;
+		this._limit = 10;
+		newCopy.developersSorted.slice(this._from,this._limit).forEach(res => {
+			someArray.push(res.id);
+		});
+		this._candidatesService.getDevelopersById(someArray).then(getRes => {
+			console.log('GET RES',getRes);
+			this.candidates.results = this.candidates.results.concat(getRes.results);
+			console.log('This candidate results after concat',this.candidates.results);
+			this.postLoader = false;	
+			return this.candidates.results;
+		}).then(resultOfGet=>{
+			console.log('ResultOfGet (2nd then)',resultOfGet);
+			this.candidates.results = this.candidates.results.slice(copyLength);
+			this.candidates.results = this.candidates.results.slice(0);
+			this.postLoader = false;			
+		});
+		console.log('Candidates results: ', this.candidates.results);
+		console.log('SuggestedCandidates: ', this.SuggestedCandidates);
+	}
+
+	skillsChecked (value: Array<any>) {
+		this.sortBySkills = true;
+		if (value.length === 0 || value.length === 3) {
+			this.sortBySkills = false;
+		}
+	}
+
+	relocationChecked (value: Array<any>) {
+		this.sortByRelocation = true;
+		if (value.length === 0) {
+			this.sortByRelocation = false;
+		}
+	}
+
+	countryChecked (value: Array<any>) {
+		this.countriesCount = value.length;
+		this.sortByCountry = true;
+		if (value.length === 0) {
+			this.sortByCountry = false;
+		} 
+	}
+
+	addToFiltersParameters (value: string) {
+		value.toString();
+		if (this.filtersParameters.length === 0) {
+			this.filtersParameters.push(value);
+			this.filterCandidates(this.filtersParameters);
+			return;
+		};
+		if (this.filtersParameters.length > 0) {
+			if (this.filtersParameters.includes(value)) {
+				this.filtersParameters.splice(this.filtersParameters.indexOf(value), 1);
+				this.filterCandidates(this.filtersParameters);				
+				return;
+			};
+			if (!this.filtersParameters.includes(value)) {
+				this.filtersParameters.push(value);
+				this.filterCandidates(this.filtersParameters);
+			}
+		};
+	}
+
+	filterCandidates (value) {
+		this.postLoader = true;
 		let sortedIdArray = [];
-		let sortedArrayBySkills = [];
 		this._from = 0; // setting new limit for scroll load function
 		this._limit = 10; // setting new limit for scroll load function
 
@@ -565,56 +633,88 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 				return item.distance;
 			});
 		};
-		sortedArrayBySkills = this.copySuggestedCandidates.filter(candidate => { // filtering the inital array and making a new sortedArrayBySkills
-			if(value.length === 0 || value.length === 3) { //checking if no skills or all the skills are choosen
-				this.sortBySkills = false; // changing value for loading more function
-				this.candidatesCount = 0;
-				return candidate.weight >= 0;
+
+		let sortedArray = this.copySuggestedCandidates; 
+
+		if (this.sortBySkills === true) {
+			sortedArray = sortedArray.filter(candidate => { // filtering the inital array and making a new sortedArrayBySkills
+				if (value.includes('greatFit')) {
+					if (value.includes('greatFit') && !value.includes('goodFit') && !value.includes('potentialFit')) { // case if only 'Great Fit' is choosen
+						return candidate.weight > 70;
+					};
+					if (value.includes('goodFit')) { // case if 'Good Fit' and 'Great Fit' are choosen 
+						return candidate.weight >= 30;
+					};
+					if (value.includes('potentialFit')) { // case if 'Potential Fit' and 'Good Fit' are choosen
+						if (candidate.weight > 70) {
+							return candidate.weight;
+						} else if (candidate.weight < 30) {
+							return candidate.weight;
+						} 
+					};
+				};
+				if (value.includes('goodFit') && !value.includes('greatFit')) {
+					if (value.includes('potentialFit')) { //case if 'Good Fit' and 'Potential Fit' are choosen
+						return candidate.weight < 70;
+					}
+					if ((candidate.weight < 70 && candidate.weight > 30)) { //case if only 'Good Fit' is choosen
+						return candidate.weight;
+					};
+				};
+				if (value.includes('potentialFit') && !value.includes('greatFit') && !value.includes('goodFit')) { // case if only 'Potential Fit' is choosen
+					return candidate.weight <= 30;
+				};
+			});
+		};
+
+		if (this.sortByRelocation === true) {
+			let array = [];
+			if (value.includes('international') && value.includes('national')) {
+				let array = [];
+				sortedArray.forEach(candidate => {
+					if (candidate.isNationalRelocate || candidate.isInternationalRelocate) {
+						array.push(candidate);
+					}
+				});
+				sortedArray = array;
 			} else {
-				this.sortBySkills = true; // changing value for loading more function 
-			};
-			if (value.includes('greatFit')) {
-				if (value.length === 1) { // case if only 'Great Fit' is choosen
-					return candidate.weight > 70;
-				};
-				if (value.includes('goodFit') && value.length === 2) { // case if 'Good Fit' and 'Great Fit' are choosen 
-					return candidate.weight >= 30;
-				};
-				if (value.includes('potentialFit') && value.length === 2) { // case if 'Potential Fit' and 'Good Fit' are choosen
-					if (candidate.weight > 70) {
-						return candidate.weight;
-					} else if (candidate.weight < 30) {
-						return candidate.weight;
-					} 
-				};
-			};
-			if (value.includes('goodFit')) {
-				if (value.includes('potentialFit')) { //case if 'Good Fit' and 'Potential Fit' are choosen
-					return candidate.weight < 70;
-				}
-				if ((candidate.weight < 70 && candidate.weight > 30) && value.length === 1) { //case if only 'Good Fit' is choosen
-					return candidate.weight;
-				};
-			};
-			if (value.includes('potentialFit') && value.length === 1) { // case if only 'Potential Fit' is choosen
-				return candidate.weight <= 30;
-			};
-		});
+				sortedArray = sortedArray.filter(candidate => {
+					if (value.includes('international')) {
+						return candidate.isInternationalRelocate === true;
+					};
+					if (value.includes('national')) {
+						return candidate.isNationalRelocate === true;
+					};
+				})
+			}
+		};
 
-		this.sortedArrayBySkills = sortedArrayBySkills; // setting the global sortedArrayBySkills for loading more function
-		this._candidatesCount = sortedArrayBySkills.length; // making a new candidates count
+		if (this.sortByCountry === true) {
+			let array = [];
+			value.forEach(element => {
+				sortedArray.forEach(candidate => {
+					if (candidate.country === element) {
+						array.push(candidate);
+					}
+				})
+			});
+			sortedArray = array;
+		}
 
-		if ((sortedArrayBySkills.length === this.copySuggestedCandidates.length) && value.length != 3) {
+		this.sortedArray = sortedArray; // setting the global sortedArrayBySkills for loading more function
+		this._candidatesCount = sortedArray.length; // making a new candidates count
+
+		if ((sortedArray.length === this.copySuggestedCandidates.length)) {
 			this.candidatesCount = 0;
 		} else {
-			this.candidatesCount = sortedArrayBySkills.length;
+			this.candidatesCount = sortedArray.length;
 		}
-		if (sortedArrayBySkills.length >= 10) { // checking if there are more than 10 sorted candidates, not to display more than 10
-			sortedArrayBySkills.slice(0,10).forEach(candidate => {
+		if (sortedArray.length >= 10) { // checking if there are more than 10 sorted candidates, not to display more than 10
+			sortedArray.slice(0,10).forEach(candidate => {
 				sortedIdArray.push(candidate.id);
 			});
 		} else { // checking if there are less than 10 candidates to dislpay less count
-			sortedArrayBySkills.forEach(candidate => {
+			sortedArray.forEach(candidate => {
 				sortedIdArray.push(candidate.id);
 			});
 		}; 
@@ -624,8 +724,5 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this.postLoader = false;
 			return this.candidates.results;
 		});
-	}
-	relocateCandidatesFilter(value) {
-		
 	}
 }
