@@ -937,7 +937,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		} else if (visible = 'industry') {
 			value = this.dropdownIndustriesVisible;
 		}
-		if (value == true) {
+		if (value === true) {
 			el.scrollIntoView({
 				behavior: 'instant',
 				block: 'center',
@@ -1122,7 +1122,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			this.dropdownRolesVisible = false;
 			this.dropdownIndustriesVisible = false
 		}
-
 	}
 
 	prevDef(value, suggestions) {

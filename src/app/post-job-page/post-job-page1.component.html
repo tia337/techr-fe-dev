@@ -74,7 +74,7 @@
                                         [disabled]="!editable" autocomplete="off">
                                 </mat-form-field>
 
-                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event);dropdownIndustriesVisible = !dropdownIndustriesVisible; dropdownVisible  = false; dropdownRolesVisible = false;">
+                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event); dropdownIndustriesVisible != dropdownIndustriesVisible; dropdownRolesVisible = false; dropdownVisible = false;">
                                   <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownIndustriesVisible" [ngModelOptions]="{standalone: true}" />
                                   <div class="arrow-button">
                                     <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -158,7 +158,7 @@
 
                                 <!-- SKILLS DROPDOWN -->
                                 <div #skillsdropdown>
-                                    <div class="dropdown-wrap" *ngIf="dropdownVisible === true">
+                                    <div class="dropdown-wrap" *ngIf="dropdownVisible === true" >
                                         <div class="categories-wrap" (clickOutside)="dropdownVisible = false" [delayClickOutsideInit]="true">
                                             <div class="category-wrap" *ngFor="let category of categories; let i = index">
                                                 <div *ngIf="category" class="category-title" (click)="getCategorySkills(i); activeSkillsCategory = category.get('title')">
@@ -250,9 +250,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-
                         </td>
                     </tr>
                     <tr>
