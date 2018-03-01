@@ -1101,28 +1101,28 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		if (value.code != 'Click') {
 			if (name === 'industry') {
 				this.activeForIndustries = true;
-				if (this.activeForIndustries === true) {
-					suggestions.scrollIntoView({
-						behavior: 'instant',
-						block: 'center',
-						inline: 'nearest'
-					});
-				}
+				// if (this.activeForIndustries === true) {
+				// 	suggestions.scrollIntoView({
+				// 		behavior: 'instant',
+				// 		block: 'center',
+				// 		inline: 'nearest'
+				// 	});
+				// }
 			} else if (name === 'role') {
 				this.activeForRoles = true;
-				if (this.activeForRoles === true) {
-					suggestions.scrollIntoView({
-						behavior: 'instant',
-						block: 'center',
-						inline: 'nearest'
-					});
-				}
+				// if (this.activeForRoles === true) {
+				// 	suggestions.scrollIntoView({
+				// 		behavior: 'instant',
+				// 		block: 'center',
+				// 		inline: 'nearest'
+				// 	});
+				// }
 			}
 			this.dropdownVisible = false;
 			this.dropdownRolesVisible = false;
 			this.dropdownIndustriesVisible = false
 		}
-		
+
 	}
 
 	prevDef(value, suggestions) {
@@ -1131,7 +1131,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				value.preventDefault();
 			}else{
 				event.returnValue = false;
-			}	
+			}
 			console.log("Arrow down");
 			if (this.selectionCounter < (this.filteredList.length - 1)) {
 				this.selectionCounter += 1;
@@ -1144,7 +1144,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				value.preventDefault();
 			}else{
 				event.returnValue = false;
-			}	
+			}
 			if (this.selectionCounter > 0) {
 				this.selectionCounter -= 1;
 				this.expPosition = 1;
@@ -1157,35 +1157,35 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				value.preventDefault();
 			}else{
 				event.returnValue = false;
-			}	
+			}
 		}
 		if (value.code != 'Click') {
 			this.active = true;
 			this.dropdownVisible = false;
 			this.dropdownRolesVisible = false;
-			if (this.active === true) {
-				suggestions.scrollIntoView({
-					behavior: 'instant',
-					block: 'center',
-					inline: 'nearest'
-				});
-			}
+			// if (this.active === true) {
+			// 	suggestions.scrollIntoView({
+			// 		behavior: 'instant',
+			// 		block: 'center',
+			// 		inline: 'nearest'
+			// 	});
+			// }
 		}
 		if (value.code == 'ArrowRight') {
 			if(value.preventDefault){
 				value.preventDefault();
 			}else{
 				event.returnValue = false;
-			}	
+			}
 		}
 		if (value.code == 'ArrowLeft') {
 			if(value.preventDefault){
 				value.preventDefault();
 			}else{
 				event.returnValue = false;
-			}	
+			}
 		}
-		
+
 	}
 
 	roleRemove(role) {
@@ -1239,13 +1239,36 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	}
 
 	activeDropdown(name: string, loc, value?) {
-		if (this.dropdownIndustriesVisible != true || this.dropdownRolesVisible != true || this.dropdownVisible != true) {
-			loc.scrollIntoView({
-				behavior: 'smooth',
-				block: 'center',
-				inline: 'nearest'
-			});
-		}
+		//if (this.dropdownIndustriesVisible != true || this.dropdownRolesVisible != true || this.dropdownVisible != true) {
+			// loc.scrollIntoView({
+			// 	behavior: 'smooth',
+			// 	block: 'center',
+			// 	inline: 'nearest'
+			// });
+		// }
+			// if (window.navigator.userAgent.indexOf('/Edge')) {
+			// 	return;
+			// } else {
+			// 	if (name === 'skills') {
+			// 	this.dropdownRolesVisible = false;
+			// 	this.dropdownIndustriesVisible = false;
+			// 	this.dropdownVisible = true;
+			// 	};
+			// 	if (name === 'roles') {
+			// 	this.dropdownIndustriesVisible = false;
+			// 	this.dropdownVisible = false;
+			// 	this.dropdownRolesVisible = true;
+			// 	};
+			// 	if (name === 'industries') {
+			// 	this.dropdownVisible = false;
+			// 	this.dropdownRolesVisible = false;
+			// 	this.dropdownIndustriesVisible = true;
+			// 	}
+			// }
+
+
+
+		/*
 		if (this.dropdownIndustriesVisible === true || this.dropdownRolesVisible === true || this.dropdownVisible === true) {
 			// value.preventDefault();
 			// value.returnValue = false;
@@ -1263,9 +1286,11 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		} else if (name == 'skills' && (this.dropdownVisible === true)) {
 			this.dropdownVisible = false;
 		}
+
 		if (name == 'skills' && (this.dropdownRolesVisible === true || this.dropdownIndustriesVisible === true)) {
 			this.dropdownRolesVisible = false;
 			this.dropdownIndustriesVisible = false;
+			this.dropdownVisible = true;
 		} else if (name == 'roles' && (this.dropdownVisible === true || this.dropdownIndustriesVisible === true)) {
 			this.dropdownIndustriesVisible = false;
 			this.dropdownVisible = false;
@@ -1276,6 +1301,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		console.log(this.dropdownVisible);
 		console.log(this.dropdownRolesVisible);
 		console.log(this.dropdownIndustriesVisible);
+		*/
 	}
 
 	accessCheck() {

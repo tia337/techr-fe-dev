@@ -47,7 +47,7 @@
                                 <mat-form-field>
                                     <input matInput placeholder="Skills" [(ngModel)]="query" [ngModelOptions]="{standalone: true}" (keydown)="prevDef($event, skillsdsuggestions)" (blur)="activeUnSet()" (keyup)="keyPressing($event)" [disabled]="!editable" autocomplete="off">
                                 </mat-form-field>
-                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); scrollDropdown(skillsdropdown, 'skills')">
+                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); dropdownVisible = !dropdownVisible; dropdownRolesVisible = false; dropdownIndustriesVisible = false;">
                                   <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownVisible" [ngModelOptions]="{standalone: true}" />
                                   <div class="arrow-button" >
                                     <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -60,7 +60,7 @@
                                     <input matInput placeholder="Roles" [(ngModel)]="queryRoles" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'role', rolessuggestions)" (blur)="activeRolesUnSet()" (keyup)="keyRnIPressing($event, 'role')" [disabled]="!editable" autocomplete="off">
                                 </mat-form-field>
 
-                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('roles',rolesdropdown, $event); scrollDropdown(rolesdropdown)">
+                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('roles',rolesdropdown, $event);  dropdownVisible  = false; dropdownRolesVisible = !dropdownRolesVisible; dropdownIndustriesVisible = false;">
                                   <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownRolesVisible" [ngModelOptions]="{standalone: true}"  />
                                   <div class="arrow-button">
                                     <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -74,7 +74,7 @@
                                         [disabled]="!editable" autocomplete="off">
                                 </mat-form-field>
 
-                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event)">
+                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event);dropdownIndustriesVisible = !dropdownIndustriesVisible; dropdownVisible  = false; dropdownRolesVisible = false;">
                                   <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownIndustriesVisible" [ngModelOptions]="{standalone: true}" />
                                   <div class="arrow-button">
                                     <i class="fa fa-angle-down" aria-hidden="true"></i>
@@ -158,8 +158,8 @@
 
                                 <!-- SKILLS DROPDOWN -->
                                 <div #skillsdropdown>
-                                    <div class="dropdown-wrap" *ngIf="dropdownVisible" (clickOutside)="dropdownVisible = false">
-                                        <div class="categories-wrap">
+                                    <div class="dropdown-wrap" *ngIf="dropdownVisible === true">
+                                        <div class="categories-wrap" (clickOutside)="dropdownVisible = false" [delayClickOutsideInit]="true">
                                             <div class="category-wrap" *ngFor="let category of categories; let i = index">
                                                 <div *ngIf="category" class="category-title" (click)="getCategorySkills(i); activeSkillsCategory = category.get('title')">
                                                     {{category.get('title')}}
@@ -173,7 +173,7 @@
 
                                 <!-- ROLES DROPDOWN -->
                                 <div #rolesdropdown>
-                                    <div class="dropdown-wrap dropdown-roles" *ngIf="dropdownRolesVisible">
+                                    <div class="dropdown-wrap dropdown-roles" *ngIf="dropdownRolesVisible === true">
                                         <div class="roles-wrap" (clickOutside)="dropdownRolesVisible = false" [delayClickOutsideInit]="true">
                                             <div>
                                                 <div class="role-wrap" *ngFor="let item of roles; let i = index" (click)="prevDfSelecting($event)">
@@ -188,8 +188,8 @@
 
                                 <!-- INDUSTRIES DROPDOWN -->
                                 <div #industriesdropdown>
-                                    <div class="dropdown-wrap dropdown-industries" *ngIf="dropdownIndustriesVisible">
-                                        <div class="roles-wrap" (clickOutside)="dropdownIndustriesVisible = false">
+                                    <div class="dropdown-wrap dropdown-industries" *ngIf="dropdownIndustriesVisible === true">
+                                        <div class="roles-wrap" (clickOutside)="dropdownIndustriesVisible = false" [delayClickOutsideInit]="true">
                                             <div class="role-wrap" *ngFor="let item of industries; let i = index">
                                                 <div *ngIf="item" class="item-title" (click)="selectIndustry(item)">
                                                     {{item.get('title')}}
