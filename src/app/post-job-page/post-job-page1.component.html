@@ -74,7 +74,7 @@
                                         [disabled]="!editable" autocomplete="off">
                                 </mat-form-field>
 
-                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event); dropdownIndustriesVisible != dropdownIndustriesVisible; dropdownRolesVisible = false; dropdownVisible = false;">
+                                <label *ngIf="editable" class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event); dropdownIndustriesVisible = !dropdownIndustriesVisible; dropdownRolesVisible = false; dropdownVisible = false;">
                                   <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownIndustriesVisible" [ngModelOptions]="{standalone: true}" />
                                   <div class="arrow-button">
                                     <i class="fa fa-angle-down" aria-hidden="true"></i>
