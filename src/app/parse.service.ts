@@ -26,10 +26,8 @@ export class Parse {
 	private _Parse: any;
 
 	// public vcr: ViewContainerRef;
-	private prodLink = 'https://www.swipein.hr/erp/';
-	private devLink = 'https://swipein-referral.herokuapp.com/erp/';
 
-	ErpCompanyPageLink = this.devLink;
+	ErpCompanyPageLink = environment.REFERRAL_URL;
 
 	public confirmEmail = new EventEmitter();
 
