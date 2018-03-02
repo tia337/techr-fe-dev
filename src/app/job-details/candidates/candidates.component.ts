@@ -679,6 +679,16 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					}
 				});
 				sortedArray = array;
+				if (this.sortMethod === 'weight') { // checking if the sort method changes
+					sortedArray = _.sortBy(sortedArray, 'weight').reverse();
+				} else if (this.sortMethod === 'distance') { // checking sort method for the correct distance === -1 visibility
+					sortedArray = _.sortBy(sortedArray, function(item) {
+						if (item.distance === -1) {
+							return 99999; // if distance === -1 returning it for 99999 to be item in the end
+						}
+						return item.distance;
+					});
+				};
 			} else {
 				sortedArray = sortedArray.filter(candidate => {
 					if (value.includes('international')) {
