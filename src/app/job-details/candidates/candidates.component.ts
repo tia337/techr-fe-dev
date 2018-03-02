@@ -273,7 +273,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this._displayLoader = true;
             let someArrayOfIds = [];
 			// let suggestionsCut = Object.assign({},this.SuggestedCandidates);
-            let suggestionsCut = this.copySuggestedCandidates;
+			let suggestionsCut = this.copySuggestedCandidates;
 			this.postLoader = true;
 			if (this.sortBySkills === true || this.sortByRelocation === true || this.sortByCountry === true) {
 				this.sortedArray.slice(this._from,this._limit).forEach(dev => {
@@ -281,7 +281,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					console.log('Slice array', dev.id, dev.weight);
 				});
 			} else {
-				suggestionsCut.developersSorted.slice(this._from,this._limit).forEach(dev => {
+				suggestionsCut.slice(this._from,this._limit).forEach(dev => {
 					someArrayOfIds.push(dev.id);
 					console.log('Slice array', dev.id, dev.weight);
 				});
@@ -678,6 +678,16 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					}
 				});
 				sortedArray = array;
+				if (this.sortMethod === 'weight') { // checking if the sort method changes
+					sortedArray = _.sortBy(sortedArray, 'weight').reverse();
+				} else if (this.sortMethod === 'distance') { // checking sort method for the correct distance === -1 visibility
+					sortedArray = _.sortBy(sortedArray, function(item) {
+						if (item.distance === -1) {
+							return 99999; // if distance === -1 returning it for 99999 to be item in the end
+						}
+						return item.distance;
+					});
+				};
 			} else {
 				sortedArray = sortedArray.filter(candidate => {
 					if (value.includes('international')) {
@@ -700,6 +710,16 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 				})
 			});
 			sortedArray = array;
+			if (this.sortMethod === 'weight') { // checking if the sort method changes
+				sortedArray = _.sortBy(sortedArray, 'weight').reverse();
+			} else if (this.sortMethod === 'distance') { // checking sort method for the correct distance === -1 visibility
+				sortedArray = _.sortBy(sortedArray, function(item) {
+					if (item.distance === -1) {
+						return 99999; // if distance === -1 returning it for 99999 to be item in the end
+					}
+					return item.distance;
+				});
+			};
 		}
 
 		this.sortedArray = sortedArray; // setting the global sortedArrayBySkills for loading more function

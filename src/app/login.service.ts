@@ -30,6 +30,7 @@ export class Login {
 				this._global.IN.API.Raw(
 					'/people/~:(id,first-name,last-name,picture-url,headline,location,industry,num-connections,summary,positions,email-address,picture-urls::(original))?format=json'
 				).result( data => {
+					console.log(data);
 					this._parse.Parse.Cloud.run('signUp', {data: data}).then(user => {
 						if (!user.authenticated()) {
 							return this._parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
