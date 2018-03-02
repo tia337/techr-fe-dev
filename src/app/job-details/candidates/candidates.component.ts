@@ -274,7 +274,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
             let someArrayOfIds = [];
 			// let suggestionsCut = Object.assign({},this.SuggestedCandidates);
 			let suggestionsCut = this.copySuggestedCandidates;
-			console.log
 			this.postLoader = true;
 			if (this.sortBySkills === true || this.sortByRelocation === true || this.sortByCountry === true) {
 				this.sortedArray.slice(this._from,this._limit).forEach(dev => {
