@@ -260,7 +260,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			if (this._activeStage == -2 ) {
 				this.loadMoreCandidates(event.target);
 			} else {
-				this.loadMoreCandidatesAnotherStage(event.target)
+				return;
 			}
 			console.log('No more candidates to load');
 		}
@@ -277,9 +277,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			this._limit += 10;
 			this._displayLoader = true;
             let someArrayOfIds = [];
-			let suggestionsCut = this.copySuggestedCandidates;
-			
-			suggestionsCut.slice(this._from,this._limit).forEach(dev => {
+			let suggestionsCut =  Object.assign({},this.SuggestedCandidates);
+			suggestionsCut.developersSorted.slice(this._from,this._limit).forEach(dev => {
 				someArrayOfIds.push(dev.id);
 				console.log('Slice array', dev.id, dev.weight);
 			});
@@ -307,6 +306,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					});
 					break;
 			}
+		} else {
+			this.postLoader = false;
 		}
 	}
 
