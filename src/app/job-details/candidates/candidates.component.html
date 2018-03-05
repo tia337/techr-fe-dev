@@ -4,20 +4,20 @@
         <mat-option value="locationMatch" (click)="changeSortMethod('distance')">Best location match</mat-option>
     </mat-select>
 </mat-form-field>
-<mat-form-field>
+<mat-form-field *ngIf="_activeStage == -2">
     <mat-select placeholder="Skills fit" multiple (change)="skillsChecked($event.value)">
         <mat-option value="greatFit" #greatFit (click)="addToFiltersParameters(greatFit.value)">Great fit</mat-option>
         <mat-option value="goodFit" #goodFit (click)="addToFiltersParameters(goodFit.value)">Good fit</mat-option>
         <mat-option value="potentialFit" #potentialFit (click)="addToFiltersParameters(potentialFit.value)">Potential fit</mat-option>
     </mat-select>
 </mat-form-field>
-<mat-form-field>
+<mat-form-field *ngIf="_activeStage == -2">
     <mat-select placeholder="Relocation" multiple (change)="relocationChecked($event.value)">
         <mat-option #international value="international" (click)="addToFiltersParameters(international.value)">Willing to relocate Internationally</mat-option>
         <mat-option #national (click)="addToFiltersParameters(national.value)" value="national">Willing to relocate Nationally</mat-option>
     </mat-select>
 </mat-form-field>
-<mat-form-field>
+<mat-form-field *ngIf="_activeStage == -2">
 <mat-select placeholder="Add country" multiple (change)="countryChecked($event.value)">
     <mat-option (click)="addToFiltersParameters(country)" *ngFor="let country of countryArray" [value]="country">{{country}}</mat-option>
 </mat-select>
@@ -28,8 +28,10 @@
         <mat-option>Send nudge</mat-option>
     </mat-select>
 </mat-form-field> -->
-<div class="candidates-count-block" *ngIf="candidatesCount > 0">    
-Candidates found: {{candidatesCount}}
+<div class="candidates-count-block" *ngIf="_activeStage == -2">
+    <div *ngIf="candidatesCount > 0">    
+    Candidates found: {{candidatesCount}}
+    </div>
 </div>
 <!-- <button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button> -->
 <!-- <button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button> -->
@@ -73,7 +75,7 @@ Candidates found: {{candidatesCount}}
                     <div class="candidate-general-info">
                         <div class="candidate-name">{{candidate.get('firstName')}} {{candidate.get('lastName')}}</div>
                         <div class="candidate-position">{{candidate.get('headline')}}</div>
-                        <p>{{candidate.get('developer').get('homeCountry').get('Country')}}</p>
+                        <!-- <p>{{candidate.get('developer').get('homeCountry').get('Country')}}</p> -->
                         <!--<div class="candidate-company-name"><span class="company-title"-->
                             <!--*ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>-->
                         <!--</div>-->
