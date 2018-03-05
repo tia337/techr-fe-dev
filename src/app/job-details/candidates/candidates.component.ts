@@ -257,10 +257,61 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 	loadCandidatesAtTheEnd(event) {
 		if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
-			this.loadMoreCandidates(event.target);
+			if (this._activeStage == -2 ) {
+				this.loadMoreCandidates(event.target);
+			} else {
+				return;
+			}
 			console.log('No more candidates to load');
 		}
+	};
+
+	loadMoreCandidatesAnotherStage(candidatesBlock) {
+		console.log(this._candidatesCount, ' this._candidatesCount IN LOAD MORE FNC');
+		console.log(this._from, ' THIS FROM IN LOAD MORE FNC');
+		if (this._from < this._candidatesCount) {
+			this.postLoader = true;
+			console.log('LOAD MORE......');
+			this._jobDetailsService.isStagesDisabled = Loading.loading;
+			this._from += 10;
+			this._limit += 10;
+			this._displayLoader = true;
+            let someArrayOfIds = [];
+			let suggestionsCut =  Object.assign({},this.SuggestedCandidates);
+			suggestionsCut.developersSorted.slice(this._from,this._limit).forEach(dev => {
+				someArrayOfIds.push(dev.id);
+				console.log('Slice array', dev.id, dev.weight);
+			});
+            
+			switch (this._activeStage) {
+				case DeveloperListType.suggested:
+                    this._candidatesService.getDevelopersById(someArrayOfIds).then(result => {
+                        console.log('RESULT FROM GET DEVS BY ID',result);
+                        this.candidates.results = this.candidates.results.concat(result.results);
+						this._jobDetailsService.isStagesDisabled = Loading.success;
+						this.postLoader = false;
+                    });
+					break;
+
+				case DeveloperListType.applied:
+					this._candidatesService.getAppliedCandidates(this.contractId, this._from, this._limit).then(suggestions => {
+						this.candidates.weights = Object.assign({}, this.candidates.weights, suggestions.weights);
+						this.candidates.distances = Object.assign({}, this.candidates.distances, suggestions.distances);
+						this.candidates.results = this.candidates.results.concat(suggestions.results);
+						this.scrollTo(candidatesBlock, candidatesBlock.scrollTop + candidatesBlock.offsetHeight, 500);
+						this._jobDetailsService.isStagesDisabled = Loading.success;
+						this.postLoader = false;						
+					}, error => {
+						console.error(error);
+					});
+					break;
+			}
+		} else {
+			this.postLoader = false;
+		}
 	}
+
+
 
 	loadMoreCandidates(candidatesBlock) {
 		console.log(this._candidatesCount, ' this._candidatesCount IN LOAD MORE FNC');
