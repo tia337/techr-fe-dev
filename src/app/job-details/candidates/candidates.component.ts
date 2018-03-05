@@ -266,17 +266,35 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		console.log(this._candidatesCount, ' this._candidatesCount IN LOAD MORE FNC');
 		console.log(this._from, ' THIS FROM IN LOAD MORE FNC');
 		if (this._from < this._candidatesCount) {
+			this.postLoader = true;
 			console.log('LOAD MORE......');
 			this._jobDetailsService.isStagesDisabled = Loading.loading;
 			this._from += 10;
 			this._limit += 10;
 			this._displayLoader = true;
             let someArrayOfIds = [];
-			// let suggestionsCut = Object.assign({},this.SuggestedCandidates);
 			let suggestionsCut = this.copySuggestedCandidates;
-			this.postLoader = true;
+			let sortedArray = this.sortedArray;
+			if (this.sortMethod === 'weight') { // checking if the sort method changes
+				suggestionsCut = _.sortBy(suggestionsCut, 'weight').reverse();
+				sortedArray = _.sortBy(sortedArray, 'weight').reverse();
+			} else if (this.sortMethod === 'distance') { // checking sort method for the correct distance === -1 visibility
+				suggestionsCut = _.sortBy(suggestionsCut, function(item) {
+					if (item.distance === -1) {
+						return 99999; // if distance === -1 returning it for 99999 to be item in the end
+					}
+					return item.distance;
+				});
+				sortedArray = _.sortBy(sortedArray, function(item) {
+					if (item.distance === -1) {
+						return 99999; // if distance === -1 returning it for 99999 to be item in the end
+					}
+					return item.distance;
+				});
+			};
+
 			if (this.sortBySkills === true || this.sortByRelocation === true || this.sortByCountry === true) {
-				this.sortedArray.slice(this._from,this._limit).forEach(dev => {
+				sortedArray.slice(this._from,this._limit).forEach(dev => {
 					someArrayOfIds.push(dev.id);
 					console.log('Slice array', dev.id, dev.weight);
 				});
@@ -290,14 +308,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
             
 			switch (this._activeStage) {
 				case DeveloperListType.suggested:
-					// this._candidatesService.getSuggestedCandidates(this.contractId, this._from, this._limit).then(suggestions => {
-					// 	this.candidates.weights = Object.assign({}, this.candidates.weights, suggestions.weights);
-					// 	this.candidates.distances = Object.assign({}, this.candidates.distances, suggestions.distances);
-					// 	this.candidates.results = this.candidates.results.concat(suggestions.results);
-					// 	this.scrollTo(candidatesBlock, candidatesBlock.scrollTop + candidatesBlock.offsetHeight, 500);
-					// 	this._jobDetailsService.isStagesDisabled = Loading.success;
-					// });
-
                     this._candidatesService.getDevelopersById(someArrayOfIds).then(result => {
                         console.log('RESULT FROM GET DEVS BY ID',result);
                         this.candidates.results = this.candidates.results.concat(result.results);
@@ -418,33 +428,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	errorHandler(event) {
 		event.target.src = '../../../assets/img/default-userpic.png';
 	}
-    // loadCountryList(){
-    // 	let countryQuery = this._parse.Query('Developer');
-    //     let someArray = [];
-	// 	countryQuery.exists('homeCountry');
-	// 	countryQuery.include('homeCountry.Country');
-	// 	countryQuery.find().then(res=>{
-	// 		console.log(res);
-	// 			for( let i in res) {
-	// 				let obj = res[i];
-	// 				let gotValue = obj.get('homeCountry');
-	// 				console.log("COUNTRIES", gotValue);
-	// 				if (someArray.length === 0) {
-	// 					someArray.push({
-	// 						id: gotValue.id,
-	// 						name: gotValue.get('Country')
-	// 					})
-	// 				} else if (someArray[i].id != gotValue.id) {
-	// 					someArray.push({
-	// 						gotValue
-	// 					});
-	// 				}
-	// 			}
-	// 			this.countryArray = someArray;
-	// 	});
-	// 	this.countryArray = someArray;
-	// }
-	
+   
 	loadCountryList () {
 		let countryArray = [];
 		this.copySuggestedCandidates.forEach(candidate => {
