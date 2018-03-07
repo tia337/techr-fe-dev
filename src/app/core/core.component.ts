@@ -63,6 +63,10 @@ export class CoreComponent implements OnInit, OnDestroy {
 				this.currentUser = profile;
 				this._coreService.getTeamMembers().then(members => {
 					this.teamMembers = members;
+					this.teamMembers = this.teamMembers.filter(member => {
+						return member.id !== this._parse.getCurrentUser().id;
+					});
+					this.getUnreadMessages(this.teamMembers);
 				});
 
 				this._coreService.getInvitations().then(invitations => {
@@ -172,4 +176,17 @@ export class CoreComponent implements OnInit, OnDestroy {
 	feedbackCreation() {
 		this._root_vcr.createComponent(FeedbackAlertComponent);
 	}
+
+	getUnreadMessages (members: Array<any>) {
+		const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+		const query = this._parse.Query('Dialogs');
+		const currentUserId = this._parse.getCurrentUser().get('Client_Pointer').id;
+		members.forEach(member => {
+			console.log(member.id)
+			// this._parse.execCloud('getUnreadMessagesPartnerCount', member.id).then(count => {
+			// 	member.unreadMessages = count;
+			// });
+		});
+	}
+
 }

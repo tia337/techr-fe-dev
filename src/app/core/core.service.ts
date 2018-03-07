@@ -49,7 +49,8 @@ export class CoreService {
 				invitations.equalTo('Invitation_Status', 0);
 				return invitations.find(invitation => {
 					return invitation;
-				});
 			});
-		}
+		});
 	}
+
+}
