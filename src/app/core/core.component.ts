@@ -29,8 +29,10 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	private _currentUserSubscription;
 	private sideNavPinned = true;
-	teamMembers;
+	teamMembers: Array<any> = [];
+	inactiveTeamMembers: Array<any> = [];
 	invitedMembers;
+	showInactiveMembers = true;
 	dialog = [];
 	private sessionId: string;
 	constructor(
@@ -50,7 +52,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
-		
 		// if (this._parse.getCurrentUser()) {
 		//   this._coreService.getClientLogo().then(logo => {
 		//     this.clientLogo = logo;
@@ -71,6 +72,10 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 				this._coreService.getInvitations().then(invitations => {
 					this.invitedMembers = invitations;
+				});
+
+				this._coreService.getInactiveTeamMembers().then(members => {
+					this.inactiveTeamMembers = members;
 				});
 			} else {
 				this.currentUser = null;
@@ -182,10 +187,9 @@ export class CoreComponent implements OnInit, OnDestroy {
 		const query = this._parse.Query('Dialogs');
 		const currentUserId = this._parse.getCurrentUser().get('Client_Pointer').id;
 		members.forEach(member => {
-			console.log(member.id)
-			// this._parse.execCloud('getUnreadMessagesPartnerCount', member.id).then(count => {
-			// 	member.unreadMessages = count;
-			// });
+			this._parse.execCloud('getUnreadMessagesPartnerCount', member.id).then(count => {
+				member.unreadMessages = count;
+			});
 		});
 	}
 

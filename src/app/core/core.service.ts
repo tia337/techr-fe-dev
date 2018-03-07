@@ -36,6 +36,19 @@ export class CoreService {
 		});
 	}
 
+	getInactiveTeamMembers(): any {
+		const client = this._parse.getCurrentUser().get('Client_Pointer');
+		let clientId;
+		if (client) {
+			clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+		}
+		const query = this._parse.Query('Clients');
+		query.equalTo('objectId', clientId);
+		return query.first().then(clientResult => {
+			return this._parse.staticObject().fetchAllIfNeeded(clientResult.get('InactiveUsers'));
+		});
+	}
+
 	getInvitations(): any {
 		return this._parse.getCurrentUser().fetch().then(user=>{
 			return user.get('Client_Pointer').fetch();

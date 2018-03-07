@@ -73,7 +73,16 @@
         <div *ngFor="let teamMember of teamMembers " class="team-member ">
           <!-- <div class="indicator "></div> -->
           {{ teamMember.get('firstName') }}
-          {{teamMember.count}}
+        </div>
+      </div>
+      <div *ngIf="inactiveTeamMembers != []" class="team-members">
+        <hr color="#94a3b5" style="margin: 5px 0;">
+        <p (click)="showInactiveMembers = false" [hidden]="!showInactiveMembers">Show inactive members</p>
+        <p (click)="showInactiveMembers = true" [hidden]="showInactiveMembers">Hide inactive members</p>
+        <div  [hidden]="showInactiveMembers" *ngIf="inactiveTeamMembers ">
+          <div *ngFor="let teamMember of inactiveTeamMembers " class="team-member ">
+            {{ teamMember.get('firstName') }}
+          </div>
         </div>
       </div>
 
