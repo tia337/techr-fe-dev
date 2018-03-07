@@ -50,7 +50,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	sortByCountry: boolean = false;
 	filtersParameters: Array<any> = [];
 	sortMethod: string = 'weight';
-	candidatesCount: number;
+	candidatesCount: number = 0;
 	postLoader: boolean = false;
 	filterCount: number = 0;
 	countriesCount: number = 0;
@@ -267,8 +267,8 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	};
 
 	loadMoreCandidatesAnotherStage(candidatesBlock) {
-		console.log(this._candidatesCount, ' this._candidatesCount IN LOAD MORE FNC');
-		console.log(this._from, ' THIS FROM IN LOAD MORE FNC');
+		let difference = this.candidatesCount - this._from;
+		
 		if (this._from < this._candidatesCount) {
 			this.postLoader = true;
 			console.log('LOAD MORE......');
@@ -314,6 +314,9 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 
 	loadMoreCandidates(candidatesBlock) {
+		if (this._limit > this._candidatesCount) {
+			return;
+		}
 		console.log(this._candidatesCount, ' this._candidatesCount IN LOAD MORE FNC');
 		console.log(this._from, ' THIS FROM IN LOAD MORE FNC');
 		if (this._from < this._candidatesCount) {
@@ -343,6 +346,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 					return item.distance;
 				});
 			};
+			console.log(sortedArray);
 
 			if (this.sortBySkills === true || this.sortByRelocation === true || this.sortByCountry === true) {
 				sortedArray.slice(this._from,this._limit).forEach(dev => {
