@@ -45,7 +45,7 @@ export class Login {
 					}, error => {
 						reject(error);
 					});
-				}).error(console.log('error'));
+				});
 			});
 		});
 	}
