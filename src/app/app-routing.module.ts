@@ -50,6 +50,7 @@ import {
 	EmployeeReferralCustomizeComponent,
 } from './employee-referral/employee-referral-customize/employee-referral-customize.component';
 
+import { ChatComponent } from './chat/chat.component';
 
 // Componenet for testing
 import { TestComponent } from './test/test.component';
@@ -69,7 +70,9 @@ import { TermsConditionsComponent } from './info-pages/terms-conditions/terms-co
 import { PrivacyPolicyComponent } from './info-pages/privacy-policy/privacy-policy.component';
 import { InvitationPageComponent } from './invitation-page/invitation-page.component';
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
-import {UserSettingsComponent} from "./user-settings/user-settings.component";
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+
+
 
 const routes: Routes = [
 	// { path: 'logout', component: LogoutComponent },
@@ -119,7 +122,7 @@ const routes: Routes = [
 		component: CoreComponent,
 		children: [
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-
+			{ path: 'chat/:id', component: ChatComponent, canActivate: [LoginGuard] },
 			{ path: 'test', component: TestComponent },
 
 			{ path: 'invitation', component: InviteUserPageComponent },
@@ -329,7 +332,7 @@ const routes: Routes = [
 				path: 'user-settings',
 				component: UserSettingsComponent,
 				canActivate: [ActiveSubscriptionGuard]
-			}
+			},
 		]
 	}
 ];

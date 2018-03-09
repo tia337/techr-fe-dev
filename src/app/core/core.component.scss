@@ -273,6 +273,7 @@ $menu-height: calc(100vh - #{$header-height});
                     font-size: 1rem;
                     transition: .3s all ease-in-out;
                     padding: 2px 0 2px 10px;
+                    position: relative;
                     &-unread-messages {
                         background: #94a4b5;
                         display: inline-block;
@@ -280,6 +281,28 @@ $menu-height: calc(100vh - #{$header-height});
                         margin-left: 10px;
                         font-size: 12px;
                         border-radius: 3px;
+                    }
+                    &-status.online {
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                        background: green;
+                        border: 2px solid transparent;
+                        display: inline-block;
+                        left: -20px;
+                        top: 6px;
+                        position: absolute;
+                    }
+                    &-status.offline {
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                        background: transparent;
+                        border: 2px solid grey;
+                        display: inline-block;
+                        left: -20px;
+                        top: 6px;
+                        position: absolute;
                     }
                     .indicator {
                         border-radius: 50%;

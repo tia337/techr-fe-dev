@@ -40,6 +40,13 @@ export class CoreService {
 		});
 	}
 
+	getStatuses(members) {
+		const query = this._parse.Query('Session');
+		return query.first().then(clientResult => {
+			return this._parse.staticObject().fetchAllIfNeeded(clientResult.get('user'));
+		});
+	}
+
 	getInactiveTeamMembers(): any {
 		const client = this._parse.getCurrentUser().get('Client_Pointer');
 		let clientId;

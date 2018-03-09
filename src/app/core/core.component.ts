@@ -12,7 +12,6 @@ import { CartAdding } from '../header/cartadding.service';
 import { CoreService } from './core.service';
 import { ActivatedRoute } from '@angular/router';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
-import {} from ''
 
 @Component({
 	selector: 'app-core',
@@ -200,15 +199,14 @@ export class CoreComponent implements OnInit, OnDestroy {
 				member.dialogId = data.dialogId;
 			});
 		});
+		this.getSessionStatus(members);
 	}
 
-	// getTeamMembersStatuses (members: Array<any>) {
-	// 	const query = this._parse.Query('Session');
-	// 	members.forEach(member => {
-	// 		query.equalsTo('user', member.id).find().then(status => {
-	// 			console.log(status);
-	// 		});
-	// 	});
-	// }
-
+	getSessionStatus (members: Array<any>) {
+		members.forEach(member => {
+			this._parse.execCloud('getSessionStatus', {memberId: member.id}).then(status => {
+				member.sessionStatus = status;
+			});
+		});
+	}
 }
