@@ -76,6 +76,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 				this._coreService.getInactiveTeamMembers().then(members => {
 					this.inactiveTeamMembers = members;
+					this.getUnreadMessages(this.inactiveTeamMembers);
 				});
 			} else {
 				this.currentUser = null;
@@ -183,14 +184,21 @@ export class CoreComponent implements OnInit, OnDestroy {
 	}
 
 	getUnreadMessages (members: Array<any>) {
-		const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
-		const query = this._parse.Query('Dialogs');
-		const currentUserId = this._parse.getCurrentUser().get('Client_Pointer').id;
 		members.forEach(member => {
-			this._parse.execCloud('getUnreadMessagesPartnerCount', member.id).then(count => {
-				member.unreadMessages = count;
+			this._parse.execCloud('getUnreadMessagesPartnerCount', {memberId: member.id}).then(data => {
+				member.unreadMessages = data.unreadMessages;
+				member.dialogId = data.dialogId;
 			});
 		});
 	}
+
+	// getTeamMembersStatuses (members: Array<any>) {
+	// 	const query = this._parse.Query('Session');
+	// 	members.forEach(member => {
+	// 		query.equalsTo('user', member.id).find().then(status => {
+	// 			console.log(status);
+	// 		});
+	// 	});
+	// }
 
 }
