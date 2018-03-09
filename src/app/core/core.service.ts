@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../parse.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class CoreService {
+
+	public deactivatedUser: BehaviorSubject<string> = new BehaviorSubject('');
+	currentDeactivatedUser = this.deactivatedUser.asObservable();
 
 	constructor(private _parse: Parse) { }
 
@@ -66,4 +70,7 @@ export class CoreService {
 		});
 	}
 
+	throwDeactivatedUser(user: string) {
+		this.deactivatedUser.next(user);
+	}
 }

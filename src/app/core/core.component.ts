@@ -48,7 +48,17 @@ export class CoreComponent implements OnInit, OnDestroy {
 		private _cartAdding: CartAdding,
 		private _router: Router,
 		private _route: ActivatedRoute
-	) { }
+	) {
+		this._coreService.currentDeactivatedUser.subscribe(userId => {
+			this.teamMembers.forEach(member => {
+				let memberId = this.teamMembers.indexOf(member);
+				if (member.id === userId) {
+					this.teamMembers.splice(memberId, 1);
+					this.inactiveTeamMembers.push(member);
+				}
+			});
+		});
+	}
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
