@@ -29,8 +29,10 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	private _currentUserSubscription;
 	private sideNavPinned = true;
-	teamMembers;
+	teamMembers: Array<any> = [];
+	inactiveTeamMembers: Array<any> = [];
 	invitedMembers;
+	showInactiveMembers = true;
 	dialog = [];
 	private sessionId: string;
 	constructor(
@@ -46,11 +48,20 @@ export class CoreComponent implements OnInit, OnDestroy {
 		private _cartAdding: CartAdding,
 		private _router: Router,
 		private _route: ActivatedRoute
-	) { }
+	) {
+		this._coreService.currentDeactivatedUser.subscribe(userId => {
+			this.teamMembers.forEach(member => {
+				let memberId = this.teamMembers.indexOf(member);
+				if (member.id === userId) {
+					this.teamMembers.splice(memberId, 1);
+					this.inactiveTeamMembers.push(member);
+				}
+			});
+		});
+	}
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
-		
 		// if (this._parse.getCurrentUser()) {
 		//   this._coreService.getClientLogo().then(logo => {
 		//     this.clientLogo = logo;
@@ -63,10 +74,19 @@ export class CoreComponent implements OnInit, OnDestroy {
 				this.currentUser = profile;
 				this._coreService.getTeamMembers().then(members => {
 					this.teamMembers = members;
+					this.teamMembers = this.teamMembers.filter(member => {
+						return member.id !== this._parse.getCurrentUser().id;
+					});
+					this.getUnreadMessages(this.teamMembers);
 				});
 
 				this._coreService.getInvitations().then(invitations => {
 					this.invitedMembers = invitations;
+				});
+
+				this._coreService.getInactiveTeamMembers().then(members => {
+					this.inactiveTeamMembers = members;
+					this.getUnreadMessages(this.inactiveTeamMembers);
 				});
 			} else {
 				this.currentUser = null;
@@ -172,4 +192,23 @@ export class CoreComponent implements OnInit, OnDestroy {
 	feedbackCreation() {
 		this._root_vcr.createComponent(FeedbackAlertComponent);
 	}
+
+	getUnreadMessages (members: Array<any>) {
+		members.forEach(member => {
+			this._parse.execCloud('getUnreadMessagesPartnerCount', {memberId: member.id}).then(data => {
+				member.unreadMessages = data.unreadMessages;
+				member.dialogId = data.dialogId;
+			});
+		});
+	}
+
+	// getTeamMembersStatuses (members: Array<any>) {
+	// 	const query = this._parse.Query('Session');
+	// 	members.forEach(member => {
+	// 		query.equalsTo('user', member.id).find().then(status => {
+	// 			console.log(status);
+	// 		});
+	// 	});
+	// }
+
 }

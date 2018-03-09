@@ -6,6 +6,7 @@ import { AccessLevelModalComponent } from './access-level-modal/access-level-mod
 import { AlertComponent } from '../../../shared/alert/alert.component';
 import { Router } from '@angular/router';
 import { Parse } from 'app/parse.service';
+import { CoreService } from '../../../core/core.service';
 
 @Component({
 	selector: 'app-user',
@@ -23,7 +24,8 @@ export class UserComponent implements OnInit {
 		private _activatedRoute: ActivatedRoute,
 		private _root_vcr: RootVCRService,
 		private _router: Router,
-		private _parse: Parse
+		private _parse: Parse,
+		public _coreService: CoreService
 	) { }
 
 	ngOnInit() {
@@ -65,6 +67,7 @@ export class UserComponent implements OnInit {
 				type: 'warn',
 				title: 'Yes, deactivate',
 				onClick: () => {
+					this._coreService.throwDeactivatedUser(this.userId);
 					this._userService.deactivateUser(this.userId).then(success => {
 						this._root_vcr.clear();
 

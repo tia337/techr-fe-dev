@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../parse.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class CoreService {
+
+	public deactivatedUser: BehaviorSubject<string> = new BehaviorSubject('');
+	currentDeactivatedUser = this.deactivatedUser.asObservable();
 
 	constructor(private _parse: Parse) { }
 
@@ -36,6 +40,19 @@ export class CoreService {
 		});
 	}
 
+	getInactiveTeamMembers(): any {
+		const client = this._parse.getCurrentUser().get('Client_Pointer');
+		let clientId;
+		if (client) {
+			clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+		}
+		const query = this._parse.Query('Clients');
+		query.equalTo('objectId', clientId);
+		return query.first().then(clientResult => {
+			return this._parse.staticObject().fetchAllIfNeeded(clientResult.get('InactiveUsers'));
+		});
+	}
+
 	getInvitations(): any {
 		return this._parse.getCurrentUser().fetch().then(user=>{
 			return user.get('Client_Pointer').fetch();
@@ -49,7 +66,11 @@ export class CoreService {
 				invitations.equalTo('Invitation_Status', 0);
 				return invitations.find(invitation => {
 					return invitation;
-				});
 			});
-		}
+		});
 	}
+
+	throwDeactivatedUser(user: string) {
+		this.deactivatedUser.next(user);
+	}
+}
