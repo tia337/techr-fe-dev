@@ -1,5 +1,50 @@
-<p>
-  {{params | json}}
-</p>
+<div *ngIf="teamMember !== undefined">
+  <div class="header">
+    <span *ngIf="teamMember.sessionStatus === 'false'"  class="team-member-status offline">not active</span>
+    <span *ngIf="teamMember.sessionStatus === 'true'" class="team-member-status online">active</span>
+    <div class="team-member-name">
+      {{teamMember.firstName}}
+      {{teamMember.lastName}}
+    </div>
+  </div>
+  <div class="info-block">
+    <div class="info-block-logo">
+      <img src="{{teamMember.avatar}}" alt="">
+      <span class="name">
+        {{teamMember.firstName}}
+        {{teamMember.lastName}}
+      </span>
+    </div>
+    <p class="info-block-text">
+      This is the very begging of your direct message history with 
+      <span class="info-block-text-name">
+        {{teamMember.firstName}}
+        {{teamMember.lastName}}
+      </span>
+    </p>
+  </div>
+</div>
+<div class="messages-block">
+  <div class="message-block" *ngFor="let message of messages; let i = index;">
+    <div class="message-block-date">
+      <hr color="#adb9ca">
+      <!-- <span>{{message[i]}}</span> -->
+      <hr color="#adb9ca">
+    </div>
+    <div class="message-block-message" *ngFor='let daymessage of message'>
+      <img class="message-block-message-avatar" src="{{daymessage.get('author').get('avatarURL')}}" alt="">
+      <div class="message-block-message-container">
+        <div class="message-block-message-name-date">
+          <span class="message-block-message-name">{{daymessage.get('author').get('firstName')}} {{daymessage.get('author').get('lastName')}}</span>
+          <span class="message-block-message-date">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
+        </div>
+        <p class="message-block-text">
+          {{daymessage.get('message')}}
+          <br>
+          {{daymessage.get('createdAt')}}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 
-<p>{{messages | json}}</p>

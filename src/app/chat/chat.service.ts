@@ -8,16 +8,15 @@ import { environment } from './../../environments/environment';
 @Injectable()
 export class ChatService {
 
-private _global;
-private _stripe;
+constructor(private _parse: Parse) {}
 
-constructor(private _parse: Parse) {
-
-}
-
-getUserMessages(dialogId) {
-    console.log(dialogId.id);
-    return this._parse.execCloud('getMessages', {dialog: dialogId.id});
+getUserMessages(id) {
+   const data = {
+       dialogId: id
+   };
+    return this._parse.execCloud('getMessages', {dialogId: data.dialogId}).then(result => {
+        return result;
+    });
 };
 
 }

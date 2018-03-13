@@ -1,0 +1,100 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 25px 15px;
+    border-bottom: 1px solid #b7b8b9;
+}
+
+.team-member {
+    &-status {
+        margin-right: 10px;
+        padding-right: 10px;
+        border-right: 1px solid #b7b8b9;
+        color: #b7b8b9;        
+    }
+    &-status.online::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        margin-top: -2px;
+        border-radius: 50%;
+        background: rgba(0, 128, 0, 0.68);
+        border: 2px solid transparent;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    &-status.offline::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        margin-top: -2px;
+        border-radius: 50%;
+        background: transparent;
+        border: 2px solid #b7b8b9;
+        display: inline-block;
+        vertical-align: middle;
+    }
+}
+
+.info-block {
+    padding: 35px 15px 20px;
+    img {
+        width: 100px;
+        display: inline-block;
+        vertical-align: bottom;
+        margin-right: 10px;
+    }
+    &-logo {
+        margin-bottom: 10px;
+    }
+    &-text {
+        color: #b7b8b9;
+        &-name {
+            color: rgba(0, 0, 0, 0.87);
+            font-weight: bold;
+        }
+    }
+}
+
+.message-block {
+    &-date {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        hr {
+            flex-grow: 1;
+            width: 1px!important;
+        }
+        span {
+            margin: 0 10px;
+            color: #505050;
+            font-weight: bold;            
+        }
+    }
+    &-message {
+        padding: 10px 15px;
+        display: flex;
+        &-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+        &-name {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        &-date {
+            font-size: 11px;
+            opacity: .7;
+        }
+        &-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+    }
+}
