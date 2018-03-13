@@ -164,8 +164,8 @@ header {
           height: 16px;
           font-size: 9px;
           position: absolute;
-          bottom: 4px;
-          right: 15px;
+          top: 13px;
+          right: 13px;
         }
       }
       .notifications-icon {
@@ -759,6 +759,7 @@ header {
 app-notifications {
   position: absolute;
   right: -450px;
+  // right: 0;
   width: 450px;
   top: 55px;
   z-index: 2;

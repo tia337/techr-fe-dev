@@ -1,0 +1,86 @@
+.single-notification {
+  &-wrap {
+    position: fixed;
+    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.8);
+    display: flex;
+    width: 365px;
+    bottom: 35px;
+    transition: .4s all ease-in-out;
+    z-index: 99;
+    right: -370px;
+    &.move {
+      animation: single-notification-move 4s ease-in-out;
+    }
+    &.move-after-hover {
+      animation: single-notification-move-after-hover 2s ease-in;
+    }
+    &.stay {
+      right: 35px;
+    }
+    &:hover {
+      transition: .4s all ease-in-out;
+      bottom: 40px;
+      box-shadow: 4px 6px 9px rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+    }
+  }
+  &-image {
+      width: 75px;
+    &-wrap {
+      background: #4673c5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 35%;
+    }
+  }
+  &-data {
+    background: #fff;
+    width: 65%;
+    padding: 10px 15px;
+    box-shadow: inset 2px 0px 5px 0px rgba(0, 0, 0, 0.8);
+    &-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    &-text {
+      text-align: left;
+    }
+    &-candidate {
+      text-align: left;
+      font-weight: bold;
+    }
+  }
+}
+
+@keyframes single-notification-move {
+  0% {
+    right: -370px;
+  }
+  10% {
+    right: 35px;
+  }
+  50% {
+    right: 35px;
+  }
+  75% {
+    right: 35px;
+  }
+  100% {
+    right: -370px;
+  }
+}
+
+@keyframes single-notification-move-after-hover {
+  0% {
+    right: 35px;
+  }
+  50% {
+    right: 35px;
+  }
+  100% {
+    right: -370px;
+  }
+}
