@@ -59,14 +59,21 @@
     }
 }
 
+.messages-block {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: calc(100vh - 196px);
+}
+
 .message-block {
     &-date {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        hr {
+        div {
             flex-grow: 1;
-            width: 1px!important;
+            // width: 1px!important;
+            border-bottom: 1px solid #adb9ca;
         }
         span {
             margin: 0 10px;
@@ -75,8 +82,21 @@
         }
     }
     &-message {
-        padding: 10px 15px;
+        &:hover {
+            background: rgba(185, 193, 200, 0.1);
+        }
+        &:hover &-date-hidden {
+            visibility: visible;
+        }
+        padding: 5px 10px;
         display: flex;
+        &-avatar-wrap {
+            width: 60px;
+            // height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         &-avatar {
             width: 50px;
             height: 50px;
@@ -91,10 +111,56 @@
             font-size: 11px;
             opacity: .7;
         }
+        &-date-hidden {
+            font-size: 11px;
+            visibility: hidden;
+        }
         &-container {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
     }
+}
+
+.message-input-block {
+    height: 40px;
+    width: calc(100% - 20px);
+    margin: 15px auto;
+    border: 2px solid #c1c1c2;
+    border-radius: 3px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    input {
+        background: transparent;
+        border: none;
+        outline: none;
+        margin-left: 10px;
+        width: 90%;
+        height: 100%;
+        font-size: 14px;
+        &::-webkit-input-placeholder {
+            color: #c1c1c2;
+            font-size: 14px;
+        }
+    }
+}
+
+.subscriptions-block {
+    display: inline-flex;
+    justify-content: space-around;
+    margin-right: 10px;
+    color: #c1c1c2;
+    font-size: 16px;
+}
+
+#mention-candidate {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#mention-team-member {
+    cursor: pointer;
 }

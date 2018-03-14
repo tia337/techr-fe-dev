@@ -7,44 +7,61 @@
       {{teamMember.lastName}}
     </div>
   </div>
-  <div class="info-block">
-    <div class="info-block-logo">
-      <img src="{{teamMember.avatar}}" alt="">
-      <span class="name">
-        {{teamMember.firstName}}
-        {{teamMember.lastName}}
-      </span>
-    </div>
-    <p class="info-block-text">
-      This is the very begging of your direct message history with 
-      <span class="info-block-text-name">
-        {{teamMember.firstName}}
-        {{teamMember.lastName}}
-      </span>
-    </p>
-  </div>
 </div>
-<div class="messages-block">
+<div *ngIf="teamMember !== undefined" class="messages-block" #messagesBlock
+      infinite-scroll
+      infiniteScrollUpDistance="0"
+      infiniteScrollThrottle="30"
+      (scrolledUp)="onScrollUp()" 
+      scrollWindow="false">
+      <div class="info-block">
+          <div class="info-block-logo">
+            <img src="{{teamMember.avatar}}" alt="">
+            <span class="name">
+              {{teamMember.firstName}}
+              {{teamMember.lastName}}
+            </span>
+          </div>
+          <p class="info-block-text">
+            This is the very begging of your direct message history with 
+            <span class="info-block-text-name">
+              {{teamMember.firstName}}
+              {{teamMember.lastName}}
+            </span>
+          </p>
+        </div>
   <div class="message-block" *ngFor="let message of messages; let i = index;">
     <div class="message-block-date">
-      <hr color="#adb9ca">
-      <!-- <span>{{message[i]}}</span> -->
-      <hr color="#adb9ca">
+      <!-- <hr color="#adb9ca"> -->
+      <div></div>
+      <span>{{message[0].date}}</span>
+      <!-- <hr color="#adb9ca"> -->
+      <div></div>
     </div>
-    <div class="message-block-message" *ngFor='let daymessage of message'>
-      <img class="message-block-message-avatar" src="{{daymessage.get('author').get('avatarURL')}}" alt="">
+    <div class="message-block-message" *ngFor='let daymessage of message[1].messages'>
+      <div class="message-block-message-avatar-wrap">
+        <img *ngIf="daymessage.author != undefined" class="message-block-message-avatar" src="{{daymessage.get('author').get('avatarURL')}}" alt="">
+        <div *ngIf="daymessage.get('author').get('avatarURL') == undefined && daymessage.author != undefined" class="message-block-message-avatar-undefined" [ngStyle]="{'background-color': teamMember.background | json}">
+          <span>{{teamMember.undefinedAvatar}}</span>
+        </div>
+        <span *ngIf="daymessage.author === undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEE, d hh:mm:s a'}}" matTooltipPosition="above" class="message-block-message-date-hidden">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
+      </div>
       <div class="message-block-message-container">
         <div class="message-block-message-name-date">
-          <span class="message-block-message-name">{{daymessage.get('author').get('firstName')}} {{daymessage.get('author').get('lastName')}}</span>
-          <span class="message-block-message-date">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
+          <span *ngIf="daymessage.author != undefined" class="message-block-message-name">{{daymessage.author}}</span>
+          <span *ngIf="daymessage.author != undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEEE, MMMM d, y, h:mm:ss a'}}" matTooltipPosition="above" class="message-block-message-date">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
         </div>
         <p class="message-block-text">
           {{daymessage.get('message')}}
-          <br>
-          {{daymessage.get('createdAt')}}
         </p>
       </div>
     </div>
   </div>
 </div>
-
+<div class="message-input-block" *ngIf="teamMember !== undefined">
+  <input type="text" placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}">
+  <div class="subscriptions-block">
+    <span id="mention-candidate">#</span>
+    <span id="mention-team-member">@</span>
+  </div>
+</div>  

@@ -54,6 +54,7 @@ import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
 // import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { environment } from './../environments/environment';
 import { ChatModule } from './chat/chat.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -105,7 +106,8 @@ const config: SocketIoConfig = {
 		LogoutModule,
 		TextInputHighlightModule,
 		InvitationPageModule,
-		ContactUsModule
+		ContactUsModule,
+		InfiniteScrollModule,
 	],
 	providers: [SidenavService, RootVCRService, StripeService, Gapi, LoginGuard, BillingGuard, ActiveSubscriptionGuard],
 	bootstrap: [AppComponent],
