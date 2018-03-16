@@ -2,6 +2,10 @@ import { Component, EventEmitter, OnInit, Output, Input, ElementRef, Renderer} f
 import { not } from '@angular/compiler/src/output/output_ast';
 import { NotificationComponent } from './notification/notification.component';
 import { RootVCRService } from '../../root_vcr.service';
+import { SocketIoConfig, Socket } from 'ng-socket-io';
+import { Observable } from 'rxjs/Observable';
+
+
 // tslint:disable:indent
 @Component({
   selector: 'app-notifications',
@@ -19,7 +23,8 @@ export class NotificationsComponent implements OnInit {
   constructor(
     private _elemenRef: ElementRef,
     private _renderer: Renderer,
-    private _root_vcr: RootVCRService
+    private _root_vcr: RootVCRService,
+    public _socket: Socket
   ) {
       this._renderer.listenGlobal('body', 'click', (event) => {
         if (this.notifications === true) {
@@ -31,22 +36,82 @@ export class NotificationsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._socket.connect();
+    this.getNoteMentionsNotificationsUpdated().subscribe(data => {
+      this.createOn(data);
+    });
+    this.getContractApplyNotifications().subscribe(data => {
+      this.createOn(data);
+    });
+    this.getScoringMentionNotifications().subscribe(data => {
+      this.createOn(data);
+    });
+    this.getEmployeeReferralsNotifications().subscribe(data => {
+      this.createOn(data);
+    });
+    this.getTeamMemberMessageNotifications().subscribe(data => {
+      this.createOn(data);
+    });
   }
 
   closeNotifications(notifications: boolean, event): void {
-      this.createOn();
       notifications = !notifications;
       this.notificationsStatus.emit(notifications);
       event.stopPropagation();
   }
 
-  createOn () {
+  createOn (data) {
     this._root_vcr.clear();
     const notification = this._root_vcr.createComponent(NotificationComponent);
-    notification.notificationType = 'note';
-    notification.notificationTitle = 'New Applicant';
-    notification.notificationText = 'You have a new applicant';
-    notification.notificationJob = 'Front-end Developer';
+    notification.notificationType = data.type;
+    notification.notificationTitle = data.applicant;
+    notification.notificationText = data.text;
+    notification.notificationJob = data.job;
+  }
+
+  getNoteMentionsNotificationsUpdated () {
+    const observable = new Observable(observer => {
+			this._socket.on('MentionOnNoteNotification', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+  };
+
+  getContractApplyNotifications () {
+    const observable = new Observable(observer => {
+			this._socket.on('ContractApplyNotification', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+  };
+
+  getScoringMentionNotifications () {
+    const observable = new Observable(observer => {
+			this._socket.on('MentionScoringNotification', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+  };
+
+  getEmployeeReferralsNotifications () {
+    const observable = new Observable(observer => {
+			this._socket.on('EmployeeReferralNotification', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+  }
+
+  getTeamMemberMessageNotifications () {
+    const observable = new Observable(observer => {
+			this._socket.on('TeamMemberMessageNotifcation', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
   }
 
 }
