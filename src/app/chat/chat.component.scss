@@ -60,9 +60,10 @@
 }
 
 .messages-block {
-    overflow-x: hidden;
-    overflow-y: scroll;
+    overflow: auto;
     height: calc(100vh - 196px);
+    position: relative;
+    padding: 15px 0 0;
 }
 
 .message-block {
@@ -163,4 +164,16 @@
 
 #mention-team-member {
     cursor: pointer;
+}
+
+
+.loader-wrap {
+    position: absolute;
+    background: rgba(255,255,255, .7);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9; 
 }

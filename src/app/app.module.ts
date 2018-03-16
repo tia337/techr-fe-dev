@@ -107,7 +107,7 @@ const config: SocketIoConfig = {
 		TextInputHighlightModule,
 		InvitationPageModule,
 		ContactUsModule,
-		InfiniteScrollModule,
+		InfiniteScrollModule
 	],
 	providers: [SidenavService, RootVCRService, StripeService, Gapi, LoginGuard, BillingGuard, ActiveSubscriptionGuard],
 	bootstrap: [AppComponent],

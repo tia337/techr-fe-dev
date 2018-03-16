@@ -3,14 +3,17 @@ import { CommonModule } from '@angular/common';
 import { ChatComponent } from './chat.component';
 import { ChatService } from './chat.service';
 import { FormsModule } from '@angular/forms';
-import { MatTabsModule, MatSelectModule, MatButtonToggleModule, MatButtonModule, MatProgressSpinnerModule } from '@angular/material';
-import { LoaderModule } from "app/shared/loader/loader.module";
-import { MatTooltipModule } from '@angular/material';
+import { MatTooltipModule, MatProgressSpinnerModule } from '@angular/material';
+import { MentionModule } from 'angular2-mentions/mention';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   imports: [
     CommonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MentionModule,
+    MatProgressSpinnerModule,
+    InfiniteScrollModule
   ],
     declarations: [ChatComponent],
     providers: [ChatService],

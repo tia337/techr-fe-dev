@@ -1,10 +1,12 @@
-import { Component, OnInit, Input, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './chat.service';
 import { MentionModule } from 'angular2-mentions/mention';
-
 import * as _ from 'underscore';
+import { Socket } from 'ng-socket-io';
+import { reject } from 'q';
+
 
 // tslint:disable
 @Component({
@@ -12,124 +14,153 @@ import * as _ from 'underscore';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit, AfterViewChecked {
+export class ChatComponent implements OnInit {
 
-  public messages: Array<any> = [];
+  public messages;
   public teamMember: ChatTeamMember;
-  public datesArray: Array<any> = [];
+  public datesArrayToDisplay: Array<any> = [];
+  public dialogId: string;
+  public loadMessages = true;
+  public teamMemberParams;
+  public teamMemberQueryParams;
+  public messageStorage; 
+  public noMessages = false;
+  public teammates = [];
+  public loader: boolean;
+  public beginning = false;
+
+
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
+
   constructor(
     private _ar: ActivatedRoute,
     private _chatService: ChatService
   ) { }
 
+
   ngOnInit() {
-    Observable
-      .combineLatest(this._ar.params, this._ar.queryParams)
-      .subscribe(([params, queryParams])=> {
-      this._chatService.getUserMessages(params.id).then(messages => {
-        this.messages = this.createMessagesArraySorted(messages);
-        this.teamMember = this.createTeamMember(params, queryParams);
-      });
-    })
-  }
-
-  ngAfterViewChecked() {
-    // this.scrollToBottom();
-  }
-
-  createDatesArray (messages: Array<any>): Array<string> {
-    let datesArray = [];
-    messages.forEach(message => {
-      let date: Date = message.get('createdAt').toLocaleDateString();
-      if (!datesArray.includes(date)) {
-        datesArray.push(date);
-        let newDate = this.createDate(message.get('createdAt'));
-        this.datesArray.push(newDate);
-      }
-    })
-    datesArray =  _.sortBy(datesArray, function (date) { return date }).reverse();
-    return datesArray;
-  }
-
-  createTeamMember (params, queryParams): ChatTeamMember {
-    let teamMember;
-    let undefinedAvatar = queryParams[0].charAt(0) + queryParams[1].charAt(0);
-    console.log(queryParams[0].charAt(0), queryParams[1].charAt(0));
-    let randomColor = '#' + Math.random().toFixed(20).substring(5,10);
-    return teamMember = {
-      firstName: queryParams[0],
-      lastName: queryParams[1],
-      avatar: queryParams[2],
-      sessionStatus: queryParams[3],
-      id: params.id,
-      undefinedAvatar: undefinedAvatar,
-      background: randomColor
-    };
-  }
-
-  createDate (date: Date): string {
-    let newDate: string;
-    let day = date.toLocaleString('en-us', {day: "numeric"});
-    let weekDay = date.toLocaleString('en-us', {weekday: "long"});
-    let month = date.toLocaleString('en-us', {month: "long"});
-    return newDate = weekDay + ', ' + month + ' ' + day;
-  }
-
-  createMessagesArraySorted (messages: Array<any>) {
-    let messagesSorted = [];
-    let datesArray = this.createDatesArray(messages);
-    let i = 0;
-    datesArray.forEach(date => {
-      let dateArray = [];
-      let messagesArray = [];
-      dateArray.push({date: this.datesArray[i]});
-      i++;
-      for (let i = 0; i < messages.length; i++) {
-        let messageDate = messages[i].get('createdAt').toLocaleDateString();
-        if (messageDate === date) {
-            messages[i].author = messages[i].get('author').get('firstName') + ' ' + messages[i].get('author').get('lastName');
-            messagesArray.push(messages[i]);
-        };
-        // if (messages[i].get('au').toLocaleDateString())
-      }
-      messagesArray = messagesArray.reverse();
-      dateArray.push({messages: messagesArray});
-      messagesSorted.push(dateArray);
-    });
-    this.scrollToBottom();
-    this.checkMessagesQueue(messagesSorted);    
-    return messagesSorted = messagesSorted.reverse();
-  }
-
-  checkMessagesQueue (messages) {
-    let newMessages = [];
-    newMessages = messages;
-    newMessages.forEach(message => {
-      const oneMessage = message[1].messages;
-      for (let prev = -1, i = 0; i < oneMessage.length; ++prev, i++) {
-        if (prev >= 0) {
-          let previousMessageAuthor = oneMessage[prev].get('author').id;
-          let currentMessageAuthor = oneMessage[i].get('author').id;
-          if (previousMessageAuthor === currentMessageAuthor) {
-              oneMessage[i].author = undefined;
+    this._ar.params.subscribe(params => {
+      this.dialogId = params.id;
+      this.createQueryData(params.id).then(queryData => {
+        let data = queryData;
+        this._chatService.getUserMessages(data).then(messages => {
+          console.log(messages.length);
+          if (messages.length === 0) {
+            this.beginning = true;
           }
+          if (messages.length > 0) {
+            this.noMessages = true;
+            this.loader = true;
+            this.beginning = false;
+          };
+          this.messageStorage = messages;
+          this._chatService.createMessagesArraySorted(messages, this.messagesBlock).then(messages => {
+            this.messages = messages;
+            this.loader = false;
+          })
+          this.scrollToBottom();
+        });
+      });   
+    })
+    this._ar.queryParams.subscribe(queryParams => {
+      this.teamMemberQueryParams = queryParams;
+      this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
+    })
+    this._chatService.getTeamMembers().then(team => this.teammates = team);
+  }
+ 
+
+  createQueryData (dialogId) {
+    return new Promise(resolve => {
+      localStorage.setItem(dialogId, '0')
+        let data = {
+          dialogId: dialogId,
+          pageNumber: 0
         }
-      }
-      return newMessages;
-    });
+        resolve(data);
+    })
   }
 
-  onScrollUp () {
-    console.log('scrolled');
+  createQueryDataForScroll (dialogId) {
+    return new Promise(resolve => {
+        let data = {
+          dialogId: dialogId,
+          pageNumber: parseFloat(localStorage.getItem(dialogId))
+        }
+        resolve(data);
+    })
+  }
+
+  updatePageNumber (number) {
+    localStorage.setItem(this.dialogId, number.toString())
+  }
+
+  onScrollUp (event) {
+    const oldHeight = this.messagesBlock.nativeElement.scrollHeight;
+    console.log(this.messagesBlock.nativeElement.scrollTop);
+
+    if (this.loadMessages === true) {
+      if (event.target.scrollTop === 0) {
+        this.loadMessages = false;
+        let data;
+        this.createQueryDataForScroll(this.dialogId).then(queryData => {
+          data = queryData;
+          let number = data.pageNumber + 1;
+          data.pageNumber = number;
+          this.updatePageNumber(number);
+          this._chatService.getUserMessages(data).then(messages => {
+            if (messages.length === 0) {
+              this.loadMessages = false;
+              this.loader = false;
+              this.beginning = true;
+              return;
+            } else {
+              // this.loader = true;
+              this.beginning = false;
+              this.messageStorage = this.messageStorage.concat(messages);
+              this._chatService.createMessagesArraySorted(this.messageStorage, this.messagesBlock).then(messages => {
+                this.messages = messages;
+                setTimeout(() => {
+                  this.scrollAfterLoading(oldHeight);
+                },0)
+              })
+            }
+          });
+        });
+      }
+    } else {
+      return;
+    }
+  }
+
+  scrollAfterLoading (oldHeight) {
+    console.log(oldHeight, ' old height');
+    this.loadMessages = true;   
+    this.loader = false;
+    try {
+      setTimeout(() => {
+        let newHeight = this.messagesBlock.nativeElement.scrollHeight;
+        let difference = newHeight - oldHeight;
+        let newScroll = newHeight + difference;
+        newScroll = newHeight + oldHeight + difference;
+        newScroll = newScroll/difference;
+        console.log(newScroll, 'coeefic')
+        this.messagesBlock.nativeElement.scrollTop = (newHeight + oldHeight)/newScroll;
+        console.log('difference= ', newHeight - oldHeight);
+        console.log(newHeight, 'newA');
+      },0)
+    }  catch (error) {
+      console.log('error');
+    }
   }
 
   scrollToBottom(): void {
     try {
       setTimeout(() => {
         this.messagesBlock.nativeElement.scrollTop = this.messagesBlock.nativeElement.scrollHeight;
+        this.loadMessages = true;
       }, 0);
     } catch (error) {}
   }
-
+  
 }
