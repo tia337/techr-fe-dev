@@ -81,8 +81,8 @@
       </div>
       <div *ngIf="inactiveTeamMembers.length > 0" class="team-members">
         <hr color="#94a3b5" style="margin: 5px 0;">
-        <p (click)="showInactiveMembers = false" class="show-inactivemembers-btn" [hidden]="!showInactiveMembers">Show inactive members</p>
-        <p (click)="showInactiveMembers = true" class="show-inactivemembers-btn" [hidden]="showInactiveMembers">Hide inactive members</p>
+        <p (click)="showInactiveMembers = false" class="show-inactivemembers-btn" [hidden]="!showInactiveMembers">Show deactivated members </p>
+        <p (click)="showInactiveMembers = true" class="show-inactivemembers-btn" [hidden]="showInactiveMembers">Hide deactivated members</p>
         <div [hidden]="showInactiveMembers" *ngIf="inactiveTeamMembers">
           <div *ngFor="let teamMember of inactiveTeamMembers">
             <p class="team-member" [routerLink]="['/chat', teamMember.id]"> 

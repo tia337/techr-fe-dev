@@ -115,7 +115,7 @@ constructor(private _parse: Parse) {}
         } catch (error) {}
       }
 
-      getTeamMembers() {
+      getTeamMembers() { // just copied this piece from another component
         let team = [];
         let i = 0;
         const client = this._parse.getCurrentUser().get('Client_Pointer');
