@@ -5,15 +5,13 @@ import { ChatService } from './chat.service';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule, MatProgressSpinnerModule } from '@angular/material';
 import { MentionModule } from 'angular2-mentions/mention';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @NgModule({
   imports: [
     CommonModule,
     MatTooltipModule,
     MentionModule,
-    MatProgressSpinnerModule,
-    InfiniteScrollModule
+    MatProgressSpinnerModule
   ],
     declarations: [ChatComponent],
     providers: [ChatService],
