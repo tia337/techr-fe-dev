@@ -44,6 +44,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	private _userMenuOpened = false;
 	private _closeUserAnim = false;
 	public _notificationsOpened: boolean = false;
+	public notificationsCount: number = 5;
 
 	constructor(
 		private router: Router,

@@ -10,9 +10,9 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	public notificationType: string;
 	public notificationTitle: string;
-	public notificationText: string;
-	public notificationCandidate: string;
-	public notificationJob: string;
+	public notificationCandidateName: string;
+	public notificationCandidateId: string;
+	public notificationContractId: string;
 	private _onDestroy: Function;
 
 
@@ -36,12 +36,16 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		this._changesDetector.detectChanges();
 	}
 
-	set candidate(value: string) {
-		this.notificationCandidate = value;
+	set candidateName(value: string) {
+		this.candidateName = value;
 	}
 
-	set job(value: string) {
-		this.notificationJob = value;
+	set candidateId(value: string) {
+		this.candidateId = value;
+	}
+
+	set contractId (value: string) {
+		this.contractId = value;
 	}
 
 	set onDestroy(func: Function) {
@@ -56,12 +60,16 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		return this.notificationTitle;
 	}
 
-	get candidate () {
-		return this.notificationCandidate;
+	get candidateName () {
+		return this.candidateName;
 	}
 
-	get job () {
-		return this.notificationJob;
+	get candidateId () {
+		return this.candidateId;
+	}
+
+	get contractId () {
+		return this.contractId;
 	}
 
 	close() {

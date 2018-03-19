@@ -12,6 +12,7 @@
       @include displayFlex;
       @include flex-direction(row);
       @include flex-wrap(wrap);
+      margin-left: -20px;
       .filters-form {
         @include flex(1, 0, auto);
         margin: 0 20px;

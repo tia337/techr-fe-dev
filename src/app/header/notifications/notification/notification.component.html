@@ -1,20 +1,23 @@
 <div class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
     <div class="single-notification-image-wrap">
-      <img *ngIf="notificationType == 'note'" class="single-notification-image" src="../../../assets/icons/notification-note.png" alt="">
+      <img *ngIf="notificationType == 'NoteMention'" class="single-notification-image" src="../../../assets/icons/notification-note.png" alt="">
       <img *ngIf="notificationType == 'message'" class="single-notification-image" src="../../../assets/icons/notification-message.png" alt="">
-      <img *ngIf="notificationType == 'scoring'" class="single-notification-image" src="../../../assets/icons/notification-scoring.png" alt="">
-      <img *ngIf="notificationType == 'referral'" class="single-notification-image" src="../../../assets/icons/notification-referral.png" alt="">
-      <img *ngIf="notificationType == 'applicant'" class="single-notification-image" src="../../../assets/icons/notification-applicant.png" alt=""> 
+      <img *ngIf="notificationType == 'ScoreMention'" class="single-notification-image" src="../../../assets/icons/notification-scoring.png" alt="">
+      <img *ngIf="notificationType == 'EmployeeReferral'" class="single-notification-image" src="../../../assets/icons/notification-referral.png" alt="">
+      <img *ngIf="notificationType == 'ContractApply'" class="single-notification-image" src="../../../assets/icons/notification-applicant.png" alt=""> 
   </div>
   <div class="single-notification-data">
-    <p  *ngIf="notificationType == 'note'" class="single-notification-data-title">Tagged on note</p>
-    <p class="single-notification-data-title">{{notificationTitle}}</p>
-    <p class="single-notification-data-title">{{notificationTitle}}</p>
-    <p class="single-notification-data-title">{{notificationTitle}}</p>
-    <p class="single-notification-data-title">{{notificationTitle}}</p>
+    <p *ngIf="notificationType == 'EmployeeReferral'" class="single-notification-data-title">New employee referral</p>
+    <p *ngIf="notificationType == 'ContractApply'" class="single-notification-data-title">New applicant</p>
+    <p *ngIf="notificationType == 'ScoreMention'" class="single-notification-data-title">Tagged on scoring</p>
+    <p *ngIf="notificationType == 'NoteMention'" class="single-notification-data-title">Tagged on note</p>
+    <p *ngIf="notificationType == 'note'" class="single-notification-data-title">{{notificationCandidateName}} wrote:</p>
     
-    <p class="single-notification-data-text">{{notificationText}}</p>
-    <p *ngIf="notificationCandidate !== ''" class="single-notification-data-candidate">{{notificationCandidate}}</p>
-    <p class="single-notification-data-job">{{notificationJob}}</p>
+    <p *ngIf="notificationType == 'EmployeeReferral'" class="single-notification-data-text">Congratulations! You have a new employee referral <br><br></p>
+    <p *ngIf="notificationType == 'ContractApply'" class="single-notification-data-text">Congratulations! You have a new applicant for:<br><br></p>
+    <p *ngIf="notificationType == 'ScoreMention'" class="single-notification-data-text">You were tagged on a candidate score:<br><br></p>
+    <p *ngIf="notificationType == 'NoteMention'" class="single-notification-data-text">You were tagged on a candidate note:<br><br></p>    
+    <p *ngIf="notificationCandidateName !== ''" class="single-notification-data-candidate">Candidate: {{notificationCandidateName}}</p>
+    <p class="single-notification-data-text">{{notificationTitle}}</p>
   </div>
 </div>

@@ -20,6 +20,8 @@ export class NotificationsComponent implements OnInit {
 
   @Output() notificationsStatus: EventEmitter<boolean> = new EventEmitter();
 
+  public counter = 0;
+
   constructor(
     private _elemenRef: ElementRef,
     private _renderer: Renderer,
@@ -38,7 +40,9 @@ export class NotificationsComponent implements OnInit {
   ngOnInit() {
     this._socket.connect();
     this.getNoteMentionsNotificationsUpdated().subscribe(data => {
-      this.createOn(data);
+      console.log(data);
+      // this.createOn(data);
+      this.counter++;
     });
     this.getContractApplyNotifications().subscribe(data => {
       this.createOn(data);
@@ -63,10 +67,11 @@ export class NotificationsComponent implements OnInit {
   createOn (data) {
     this._root_vcr.clear();
     const notification = this._root_vcr.createComponent(NotificationComponent);
-    notification.notificationType = data.type;
-    notification.notificationTitle = data.applicant;
-    notification.notificationText = data.text;
-    notification.notificationJob = data.job;
+    notification.notificationType = data.notificationType;
+    notification.notificationTitle = data.contractTitle;
+    notification.candidateName = data.candidateName;
+    notification.candidateId = data.candidateId;
+    notification.contractId = data.contractId;
   }
 
   getNoteMentionsNotificationsUpdated () {
