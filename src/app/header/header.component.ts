@@ -163,6 +163,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this.currentUser = null;
 		this._socket.emit('disconnect', {});
 		this._socket.disconnect();
+		localStorage.clear();
 	}
 
 	openAdminMenu() {

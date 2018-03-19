@@ -53,6 +53,7 @@ import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
 // import { UserSettingsComponent } from './user-settings/user-settings.component';
 // import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { environment } from './../environments/environment';
+import { ChatModule } from './chat/chat.module';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -76,7 +77,7 @@ const config: SocketIoConfig = {
 		BrowserAnimationsModule,
 		MatSidenavModule,
 		MatMenuModule,
-
+		ChatModule,
 		// HeaderModule,
 		JobsPageModule,
 		DashboardModule,
@@ -93,7 +94,6 @@ const config: SocketIoConfig = {
 		EmReferralModule,
 		// Testing component
 		TestModule,
-
 		AlertModule,
 		CheckoutPageModule,
 		MatIconModule,
@@ -105,8 +105,7 @@ const config: SocketIoConfig = {
 		LogoutModule,
 		TextInputHighlightModule,
 		InvitationPageModule,
-
-		ContactUsModule
+		ContactUsModule,
 	],
 	providers: [SidenavService, RootVCRService, StripeService, Gapi, LoginGuard, BillingGuard, ActiveSubscriptionGuard],
 	bootstrap: [AppComponent],
