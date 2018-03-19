@@ -201,14 +201,4 @@ export class CoreComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	// getTeamMembersStatuses (members: Array<any>) {
-	// 	const query = this._parse.Query('Session');
-	// 	members.forEach(member => {
-	// 		query.equalsTo('user', member.id).find().then(status => {
-	// 			console.log(status);
-	// 		});
-	// 	});
-	// }
-
-
 }

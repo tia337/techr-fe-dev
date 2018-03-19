@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../parse.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class HeaderService {
+	public unreadNotificationsCount: BehaviorSubject<string> = new BehaviorSubject('');
+	currentNotificationsCount = this.unreadNotificationsCount.asObservable();
 
 	constructor(private _parse: Parse) { }
 
@@ -19,7 +22,6 @@ export class HeaderService {
 				error => {
 					console.error(error);
 				});
-
 		}
 
 	}
@@ -57,7 +59,7 @@ export class HeaderService {
 	}
 
 	updateNotificationsCount (count) {
-		
+		this.unreadNotificationsCount.next(count);
 	}
 
 }

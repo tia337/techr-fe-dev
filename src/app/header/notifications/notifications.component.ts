@@ -4,6 +4,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { RootVCRService } from '../../root_vcr.service';
 import { SocketIoConfig, Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
+import { HeaderService } from '../header.service';
 
 
 // tslint:disable:indent
@@ -20,13 +21,12 @@ export class NotificationsComponent implements OnInit {
 
   @Output() notificationsStatus: EventEmitter<boolean> = new EventEmitter();
 
-  public counter = 0;
-
   constructor(
     private _elemenRef: ElementRef,
     private _renderer: Renderer,
     private _root_vcr: RootVCRService,
-    public _socket: Socket
+    public _socket: Socket,
+    public _headerService: HeaderService
   ) {
       this._renderer.listenGlobal('body', 'click', (event) => {
         if (this.notifications === true) {
@@ -41,20 +41,28 @@ export class NotificationsComponent implements OnInit {
     this._socket.connect();
     this.getNoteMentionsNotificationsUpdated().subscribe(data => {
       console.log(data);
-      // this.createOn(data);
-      this.counter++;
+      this.createOn(data);
+      this._headerService.updateNotificationsCount('1');
     });
     this.getContractApplyNotifications().subscribe(data => {
+      console.log(data);
       this.createOn(data);
+      this._headerService.updateNotificationsCount('1');
     });
     this.getScoringMentionNotifications().subscribe(data => {
+      console.log(data);
       this.createOn(data);
+      this._headerService.updateNotificationsCount('1');
     });
     this.getEmployeeReferralsNotifications().subscribe(data => {
+      console.log(data);
       this.createOn(data);
+      this._headerService.updateNotificationsCount('1');
     });
     this.getTeamMemberMessageNotifications().subscribe(data => {
+      console.log(data);
       this.createOn(data);
+      this._headerService.updateNotificationsCount('1');
     });
   }
 
