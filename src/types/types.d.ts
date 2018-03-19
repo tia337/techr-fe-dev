@@ -7,3 +7,7 @@ type ChatTeamMember = {
     undefinedAvatar: string,
     background: string
 }
+
+type UpdatedUser = {
+    userId: string
+}
