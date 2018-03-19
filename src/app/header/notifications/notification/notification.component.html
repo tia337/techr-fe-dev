@@ -1,4 +1,5 @@
-<div class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
+<!-- <div class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)"> -->
+<div class="single-notification-wrap move" id="single-notification-wrap">
     <div class="single-notification-image-wrap">
       <img *ngIf="notificationType == 'NoteMention'" class="single-notification-image" src="../../../assets/icons/notification-note.png" alt="">
       <img *ngIf="notificationType == 'message'" class="single-notification-image" src="../../../assets/icons/notification-message.png" alt="">
@@ -17,7 +18,7 @@
     <p *ngIf="notificationType == 'ContractApply'" class="single-notification-data-text">Congratulations! You have a new applicant for:<br><br></p>
     <p *ngIf="notificationType == 'ScoreMention'" class="single-notification-data-text">You were tagged on a candidate score:<br><br></p>
     <p *ngIf="notificationType == 'NoteMention'" class="single-notification-data-text">You were tagged on a candidate note:<br><br></p>    
-    <p *ngIf="notificationCandidateName !== ''" class="single-notification-data-candidate">Candidate: {{notificationCandidateName}}</p>
+    <p *ngIf="notificationCandidateName" class="single-notification-data-candidate">Candidate: {{notificationCandidateName}}</p>
     <p class="single-notification-data-text">{{notificationTitle}}</p>
   </div>
 </div>

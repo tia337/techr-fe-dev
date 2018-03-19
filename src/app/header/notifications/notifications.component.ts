@@ -67,6 +67,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   closeNotifications(notifications: boolean, event): void {
+      this.create();
       notifications = !notifications;
       this.notificationsStatus.emit(notifications);
       event.stopPropagation();
@@ -76,10 +77,24 @@ export class NotificationsComponent implements OnInit {
     this._root_vcr.clear();
     const notification = this._root_vcr.createComponent(NotificationComponent);
     notification.notificationType = data.notificationType;
-    notification.notificationTitle = data.contractTitle;
-    notification.candidateName = data.candidateName;
+    if (data.candidateName) {
+      notification.candidateName = data.candidateName;
+    };
+    if (data.contractTitle) {
+      notification.notificationTitle = data.contractTitle;
+    };
     notification.candidateId = data.candidateId;
     notification.contractId = data.contractId;
+  }
+
+  create() {
+    this._root_vcr.clear();
+    const notification = this._root_vcr.createComponent(NotificationComponent);
+    notification.notificationType = 'NoteMention';
+    notification.candidateName = 'Lil Jordan Michael Wayne';
+    notification.notificationTitle = 'Angular 2+ developer/Middle';
+    notification.candidateId = '2';
+    notification.contractId = '2';
   }
 
   getNoteMentionsNotificationsUpdated () {

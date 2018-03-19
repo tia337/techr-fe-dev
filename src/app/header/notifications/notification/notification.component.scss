@@ -3,11 +3,11 @@
     position: fixed;
     box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.8);
     display: flex;
-    width: 365px;
+    width: 430px;
     bottom: 35px;
     transition: .4s all ease-in-out;
     z-index: 99;
-    right: -370px;
+    right: -435px;
     &.move {
       animation: single-notification-move 4s ease-in-out;
     }
@@ -25,18 +25,18 @@
     }
   }
   &-image {
-      width: 75px;
+      width: 75%;
     &-wrap {
       background: #4673c5;
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 35%;
+      width: 30%;
     }
   }
   &-data {
     background: #fff;
-    width: 65%;
+    width: 70%;
     padding: 10px 15px;
     box-shadow: inset 2px 0px 5px 0px rgba(0, 0, 0, 0.8);
     &-title {
@@ -57,7 +57,7 @@
 
 @keyframes single-notification-move {
   0% {
-    right: -370px;
+    right: -435px;
   }
   10% {
     right: 35px;
@@ -69,7 +69,7 @@
     right: 35px;
   }
   100% {
-    right: -370px;
+    right: -435px;
   }
 }
 
@@ -81,6 +81,6 @@
     right: 35px;
   }
   100% {
-    right: -370px;
+    right: -435px;
   }
 }

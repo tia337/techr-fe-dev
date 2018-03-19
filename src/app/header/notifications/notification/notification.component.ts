@@ -37,15 +37,15 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	set candidateName(value: string) {
-		this.candidateName = value;
+		this.notificationCandidateName = value;
 	}
 
 	set candidateId(value: string) {
-		this.candidateId = value;
+		this.notificationCandidateId = value;
 	}
 
 	set contractId (value: string) {
-		this.contractId = value;
+		this.notificationContractId = value;
 	}
 
 	set onDestroy(func: Function) {
@@ -61,15 +61,15 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	get candidateName () {
-		return this.candidateName;
+		return this.notificationCandidateName;
 	}
 
 	get candidateId () {
-		return this.candidateId;
+		return this.notificationCandidateId;
 	}
 
 	get contractId () {
-		return this.contractId;
+		return this.notificationContractId;
 	}
 
 	close() {
