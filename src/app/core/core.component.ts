@@ -64,7 +64,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
 		this.getTeamMemberOnline().subscribe(data => {
-			console.log(data);
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
 					member.sessionStatus = true;
@@ -72,7 +71,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		this.getTeamMemberOffline().subscribe(data => {
-			console.log(data);
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
 					member.sessionStatus = false;
@@ -80,9 +78,10 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		this.getUnreadMessagesCountUpdated().subscribe(data => {
+			console.log(data);
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
-					member.unreadMessages = member.unreadMessages + 1;
+					member.unreadMessages = parseFloat(member.unreadMessages) + 1;
 				}
 			});
 		});
@@ -108,7 +107,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 				});
 			} else {
 				this.currentUser = null;
-				this.teamMembers = null;
+				// this.teamMembers = null;
 				this.invitedMembers = null;
 			}
 		});
@@ -249,7 +248,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	getUnreadMessagesCountUpdated() {
 		const observable = new Observable(observer => {
-			this._socket.on('PlusOneUnreadMessage', data => {
+			this._socket.on('IncrementUnreadMessagesCounter', data => {
 				observer.next(data);
 			});
 		});

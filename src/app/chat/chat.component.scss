@@ -134,6 +134,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
     input {
         background: transparent;
         border: none;
@@ -146,6 +147,11 @@
             color: #c1c1c2;
             font-size: 14px;
         }
+    }
+    mention-list {
+        position: absolute;
+        left: 40px!important;
+        top: -175px!important;
     }
 }
 
