@@ -12,8 +12,6 @@ import { CartAdding } from '../header/cartadding.service';
 import { CoreService } from './core.service';
 import { ActivatedRoute } from '@angular/router';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
-import { Observable } from 'rxjs/Observable';
-
 
 @Component({
 	selector: 'app-core',
@@ -63,29 +61,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
-		this.getTeamMemberOnline().subscribe(data => {
-			console.log(data);
-			this.teamMembers.forEach(member => {
-				if (member.id === data) {
-					member.sessionStatus = true;
-				}
-			});
-		});
-		this.getTeamMemberOffline().subscribe(data => {
-			console.log(data);
-			this.teamMembers.forEach(member => {
-				if (member.id === data) {
-					member.sessionStatus = false;
-				}
-			});
-		});
-		this.getUnreadMessagesCountUpdated().subscribe(data => {
-			this.teamMembers.forEach(member => {
-				if (member.id === data) {
-					member.unreadMessages = member.unreadMessages + 1;
-				}
-			});
-		});
+		// if (this._parse.getCurrentUser()) {
+		//   this._coreService.getClientLogo().then(logo => {
+		//     this.clientLogo = logo;
+		//     console.log(logo._url);
+		//   });
+		// }
 
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
@@ -112,17 +93,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 				this.invitedMembers = null;
 			}
 		});
-		// if (this._login.profile) {
-		//   this._coreService.getTeamMembers().then(members => {
-		//     this.teamMembers = members;
-		//   });
-		//
-		//
-		//   this._coreService.getInvitations().then(invitations => {
-		//     this.invitedMembers = invitations;
-		//   });
-		// }
-
 		console.log(this._parse.Session());
 		console.log('First time', this._socket);
 
@@ -218,41 +188,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 				member.dialogId = data.dialogId;
 			});
 		});
-		this.getSessionStatus(members);
 	}
 
-	getSessionStatus (members: Array<any>) {
-		members.forEach(member => {
-			this._parse.execCloud('getSessionStatus', {memberId: member.id}).then(status => {
-				member.sessionStatus = status;
-			});
-		});
-	}
-
-	getTeamMemberOnline() {
-		const observable = new Observable(observer => {
-			this._socket.on('teamMemberOnline', data => {
-				observer.next(data);
-			});
-		});
-		return observable;
-	}
-
-	getTeamMemberOffline() {
-		const observable = new Observable(observer => {
-			this._socket.on('teamMemberOffline', data => {
-				observer.next(data);
-			});
-		});
-		return observable;
-	}
-
-	getUnreadMessagesCountUpdated() {
-		const observable = new Observable(observer => {
-			this._socket.on('PlusOneUnreadMessage', data => {
-				observer.next(data);
-			});
-		});
-		return observable;
-	}
 }
