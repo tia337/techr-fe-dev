@@ -13,7 +13,7 @@ import { CoreService } from './core.service';
 import { ActivatedRoute } from '@angular/router';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
 import { Observable } from 'rxjs/Observable';
-
+import { ChatService } from '../chat/chat.service';
 
 @Component({
 	selector: 'app-core',
@@ -48,11 +48,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 		private _gapi: Gapi,
 		private _cartAdding: CartAdding,
 		private _router: Router,
-		private _route: ActivatedRoute
+		private _route: ActivatedRoute,
+		public _chatService: ChatService
 	) {
 		this._coreService.currentDeactivatedUser.subscribe(userId => {
 			this.teamMembers.forEach(member => {
-				let memberId = this.teamMembers.indexOf(member);
+				const memberId = this.teamMembers.indexOf(member);
 				if (member.id === userId) {
 					this.teamMembers.splice(memberId, 1);
 					this.inactiveTeamMembers.push(member);
@@ -85,11 +86,20 @@ export class CoreComponent implements OnInit, OnDestroy {
 				}
 			});
 		});
+		this._coreService.readCurrentMessages.subscribe(data => {
+			console.log(data);
+			this.teamMembers.forEach(member => {
+				if (member.dialogId === data) {
+					member.unreadMessages = 0;
+				}
+			});
+		});
 
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				this.currentUser = profile;
 				this._coreService.getTeamMembers().then(members => {
+					console.log(members);
 					this.teamMembers = members;
 					this.teamMembers = this.teamMembers.filter(member => {
 						return member.id !== this._parse.getCurrentUser().id;
@@ -218,7 +228,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		this.getSessionStatus(members);
-	}
+	};
 
 	getSessionStatus (members: Array<any>) {
 		members.forEach(member => {
@@ -226,7 +236,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 				member.sessionStatus = status;
 			});
 		});
-	}
+	};
 
 	getTeamMemberOnline() {
 		const observable = new Observable(observer => {
@@ -235,7 +245,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
-	}
+	};
 
 	getTeamMemberOffline() {
 		const observable = new Observable(observer => {
@@ -244,7 +254,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
-	}
+	};
 
 	getUnreadMessagesCountUpdated() {
 		const observable = new Observable(observer => {
@@ -253,5 +263,5 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
-	}
+	};
 }

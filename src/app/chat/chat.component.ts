@@ -6,6 +6,8 @@ import { MentionModule } from 'angular2-mentions/mention';
 import * as _ from 'underscore';
 import { Socket } from 'ng-socket-io';
 import { reject } from 'q';
+import { CoreService } from '../core/core.service';
+import { Parse } from '../parse.service';
 
 
 // tslint:disable
@@ -34,11 +36,18 @@ export class ChatComponent implements OnInit {
 
   constructor(
     private _ar: ActivatedRoute,
-    private _chatService: ChatService
+    private _chatService: ChatService,
+    private _coreService: CoreService,
+    private _socket: Socket,
+		private _parse: Parse    
   ) { }
 
 
   ngOnInit() {
+    this._socket.connect();
+    this.recieveCollegueMessage().subscribe(data => {
+      console.log(data);
+    })
     this._ar.params.subscribe(params => {
       this.dialogId = params.id;
       this.createQueryData(params.id).then(queryData => {
@@ -57,6 +66,7 @@ export class ChatComponent implements OnInit {
           this._chatService.createMessagesArraySorted(messages, this.messagesBlock).then(messages => {
             this.messages = messages;
             this.loader = false;
+            this._coreService.clearMessagesCount(params.id);
           })
           this.scrollToBottom();
         });
@@ -65,7 +75,7 @@ export class ChatComponent implements OnInit {
     this._ar.queryParams.subscribe(queryParams => {
       this.teamMemberQueryParams = queryParams;
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
-    })
+    });
     this._chatService.getTeamMembers().then(team => this.teammates = team);
   }
  
@@ -152,6 +162,27 @@ export class ChatComponent implements OnInit {
     }  catch (error) {
       console.log('error');
     }
+  }
+
+  sendColleagueMessage (event) {
+    this._socket.emit('outgoing-to-colleague', {
+      'message': event.target.value,
+      'dialogId': this.dialogId,
+      'sender': this._parse.getCurrentUser().id,
+      'type': 'AppChat'
+    });
+    setTimeout(() => {
+      event.target.value = null;
+    },0);
+  }
+
+  recieveCollegueMessage () {
+    const observable = new Observable(observer => {
+			this._socket.on('updated-from-colleague', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
   }
 
   scrollToBottom(): void {

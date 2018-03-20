@@ -6,7 +6,9 @@ import { BehaviorSubject } from 'rxjs';
 export class CoreService {
 
 	public deactivatedUser: BehaviorSubject<string> = new BehaviorSubject('');
+	public readMessages: BehaviorSubject<string> = new BehaviorSubject('');
 	currentDeactivatedUser = this.deactivatedUser.asObservable();
+	readCurrentMessages = this.readMessages.asObservable();
 
 	constructor(private _parse: Parse) { }
 
@@ -61,7 +63,7 @@ export class CoreService {
 	}
 
 	getInvitations(): any {
-		return this._parse.getCurrentUser().fetch().then(user=>{
+		return this._parse.getCurrentUser().fetch().then(user => {
 			return user.get('Client_Pointer').fetch();
 		}).then(clientp=>{
 			const clientId = clientp.id;
@@ -79,5 +81,10 @@ export class CoreService {
 
 	throwDeactivatedUser(user: string) {
 		this.deactivatedUser.next(user);
+	}
+
+	clearMessagesCount (id) {
+		this.readMessages.next(id);
+		console.log(id);
 	}
 }

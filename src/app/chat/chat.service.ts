@@ -3,7 +3,7 @@ import { ElementRef } from '@angular/core';
 import { ParseObject } from 'parse';
 import { Parse } from '../parse.service';
 import * as _ from 'underscore';
-
+import { BehaviorSubject } from 'rxjs';
 import { environment } from './../../environments/environment';
 
 @Injectable()
@@ -11,8 +11,15 @@ export class ChatService {
 //tslint:disable
 
 public datesArrayToDisplay: Array<any> = [];
+node;    
+previousScrollHeightMinusTop: number;    
+readyFor: string;    
+toReset: boolean = false;  
 
-constructor(private _parse: Parse) {}
+
+constructor(
+  private _parse: Parse
+) {}
 
     getUserMessages(data) {
         const params = { 
@@ -115,25 +122,47 @@ constructor(private _parse: Parse) {}
         } catch (error) {}
       }
 
-      getTeamMembers() { // just copied this piece from another component
-        let team = [];
-        let i = 0;
-        const client = this._parse.getCurrentUser().get('Client_Pointer');
-        let clientId;
-        if (client) {
-          clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
-        }
-        const query = this._parse.Query('Clients');
-        query.include('TeamMembers');
-        return query.get(clientId).then(clientC => {
-          clientC.get('TeamMembers').forEach(teamMember => {
-            team[i] = {
-              name: `${teamMember.get('firstName')}_${teamMember.get('lastName')}`,
-              teamMemberPoint: teamMember.toPointer()
-            };
-            i++;
-          });
-          return (team);
-        });
+    getTeamMembers() { // just copied this piece from another component
+      let team = [];
+      let i = 0;
+      const client = this._parse.getCurrentUser().get('Client_Pointer');
+      let clientId;
+      if (client) {
+        clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
       }
+      const query = this._parse.Query('Clients');
+      query.include('TeamMembers');
+      return query.get(clientId).then(clientC => {
+        clientC.get('TeamMembers').forEach(teamMember => {
+          team[i] = {
+            name: `${teamMember.get('firstName')}_${teamMember.get('lastName')}`,
+            teamMemberPoint: teamMember.toPointer()
+          };
+          i++;
+        });
+        return (team);
+      });
+    }
+
+    init(node) {    
+      this.node = node;    
+      this.previousScrollHeightMinusTop = 0;    
+      this.readyFor = 'up';  
+    }   
+    restore() {    
+      if(this.toReset) {    
+          console.log("restore");   
+           if (this.readyFor === 'up') {  
+                this.node.scrollTop = this.node.scrollHeight - this.previousScrollHeightMinusTop;      
+           }        
+           this.toReset = false;    
+      }  
+    }  
+    prepareFor(direction) {    
+      this.toReset = true;    
+      this.readyFor = direction || 'up'; 
+      this.previousScrollHeightMinusTop = this.node.scrollHeight - this.node.scrollTop;  
+    }
+
+    
 }
