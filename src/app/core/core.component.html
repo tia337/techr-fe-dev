@@ -28,13 +28,21 @@
       <nav class="side-nav">
         <ul>
           <span (click)="postJob()">
-            <li class=" func-buttons ">
+            <li class=" func-buttons" style="margin-bottom: 50px;">
               <p>
                 Post Job
               </p>
               <!-- <mat-icon class="fa fa-file-text-o "></mat-icon> -->
             </li>
           </span>
+          <span [routerLink]="['/jobs']">
+              <li class=" func-buttons ">
+                <p>
+                  Jobs
+                </p>
+                <!-- <mat-icon class="fa fa-file-text-o "></mat-icon> -->
+              </li>
+            </span>
           <span [routerLink]="['/', 'scorecards']">
             <li class="func-buttons ">
               <p>Scorecards</p>
