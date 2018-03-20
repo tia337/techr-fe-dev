@@ -33,6 +33,7 @@ import { StarRatingModule } from './shared/star-rating/star-rating.module';
 import { TestModule } from './test/test.module';
 
 import { AlertModule } from './shared/alert/alert.module';
+import { NotificationModule } from './header/notifications/notification/notification.module';
 
 import { StripeService } from './shared/services/stripe.service';
 
@@ -77,6 +78,7 @@ const config: SocketIoConfig = {
 		BrowserAnimationsModule,
 		MatSidenavModule,
 		MatMenuModule,
+		NotificationModule,
 		ChatModule,
 		// HeaderModule,
 		JobsPageModule,

@@ -160,12 +160,12 @@ header {
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 16px;
-          height: 16px;
-          font-size: 9px;
+          width: 19px;
+          height: 19px;
+          font-size: 11px;
           position: absolute;
-          bottom: 4px;
-          right: 15px;
+          top: 10px;
+          right: 10px;
         }
       }
       .notifications-icon {
@@ -763,6 +763,7 @@ header {
 app-notifications {
   position: absolute;
   right: -450px;
+  // right: 0;
   width: 450px;
   top: 55px;
   z-index: 2;

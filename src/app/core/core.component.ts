@@ -94,7 +94,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 				}
 			});
 		});
-
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				this.currentUser = profile;
@@ -121,17 +120,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 				this.invitedMembers = null;
 			}
 		});
-		// if (this._login.profile) {
-		//   this._coreService.getTeamMembers().then(members => {
-		//     this.teamMembers = members;
-		//   });
-		//
-		//
-		//   this._coreService.getInvitations().then(invitations => {
-		//     this.invitedMembers = invitations;
-		//   });
-		// }
-
 		console.log(this._parse.Session());
 		console.log('First time', this._socket);
 
@@ -265,3 +253,4 @@ export class CoreComponent implements OnInit, OnDestroy {
 		return observable;
 	};
 }
+
