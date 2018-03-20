@@ -261,6 +261,10 @@ header {
         font-size: 2.8em;
         margin-right: 8px;
         margin-left: 10px;
+        transition: .3s all ease-in-out;
+      }
+      .shopping-cart-icon.work-cart-icon {
+        margin-right: 10px;
       }
       .profile-span {
         display: flex;

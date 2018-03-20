@@ -28,13 +28,21 @@
       <nav class="side-nav">
         <ul>
           <span (click)="postJob()">
-            <li class=" func-buttons ">
+            <li class=" func-buttons" style="margin-bottom: 50px;">
               <p>
                 Post Job
               </p>
               <!-- <mat-icon class="fa fa-file-text-o "></mat-icon> -->
             </li>
           </span>
+          <span [routerLink]="['/jobs']">
+              <li class=" func-buttons ">
+                <p>
+                  Jobs
+                </p>
+                <!-- <mat-icon class="fa fa-file-text-o "></mat-icon> -->
+              </li>
+            </span>
           <span [routerLink]="['/', 'scorecards']">
             <li class="func-buttons ">
               <p>Scorecards</p>
@@ -70,22 +78,25 @@
 
       </div>
       <div class="team-members " *ngIf="teamMembers">
-        <div *ngFor="let teamMember of teamMembers" class="team-member">
+        <div *ngFor="let teamMember of teamMembers">
+          <p class="team-member" [routerLink]="['/chat', teamMember.dialogId]" [queryParams]="[teamMember.get('firstName'), teamMember.get('lastName'), teamMember.get('avatarURL'), teamMember.sessionStatus ]"> 
+            <span *ngIf="teamMember.sessionStatus === false" class="team-member-status offline"></span>
+            <span *ngIf="teamMember.sessionStatus === true" class="team-member-status online"></span>
             {{ teamMember.get('firstName') }} 
-            <!-- {{teamMember.status}} -->
             <span class="team-member-unread-messages" *ngIf="teamMember.unreadMessages > 0">{{teamMember.unreadMessages}}</span>
+          </p>
         </div>
       </div>
       <div *ngIf="inactiveTeamMembers.length > 0" class="team-members">
         <hr color="#94a3b5" style="margin: 5px 0;">
-        <p (click)="showInactiveMembers = false" class="show-inactivemembers-btn" [hidden]="!showInactiveMembers">Show inactive members</p>
-        <p (click)="showInactiveMembers = true" class="show-inactivemembers-btn" [hidden]="showInactiveMembers">Hide inactive members</p>
+        <p (click)="showInactiveMembers = false" class="show-inactivemembers-btn" [hidden]="!showInactiveMembers">Show deactivated members </p>
+        <p (click)="showInactiveMembers = true" class="show-inactivemembers-btn" [hidden]="showInactiveMembers">Hide deactivated members</p>
         <div [hidden]="showInactiveMembers" *ngIf="inactiveTeamMembers">
-          <div *ngFor="let teamMember of inactiveTeamMembers" class="team-member ">
-            <!-- <span class="team-member-status online"></span> -->
-            <!-- {{teamMember.status}} -->
-            {{ teamMember.get('firstName') }} 
-            <span class="team-member-unread-messages" *ngIf="teamMember.unreadMessages > 0">{{teamMember.unreadMessages}}</span>
+          <div *ngFor="let teamMember of inactiveTeamMembers">
+            <p class="team-member" [routerLink]="['/chat', teamMember.id]"> 
+              {{ teamMember.get('firstName') }} 
+              <span class="team-member-unread-messages" *ngIf="teamMember.unreadMessages > 0">{{teamMember.unreadMessages}}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -93,7 +104,6 @@
     </div>
 
   </mat-sidenav>
-
   <div class="main-content ">
 	<router-outlet></router-outlet>
   </div>

@@ -1,0 +1,66 @@
+<div *ngIf="teamMember !== undefined">
+  <div class="header">
+    <span *ngIf="teamMember.sessionStatus === 'false'"  class="team-member-status offline">not active</span>
+    <span *ngIf="teamMember.sessionStatus === 'true'" class="team-member-status online">active</span>
+    <div class="team-member-name">
+      {{teamMember.firstName}}
+      {{teamMember.lastName}}
+    </div>
+  </div>
+</div>
+<div *ngIf="teamMember !== undefined" class="messages-block" #messagesBlock (scroll)="onScrollUp($event)">
+  <div class="loader-wrap" *ngIf="loader === true">
+    <mat-progress-spinner class="candidates-loader"  color="primary" mode="indeterminate"></mat-progress-spinner>
+  </div>
+  <div class="info-block"  *ngIf="beginning === true">  
+      <div class="info-block-logo">
+        <img src="{{teamMember.avatar}}" alt="">
+        <span class="name">
+          {{teamMember.firstName}}
+          {{teamMember.lastName}}
+        </span>
+      </div>
+      <p class="info-block-text">
+        This is the very beginning of your direct message history with 
+        <span class="info-block-text-name">
+          {{teamMember.firstName}}
+          {{teamMember.lastName}}
+        </span>
+      </p>
+  </div>
+  <div *ngIf="noMessages === true && loader === false">
+    <div class="message-block" *ngFor="let message of messages">
+      <div class="message-block-date">
+        <div></div>
+        <span>{{message[0].date}}</span>
+        <div></div>
+      </div>
+      <div class="message-block-message" *ngFor='let daymessage of message[1].messages'>
+        <div class="message-block-message-avatar-wrap">
+          <img *ngIf="daymessage.author != undefined" class="message-block-message-avatar" src="{{daymessage.get('author').get('avatarURL')}}" alt="">
+          <div *ngIf="daymessage.get('author').get('avatarURL') == undefined && daymessage.author != undefined" class="message-block-message-avatar-undefined" [ngStyle]="{'background-color': teamMember.background | json}">
+            <span>{{teamMember.undefinedAvatar}}</span>
+          </div>
+          <span *ngIf="daymessage.author === undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEE, d hh:mm:s a'}}" matTooltipPosition="above" class="message-block-message-date-hidden">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
+        </div>
+        <div class="message-block-message-container">
+          <div class="message-block-message-name-date">
+            <span *ngIf="daymessage.author != undefined" class="message-block-message-name">{{daymessage.author}}</span>
+            <span *ngIf="daymessage.author != undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEEE, MMMM d, y, h:mm:ss a'}}" matTooltipPosition="above" class="message-block-message-date">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
+          </div>
+          <p class="message-block-text">
+            {{daymessage.get('message')}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="message-input-block" *ngIf="teamMember !== undefined">
+  <input type="text" [mention]="teammates" [mentionConfig]="{labelKey: 'name'}" placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}">
+  <div class="subscriptions-block">
+    <span id="mention-candidate">#</span>
+    <span id="mention-team-member">@</span>
+  </div>
+</div>  
+
