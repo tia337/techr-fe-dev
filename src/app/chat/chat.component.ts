@@ -6,7 +6,8 @@ import { MentionModule } from 'angular2-mentions/mention';
 import * as _ from 'underscore';
 import { Socket } from 'ng-socket-io';
 import { reject } from 'q';
-
+import { CoreService } from '../core/core.service';
+import { Parse } from '../parse.service';
 
 // tslint:disable
 @Component({
@@ -34,11 +35,18 @@ export class ChatComponent implements OnInit {
 
   constructor(
     private _ar: ActivatedRoute,
-    private _chatService: ChatService
+    private _chatService: ChatService,
+    private _coreService: CoreService,
+    private _socket: Socket,
+    private _parse: Parse
   ) { }
 
 
   ngOnInit() {
+    this._socket.connect();
+    this.recieveColleagueMessage().subscribe(data => {
+      console.log(data);
+    })
     this._ar.params.subscribe(params => {
       this.dialogId = params.id;
       this.createQueryData(params.id).then(queryData => {
@@ -57,6 +65,7 @@ export class ChatComponent implements OnInit {
           this._chatService.createMessagesArraySorted(messages, this.messagesBlock).then(messages => {
             this.messages = messages;
             this.loader = false;
+            this._coreService.clearMessagesCounter(this.dialogId);
           })
           this.scrollToBottom();
         });
@@ -161,6 +170,25 @@ export class ChatComponent implements OnInit {
         this.loadMessages = true;
       }, 0);
     } catch (error) {}
+  }
+
+  sendColleagueMessage (event) {
+    this._socket.emit('outgoing-to-colleague', {
+      'message': event.target.value,
+      'dialogId': this.dialogId,
+      'sender': this._parse.getCurrentUser().id,
+      'type': 'AppChat'
+    });
+    event.target.value = null;
+  }
+
+  recieveColleagueMessage () {
+    const observable = new Observable(observer => {
+      this._socket.on('updated-from-colleague', data => {
+        observer.next(data);
+      })
+    })
+    return observable;
   }
   
 }

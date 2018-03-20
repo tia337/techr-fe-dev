@@ -52,7 +52,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 	) {
 		this._coreService.currentDeactivatedUser.subscribe(userId => {
 			this.teamMembers.forEach(member => {
-				let memberId = this.teamMembers.indexOf(member);
+				const memberId = this.teamMembers.indexOf(member);
 				if (member.id === userId) {
 					this.teamMembers.splice(memberId, 1);
 					this.inactiveTeamMembers.push(member);
@@ -63,6 +63,13 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
+		this._coreService.currentReadMessage.subscribe(data => {
+			this.teamMembers.forEach(member => {
+				if (member.dialogId === data) {
+					member.unreadMessages = 0;
+				}
+			});
+		});
 		this.getTeamMemberOnline().subscribe(data => {
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {

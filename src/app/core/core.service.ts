@@ -6,6 +6,8 @@ import { BehaviorSubject } from 'rxjs';
 export class CoreService {
 
 	public deactivatedUser: BehaviorSubject<string> = new BehaviorSubject('');
+	public readMessage: BehaviorSubject<string> = new BehaviorSubject('');
+	currentReadMessage = this.readMessage.asObservable();
 	currentDeactivatedUser = this.deactivatedUser.asObservable();
 
 	constructor(private _parse: Parse) { }
@@ -79,5 +81,9 @@ export class CoreService {
 
 	throwDeactivatedUser(user: string) {
 		this.deactivatedUser.next(user);
+	}
+
+	clearMessagesCounter (id) {
+		this.readMessage.next(id);
 	}
 }
