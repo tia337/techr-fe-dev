@@ -78,7 +78,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		this.getUnreadMessagesCountUpdated().subscribe(data => {
-			console.log(data);
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
 					member.unreadMessages = parseFloat(member.unreadMessages) + 1;
