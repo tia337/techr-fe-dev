@@ -29,7 +29,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   public teammates = [];
   public loader: boolean;
   public beginning = false;
-
+  public messagesRecievedStorage = [];
 
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
   @ViewChild('messageBlock') private messageBlock: QueryList<any>;
@@ -50,10 +50,14 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit() {
-    console.log('12');
     this._socket.connect();
     this.recieveColleagueMessage().subscribe(data => {
-      console.log(this.messages);
+      console.log(data);
+      // this.messageStorage.push(data);
+      // console.log(this.messageStorage);
+      // this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
+      //   this.messages = messagesSorted;
+      // });
     })
     this._ar.params.subscribe(params => {
       this._socket.emit('leave-chat-room', {
@@ -67,7 +71,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       this.createQueryData(params.id).then(queryData => {
         let data = queryData;
         this._chatService.getUserMessages(data).then(messages => {
-          console.log(messages.length);
+          // console.log(messages.length);
           if (messages.length === 0) {
             this.beginning = true;
           }
@@ -128,8 +132,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onScrollUp (event) {
     const oldHeight = this.messagesBlock.nativeElement.scrollHeight;
-    // console.log(this.messagesBlock.nativeElement.scrollTop);
-
     if (this.loadMessages === true) {
       if (event.target.scrollTop === 0) {
         this.loadMessages = false;
@@ -216,6 +218,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     this._socket.emit('leave-chat-room', {
       'dialogId': this.dialogId
     });
+    this._socket.disconnect();
   }
   
 }
