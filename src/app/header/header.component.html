@@ -13,9 +13,12 @@
     </div>
 
     <div *ngIf="currentUser" class="profile-icons-wrap">
+      <span class="jobs-span" [routerLink]="['/jobs']">
+        <i class="shopping-cart-icon material-icons ">work</i>
+      </span>
         <span class="cart-span" [ngClass]="{'animation-cart': animationActive === true}" (click)="redirect()">
           <!-- <i class="fa fa-shopping-cart" aria-hidden="true" (click) = "redirect()" ></i> -->
-          <i class="shopping-cart-icon material-icons ">shopping_cart</i>
+          <i class="shopping-cart-icon work-cart-icon material-icons ">shopping_cart</i>
           <!-- <img class = "" (click) = "redirect()" src = "../../assets/icons/sh-cart.png"> -->
           <p class="cartamount">
             <a style="white-space:nowrap">{{cartAmount}} items</a>
@@ -37,10 +40,10 @@
             <mat-icon class="top-bar-button fa fa-cog settings-icon"></mat-icon>
           </span>
         </span>
-      <!-- <span class="notifications-span" (click)="_notificationsOpened = !_notificationsOpened" (click)="$event.stopPropagation()">
+      <span class="notifications-span" (click)="_notificationsOpened = !_notificationsOpened" (click)="$event.stopPropagation()">
         <mat-icon class="top-bar-button notifications-icon">notifications_none</mat-icon>
-        <span class="notifications-span-count">3</span>
-      </span> -->
+        <span class="notifications-span-count">{{notificationsCount}}</span>
+      </span>
       <span class="profile-span">
           <span class="user-logo-name" (mouseenter)="openUserMenu()" (mouseleave)="closeUserMenu($event)"
                 [ngClass]="{'user-name-hovered': userMenuOpened == true}">
@@ -110,5 +113,5 @@
   </section> -->
   </div>
   <!-- *ngIf="currentUser" -->
-  <!-- <app-notifications [class.move]="_notificationsOpened" [notifications]="_notificationsOpened" (notificationsStatus)="changeNotifications($event)"></app-notifications> -->
+  <app-notifications [class.move]="_notificationsOpened" [notifications]="_notificationsOpened" (notificationsStatus)="changeNotifications($event)"></app-notifications>
 </header>

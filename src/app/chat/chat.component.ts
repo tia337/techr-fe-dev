@@ -73,7 +73,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         this._chatService.getUserMessages(data).then(messages => {
           if (messages.length === 0 || messages.length <= 30) {
             this.beginning = true;
-          }
+          };
           if (messages.length > 0) {
             this.noMessages = true;
             this.loader = true;
@@ -219,5 +219,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this._socket.disconnect();
   }
+
+  
   
 }
