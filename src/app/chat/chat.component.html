@@ -36,7 +36,7 @@
         <span>{{message[0].date}}</span>
         <div></div>
       </div>
-      <div class="message-block-message" *ngFor='let daymessage of message[1].messages'>
+      <div class="message-block-message" *ngFor='let daymessage of message[1].messages; let i = index;'>
         <div class="message-block-message-avatar-wrap">
           <img *ngIf="daymessage.author != undefined" class="message-block-message-avatar" src="{{daymessage.get('author').get('avatarURL')}}" alt="">
           <div *ngIf="daymessage.get('author').get('avatarURL') == undefined && daymessage.author != undefined" class="message-block-message-avatar-undefined" [ngStyle]="{'background-color': teamMember.background | json}">
@@ -44,7 +44,7 @@
           </div>
           <span *ngIf="daymessage.author === undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEE, d hh:mm:s a'}}" matTooltipPosition="above" class="message-block-message-date-hidden">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
         </div>
-        <div class="message-block-message-container">
+        <div class="message-block-message-container" *ngIf="daymessage.editHidden === false">
           <div class="message-block-message-name-date">
             <span *ngIf="daymessage.author != undefined" class="message-block-message-name">{{daymessage.author}}</span>
             <span *ngIf="daymessage.author != undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEEE, MMMM d, y, h:mm:ss a'}}" matTooltipPosition="above" class="message-block-message-date">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
@@ -53,11 +53,24 @@
             {{daymessage.get('message')}}
           </p>
         </div>
-        <!-- <div class="message-block-edit">
+        <div *ngIf="daymessage.editHidden === true" class="message-block-edit">
           <input type="text" value="{{daymessage.get('message')}}">
-          <button ()>cancel</button> 
-          <button>save changes</button>
-        </div> -->
+          <div class="edit-buttons-wrap">
+            <button (click)="daymessage.editHidden = false" class="message-block-edit-cancel">cancel</button> 
+            <button class="message-block-edit-save">save changes</button>
+          </div>
+        </div> 
+        <div class="options-button" *ngIf="daymessage.editHidden === false" (click)="daymessage.optionsHidden = !daymessage.optionsHidden">
+          <span>.</span>        
+          <span>.</span>        
+          <span>.</span>                  
+        </div>
+        <div *ngIf="daymessage.optionsHidden === true">
+          <div class="options-menu" (clickOutside)="daymessage.optionsHidden = false" [delayClickOutsideInit]="true">
+              <span (click)="daymessage.optionsHidden = false; daymessage.editHidden = true;" class="options-menu-edit">Edit message</span>
+              <span class="option-menu-delete">Delete message</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>

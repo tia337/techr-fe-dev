@@ -84,6 +84,8 @@ constructor(
               let messageDate = messages[i].get('createdAt').toLocaleDateString(); // making date of the message to compare, it will look like ('08.03.2018')
               if (messageDate === date) { // comparing message date to datesArray which was made for comparing 
                   messages[i].author = messages[i].get('author').get('firstName') + ' ' + messages[i].get('author').get('lastName'); // pushing author of the message check in the future the previous message author
+                  messages[i].optionsHidden = false;
+                  messages[i].editHidden = false;
                   messagesArray.push(messages[i]); // pushing message to array of this day messages
               };
             }

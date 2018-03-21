@@ -241,6 +241,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   RecruiterColleagueTypes () {
+    console.log(this.teamMemberId);
     this._socket.emit('typing-message', {
       'dialogId': this.dialogId,
       'recipient': this.teamMemberId,

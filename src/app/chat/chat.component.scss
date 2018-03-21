@@ -67,6 +67,7 @@
 }
 
 .message-block {
+   
     &-date {
         display: flex;
         align-items: center;
@@ -83,6 +84,10 @@
         }
     }
     &-message {
+        position: relative;
+        &:hover .options-button {
+            display: flex;
+        }
         &:hover {
             background: rgba(185, 193, 200, 0.1);
         }
@@ -201,4 +206,74 @@
     display: inline-block;
     color: #383838;
     font-weight: bold;
+}
+
+.options-button {
+    position: absolute;
+    right: 30px;
+    top: -10px;
+    align-items: center; 
+    justify-content: space-around;
+    border: 1px solid #b7b7b7;
+    background: #ececec;
+    border-radius: 4px;
+    width: 25px;
+    height: 20px;
+    padding: 0 2px;
+    display: none;
+    cursor: pointer;
+    span {
+        margin-bottom: 10px;
+    }
+}
+
+.options-menu {
+    position: absolute;
+    right: 40px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #b7b7b7;
+    background: #ececec;
+    top: -65px;
+    box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.87);
+    &-edit {
+        cursor: pointer;
+    }
+    &-delete {
+        cursor: pointer;
+        color: red;
+    }
+}
+
+.message-block {
+    &-edit {
+        width: 100%;
+        input {
+            width: 100%;
+            padding: 10px;
+            outline: none;
+            border: none;
+            border: 1px solid;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        &-save {
+            padding: 5px 15px;
+            background: green;
+            border-radius: 3px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        &-cancel {
+            padding: 5px 15px;
+            background: white;
+            border-radius: 3px;
+            text-transform: uppercase;
+            margin-left: 10px;
+            margin-bottom: 5px;
+        }
+    }
 }
