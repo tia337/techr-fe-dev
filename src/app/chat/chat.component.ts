@@ -31,6 +31,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   public loader: boolean;
   public beginning = false;
   public messagesRecievedStorage = [];
+  public tempMessage: LooseObject = {};
 
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
   @ViewChild('messageBlock') private messageBlock: QueryList<any>;
@@ -53,13 +54,17 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this._socket.connect();
     this.recieveColleagueMessage().subscribe(data => {
-      console.log(data);
-      // this.messageStorage.push(data);
-      // console.log(this.messageStorage);
-      // this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
-      //   this.messages = messagesSorted;
-      // });
-    })
+      Object.defineProperty(data, 'className', {value: 'Message'});
+      let message = this._parse.Parse.Object.fromJSON(data);
+      this.messageStorage.unshift(message);
+      console.log(this.messageStorage);
+      this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
+        console.log('MESSAGES SORTED', messagesSorted);
+        // this.messageStorage = this.messageStorage.concat(messagesSorted);
+        this.messages = messagesSorted;
+        this.scrollToBottom()
+      });
+    });
     this._ar.params.subscribe(params => {
       this._socket.emit('leave-chat-room', {
         'dialogId': this.dialogId
@@ -81,6 +86,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
             this.beginning = false;
           };
           this.messageStorage = messages;
+          console.log(this.messageStorage);
           this._chatService.createMessagesArraySorted(messages, this.messagesBlock).then(messages => {
             this.messages = messages;
             this.loader = false;
@@ -166,7 +172,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scrollAfterLoading (oldHeight) {
-    console.log(oldHeight, ' old height');
+    // console.log(oldHeight, ' old height');
     this.loadMessages = true;   
     this.loader = false;
     try {
@@ -176,10 +182,10 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         let newScroll = newHeight + difference;
         newScroll = newHeight + oldHeight + difference;
         newScroll = newScroll/difference;
-        console.log(newScroll, 'coeefic')
-        this.messagesBlock.nativeElement.scrollTop = (newHeight + oldHeight)/newScroll;
-        console.log('difference= ', newHeight - oldHeight);
-        console.log(newHeight, 'newA');
+        // console.log(newScroll, 'coeefic')
+        // this.messagesBlock.nativeElement.scrollTop = (newHeight + oldHeight)/newScroll;
+        // console.log('difference= ', newHeight - oldHeight);
+        // console.log(newHeight, 'newA');
       },0)
     }  catch (error) {
       console.log('error');
@@ -221,6 +227,10 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     })
     return observable;
+  }
+
+  RecruiterColleagueTypes () {
+    // this._socket.emit()
   }
 
   ngOnDestroy () {
