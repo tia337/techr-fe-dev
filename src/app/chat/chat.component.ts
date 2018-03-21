@@ -71,8 +71,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       this.createQueryData(params.id).then(queryData => {
         let data = queryData;
         this._chatService.getUserMessages(data).then(messages => {
-          // console.log(messages.length);
-          if (messages.length === 0) {
+          if (messages.length === 0 || messages.length <= 30) {
             this.beginning = true;
           }
           if (messages.length > 0) {
