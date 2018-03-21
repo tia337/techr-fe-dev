@@ -79,7 +79,7 @@
       </div>
       <div class="team-members " *ngIf="teamMembers">
         <div *ngFor="let teamMember of teamMembers">
-          <p class="team-member" [routerLink]="['/chat', teamMember.dialogId]" [queryParams]="[teamMember.get('firstName'), teamMember.get('lastName'), teamMember.get('avatarURL'), teamMember.sessionStatus ]"> 
+          <p class="team-member" [routerLink]="['/chat', teamMember.dialogId]" [queryParams]="[teamMember.get('firstName'), teamMember.get('lastName'), teamMember.get('avatarURL'), teamMember.sessionStatus, teamMember.id ]"> 
             <span *ngIf="teamMember.sessionStatus === false" class="team-member-status offline"></span>
             <span *ngIf="teamMember.sessionStatus === true" class="team-member-status online"></span>
             {{ teamMember.get('firstName') }} 
@@ -93,7 +93,7 @@
         <p (click)="showInactiveMembers = true" class="show-inactivemembers-btn" [hidden]="showInactiveMembers">Hide deactivated members</p>
         <div [hidden]="showInactiveMembers" *ngIf="inactiveTeamMembers">
           <div *ngFor="let teamMember of inactiveTeamMembers">
-            <p class="team-member" [routerLink]="['/chat', teamMember.id]"> 
+            <p class="team-member" [routerLink]="['/chat', teamMember.dialogId]"> 
               {{ teamMember.get('firstName') }} 
               <span class="team-member-unread-messages" *ngIf="teamMember.unreadMessages > 0">{{teamMember.unreadMessages}}</span>
             </p>

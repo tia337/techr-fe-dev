@@ -32,6 +32,10 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   public beginning = false;
   public messagesRecievedStorage = [];
   public tempMessage: LooseObject = {};
+  public teamMemberId: string;
+  public typing = false;
+  private timer;
+  private newMessagesCount: number = 0;
 
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
   @ViewChild('messageBlock') private messageBlock: QueryList<any>;
@@ -53,18 +57,23 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this._socket.connect();
+
     this.recieveColleagueMessage().subscribe(data => {
       Object.defineProperty(data, 'className', {value: 'Message'});
       let message = this._parse.Parse.Object.fromJSON(data);
       this.messageStorage.unshift(message);
-      console.log(this.messageStorage);
       this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
-        console.log('MESSAGES SORTED', messagesSorted);
-        // this.messageStorage = this.messageStorage.concat(messagesSorted);
         this.messages = messagesSorted;
-        this.scrollToBottom()
+        if (this.messagesBlock.nativeElement.scrollHeight - this.messagesBlock.nativeElement.scrollTop - this.messagesBlock.nativeElement.offsetHeight <= 20) {
+          this.scrollToBottom();
+        }
       });
     });
+
+    this.listenToRecruiterColleagueTypes().subscribe(data => {
+      this.checkIfTyping(data);
+    });
+
     this._ar.params.subscribe(params => {
       this._socket.emit('leave-chat-room', {
         'dialogId': this.dialogId
@@ -86,7 +95,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
             this.beginning = false;
           };
           this.messageStorage = messages;
-          console.log(this.messageStorage);
           this._chatService.createMessagesArraySorted(messages, this.messagesBlock).then(messages => {
             this.messages = messages;
             this.loader = false;
@@ -98,6 +106,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     })
     this._ar.queryParams.subscribe(queryParams => {
       this.teamMemberQueryParams = queryParams;
+      this.teamMemberId = queryParams[4];
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
     });
     this._chatService.getTeamMembers().then(team => this.teammates = team);
@@ -109,6 +118,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     //     this._chatService.restore()
     // });
   }
+
+  
  
 
   createQueryData (dialogId) {
@@ -183,7 +194,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         newScroll = newHeight + oldHeight + difference;
         newScroll = newScroll/difference;
         // console.log(newScroll, 'coeefic')
-        // this.messagesBlock.nativeElement.scrollTop = (newHeight + oldHeight)/newScroll;
+        this.messagesBlock.nativeElement.scrollTop = (newHeight + oldHeight)/newScroll;
         // console.log('difference= ', newHeight - oldHeight);
         // console.log(newHeight, 'newA');
       },0)
@@ -230,16 +241,40 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   RecruiterColleagueTypes () {
-    // this._socket.emit()
+    this._socket.emit('typing-message', {
+      'dialogId': this.dialogId,
+      'recipient': this.teamMemberId,
+      'sender': this._parse.getCurrentUser().id
+    })
   }
 
+  listenToRecruiterColleagueTypes () {
+    const observable = new Observable(observer => {
+      this._socket.on('typing-message', data => {
+        observer.next(data);
+      })
+    })
+    return observable;
+  }
+
+  checkIfTyping (data) {
+    if (data.sender === this.teamMemberId) {
+      this.typing = true;
+    };
+    if (this.timer != undefined) {
+      clearTimeout(this.timer);
+    };
+    const self = this;
+    this.timer = setTimeout(function () {
+      self.typing = false;
+    }, 7000); 
+  }
+  
   ngOnDestroy () {
     this._socket.emit('leave-chat-room', {
       'dialogId': this.dialogId
     });
     this._socket.disconnect();
   }
-
-  
   
 }

@@ -61,7 +61,7 @@
 
 .messages-block {
     overflow: auto;
-    height: calc(100vh - 196px);
+    height: calc(100vh - 205px);
     position: relative;
     padding: 15px 0 0;
 }
@@ -93,7 +93,6 @@
         display: flex;
         &-avatar-wrap {
             width: 60px;
-            // height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -127,7 +126,7 @@
 .message-input-block {
     height: 40px;
     width: calc(100% - 20px);
-    margin: 15px auto;
+    margin: 10px auto 0;
     border: 2px solid #c1c1c2;
     border-radius: 3px;
     background: white;
@@ -182,4 +181,24 @@
     align-items: center;
     justify-content: center;
     z-index: 9; 
+}
+
+.new-messages-count {
+    position: absolute;
+    color: #505050;
+    background: white;
+    border: 1px solid #505050;
+    border-radius: 50%;
+    bottom: 40px;
+    right: 40px;
+    width: 15px;
+    height: 15px;
+}
+
+.typing-attention {
+    margin-left: 20px;
+    font-size: 12px;
+    display: inline-block;
+    color: #383838;
+    font-weight: bold;
 }

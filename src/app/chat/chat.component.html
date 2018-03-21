@@ -6,6 +6,7 @@
       {{teamMember.firstName}}
       {{teamMember.lastName}}
     </div>
+    <!-- <span class="new-messages-count">5</span>     -->
   </div>
 </div>
 <div *ngIf="teamMember !== undefined" class="messages-block" #messagesBlock (scroll)="onScrollUp($event)">
@@ -52,15 +53,23 @@
             {{daymessage.get('message')}}
           </p>
         </div>
+        <!-- <div class="message-block-edit">
+          <input type="text" value="{{daymessage.get('message')}}">
+          <button ()>cancel</button> 
+          <button>save changes</button>
+        </div> -->
       </div>
     </div>
   </div>
 </div>
-<div class="message-input-block" *ngIf="teamMember !== undefined">
-  <input type="text" [mention]="teammates" (keydown)="RecruiterColleagueTypes()"  (keyup.enter)="sendColleagueMessage($event)" [mentionConfig]="{labelKey: 'name'}" placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}">
-  <div class="subscriptions-block">
-    <span id="mention-candidate">#</span>
-    <span id="mention-team-member">@</span>
+<div>
+  <div class="message-input-block" *ngIf="teamMember !== undefined">
+    <input type="text" [mention]="teammates" (keydown)="RecruiterColleagueTypes()"  (keyup.enter)="sendColleagueMessage($event)" [mentionConfig]="{labelKey: 'name'}" placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}">
+    <div class="subscriptions-block">
+      <span id="mention-candidate">#</span>
+      <span id="mention-team-member">@</span>
+    </div>
   </div>
+  <span *ngIf="typing === true" class="typing-attention">{{teamMember.firstName}} {{teamMember.lastName}} is typing</span>
 </div>  
 
