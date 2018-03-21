@@ -64,6 +64,13 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
+		this._coreService.readCurrentMessages.subscribe(data => {
+			this.teamMembers.forEach(member => {
+				if (member.dialogId === data) {
+					member.unreadMessages = 0;
+				}
+			});
+		});
 		this.getTeamMemberOnline().subscribe(data => {
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
@@ -79,7 +86,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		this.getUnreadMessagesCountUpdated().subscribe(data => {
-			console.log(data);
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
 					member.unreadMessages = parseFloat(member.unreadMessages) + 1;
@@ -94,6 +100,13 @@ export class CoreComponent implements OnInit, OnDestroy {
 				}
 			});
 		});
+		// if (this._parse.getCurrentUser()) {
+		//   this._coreService.getClientLogo().then(logo => {
+		//     this.clientLogo = logo;
+		//     console.log(logo._url);
+		//   });
+		// }
+
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				this.currentUser = profile;
@@ -253,4 +266,5 @@ export class CoreComponent implements OnInit, OnDestroy {
 		return observable;
 	};
 }
+
 

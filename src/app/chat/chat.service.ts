@@ -14,8 +14,7 @@ public datesArrayToDisplay: Array<any> = [];
 node;    
 previousScrollHeightMinusTop: number;    
 readyFor: string;    
-toReset: boolean = false;  
-
+toReset: boolean = false; 
 
 constructor(
   private _parse: Parse
@@ -98,6 +97,10 @@ constructor(
           return messagesSorted  // reversing the array to display in right queue
         })
       }
+
+      addRecievedMessage(message) {
+        
+      }
     
       createTeamMember (params, queryParams): ChatTeamMember { // creating a team member object
         let teamMember;
@@ -164,5 +167,4 @@ constructor(
       this.previousScrollHeightMinusTop = this.node.scrollHeight - this.node.scrollTop;  
     }
 
-    
 }
