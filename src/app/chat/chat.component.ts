@@ -9,6 +9,7 @@ import { reject } from 'q';
 import { CoreService } from '../core/core.service';
 import { Parse } from '../parse.service';
 
+
 // tslint:disable
 @Component({
   selector: 'app-chat',
@@ -39,7 +40,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     private _chatService: ChatService,
     private _coreService: CoreService,
     private _socket: Socket,
-    private _parse: Parse
+		private _parse: Parse    
   ) {  
     this._ar.params.subscribe(params => {
       this._socket.emit('enter-chat-room', {
@@ -83,7 +84,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
           this._chatService.createMessagesArraySorted(messages, this.messagesBlock).then(messages => {
             this.messages = messages;
             this.loader = false;
-            this._coreService.clearMessagesCounter(this.dialogId);
+            this._coreService.clearMessagesCount(this.dialogId);
           })
           this.scrollToBottom();
         });
@@ -92,7 +93,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     this._ar.queryParams.subscribe(queryParams => {
       this.teamMemberQueryParams = queryParams;
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
-    })
+    });
     this._chatService.getTeamMembers().then(team => this.teammates = team);
   }
 
@@ -183,6 +184,15 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     }  catch (error) {
       console.log('error');
     }
+  }
+
+  recieveCollegueMessage () {
+    const observable = new Observable(observer => {
+			this._socket.on('updated-from-colleague', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
   }
 
   scrollToBottom(): void {

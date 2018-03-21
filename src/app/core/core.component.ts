@@ -12,7 +12,8 @@ import { CartAdding } from '../header/cartadding.service';
 import { CoreService } from './core.service';
 import { ActivatedRoute } from '@angular/router';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { ChatService } from '../chat/chat.service';
 
 @Component({
 	selector: 'app-core',
@@ -47,7 +48,8 @@ export class CoreComponent implements OnInit, OnDestroy {
 		private _gapi: Gapi,
 		private _cartAdding: CartAdding,
 		private _router: Router,
-		private _route: ActivatedRoute
+		private _route: ActivatedRoute,
+		public _chatService: ChatService
 	) {
 		this._coreService.currentDeactivatedUser.subscribe(userId => {
 			this.teamMembers.forEach(member => {
@@ -62,7 +64,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
-		this._coreService.currentReadMessage.subscribe(data => {
+		this._coreService.readCurrentMessages.subscribe(data => {
 			this.teamMembers.forEach(member => {
 				if (member.dialogId === data) {
 					member.unreadMessages = 0;
@@ -90,6 +92,14 @@ export class CoreComponent implements OnInit, OnDestroy {
 				}
 			});
 		});
+		this._coreService.readCurrentMessages.subscribe(data => {
+			console.log(data);
+			this.teamMembers.forEach(member => {
+				if (member.dialogId === data) {
+					member.unreadMessages = 0;
+				}
+			});
+		});
 		// if (this._parse.getCurrentUser()) {
 		//   this._coreService.getClientLogo().then(logo => {
 		//     this.clientLogo = logo;
@@ -101,6 +111,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 			if (profile) {
 				this.currentUser = profile;
 				this._coreService.getTeamMembers().then(members => {
+					console.log(members);
 					this.teamMembers = members;
 					this.teamMembers = this.teamMembers.filter(member => {
 						return member.id !== this._parse.getCurrentUser().id;
@@ -217,7 +228,8 @@ export class CoreComponent implements OnInit, OnDestroy {
 				member.dialogId = data.dialogId;
 			});
 		});
-	}
+		this.getSessionStatus(members);
+	};
 
 	getSessionStatus (members: Array<any>) {
 		members.forEach(member => {
@@ -225,7 +237,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 				member.sessionStatus = status;
 			});
 		});
-	}
+	};
 
 	getTeamMemberOnline() {
 		const observable = new Observable(observer => {
@@ -234,7 +246,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
-	}
+	};
 
 	getTeamMemberOffline() {
 		const observable = new Observable(observer => {
@@ -243,7 +255,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
-	}
+	};
 
 	getUnreadMessagesCountUpdated() {
 		const observable = new Observable(observer => {
@@ -252,5 +264,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
-	}
+	};
 }
+
+
