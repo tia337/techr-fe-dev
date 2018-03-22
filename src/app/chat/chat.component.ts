@@ -8,7 +8,8 @@ import { Socket } from 'ng-socket-io';
 import { reject } from 'q';
 import { CoreService } from '../core/core.service';
 import { Parse } from '../parse.service';
-
+import { AlertComponent } from '../shared/alert/alert.component';
+import { RootVCRService } from '../root_vcr.service';
 
 // tslint:disable
 @Component({
@@ -46,7 +47,8 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     private _chatService: ChatService,
     private _coreService: CoreService,
     private _socket: Socket,
-		private _parse: Parse    
+    private _parse: Parse,
+    private _root_vcr: RootVCRService    
   ) {  
     this._ar.params.subscribe(params => {
       this._socket.emit('enter-chat-room', {
@@ -67,7 +69,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     })
     
     this.listeToDeletedMessage().subscribe(data => {
-      console.log(data);
+      this.deleteMessage(data);
     })
 
     this.recieveColleagueMessage().subscribe(data => {
@@ -195,7 +197,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scrollAfterLoading (oldHeight) {
-    // console.log(oldHeight, ' old height');
     this.loadMessages = true;   
     this.loader = false;
     try {
@@ -205,32 +206,11 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         let newScroll = newHeight + difference;
         newScroll = newHeight + oldHeight + difference;
         newScroll = newScroll/difference;
-        // console.log(newScroll, 'coeefic')
         this.messagesBlock.nativeElement.scrollTop = (newHeight + oldHeight)/newScroll;
-        // console.log('difference= ', newHeight - oldHeight);
-        // console.log(newHeight, 'newA');
       },0)
     }  catch (error) {
       console.log('error');
     }
-  }
-
-  recieveCollegueMessage () {
-    const observable = new Observable(observer => {
-			this._socket.on('updated-from-colleague', data => {
-				observer.next(data);
-			});
-		});
-		return observable;
-  }
-
-  scrollToBottom(): void {
-    try {
-      setTimeout(() => {
-        this.messagesBlock.nativeElement.scrollTop = this.messagesBlock.nativeElement.scrollHeight;
-        this.loadMessages = true;
-      }, 0);
-    } catch (error) {}
   }
 
   sendColleagueMessage (event) {
@@ -241,6 +221,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       'type': 'AppChat'
     });
     event.target.value = null;
+    clearTimeout(this.timer);
   }
 
   recieveColleagueMessage () {
@@ -281,19 +262,16 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       self.typing = false;
     }, 7000); 
   }
-  
-  ngOnDestroy () {
-    this._socket.emit('leave-chat-room', {
-      'dialogId': this.dialogId
-    });
-    this._socket.disconnect();
-  }
 
   editMessage (value, message) {
-    if (value !== message.get('message')) {
+    if (value !== message.get('message') && value != "") {
       message.set('message', value);
       message.isEdited = true;
+      message.editHidden = false;
       this._socket.emit('edit-message', {dialogId: this.dialogId, messageId: message.id, message: value});
+    }
+    if (value === '') {
+      this.alertDeleteMessage(message);
     }
   }
 
@@ -308,16 +286,69 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
   turnEditedMessage(data) {
     this.messages.forEach(message => {
-      message[1].forEach(message => {
-        if (message.id === data.id) {
+      let day = message[1].messages;
+      day.forEach(message => {
+        if (message.id === data.objectId) {
           message.isEdited = true;
+          message.set('message', data.message);
         }
       })
     })
   }
 
-  deleteMessage (message) {
-    this._socket.emit('delete-message',{ dialogId: this.dialogId, messageId: message.id});
+  alertDeleteMessage (message) {
+    const alert = this._root_vcr.createComponent(AlertComponent);
+    alert.title = "Delete message"
+    alert.content = `
+    <p style="margin-bottom: 10px; font-size: 18px;">Are you sure you want to delete this message? This cannot be undone.</p>
+    <div style="display: flex;padding: 10px;border: 1px solid;border-radius: 5px; width: 100%;">
+      <div style="display: flex;align-items: center;justify-content: center;">
+        <img style="border-radius: 3px;margin-right: 10px;" src="` + message.get('author').get('avatarURL') + `" alt="">
+      </div>
+    <div style="display: flex;flex-direction: column;justify-content: space-between;">
+        <div style="display: flex; height: 50%;">
+          <span style="margin-right: 10px; font-weight-bold">` + message.get('author').get('firstName') + ` ` +  message.get('author').get('lastName') + `</span>
+          <span>` + message.get('createdAt') + `</span>
+        </div>
+        <p class="message-block-text" style="height: 50%;">` + message.get('message') + ` </p>
+      </div>
+    </div>
+    `;
+    alert.addButton({
+      type: 'primary',
+      title: 'Cancel',
+      onClick: () => {
+        this._root_vcr.clear();
+        message.editHidden = false;
+      }
+    })
+    alert.addButton({
+      type: 'warn',
+      title: 'Delete',
+      onClick: () => {
+        this.deleteMessage(message);
+      }
+    })
+  }
+
+  deleteMessage (data) {
+    this.messages.forEach(message => {
+      let dayMessages = message[1].messages;
+      for (let next = 1, i = 0; i < dayMessages.length; ++next, i++) {
+        if (dayMessages[i].id === data.id || dayMessages[i].id === data.objectId) {
+          if (dayMessages[next] != undefined) {
+            let nextMessageAuthor = dayMessages[next].author; 
+            let currentMessageAuthor = dayMessages[i].author; 
+            if (nextMessageAuthor === undefined) { 
+              dayMessages[next].author = currentMessageAuthor;
+            }
+          }
+          dayMessages.splice(dayMessages.indexOf(dayMessages[i]), 1);
+          this._root_vcr.clear();
+        };
+      }
+    });
+    this._socket.emit('delete-message',{ dialogId: this.dialogId, messageId: data.id});
   }
 
   listeToDeletedMessage () {
@@ -327,6 +358,22 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       })
     })
     return observable;
+  }
+
+  scrollToBottom(): void {
+    try {
+      setTimeout(() => {
+        this.messagesBlock.nativeElement.scrollTop = this.messagesBlock.nativeElement.scrollHeight;
+        this.loadMessages = true;
+      }, 0);
+    } catch (error) {}
+  }
+
+  ngOnDestroy () {
+    this._socket.emit('leave-chat-room', {
+      'dialogId': this.dialogId
+    });
+    this._socket.disconnect();
   }
   
 }

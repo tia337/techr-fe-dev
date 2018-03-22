@@ -56,10 +56,10 @@
           </p>
         </div>
         <div *ngIf="daymessage.editHidden === true" class="message-block-edit">
-          <input type="text" #editInput (keyup.enter)="editMessage($event.target.value, daymessage); daymessage.editHidden = false;" value="{{daymessage.get('message')}}">
+          <input type="text" #editInput (keyup.enter)="editMessage($event.target.value, daymessage);" value="{{daymessage.get('message')}}">
           <div class="edit-buttons-wrap">
             <button (click)="daymessage.editHidden = false" class="message-block-edit-cancel">cancel</button> 
-            <button (click)="editMessage(editInput.value, daymessage); daymessage.editHidden = false;" class="message-block-edit-save">save changes</button>
+            <button (click)="editMessage(editInput.value, daymessage);" class="message-block-edit-save">save changes</button>
           </div>
         </div> 
         <div *ngIf="daymessage.get('author').id === userId">
@@ -71,7 +71,7 @@
           <div *ngIf="daymessage.optionsHidden === true">
             <div class="options-menu" (clickOutside)="daymessage.optionsHidden = false" [delayClickOutsideInit]="true">
                 <span (click)="daymessage.optionsHidden = false; daymessage.editHidden = true;" class="options-menu-edit">Edit message</span>
-                <span class="option-menu-delete">Delete message</span>
+                <span (click)="alertDeleteMessage(daymessage)" class="option-menu-delete">Delete message</span>
             </div>
           </div>
         </div>

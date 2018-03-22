@@ -64,11 +64,14 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
+		this.recruterTyping().subscribe(data => {
+			console.log(data);
+		});
 		this._coreService.readCurrentMessages.subscribe(data => {
 			this.teamMembers.forEach(member => {
 				if (member.dialogId === data) {
 					member.unreadMessages = 0;
-				}
+				};
 			});
 		});
 		this.getTeamMemberOnline().subscribe(data => {
@@ -257,6 +260,15 @@ export class CoreComponent implements OnInit, OnDestroy {
 		});
 		return observable;
 	};
+
+	recruterTyping() {
+		const observable = new Observable(observer => {
+			this._socket.on('typing-message', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+	}
 }
 
 
