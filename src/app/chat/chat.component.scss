@@ -61,7 +61,7 @@
 
 .messages-block {
     overflow: auto;
-    height: calc(100vh - 196px);
+    height: calc(100vh - 205px);
     position: relative;
     padding: 15px 0 0;
 }
@@ -82,7 +82,18 @@
             font-weight: bold;            
         }
     }
+    &-text-edited {
+        opacity: .7;
+        font-size: 12px;
+    }
     &-message {
+        &.edit {
+            background: #ffeb3b52!important;
+        }
+        position: relative;
+        &:hover .options-button {
+            display: flex;
+        }
         &:hover {
             background: rgba(185, 193, 200, 0.1);
         }
@@ -93,7 +104,6 @@
         display: flex;
         &-avatar-wrap {
             width: 60px;
-            // height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -121,13 +131,14 @@
             flex-direction: column;
             justify-content: space-between;
         }
+        
     }
 }
 
 .message-input-block {
     height: 40px;
     width: calc(100% - 20px);
-    margin: 15px auto;
+    margin: 10px auto 0;
     border: 2px solid #c1c1c2;
     border-radius: 3px;
     background: white;
@@ -172,7 +183,6 @@
     cursor: pointer;
 }
 
-
 .loader-wrap {
     position: absolute;
     background: rgba(255,255,255, .7);
@@ -182,4 +192,98 @@
     align-items: center;
     justify-content: center;
     z-index: 9; 
+}
+
+.new-messages-count {
+    position: absolute;
+    color: #505050;
+    background: white;
+    border: 1px solid #505050;
+    border-radius: 50%;
+    bottom: 40px;
+    right: 40px;
+    width: 15px;
+    height: 15px;
+}
+
+.typing-attention {
+    margin-left: 20px;
+    font-size: 12px;
+    display: inline-block;
+    color: #383838;
+    font-weight: bold;
+}
+
+.options-button {
+    position: absolute;
+    right: 30px;
+    top: -10px;
+    align-items: center; 
+    justify-content: space-around;
+    border: 1px solid #b7b7b7;
+    background: #ececec;
+    border-radius: 4px;
+    width: 25px;
+    height: 20px;
+    padding: 0 2px;
+    display: none;
+    cursor: pointer;
+    span {
+        margin-bottom: 10px;
+    }
+}
+
+.options-menu {
+    position: absolute;
+    right: 40px;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #b7b7b7;
+    background: #ececec;
+    top: -65px;
+    box-shadow: 2px 3px 4px rgba(0, 0, 0, 0.87);
+    &-edit {
+        cursor: pointer;
+    }
+    &-delete {
+        cursor: pointer;
+        color: red;
+    }
+    &.edit {
+        display: flex!important;
+    }
+}
+
+.message-block {
+    &-edit {
+        width: 100%;
+        input {
+            width: 100%;
+            padding: 5px 10px;
+            outline: none;
+            border: none;
+            border: 1px solid;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        &-save {
+            padding: 5px 10px;
+            background: #00af00;
+            border-radius: 3px;
+            text-transform: uppercase;
+            color: white;
+            cursor: pointer;
+        }
+        &-cancel {
+            padding: 5px 10px;
+            background: white;
+            border-radius: 3px;
+            text-transform: uppercase;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+    }
 }

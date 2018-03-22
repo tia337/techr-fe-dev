@@ -64,11 +64,21 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
+		this.recruterTyping().subscribe(data => {
+			this.addAnimationToTyping(data);
+		});
+		this._coreService.currentTypingStatus.subscribe(data => {
+			this.teamMembers.forEach(member => {
+				if (member.dialogId === data) {
+					member.typing = false;
+				};
+			});
+		});
 		this._coreService.readCurrentMessages.subscribe(data => {
 			this.teamMembers.forEach(member => {
 				if (member.dialogId === data) {
 					member.unreadMessages = 0;
-				}
+				};
 			});
 		});
 		this.getTeamMemberOnline().subscribe(data => {
@@ -89,33 +99,34 @@ export class CoreComponent implements OnInit, OnDestroy {
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
 					member.unreadMessages = parseFloat(member.unreadMessages) + 1;
+					member.typing = false;
+				}
+			});
+		});
+		this._coreService.currentHighlighter.subscribe(data => {
+			this.teamMembers.forEach(member => {
+				if (member.id === data) {
+					member.currentChat = 0;
 				}
 			});
 		});
 		this._coreService.readCurrentMessages.subscribe(data => {
-			console.log(data);
 			this.teamMembers.forEach(member => {
 				if (member.dialogId === data) {
 					member.unreadMessages = 0;
 				}
 			});
 		});
-		// if (this._parse.getCurrentUser()) {
-		//   this._coreService.getClientLogo().then(logo => {
-		//     this.clientLogo = logo;
-		//     console.log(logo._url);
-		//   });
-		// }
 
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				this.currentUser = profile;
 				this._coreService.getTeamMembers().then(members => {
-					console.log(members);
 					this.teamMembers = members;
 					this.teamMembers = this.teamMembers.filter(member => {
 						return member.id !== this._parse.getCurrentUser().id;
 					});
+					this.addTypingStatus();
 					this.getUnreadMessages(this.teamMembers);
 				});
 
@@ -264,6 +275,38 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
+	};
+
+	recruterTyping() {
+		const observable = new Observable(observer => {
+			this._socket.on('typing-message', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+	}
+
+	addTypingStatus () {
+		this.teamMembers.forEach(member => {
+			member.typing = false;
+			member.currentChat = false;
+			member.firstName = member.get('firstName');
+			member.lastName = member.get('lastName');
+			member.avatarURL = member.get('avatarURL');
+		});
+	}
+
+	addAnimationToTyping (data) {
+		this.teamMembers.forEach(member => {
+			if (member.id === data.sender) {
+				clearTimeout(data.sender);
+				member.typing = true;
+				data.sender = setTimeout(() => {
+					member.typing = false;
+					console.log('FAAAAAALSE');
+				}, 7000);
+			}
+		});
 	};
 }
 

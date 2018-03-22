@@ -5,13 +5,15 @@ import { ChatService } from './chat.service';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule, MatProgressSpinnerModule } from '@angular/material';
 import { MentionModule } from 'angular2-mentions/mention';
+import { ClickOutsideModule } from 'ng-click-outside';
 
 @NgModule({
   imports: [
     CommonModule,
     MatTooltipModule,
     MentionModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ClickOutsideModule
   ],
     declarations: [ChatComponent],
     providers: [ChatService],

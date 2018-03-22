@@ -7,8 +7,12 @@ export class CoreService {
 
 	public deactivatedUser: BehaviorSubject<string> = new BehaviorSubject('');
 	public readMessages: BehaviorSubject<string> = new BehaviorSubject('');
+	public typingStatus: BehaviorSubject<string> = new BehaviorSubject('');
+	public highlighter: BehaviorSubject<string> = new BehaviorSubject('');
 	currentDeactivatedUser = this.deactivatedUser.asObservable();
 	readCurrentMessages = this.readMessages.asObservable();
+	currentTypingStatus = this.typingStatus.asObservable();
+	currentHighlighter = this.highlighter.asObservable();
 
 	constructor(private _parse: Parse) { }
 
@@ -85,6 +89,13 @@ export class CoreService {
 
 	clearMessagesCount (id) {
 		this.readMessages.next(id);
-		console.log(id);
+	}
+
+	closeTypingStatus (id) {
+		this.typingStatus.next(id);
+	}
+
+	removeHighlighter (id) {
+		this.highlighter.next(id);
 	}
 }

@@ -11,3 +11,7 @@ type ChatTeamMember = {
 type UpdatedUser = {
     userId: string
 }
+
+interface LooseObject {
+    [key: string]: any
+}
