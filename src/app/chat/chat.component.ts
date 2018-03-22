@@ -21,6 +21,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   public messages;
   public teamMember: ChatTeamMember;
   public datesArrayToDisplay: Array<any> = [];
+  public userId: string;
   public dialogId: string;
   public loadMessages = true;
   public teamMemberParams;
@@ -56,7 +57,18 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngOnInit() {
+    this.userId = this._parse.getCurrentUser().id;
+
     this._socket.connect();
+
+    this.editPartnersMessage().subscribe(data => {
+      console.log(data);
+      this.turnEditedMessage(data);
+    })
+    
+    this.listeToDeletedMessage().subscribe(data => {
+      console.log(data);
+    })
 
     this.recieveColleagueMessage().subscribe(data => {
       Object.defineProperty(data, 'className', {value: 'Message'});
@@ -241,7 +253,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   RecruiterColleagueTypes () {
-    console.log(this.teamMemberId);
     this._socket.emit('typing-message', {
       'dialogId': this.dialogId,
       'recipient': this.teamMemberId,
@@ -276,6 +287,46 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       'dialogId': this.dialogId
     });
     this._socket.disconnect();
+  }
+
+  editMessage (value, message) {
+    if (value !== message.get('message')) {
+      message.set('message', value);
+      message.isEdited = true;
+      this._socket.emit('edit-message', {dialogId: this.dialogId, messageId: message.id, message: value});
+    }
+  }
+
+  editPartnersMessage () {
+    const observable = new Observable(observer => {
+      this._socket.on('message-edited', data => {
+        observer.next(data);
+      })
+    })
+    return observable;
+  }
+
+  turnEditedMessage(data) {
+    this.messages.forEach(message => {
+      message[1].forEach(message => {
+        if (message.id === data.id) {
+          message.isEdited = true;
+        }
+      })
+    })
+  }
+
+  deleteMessage (message) {
+    this._socket.emit('delete-message',{ dialogId: this.dialogId, messageId: message.id});
+  }
+
+  listeToDeletedMessage () {
+    const observable = new Observable(observer => {
+      this._socket.on('message-deleted', data => {
+        observer.next(data);
+      })
+    })
+    return observable;
   }
   
 }

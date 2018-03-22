@@ -26,6 +26,7 @@ constructor(
             pageNumber: data.pageNumber
         };
         return this._parse.execCloud('getMessages', params).then(result => {
+          console.log(result);
           return result;
         });
     };
@@ -98,10 +99,6 @@ constructor(
           resolve(messagesSorted);
           return messagesSorted  // reversing the array to display in right queue
         })
-      }
-
-      addRecievedMessage(message) {
-        
       }
     
       createTeamMember (params, queryParams): ChatTeamMember { // creating a team member object

@@ -93,25 +93,17 @@ export class CoreComponent implements OnInit, OnDestroy {
 			});
 		});
 		this._coreService.readCurrentMessages.subscribe(data => {
-			console.log(data);
 			this.teamMembers.forEach(member => {
 				if (member.dialogId === data) {
 					member.unreadMessages = 0;
 				}
 			});
 		});
-		// if (this._parse.getCurrentUser()) {
-		//   this._coreService.getClientLogo().then(logo => {
-		//     this.clientLogo = logo;
-		//     console.log(logo._url);
-		//   });
-		// }
 
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				this.currentUser = profile;
 				this._coreService.getTeamMembers().then(members => {
-					console.log(members);
 					this.teamMembers = members;
 					this.teamMembers = this.teamMembers.filter(member => {
 						return member.id !== this._parse.getCurrentUser().id;

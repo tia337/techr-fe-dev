@@ -67,7 +67,6 @@
 }
 
 .message-block {
-   
     &-date {
         display: flex;
         align-items: center;
@@ -83,7 +82,14 @@
             font-weight: bold;            
         }
     }
+    &-text-edited {
+        opacity: .7;
+        font-size: 12px;
+    }
     &-message {
+        &.edit {
+            background: #ffeb3b52!important;
+        }
         position: relative;
         &:hover .options-button {
             display: flex;
@@ -125,6 +131,7 @@
             flex-direction: column;
             justify-content: space-between;
         }
+        
     }
 }
 
@@ -175,7 +182,6 @@
 #mention-team-member {
     cursor: pointer;
 }
-
 
 .loader-wrap {
     position: absolute;
@@ -245,6 +251,9 @@
         cursor: pointer;
         color: red;
     }
+    &.edit {
+        display: flex!important;
+    }
 }
 
 .message-block {
@@ -252,7 +261,7 @@
         width: 100%;
         input {
             width: 100%;
-            padding: 10px;
+            padding: 5px 10px;
             outline: none;
             border: none;
             border: 1px solid;
@@ -261,19 +270,20 @@
             margin-bottom: 5px;
         }
         &-save {
-            padding: 5px 15px;
-            background: green;
+            padding: 5px 10px;
+            background: #00af00;
             border-radius: 3px;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            color: white;
+            cursor: pointer;
         }
         &-cancel {
-            padding: 5px 15px;
+            padding: 5px 10px;
             background: white;
             border-radius: 3px;
             text-transform: uppercase;
-            margin-left: 10px;
-            margin-bottom: 5px;
+            margin-right: 10px;
+            cursor: pointer;
         }
     }
 }

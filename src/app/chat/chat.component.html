@@ -36,7 +36,7 @@
         <span>{{message[0].date}}</span>
         <div></div>
       </div>
-      <div class="message-block-message" *ngFor='let daymessage of message[1].messages; let i = index;'>
+      <div class="message-block-message" [ngClass]="{'edit': daymessage.editHidden === true }" *ngFor='let daymessage of message[1].messages; let i = index;'>
         <div class="message-block-message-avatar-wrap">
           <img *ngIf="daymessage.author != undefined" class="message-block-message-avatar" src="{{daymessage.get('author').get('avatarURL')}}" alt="">
           <div *ngIf="daymessage.get('author').get('avatarURL') == undefined && daymessage.author != undefined" class="message-block-message-avatar-undefined" [ngStyle]="{'background-color': teamMember.background | json}">
@@ -51,24 +51,28 @@
           </div>
           <p class="message-block-text">
             {{daymessage.get('message')}}
+            <span class="message-block-text-edited" *ngIf="daymessage.isEdited === true">(edited)</span>
+            <span class="message-block-text-edited" *ngIf="daymessage.get('isEdited') === true">(edited)</span>
           </p>
         </div>
         <div *ngIf="daymessage.editHidden === true" class="message-block-edit">
-          <input type="text" value="{{daymessage.get('message')}}">
+          <input type="text" #editInput (keyup.enter)="editMessage($event.target.value, daymessage); daymessage.editHidden = false;" value="{{daymessage.get('message')}}">
           <div class="edit-buttons-wrap">
             <button (click)="daymessage.editHidden = false" class="message-block-edit-cancel">cancel</button> 
-            <button class="message-block-edit-save">save changes</button>
+            <button (click)="editMessage(editInput.value, daymessage); daymessage.editHidden = false;" class="message-block-edit-save">save changes</button>
           </div>
         </div> 
-        <div class="options-button" *ngIf="daymessage.editHidden === false" (click)="daymessage.optionsHidden = !daymessage.optionsHidden">
-          <span>.</span>        
-          <span>.</span>        
-          <span>.</span>                  
-        </div>
-        <div *ngIf="daymessage.optionsHidden === true">
-          <div class="options-menu" (clickOutside)="daymessage.optionsHidden = false" [delayClickOutsideInit]="true">
-              <span (click)="daymessage.optionsHidden = false; daymessage.editHidden = true;" class="options-menu-edit">Edit message</span>
-              <span class="option-menu-delete">Delete message</span>
+        <div *ngIf="daymessage.get('author').id === userId">
+          <div class="options-button" [ngClass]="{'edit': daymessage.optionsHidden === true}" *ngIf="daymessage.editHidden === false" (click)="daymessage.optionsHidden = !daymessage.optionsHidden">
+            <span>.</span>        
+            <span>.</span>        
+            <span>.</span>                  
+          </div>
+          <div *ngIf="daymessage.optionsHidden === true">
+            <div class="options-menu" (clickOutside)="daymessage.optionsHidden = false" [delayClickOutsideInit]="true">
+                <span (click)="daymessage.optionsHidden = false; daymessage.editHidden = true;" class="options-menu-edit">Edit message</span>
+                <span class="option-menu-delete">Delete message</span>
+            </div>
           </div>
         </div>
       </div>
