@@ -73,6 +73,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     })
 
     this.recieveColleagueMessage().subscribe(data => {
+      this._coreService.closeTypingStatus(this.teamMemberId);      
       Object.defineProperty(data, 'className', {value: 'Message'});
       let message = this._parse.Parse.Object.fromJSON(data);
       this.messageStorage.unshift(message);
@@ -222,6 +223,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     event.target.value = null;
     clearTimeout(this.timer);
+    this.typing = false;
   }
 
   recieveColleagueMessage () {
@@ -374,6 +376,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       'dialogId': this.dialogId
     });
     this._socket.disconnect();
+    this._coreService.removeHighlighter(this.teamMemberId);
   }
   
 }

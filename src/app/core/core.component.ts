@@ -65,7 +65,14 @@ export class CoreComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
 		this.recruterTyping().subscribe(data => {
-			console.log(data);
+			this.addAnimationToTyping(data);
+		});
+		this._coreService.currentTypingStatus.subscribe(data => {
+			this.teamMembers.forEach(member => {
+				if (member.dialogId === data) {
+					member.typing = false;
+				};
+			});
 		});
 		this._coreService.readCurrentMessages.subscribe(data => {
 			this.teamMembers.forEach(member => {
@@ -92,6 +99,14 @@ export class CoreComponent implements OnInit, OnDestroy {
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
 					member.unreadMessages = parseFloat(member.unreadMessages) + 1;
+					member.typing = false;
+				}
+			});
+		});
+		this._coreService.currentHighlighter.subscribe(data => {
+			this.teamMembers.forEach(member => {
+				if (member.id === data) {
+					member.currentChat = 0;
 				}
 			});
 		});
@@ -111,6 +126,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 					this.teamMembers = this.teamMembers.filter(member => {
 						return member.id !== this._parse.getCurrentUser().id;
 					});
+					this.addTypingStatus();
 					this.getUnreadMessages(this.teamMembers);
 				});
 
@@ -269,6 +285,29 @@ export class CoreComponent implements OnInit, OnDestroy {
 		});
 		return observable;
 	}
+
+	addTypingStatus () {
+		this.teamMembers.forEach(member => {
+			member.typing = false;
+			member.currentChat = false;
+			member.firstName = member.get('firstName');
+			member.lastName = member.get('lastName');
+			member.avatarURL = member.get('avatarURL');
+		});
+	}
+
+	addAnimationToTyping (data) {
+		this.teamMembers.forEach(member => {
+			if (member.id === data.sender) {
+				clearTimeout(data.sender);
+				member.typing = true;
+				data.sender = setTimeout(() => {
+					member.typing = false;
+					console.log('FAAAAAALSE');
+				}, 7000);
+			}
+		});
+	};
 }
 
 

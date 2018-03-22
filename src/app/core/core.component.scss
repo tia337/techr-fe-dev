@@ -304,6 +304,13 @@ $menu-height: calc(100vh - #{$header-height});
                         top: 6px;
                         position: absolute;
                     }
+                    &-typing img {
+                        width: 40px;
+                        height: 40px;
+                        position: absolute;
+                        right: 0;
+                        bottom: -8px;
+                    }
                     .indicator {
                         border-radius: 50%;
                         border: 1px solid $black;
@@ -321,6 +328,9 @@ $menu-height: calc(100vh - #{$header-height});
                 .team-member:hover {
                     border-left: 3px solid #3c7ec4;
                     background: rgba(148,164,181,0.4);
+                }
+                .team-member.current-chat {
+                    background: rgba(148,164,181,0.4)!important;                    
                 }
             }
         }
