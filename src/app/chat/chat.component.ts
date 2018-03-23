@@ -70,6 +70,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.listenToRecruiterColleagueTypes().subscribe(data => {
+      console.log(data);
       this.checkIfTyping(data);
     });
     
@@ -402,7 +403,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._socket.emit('leave-chat-room', {
       'dialogId': this.dialogId
     });
-    this._socket.disconnect();
     this._coreService.removeHighlighter(this.teamMemberId);
   }
   
