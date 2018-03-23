@@ -38,7 +38,6 @@ export class NotificationsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._socket.connect();
     this.getNoteMentionsNotificationsUpdated().subscribe(data => {
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
