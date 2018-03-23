@@ -26,7 +26,6 @@ constructor(
             pageNumber: data.pageNumber
         };
         return this._parse.execCloud('getMessages', params).then(result => {
-          console.log(result);
           return result;
         });
     };

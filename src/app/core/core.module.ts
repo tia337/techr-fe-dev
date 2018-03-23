@@ -10,6 +10,7 @@ import { FeedbackAlertComponent } from './feedback-alert/feedback-alert.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FeedbackService } from './feedback-alert/feedback.service';
 import { HeaderModule } from '../header/header.module';
+import { ClickOutsideModule } from 'ng-click-outside';
 
 @NgModule({
 	imports: [
@@ -21,7 +22,8 @@ import { HeaderModule } from '../header/header.module';
 		ReactiveFormsModule,
 		MatButtonModule,
 		MatSelectModule,
-		HeaderModule
+		HeaderModule,
+		ClickOutsideModule
 	],
 	declarations: [CoreComponent, FeedbackAlertComponent],
 	providers: [CoreService, FeedbackService],

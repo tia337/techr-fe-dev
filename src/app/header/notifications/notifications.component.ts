@@ -40,34 +40,29 @@ export class NotificationsComponent implements OnInit {
   ngOnInit() {
     this._socket.connect();
     this.getNoteMentionsNotificationsUpdated().subscribe(data => {
-      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getContractApplyNotifications().subscribe(data => {
-      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getScoringMentionNotifications().subscribe(data => {
-      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getEmployeeReferralsNotifications().subscribe(data => {
-      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getTeamMemberMessageNotifications().subscribe(data => {
+      // this.createOn(data);
       console.log(data);
-      this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
   }
 
   closeNotifications(notifications: boolean, event): void {
-      this.create();
       notifications = !notifications;
       this.notificationsStatus.emit(notifications);
       event.stopPropagation();
@@ -135,7 +130,7 @@ export class NotificationsComponent implements OnInit {
 
   getTeamMemberMessageNotifications () {
     const observable = new Observable(observer => {
-			this._socket.on('TeamMemberMessageNotifcation', data => {
+			this._socket.on('NewMessagePartnerNotification', data => {
 				observer.next(data);
 			});
 		});

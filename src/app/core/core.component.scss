@@ -329,11 +329,12 @@ $menu-height: calc(100vh - #{$header-height});
                     border-left: 3px solid #3c7ec4;
                     background: rgba(148,164,181,0.4);
                 }
-                .team-member.current-chat {
-                    background: rgba(148,164,181,0.4)!important;                    
-                }
+                
             }
         }
+    }
+    .team-member.active-dialog {
+        background: rgba(148,164,181,0.4)!important;                    
     }
     .main-content {
         overflow-x: hidden;

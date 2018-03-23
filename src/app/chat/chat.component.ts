@@ -17,7 +17,7 @@ import { RootVCRService } from '../root_vcr.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ChatComponent implements OnInit, OnDestroy {
 
   public messages;
   public teamMember: ChatTeamMember;
@@ -49,75 +49,45 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     private _socket: Socket,
     private _parse: Parse,
     private _root_vcr: RootVCRService    
-  ) {  
-    this._ar.params.subscribe(params => {
-      this._socket.emit('enter-chat-room', {
-        'dialogId': params.id 
-      });
-    })
-  }
-
+  ) { }
 
   ngOnInit() {
+    
     this.userId = this._parse.getCurrentUser().id;
 
     this._socket.connect();
 
     this.editPartnersMessage().subscribe(data => {
-      console.log(data);
       this.turnEditedMessage(data);
-    })
+    });
     
     this.listeToDeletedMessage().subscribe(data => {
       this.deleteMessage(data);
-    })
+    });
 
     this.recieveColleagueMessage().subscribe(data => {
-      this._coreService.closeTypingStatus(this.teamMemberId);      
-      Object.defineProperty(data, 'className', {value: 'Message'});
-      let message = this._parse.Parse.Object.fromJSON(data);
-      this.messageStorage.unshift(message);
-      this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
-        this.messages = messagesSorted;
-        if (this.messagesBlock.nativeElement.scrollHeight - this.messagesBlock.nativeElement.scrollTop - this.messagesBlock.nativeElement.offsetHeight <= 20) {
-          this.scrollToBottom();
-        }
-      });
+      this.addMessageToChat(data);
     });
 
     this.listenToRecruiterColleagueTypes().subscribe(data => {
       this.checkIfTyping(data);
     });
-
+    
     this._ar.params.subscribe(params => {
-      this._socket.emit('leave-chat-room', {
-        'dialogId': this.dialogId
-      });
-      this._socket.connect();
-      this.dialogId = params.id;
-      this._socket.emit('enter-chat-room', {
-        'dialogId': this.dialogId 
-      });
-      this.createQueryData(params.id).then(queryData => {
-        let data = queryData;
-        this._chatService.getUserMessages(data).then(messages => {
-          if (messages.length === 0 || messages.length <= 30) {
-            this.beginning = true;
-          };
-          if (messages.length > 0) {
-            this.noMessages = true;
-            this.loader = true;
-            this.beginning = false;
-          };
-          this.messageStorage = messages;
-          this._chatService.createMessagesArraySorted(messages, this.messagesBlock).then(messages => {
-            this.messages = messages;
-            this.loader = false;
-            this._coreService.clearMessagesCount(this.dialogId);
-          })
-          this.scrollToBottom();
-        });
-      });   
+      
+      if (params.id === 'false') {
+        this.messages = [];
+        this.noMessages = false;
+        this.beginning = true;
+        this._socket.connect();        
+        return;
+      } else {
+        this.dialogId = params.id;
+        this._socket.connect();        
+        this.setDialogIdToLocalStorage(params);
+        this.getMessages(params);
+      }
+        
     })
     this._ar.queryParams.subscribe(queryParams => {
       this.teamMemberQueryParams = queryParams;
@@ -125,17 +95,50 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
     });
     this._chatService.getTeamMembers().then(team => this.teammates = team);
+    this.clearMessagesCount();
   }
 
-  ngAfterViewInit () {
-    // this._chatService.init(this.messagesBlock.nativeElement);
-    // let sub = this.messageBlock.changes.subscribe(data => {
-    //     this._chatService.restore()
-    // });
+  setDialogIdToLocalStorage (params) {
+    if (!localStorage.getItem('chatRoom')){
+      localStorage.setItem('chatRoom', params.id);
+      this._socket.emit('enter-chat-room', {
+        'dialogId': params.id 
+      });
+      return;
+    } else {
+      let dialogIdToLeave = localStorage.getItem('chatRoom');
+      this._socket.emit('leave-chat-room', {
+        'dialogId': dialogIdToLeave
+      });
+      localStorage.setItem('chatRoom', params.id);
+      this._socket.emit('enter-chat-room', {
+        'dialogId': params.id 
+      });
+    }
   }
 
-  
- 
+  getMessages(params){
+    this.createQueryData(params.id).then(queryData => {
+      let data = queryData;
+      this._chatService.getUserMessages(data).then(messages => {
+        if (messages.length > 0) {
+          this.noMessages = true;
+          this.loader = true;
+          this.beginning = false;
+          this.messageStorage = messages;
+          this._chatService.createMessagesArraySorted(messages, this.messagesBlock).then(messages => {
+            this.messages = messages;
+            this.loader = false;
+            this._coreService.clearMessagesCount(this.dialogId);
+          })
+        this.scrollToBottom();
+        };
+        if (messages.length <= 30) {
+          this.beginning = true;
+        };
+      });
+    }); 
+  }
 
   createQueryData (dialogId) {
     return new Promise(resolve => {
@@ -235,6 +238,19 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     return observable;
   }
 
+  addMessageToChat (data) {
+    this._coreService.closeTypingStatus(this.teamMemberId);      
+    Object.defineProperty(data, 'className', {value: 'Message'});
+    let message = this._parse.Parse.Object.fromJSON(data);
+    this.messageStorage.unshift(message);
+    this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
+      this.messages = messagesSorted;
+      if (this.messagesBlock.nativeElement.scrollHeight - this.messagesBlock.nativeElement.scrollTop - this.messagesBlock.nativeElement.offsetHeight <= 20) {
+        this.scrollToBottom();
+      }
+    });
+  }
+
   RecruiterColleagueTypes () {
     this._socket.emit('typing-message', {
       'dialogId': this.dialogId,
@@ -266,6 +282,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editMessage (value, message) {
+    if (value === message.get('message')) {
+      message.editHidden = false;      
+    }
     if (value !== message.get('message') && value != "") {
       message.set('message', value);
       message.isEdited = true;
@@ -273,7 +292,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       this._socket.emit('edit-message', {dialogId: this.dialogId, messageId: message.id, message: value});
     }
     if (value === '') {
-      this.alertDeleteMessage(message);
+      this.alertDeleteMessage(message, value);
     }
   }
 
@@ -298,7 +317,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     })
   }
 
-  alertDeleteMessage (message) {
+  alertDeleteMessage (message, value) {
     const alert = this._root_vcr.createComponent(AlertComponent);
     alert.title = "Delete message"
     alert.content = `
@@ -321,7 +340,9 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
       title: 'Cancel',
       onClick: () => {
         this._root_vcr.clear();
-        message.editHidden = false;
+        if (value !== '') {
+          message.editHidden = false;
+        }
       }
     })
     alert.addButton({
@@ -369,6 +390,11 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadMessages = true;
       }, 0);
     } catch (error) {}
+  }
+
+  
+  clearMessagesCount () {
+    this._coreService.clearMessagesCount(this.dialogId);    
   }
 
   ngOnDestroy () {

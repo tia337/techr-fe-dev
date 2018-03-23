@@ -106,7 +106,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 		this._coreService.currentHighlighter.subscribe(data => {
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
-					member.currentChat = 0;
+					member.dialogActive = false;
 				}
 			});
 		});
@@ -237,8 +237,10 @@ export class CoreComponent implements OnInit, OnDestroy {
 			this._parse.execCloud('getUnreadMessagesPartnerCount', {memberId: member.id}).then(data => {
 				member.unreadMessages = data.unreadMessages;
 				member.dialogId = data.dialogId;
+				member.dialogActive = false;
 			});
 		});
+		console.log(members);
 		this.getSessionStatus(members);
 	};
 
@@ -308,6 +310,15 @@ export class CoreComponent implements OnInit, OnDestroy {
 			}
 		});
 	};
+
+	highlightDialog (id) {
+		this.teamMembers.forEach(member => {
+			member.dialogActive = false;
+			if (member.id === id) {
+				member.dialogActive = true;
+			}
+		});
+	}
 }
 
 
