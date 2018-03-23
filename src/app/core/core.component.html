@@ -78,12 +78,16 @@
       </div>
       <div class="team-members " *ngIf="teamMembers">
         <div *ngFor="let teamMember of teamMembers">
-          <p class="team-member" [routerLink]="['/chat', teamMember.dialogId]" [queryParams]="[teamMember.firstName, teamMember.lastName, teamMember.avatarURL, teamMember.sessionStatus, teamMember.id ]"> 
-            <span *ngIf="teamMember.sessionStatus === false" class="team-member-status offline"></span>
-            <span *ngIf="teamMember.sessionStatus === true" class="team-member-status online"></span>
-            <span>{{ teamMember.firstName }}</span>  
-            <span class="team-member-unread-messages" *ngIf="teamMember.unreadMessages > 0 && teamMember.typing === false">{{teamMember.unreadMessages}}</span>
-            <span *ngIf="teamMember.typing === true" class="team-member-typing"><img src="../../assets/icons/typing.svg" alt=""></span>
+          <p class="team-member" 
+            [ngClass]="{'active-dialog': teamMember.dialogActive === true}"
+            (click)="highlightDialog(teamMember.id)" 
+            [routerLink]="['/chat', teamMember.dialogId]" 
+            [queryParams]="[teamMember.firstName, teamMember.lastName, teamMember.avatarURL, teamMember.sessionStatus, teamMember.id ]"> 
+              <span *ngIf="teamMember.sessionStatus === false" class="team-member-status offline"></span>
+              <span *ngIf="teamMember.sessionStatus === true" class="team-member-status online"></span>
+              <span>{{ teamMember.firstName }}</span>  
+              <span class="team-member-unread-messages" *ngIf="teamMember.unreadMessages > 0 && teamMember.typing === false">{{teamMember.unreadMessages}}</span>
+              <span *ngIf="teamMember.typing === true" class="team-member-typing"><img src="../../assets/icons/typing.svg" alt=""></span>
           </p>
         </div>
       </div>

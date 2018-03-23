@@ -40,7 +40,8 @@
   padding-left: 40px;
   padding-right: 15px;
   overflow: scroll; 
-  height: 700px;
+  overflow: auto;
+  height: calc(100vh - 103px);
   &__title {
     text-align: center;
     margin: 20px 0;
