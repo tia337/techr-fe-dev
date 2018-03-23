@@ -55,7 +55,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     
     this.userId = this._parse.getCurrentUser().id;
 
-    this._socket.connect();
 
     this.editPartnersMessage().subscribe(data => {
       this.turnEditedMessage(data);
@@ -80,11 +79,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messages = [];
         this.noMessages = false;
         this.beginning = true;
-        this._socket.connect();        
         return;
       } else {
         this.dialogId = params.id;
-        this._socket.connect();        
         this.setDialogIdToLocalStorage(params);
         this.getMessages(params);
       }
@@ -253,7 +250,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   RecruiterColleagueTypes () {
-    console.log(this.teamMemberId);
+
+    console.log(this._parse.getCurrentUser().id);
     this._socket.emit('typing-message', {
       'dialogId': this.dialogId,
       'sender': this._parse.getCurrentUser().id,
