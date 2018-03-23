@@ -252,10 +252,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   RecruiterColleagueTypes () {
+    console.log(this.teamMemberId);
     this._socket.emit('typing-message', {
       'dialogId': this.dialogId,
-      'recipient': this.teamMemberId,
-      'sender': this._parse.getCurrentUser().id
+      'sender': this._parse.getCurrentUser().id,
+      'recipient': this.teamMemberId
     })
   }
 

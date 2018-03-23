@@ -98,6 +98,9 @@ export class CoreComponent implements OnInit, OnDestroy {
 		this.getUnreadMessagesCountUpdated().subscribe(data => {
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
+					if (window.location.href.indexOf(`chat/` + member.dialogId)) {
+						console.log('WOHOO');
+					};
 					member.unreadMessages = parseFloat(member.unreadMessages) + 1;
 					member.typing = false;
 				}
