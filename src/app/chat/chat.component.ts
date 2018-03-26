@@ -250,8 +250,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   RecruiterColleagueTypes () {
-
-    console.log(this._parse.getCurrentUser().id);
+    console.log('sender :', this._parse.getCurrentUser().id);
+    let data = {
+      'dialogId': this.dialogId,
+      'sender': this._parse.getCurrentUser().id,
+      'recipient': this.teamMemberId
+    }
+    console.log(data);
     this._socket.emit('typing-message', {
       'dialogId': this.dialogId,
       'sender': this._parse.getCurrentUser().id,
