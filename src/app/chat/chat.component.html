@@ -81,7 +81,12 @@
 </div>
 <div>
   <div class="message-input-block" *ngIf="teamMember !== undefined">
-    <input type="text" [mention]="teammates" (keydown)="RecruiterColleagueTypes()"  (keyup.enter)="sendColleagueMessage($event)" [mentionConfig]="{labelKey: 'name'}" placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}">
+    <input type="text" 
+     [mention]="teammates" 
+     [mentionConfig]="{labelKey: 'name'}" 
+     (keydown)="RecruiterColleagueTypes()"  
+     (keyup.enter)="sendColleagueMessage($event)" 
+     placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}">
     <div class="subscriptions-block">
       <span id="mention-candidate">#</span>
       <span id="mention-team-member">@</span>

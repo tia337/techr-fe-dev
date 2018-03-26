@@ -303,7 +303,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	addAnimationToTyping (data) {
 		this.teamMembers.forEach(member => {
-			if (member.id === data.sender) {
+			if (member.id === data.senderId) {
 				clearTimeout(data.sender);
 				member.typing = true;
 				data.sender = setTimeout(() => {

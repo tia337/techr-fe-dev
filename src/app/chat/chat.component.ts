@@ -27,7 +27,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   public loadMessages = true;
   public teamMemberParams;
   public teamMemberQueryParams;
-  public messageStorage; 
+  public messageStorage;
   public noMessages = false;
   public teammates = [];
   public loader: boolean;
@@ -36,6 +36,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   public tempMessage: LooseObject = {};
   public teamMemberId: string;
   public typing = false;
+  public username = '';
   private timer;
   private newMessagesCount: number = 0;
 
@@ -48,18 +49,18 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _coreService: CoreService,
     private _socket: Socket,
     private _parse: Parse,
-    private _root_vcr: RootVCRService    
+    private _root_vcr: RootVCRService
   ) { }
 
   ngOnInit() {
-    
+
     this.userId = this._parse.getCurrentUser().id;
 
 
     this.editPartnersMessage().subscribe(data => {
       this.turnEditedMessage(data);
     });
-    
+
     this.listeToDeletedMessage().subscribe(data => {
       this.deleteMessage(data);
     });
@@ -69,12 +70,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.listenToRecruiterColleagueTypes().subscribe(data => {
-      console.log(data);
       this.checkIfTyping(data);
     });
-    
+
     this._ar.params.subscribe(params => {
-      
+
       if (params.id === 'false') {
         this.messages = [];
         this.noMessages = false;
@@ -85,7 +85,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.setDialogIdToLocalStorage(params);
         this.getMessages(params);
       }
-        
+
     })
     this._ar.queryParams.subscribe(queryParams => {
       this.teamMemberQueryParams = queryParams;
@@ -100,7 +100,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!localStorage.getItem('chatRoom')){
       localStorage.setItem('chatRoom', params.id);
       this._socket.emit('enter-chat-room', {
-        'dialogId': params.id 
+        'dialogId': params.id
       });
       return;
     } else {
@@ -110,7 +110,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
       localStorage.setItem('chatRoom', params.id);
       this._socket.emit('enter-chat-room', {
-        'dialogId': params.id 
+        'dialogId': params.id
       });
     }
   }
@@ -135,7 +135,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           this.beginning = true;
         };
       });
-    }); 
+    });
   }
 
   createQueryData (dialogId) {
@@ -199,7 +199,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   scrollAfterLoading (oldHeight) {
-    this.loadMessages = true;   
+    this.loadMessages = true;
     this.loader = false;
     try {
       setTimeout(() => {
@@ -220,11 +220,10 @@ export class ChatComponent implements OnInit, OnDestroy {
       'message': event.target.value,
       'dialogId': this.dialogId,
       'sender': this._parse.getCurrentUser().id,
+      'recipientId': this.teamMemberId,
       'type': 'AppChat'
     });
     event.target.value = null;
-    clearTimeout(this.timer);
-    this.typing = false;
   }
 
   recieveColleagueMessage () {
@@ -237,7 +236,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   addMessageToChat (data) {
-    this._coreService.closeTypingStatus(this.teamMemberId);      
+    this._coreService.closeTypingStatus(this.teamMemberId);
     Object.defineProperty(data, 'className', {value: 'Message'});
     let message = this._parse.Parse.Object.fromJSON(data);
     this.messageStorage.unshift(message);
@@ -250,13 +249,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   RecruiterColleagueTypes () {
-    console.log('sender :', this._parse.getCurrentUser().id);
-    let data = {
-      'dialogId': this.dialogId,
-      'sender': this._parse.getCurrentUser().id,
-      'recipient': this.teamMemberId
-    }
-    console.log(data);
     this._socket.emit('typing-message', {
       'dialogId': this.dialogId,
       'sender': this._parse.getCurrentUser().id,
@@ -266,7 +258,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   listenToRecruiterColleagueTypes () {
     const observable = new Observable(observer => {
-      this._socket.on('typing-message', data => {
+      this._socket.on('typing-message-listen', data => {
         observer.next(data);
       })
     })
@@ -283,12 +275,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     const self = this;
     this.timer = setTimeout(function () {
       self.typing = false;
-    }, 7000); 
+    }, 7000);
   }
 
   editMessage (value, message) {
     if (value === message.get('message')) {
-      message.editHidden = false;      
+      message.editHidden = false;
     }
     if (value !== message.get('message') && value != "") {
       message.set('message', value);
@@ -365,9 +357,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       for (let next = 1, i = 0; i < dayMessages.length; ++next, i++) {
         if (dayMessages[i].id === data.id || dayMessages[i].id === data.objectId) {
           if (dayMessages[next] != undefined) {
-            let nextMessageAuthor = dayMessages[next].author; 
-            let currentMessageAuthor = dayMessages[i].author; 
-            if (nextMessageAuthor === undefined) { 
+            let nextMessageAuthor = dayMessages[next].author;
+            let currentMessageAuthor = dayMessages[i].author;
+            if (nextMessageAuthor === undefined) {
               dayMessages[next].author = currentMessageAuthor;
             }
           }
@@ -397,9 +389,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     } catch (error) {}
   }
 
-  
+
   clearMessagesCount () {
-    this._coreService.clearMessagesCount(this.dialogId);    
+    this._coreService.clearMessagesCount(this.dialogId);
   }
 
   ngOnDestroy () {
@@ -408,5 +400,5 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
     this._coreService.removeHighlighter(this.teamMemberId);
   }
-  
+
 }
