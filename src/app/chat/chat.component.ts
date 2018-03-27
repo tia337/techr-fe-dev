@@ -86,12 +86,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messages = [];
         this.noMessages = false;
         this.beginning = true;
-        // localStorage.setItem('chatRoom', 'false');
-        if (localStorage.getItem('chatRoom')) {
-          this._socket.emit('enter-chat-room', {
-            'dialogId': localStorage.getItem('chatRoom')
-          });
-        }
         return;
       } else {
         this.dialogId = params.id;
@@ -233,14 +227,22 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendColleagueMessage (event) {
     console.log(this.dialogId);
-    this._socket.emit('outgoing-to-colleague', {
-      message: event.target.value,
-      sender: this._parse.getCurrentUser().id,
-      dialog: this.dialogId,
-      recipientId: this.teamMemberId,
-      type: 'AppChat'
-    });
-    event.target.value = null;
+    // if (event.target.value === '') {
+    //   return;
+    // } else {
+    //   this._socket.emit('outgoing-to-colleague', {
+    //     message: event.target.value,
+    //     sender: this._parse.getCurrentUser().id,
+    //     dialog: this.dialogId,
+    //     recipientId: this.teamMemberId,
+    //     type: 'AppChat'
+    //   });
+    //   event.target.value = null;
+    // }
+    if (event.target.value === '') {
+      return;
+    } 
+    console.log('GOT IT');
   }
 
   recieveColleagueMessage () {
