@@ -72,6 +72,7 @@ import { InvitationPageComponent } from './invitation-page/invitation-page.compo
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 
+import { NotificationComponent } from './header/notifications/notification/notification.component';
 
 
 const routes: Routes = [
@@ -123,8 +124,8 @@ const routes: Routes = [
 		children: [
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 			{ path: 'chat/:id', component: ChatComponent, canActivate: [LoginGuard] },
+			{ path: 'chat/:id', component: NotificationComponent },
 			{ path: 'test', component: TestComponent },
-
 			{ path: 'invitation', component: InviteUserPageComponent },
 			{ path: 'dashboard', component: DashboardComponent },
 			{

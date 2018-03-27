@@ -103,6 +103,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._chatService.getTeamMembers().then(team => this.teammates = team);
     this.clearMessagesCount();
     
+    this.getTeamMemberOnline().subscribe(data => {
+        this.teamMember.sessionStatus = 'true';
+    });
+    this.getTeamMemberOffline().subscribe(data => {
+        this.teamMember.sessionStatus = 'false';
+    });
+
   }
 
   setDialogIdToLocalStorage (params) {
@@ -416,6 +423,24 @@ export class ChatComponent implements OnInit, OnDestroy {
   clearMessagesCount () {
     this._coreService.clearMessagesCount(this.dialogId);
   }
+
+  getTeamMemberOnline() {
+		const observable = new Observable(observer => {
+			this._socket.on('teamMemberOnline', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+	};
+
+	getTeamMemberOffline() {
+		const observable = new Observable(observer => {
+			this._socket.on('teamMemberOffline', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+	};
 
   ngOnDestroy () {
     this._socket.emit('leave-chat-room', {

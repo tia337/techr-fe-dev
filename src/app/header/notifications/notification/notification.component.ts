@@ -1,5 +1,6 @@
 import {Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef, OnDestroy} from '@angular/core';
 import { RootVCRService } from '../../../root_vcr.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: "notification",
@@ -15,10 +16,15 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 	public notificationContractId: string;
 	public notificationMessage: string;
 	public notificationMessageSender: string;
+	public notificationDialogId: string;
 	private _onDestroy: Function;
 
 
-	constructor(private _root_vcr: RootVCRService, private _changesDetector: ChangeDetectorRef) { }
+	constructor(
+		private _root_vcr: RootVCRService,
+		private _changesDetector: ChangeDetectorRef,
+		private _router: Router
+	) { }
 
 	ngOnInit() {
 		// this.contentBlock.nativeElement.innerHTML = this._content;
@@ -58,6 +64,10 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.notificationMessage = value;
 	}
 
+	set dialogId (value: string) {
+		this.notificationDialogId = value;
+	}
+
 	set onDestroy(func: Function) {
 		this._onDestroy = func;
 	}
@@ -88,6 +98,15 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	get message () {
 		return this.notificationMessage;
+	}
+
+	get dialogId () {
+		return this.notificationDialogId;
+	}
+
+	navigateToDialog (dialogId) {
+		console.log(dialogId);
+		// this._router.navigate('[]')
 	}
 
 	close() {

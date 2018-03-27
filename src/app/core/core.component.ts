@@ -160,7 +160,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 			console.log('Second time', this._socket);
 		}
 		this._cartAdding.cartLoad();
-
 	}
 	test(event) {
 		// console.log('open ', event);
@@ -327,6 +326,9 @@ export class CoreComponent implements OnInit, OnDestroy {
 				member.dialogActive = true;
 			}
 		});
+	}
+
+	addTeamMembersToLocalStorage (teamMembers) {
 	}
 }
 

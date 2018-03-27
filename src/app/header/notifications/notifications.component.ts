@@ -5,6 +5,7 @@ import { RootVCRService } from '../../root_vcr.service';
 import { SocketIoConfig, Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import { HeaderService } from '../header.service';
+import { Router, NavigationEnd } from '@angular/router';
 
 
 // tslint:disable:indent
@@ -55,8 +56,7 @@ export class NotificationsComponent implements OnInit {
       this._headerService.updateNotificationsCount('1');
     });
     this.getTeamMemberMessageNotifications().subscribe(data => {
-      this.createOn(data);
-      console.log(data);
+      this.createMessageNotification(data);
       this._headerService.updateNotificationsCount('1');
     });
   }
@@ -77,24 +77,22 @@ export class NotificationsComponent implements OnInit {
     if (data.contractTitle) {
       notification.notificationTitle = data.contractTitle;
     };
-    if (data.sender) {
-      notification.notificationMessageSender = data.sender;
-    };
-    if (data.message) {
-      notification.notificationMessage = data.message;
-    };
+    
     notification.candidateId = data.candidateId;
     notification.contractId = data.contractId;
   }
 
-  create() {
-    this._root_vcr.clear();
-    const notification = this._root_vcr.createComponent(NotificationComponent);
-    notification.notificationType = 'NoteMention';
-    notification.candidateName = 'Lil Jordan Michael Wayne';
-    notification.notificationTitle = 'Angular 2+ developer/Middle';
-    notification.candidateId = '2';
-    notification.contractId = '2';
+  createMessageNotification (data) {
+    if (window.location.href.indexOf(data.dialogId) > -1) {
+      console.log('Do not show Notification');
+    } else {
+      this._root_vcr.clear();
+      const notification = this._root_vcr.createComponent(NotificationComponent);
+      notification.notificationType = 'NewMessagePartner';
+      notification.notificationMessageSender = data.sender;
+      notification.notificationMessage = data.message;
+      notification.notificationDialogId = data.dialogId;
+    };
   }
 
   getNoteMentionsNotificationsUpdated () {
