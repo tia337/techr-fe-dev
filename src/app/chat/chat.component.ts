@@ -113,19 +113,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!localStorage.getItem('chatRoom')){
       localStorage.setItem('chatRoom', params.id);
       this._socket.emit('enter-chat-room', {
-        'dialogId': params.id
+        dialogId: params.id
       });
       console.log('ENTERED THE ROOM');      
       return;
     } else {
       let dialogIdToLeave = localStorage.getItem('chatRoom');
       this._socket.emit('leave-chat-room', {
-        'dialogId': dialogIdToLeave
+        dialogId: dialogIdToLeave
       });
       console.log('LEAVED THE ROOM', dialogIdToLeave);
       localStorage.setItem('chatRoom', params.id);
       this._socket.emit('enter-chat-room', {
-        'dialogId': params.id
+        dialogId: params.id
       });
       console.log('ENTERED THE ROOM', params.id);
     }
@@ -234,11 +234,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendColleagueMessage (event) {
     console.log(this.dialogId);
     this._socket.emit('outgoing-to-colleague', {
-      'message': event.target.value,
-      'sender': this._parse.getCurrentUser().id,
-      'dialog': this.dialogId,
-      'recipientId': this.teamMemberId,
-      'type': 'AppChat'
+      message: event.target.value,
+      sender: this._parse.getCurrentUser().id,
+      dialog: this.dialogId,
+      recipientId: this.teamMemberId,
+      type: 'AppChat'
     });
     event.target.value = null;
   }
@@ -268,9 +268,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   RecruiterColleagueTypes () {
     console.log('sender typing:', this._parse.getCurrentUser().id);
     this._socket.emit('typing-message', {
-      'dialogId': this.dialogId,
-      'sender': this._parse.getCurrentUser().id,
-      'recipient': this.teamMemberId
+      dialogId: this.dialogId,
+      sender: this._parse.getCurrentUser().id,
+      recipient: this.teamMemberId
     })
   }
 
@@ -304,7 +304,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       message.set('message', value);
       message.isEdited = true;
       message.editHidden = false;
-      this._socket.emit('edit-message', {dialogId: this.dialogId, messageId: message.id, message: value});
+      this._socket.emit('edit-message', {
+        dialogId: this.dialogId, 
+        messageId: message.id, 
+        message: value
+      });
     }
     if (value === '') {
       this.alertDeleteMessage(message, value);
@@ -386,7 +390,10 @@ export class ChatComponent implements OnInit, OnDestroy {
         };
       }
     });
-    this._socket.emit('delete-message',{ dialogId: this.dialogId, messageId: data.id});
+    this._socket.emit('delete-message', { 
+      dialogId: this.dialogId, 
+      messageId: data.id
+    });
   }
 
   listeToDeletedMessage () {
