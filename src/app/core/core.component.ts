@@ -99,11 +99,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 		this.getUnreadMessagesCountUpdated().subscribe(data => {
 			this.teamMembers.forEach(member => {
 				if (member.id === data) {
-					if (window.location.href.indexOf(`chat/` + member.dialogId)) {
-						console.log('WOHOO');
-					};
-					member.unreadMessages = parseFloat(member.unreadMessages) + 1;
-					member.typing = false;
+					if (window.location.href.indexOf(member.dialogId) > -1) {
+						return;
+					} else {
+						member.unreadMessages = parseFloat(member.unreadMessages) + 1;
+						member.typing = false;
+					}
 				}
 			});
 		});
@@ -303,16 +304,20 @@ export class CoreComponent implements OnInit, OnDestroy {
 	}
 
 	addAnimationToTyping (data) {
-		this.teamMembers.forEach(member => {
-			if (member.id === data.sender) {
-				clearTimeout(data.sender);
-				member.typing = true;
-				data.sender = setTimeout(() => {
-					member.typing = false;
-					console.log('FAAAAAALSE');
-				}, 7000);
-			}
-		});
+		if (window.location.href.indexOf(data.dialogId) > -1) {
+			return;
+		} else {
+			this.teamMembers.forEach(member => {
+				if (member.id === data.sender) {
+					clearTimeout(data.sender);
+					member.typing = true;
+					data.sender = setTimeout(() => {
+						member.typing = false;
+						console.log('FAAAAAALSE');
+					}, 7000);
+				}
+			});
+		}
 	};
 
 	highlightDialog (id) {
