@@ -82,11 +82,11 @@
 <div>
   <div class="message-input-block" *ngIf="teamMember !== undefined">
     <textarea autosize
-     #messageInput
+     #messageTextArea
      [mention]="teammates" 
      [mentionConfig]="{labelKey: 'name'}" 
-     (keydown)="RecruiterColleagueTypes()"
-     (keyup.enter)="sendColleagueMessage($event)" 
+     (keydown)="RecruiterColleagueTypes();"
+     (keydown.enter)="sendColleagueMessage($event)"
      placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}"></textarea>
     <div class="subscriptions-block">
       <span id="mention-candidate">#</span>

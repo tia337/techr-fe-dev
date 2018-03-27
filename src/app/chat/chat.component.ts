@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, QueryList, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './chat.service';
 import { MentionModule } from 'angular2-mentions/mention';
@@ -36,16 +36,17 @@ export class ChatComponent implements OnInit, OnDestroy {
   public tempMessage: LooseObject = {};
   public teamMemberId: string;
   public typing = false;
-  public value = '';
+  public value = 'value...';
   private timer;
   private newMessagesCount: number = 0;
 
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
   @ViewChild('messageBlock') private messageBlock: QueryList<any>;
-  @ViewChild('messageInput') public messageInput: HTMLInputElement;
+  @ViewChild('messageInput') public messageTextArea: HTMLTextAreaElement;
   
 
   constructor(
+    private _router: Router,
     private _ar: ActivatedRoute,
     private _chatService: ChatService,
     private _coreService: CoreService,
@@ -58,6 +59,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.userId = this._parse.getCurrentUser().id;
 
+    this._ar.data.subscribe(data => {
+      console.log('SUBSCRIBED DATA', data)
+    })
 
     this.editPartnersMessage().subscribe(data => {
       this.turnEditedMessage(data);
@@ -68,6 +72,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.recieveColleagueMessage().subscribe(data => {
+      console.log(data);
       clearTimeout(this.timer);
       this.typing = false;
       if (this.dialogId != undefined) {
@@ -80,12 +85,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.checkIfTyping(data);
     });
 
-    this._ar.params.subscribe(params => {
-      // this.messageInput.value = '';
+    this._ar.params.subscribe(params => {   
       if (params.id === 'false') {
         this.messages = [];
         this.noMessages = false;
         this.beginning = true;
+        this.dialogId = params.id;
         return;
       } else {
         this.dialogId = params.id;
@@ -93,14 +98,18 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.getMessages(params);
       }
 
-    })
+    });
+
     this._ar.queryParams.subscribe(queryParams => {
       this.teamMemberQueryParams = queryParams;
       this.teamMemberId = queryParams[4];
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
+      this.value = '';
     });
+
     this._chatService.getTeamMembers().then(team => this.teammates = team);
     this.clearMessagesCount();
+    
   }
 
   setDialogIdToLocalStorage (params) {
@@ -109,7 +118,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this._socket.emit('enter-chat-room', {
         dialogId: params.id
       });
-      console.log('ENTERED THE ROOM');      
+      console.log('ENTERED THE ROOM', params.id);      
       return;
     } else {
       let dialogIdToLeave = localStorage.getItem('chatRoom');
@@ -138,8 +147,8 @@ export class ChatComponent implements OnInit, OnDestroy {
             this.messages = messages;
             this.loader = false;
             this._coreService.clearMessagesCount(this.dialogId);
-          })
-        this.scrollToBottom();
+          });
+          this.scrollToBottom();
         };
         if (messages.length <= 30) {
           this.beginning = true;
@@ -175,7 +184,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   onScrollUp (event) {
     const oldHeight = this.messagesBlock.nativeElement.scrollHeight;
-    if (this.loadMessages === true) {
+    if (this.loadMessages === true && this.dialogId !== 'false') {
       if (event.target.scrollTop === 0) {
         this.loadMessages = false;
         let data;
@@ -191,11 +200,9 @@ export class ChatComponent implements OnInit, OnDestroy {
               this.beginning = true;
               return;
             } else {
-              // this.loader = true;
               this.beginning = false;
               this.messageStorage = this.messageStorage.concat(messages);
               this._chatService.createMessagesArraySorted(this.messageStorage, this.messagesBlock).then(messages => {
-                // this._chatService.prepareFor('up');
                 this.messages = messages;
                 this.scrollAfterLoading(oldHeight);
               })
@@ -226,23 +233,20 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   sendColleagueMessage (event) {
-    console.log(this.dialogId);
-    // if (event.target.value === '') {
-    //   return;
-    // } else {
-    //   this._socket.emit('outgoing-to-colleague', {
-    //     message: event.target.value,
-    //     sender: this._parse.getCurrentUser().id,
-    //     dialog: this.dialogId,
-    //     recipientId: this.teamMemberId,
-    //     type: 'AppChat'
-    //   });
-    //   event.target.value = null;
-    // }
+    if (event.target.value != '') {
+      event.preventDefault();
+      this._socket.emit('outgoing-to-colleague', {
+        message: event.target.value,
+        sender: this._parse.getCurrentUser().id,
+        dialog: this.dialogId,
+        recipientId: this.teamMemberId,
+        type: 'AppChat'
+      });
+      event.target.value = null;
+    };
     if (event.target.value === '') {
-      return;
-    } 
-    console.log('GOT IT');
+      event.preventDefault();
+    };
   }
 
   recieveColleagueMessage () {
@@ -250,7 +254,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this._socket.on('updated-from-colleague', data => {
         observer.next(data);
       })
-    })
+    });
     return observable;
   }
 
@@ -263,12 +267,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.messages = messagesSorted;
       if (this.messagesBlock.nativeElement.scrollHeight - this.messagesBlock.nativeElement.scrollTop - this.messagesBlock.nativeElement.offsetHeight <= 20) {
         this.scrollToBottom();
-      }
+      };
     });
   }
 
   RecruiterColleagueTypes () {
-    console.log('sender typing:', this._parse.getCurrentUser().id);
     this._socket.emit('typing-message', {
       dialogId: this.dialogId,
       sender: this._parse.getCurrentUser().id,

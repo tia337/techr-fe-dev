@@ -139,7 +139,7 @@
 }
 
 .message-input-block {
-    height: 40px;
+    height: auto;
     width: calc(100% - 20px);
     margin: 10px auto 0;
     border: 2px solid #c1c1c2;
@@ -158,6 +158,8 @@
         width: 90%;
         height: 100%;
         font-size: 14px;
+        padding-top: 10px;
+        min-height: 40px;
         &::-webkit-input-placeholder {
             color: #c1c1c2;
             font-size: 14px;
@@ -222,6 +224,7 @@ textarea {
 
 .typing-attention {
     margin-left: 20px;
+    margin-bottom: 5px;
     font-size: 12px;
     display: inline-block;
     color: #383838;
