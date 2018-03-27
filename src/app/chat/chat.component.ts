@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, QueryList, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './chat.service';
 import { MentionModule } from 'angular2-mentions/mention';
@@ -36,7 +36,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   public tempMessage: LooseObject = {};
   public teamMemberId: string;
   public typing = false;
-  public value = 'value...';
   private timer;
   private newMessagesCount: number = 0;
 
@@ -46,7 +45,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   
 
   constructor(
-    private _router: Router,
     private _ar: ActivatedRoute,
     private _chatService: ChatService,
     private _coreService: CoreService,
@@ -58,10 +56,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     this.userId = this._parse.getCurrentUser().id;
-
-    this._ar.data.subscribe(data => {
-      console.log('SUBSCRIBED DATA', data)
-    })
 
     this.editPartnersMessage().subscribe(data => {
       this.turnEditedMessage(data);
@@ -104,7 +98,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.teamMemberQueryParams = queryParams;
       this.teamMemberId = queryParams[4];
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
-      this.value = '';
     });
 
     this._chatService.getTeamMembers().then(team => this.teammates = team);

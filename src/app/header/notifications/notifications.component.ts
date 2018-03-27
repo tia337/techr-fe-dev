@@ -32,7 +32,7 @@ export class NotificationsComponent implements OnInit {
         if (this.notifications === true) {
           this.notifications = !this.notifications;
           this.notificationsStatus.emit(this.notifications);
-        }
+        };
         event.stopPropagation();
     });
   }
@@ -55,7 +55,7 @@ export class NotificationsComponent implements OnInit {
       this._headerService.updateNotificationsCount('1');
     });
     this.getTeamMemberMessageNotifications().subscribe(data => {
-      // this.createOn(data);
+      this.createOn(data);
       console.log(data);
       this._headerService.updateNotificationsCount('1');
     });
@@ -76,6 +76,12 @@ export class NotificationsComponent implements OnInit {
     };
     if (data.contractTitle) {
       notification.notificationTitle = data.contractTitle;
+    };
+    if (data.sender) {
+      notification.notificationMessageSender = data.sender;
+    };
+    if (data.message) {
+      notification.notificationMessage = data.message;
     };
     notification.candidateId = data.candidateId;
     notification.contractId = data.contractId;

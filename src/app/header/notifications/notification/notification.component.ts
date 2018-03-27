@@ -13,6 +13,8 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 	public notificationCandidateName: string;
 	public notificationCandidateId: string;
 	public notificationContractId: string;
+	public notificationMessage: string;
+	public notificationMessageSender: string;
 	private _onDestroy: Function;
 
 
@@ -48,6 +50,14 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.notificationContractId = value;
 	}
 
+	set messageSender (value: string) {
+		this.notificationMessageSender = value;
+	}
+
+	set message (value: string) {
+		this.notificationMessage = value;
+	}
+
 	set onDestroy(func: Function) {
 		this._onDestroy = func;
 	}
@@ -70,6 +80,14 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	get contractId () {
 		return this.notificationContractId;
+	}
+
+	get messageSender () {
+		return this.notificationMessageSender;
+	}
+
+	get message () {
+		return this.notificationMessage;
 	}
 
 	close() {
