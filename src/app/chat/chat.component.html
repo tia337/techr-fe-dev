@@ -36,7 +36,7 @@
         <span>{{message[0].date}}</span>
         <div></div>
       </div>
-      <div class="message-block-message" [ngClass]="{'edit': daymessage.editHidden === true }" *ngFor='let daymessage of message[1].messages; let i = index;'>
+      <div class="message-block-message" [ngClass]="{'edit': daymessage.editHidden === true, 'check': daymessage.optionsHidden === true }" *ngFor='let daymessage of message[1].messages; let i = index;'>
         <div class="message-block-message-avatar-wrap">
           <img *ngIf="daymessage.author != undefined" class="message-block-message-avatar" src="{{daymessage.get('author').get('avatarURL')}}" alt="">
           <div *ngIf="daymessage.get('author').get('avatarURL') == undefined && daymessage.author != undefined" class="message-block-message-avatar-undefined" [ngStyle]="{'background-color': teamMember.background | json}">
@@ -71,7 +71,7 @@
           <div *ngIf="daymessage.optionsHidden === true">
             <div class="options-menu" (clickOutside)="daymessage.optionsHidden = false" [delayClickOutsideInit]="true">
                 <span (click)="daymessage.optionsHidden = false; daymessage.editHidden = true;" class="options-menu-edit">Edit message</span>
-                <span (click)="alertDeleteMessage(daymessage)" class="option-menu-delete">Delete message</span>
+                <span (click)="alertDeleteMessage(daymessage)" class="options-menu-delete">Delete message</span>
             </div>
           </div>
         </div>
@@ -81,12 +81,13 @@
 </div>
 <div>
   <div class="message-input-block" *ngIf="teamMember !== undefined">
-    <input type="text" 
+    <textarea autosize
+     #messageInput
      [mention]="teammates" 
      [mentionConfig]="{labelKey: 'name'}" 
-     (keydown)="RecruiterColleagueTypes()"  
+     (keydown)="RecruiterColleagueTypes()"
      (keyup.enter)="sendColleagueMessage($event)" 
-     placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}">
+     placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}"></textarea>
     <div class="subscriptions-block">
       <span id="mention-candidate">#</span>
       <span id="mention-team-member">@</span>

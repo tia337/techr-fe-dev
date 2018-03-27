@@ -36,12 +36,14 @@ export class ChatComponent implements OnInit, OnDestroy {
   public tempMessage: LooseObject = {};
   public teamMemberId: string;
   public typing = false;
-  public username = '';
+  public value = '';
   private timer;
   private newMessagesCount: number = 0;
 
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
   @ViewChild('messageBlock') private messageBlock: QueryList<any>;
+  @ViewChild('messageInput') public messageInput: HTMLInputElement;
+  
 
   constructor(
     private _ar: ActivatedRoute,
@@ -66,19 +68,30 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.recieveColleagueMessage().subscribe(data => {
-      this.addMessageToChat(data);
+      clearTimeout(this.timer);
+      this.typing = false;
+      if (this.dialogId != undefined) {
+        this.addMessageToChat(data);
+      }
     });
 
     this.listenToRecruiterColleagueTypes().subscribe(data => {
+      console.log(data);
       this.checkIfTyping(data);
     });
 
     this._ar.params.subscribe(params => {
-
+      // this.messageInput.value = '';
       if (params.id === 'false') {
         this.messages = [];
         this.noMessages = false;
         this.beginning = true;
+        // localStorage.setItem('chatRoom', 'false');
+        if (localStorage.getItem('chatRoom')) {
+          this._socket.emit('enter-chat-room', {
+            'dialogId': localStorage.getItem('chatRoom')
+          });
+        }
         return;
       } else {
         this.dialogId = params.id;
@@ -102,16 +115,19 @@ export class ChatComponent implements OnInit, OnDestroy {
       this._socket.emit('enter-chat-room', {
         'dialogId': params.id
       });
+      console.log('ENTERED THE ROOM');      
       return;
     } else {
       let dialogIdToLeave = localStorage.getItem('chatRoom');
       this._socket.emit('leave-chat-room', {
         'dialogId': dialogIdToLeave
       });
+      console.log('LEAVED THE ROOM', dialogIdToLeave);
       localStorage.setItem('chatRoom', params.id);
       this._socket.emit('enter-chat-room', {
         'dialogId': params.id
       });
+      console.log('ENTERED THE ROOM', params.id);
     }
   }
 
@@ -216,10 +232,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   sendColleagueMessage (event) {
+    console.log(this.dialogId);
     this._socket.emit('outgoing-to-colleague', {
       'message': event.target.value,
-      'dialogId': this.dialogId,
       'sender': this._parse.getCurrentUser().id,
+      'dialog': this.dialogId,
       'recipientId': this.teamMemberId,
       'type': 'AppChat'
     });
@@ -249,6 +266,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   RecruiterColleagueTypes () {
+    console.log('sender typing:', this._parse.getCurrentUser().id);
     this._socket.emit('typing-message', {
       'dialogId': this.dialogId,
       'sender': this._parse.getCurrentUser().id,

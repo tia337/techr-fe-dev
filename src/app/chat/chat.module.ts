@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { MatTooltipModule, MatProgressSpinnerModule } from '@angular/material';
 import { MentionModule } from 'angular2-mentions/mention';
 import { ClickOutsideModule } from 'ng-click-outside';
+import { AutosizeModule } from '../shared/autosize/autosize.module';
+
 
 @NgModule({
   imports: [
@@ -13,7 +15,8 @@ import { ClickOutsideModule } from 'ng-click-outside';
     MatTooltipModule,
     MentionModule,
     MatProgressSpinnerModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    AutosizeModule
   ],
     declarations: [ChatComponent],
     providers: [ChatService],

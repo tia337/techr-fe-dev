@@ -66,6 +66,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 		this._sidenav.setSidenav(this.sidenav);
 		this.recruterTyping().subscribe(data => {
 			this.addAnimationToTyping(data);
+			console.log(data);
 		});
 		this._coreService.currentTypingStatus.subscribe(data => {
 			this.teamMembers.forEach(member => {
@@ -284,7 +285,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	recruterTyping() {
 		const observable = new Observable(observer => {
-			this._socket.on('typing-message', data => {
+			this._socket.on('typing-message-animation', data => {
 				observer.next(data);
 			});
 		});
@@ -303,7 +304,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	addAnimationToTyping (data) {
 		this.teamMembers.forEach(member => {
-			if (member.id === data.senderId) {
+			if (member.id === data.sender) {
 				clearTimeout(data.sender);
 				member.typing = true;
 				data.sender = setTimeout(() => {
