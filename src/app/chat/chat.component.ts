@@ -76,7 +76,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.listenToRecruiterColleagueTypes().subscribe(data => {
-      // console.log(data);
+      console.log(data);
       this.checkIfTyping(data);
     });
 
