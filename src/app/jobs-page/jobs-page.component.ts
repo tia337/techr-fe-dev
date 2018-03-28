@@ -470,6 +470,7 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 			this._jobDetailsService = null;
 			// this._profileSubscription.unsubscribe();
 			this._filters.updateFilters(this.filters);
+			localStorage.removeItem('activeStage');
 		}
 		decreaseAll() {
 			this.first--;

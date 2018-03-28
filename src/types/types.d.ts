@@ -15,3 +15,11 @@ type UpdatedUser = {
 interface LooseObject {
     [key: string]: any
 }
+
+type NotificationMessageSender = {
+    avatarURL: string,
+    firstName: string,
+    id: string,
+    lastName: string,
+    sessionStatus: boolean
+}

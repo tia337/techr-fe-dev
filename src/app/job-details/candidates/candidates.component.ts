@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, Input, OnChanges} from '@angular/core';
 import { CandidatesService } from './candidates.service';
 import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { JobDetailsService } from '../job-details.service';
@@ -27,7 +27,7 @@ import { element } from 'protractor';
 	styleUrls: ['./candidates.component.scss']
 })
 
-export class CandidatesComponent implements OnInit, OnDestroy {
+export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	countryArray:Array<any> = [];
 	sortSelect:string = "skillsMatch";
 	skillMatchSelect:string;
@@ -56,6 +56,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 	countriesCount: number = 0;
     private countriesSourcing: Array<any> = [];
 	private _candidatesCount: number;
+	public queryParams;
   @Input() contractObj;
 	private _displayLoader;
 
@@ -79,7 +80,20 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
 	}
 
+	ngOnChanges () {
+	}
+
 	ngOnInit() {
+		// this._candidatesService.currentNotificationCandidate.subscribe(data => {
+		// 	if (data === {}) {
+		// 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
+		// 	} else {
+		// 		this.setNotificationCandidate(data);
+		// 		this.queryParams = data;
+		// 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], {queryParams: {candidateId: this.queryParams[1], contractId: this.queryParams[0] }, skipLocationChange: true });
+		// 	}
+		// });
+		
 		console.log('ON INIT')
 		this._candidatesService.contractId = this._jobDetailsService.contractId;
 		this.contractId = this._jobDetailsService.contractId;
@@ -91,7 +105,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 			if (candidatesCount) {
 				this._candidatesCountObject = candidatesCount;
 				if (this._activeStage) {
-					this._candidatesCount = this._candidatesCountObject.find( count => {
+					this._candidatesCount = this._candidatesCountObject.find(count => {
 						return count.type === this._activeStage;
 					}).value;
 					console.log('Subsribed for candidatesCount: ', this._candidatesCount);
@@ -108,7 +122,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 				console.log('Subscribed for stage. CandidatesCount: ', this._candidatesCount);
 			}
 			console.log('Active Stage: ', activeStage);
-
+			localStorage.setItem('activeStage', activeStage);
 			delete this.candidates;
 			delete this.userId;
 			delete this.candidateWeight;
@@ -154,33 +168,6 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 								this._jobDetailsService.isStagesDisabled = Loading.error;
 							}
 						});
-                    // this._candidatesService.getSuggestedCandidates(this.contractId).then(suggestions => {
-						// console.log('SUGGESTIONS NG ON INIT: ', suggestions);
-						// if (suggestions && suggestions.results.length > 0) {
-						// 	this.hasCandidates = Loading.success;
-						// 	this._jobDetailsService.isStagesDisabled = Loading.success;
-						// 	this.candidates = Object.assign({},suggestions);
-						// 	this.allSuggestionsObject= Object.assign({},suggestions);
-						// 	this.candidates.results = this.candidates.results.slice(this._from,this._limit);
-						// 	this.candidates.weights = this.candidates.weights.slice(this._from,this._limit);
-						// 	this.candidates.distances = this.candidates.distances.slice(this._from,this._limit);
-                    //         // let tempArray = [];
-                    //         // this.candidates.results.slice(0,10).forEach(devID => {
-                    //          //    tempArray.push(devID);
-                    //         // });
-                    //         // this._candidatesService.getDevelopersById(tempArray).then(result => {
-                    //          //    this.candidates.results = this.candidates.results.concat(result.results);
-                    //         // });
-                    //         console.log('CANDIDATES================', this.candidates);
-                    //         console.log('Suggestion results================', suggestions.results);
-						// 	const firstUser = suggestions.results[0];
-						// 	this._candidatesService.userId = firstUser.id;
-						// 	this.userProfile(firstUser.id, this.getPercentageMatch(firstUser));
-						// } else {
-						// 	this.hasCandidates = Loading.error;
-						// 	this._jobDetailsService.isStagesDisabled = Loading.error;
-						// }
-                    // });
 					break;
 
 				case DeveloperListType.applied:
@@ -253,6 +240,7 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 
 		});
 		this.copySuggestedCandidates = this.SuggestedCandidates;
+
 	}
 
 	loadCandidatesAtTheEnd(event) {
@@ -478,6 +466,11 @@ export class CandidatesComponent implements OnInit, OnDestroy {
 		this.userId = userId;
 		this.candidateWeight = candidateWeight;
 		this.candidateDistance = candidateDistance;
+	}
+
+	setNotificationCandidate (candidate) {
+		console.log(candidate);
+		this.userId = candidate[1];
 	}
 
 	errorHandler(event) {

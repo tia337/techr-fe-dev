@@ -15,6 +15,8 @@ export class CandidatesService {
 	private _contractId: string;
 	// private _userId: string;
 	private _userId: any = new BehaviorSubject(null);
+	public notificationCandidate: BehaviorSubject<any> = new BehaviorSubject(null);
+	public currentNotificationCandidate = this.notificationCandidate.asObservable();
 
 	constructor(private _parse: Parse, private _jobDetailsService: JobDetailsService) { }
 
@@ -258,6 +260,10 @@ export class CandidatesService {
 				};
 		};
 		return distances;
+	}
+
+	throwNotificationCandidate(candidate) {
+		this.notificationCandidate.next(candidate);
 	}
 
 
