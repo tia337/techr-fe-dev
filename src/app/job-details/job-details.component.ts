@@ -5,6 +5,7 @@ import { DeveloperListType, Loading } from '../shared/utils';
 import * as _ from 'underscore';
 import { Socket } from 'ng-socket-io';
 import { Parse } from '../parse.service';
+import { CandidatesService } from './candidates/candidates.service';
 
 @Component({
 	selector: 'app-job-details',
@@ -26,12 +27,17 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 	constructor(
 		private _jobDetailsService: JobDetailsService,
 		private _route: ActivatedRoute,
+		private _candidatesService: CandidatesService,
 		private _socket: Socket,
 		private _parse: Parse,
 		private _changeDetector: ChangeDetectorRef
 	) { }
 
 	ngOnInit() {
+		this._route.queryParams.subscribe(queryParams => {
+			console.log(queryParams);
+			this._candidatesService.throwNotificationCandidate(queryParams);
+		});
 		this._socket.emit('enterPipeLineGroup', {
 			'contract': this.contractId,
 		});
@@ -170,6 +176,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
 	setActiveStage() {
 		this._jobDetailsService.activeStage = this.currentInterviewStage;
+		console.log('SET ACTIVE STAGE');
 	}
 
 	get Loading() {

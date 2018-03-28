@@ -45,18 +45,22 @@ export class NotificationsComponent implements OnInit {
       this._headerService.updateNotificationsCount('1');
     });
     this.getContractApplyNotifications().subscribe(data => {
+      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getScoringMentionNotifications().subscribe(data => {
+      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getEmployeeReferralsNotifications().subscribe(data => {
+      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getTeamMemberMessageNotifications().subscribe(data => {
+      console.log(data);
       this.createMessageNotification(data);
       this._headerService.updateNotificationsCount('1');
     });
@@ -78,9 +82,15 @@ export class NotificationsComponent implements OnInit {
     if (data.contractTitle) {
       notification.notificationTitle = data.contractTitle;
     };
-    
-    notification.candidateId = data.candidateId;
-    notification.contractId = data.contractId;
+    if (data.sender) {
+      notification.notificationMessageSender = data.sender;
+    };
+    if (data.candidateId) {
+      notification.notificationCandidateId = data.candidateId;
+    };
+    if (data.contractId) {
+      notification.notificationContractId = data.contractId;
+    };
   }
 
   createMessageNotification (data) {

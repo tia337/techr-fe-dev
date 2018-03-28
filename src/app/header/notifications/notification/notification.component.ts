@@ -15,7 +15,7 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 	public notificationCandidateId: string;
 	public notificationContractId: string;
 	public notificationMessage: string;
-	public notificationMessageSender: string;
+	public notificationMessageSender: NotificationMessageSender;
 	public notificationDialogId: string;
 	private _onDestroy: Function;
 
@@ -56,7 +56,7 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.notificationContractId = value;
 	}
 
-	set messageSender (value: string) {
+	set messageSender (value) {
 		this.notificationMessageSender = value;
 	}
 
@@ -133,5 +133,12 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 			notification.classList.remove('stay');
 			notification.classList.add('move-after-hover');
 		}
+	}
+	setQueryParams (contractId, candidateId) {
+		let data = {
+			contractId: contractId,
+			candidateId: candidateId
+		}
+		localStorage.setItem('queryParams', JSON.stringify(data));
 	}
 }

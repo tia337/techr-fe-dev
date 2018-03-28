@@ -73,7 +73,9 @@ import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
 
 import { NotificationComponent } from './header/notifications/notification/notification.component';
-
+import { CandidatesComponent } from './job-details/candidates/candidates.component';
+import { CandidateNotesComponent } from './job-details/candidates/candidates-info-tabs/candidate-notes/candidate-notes.component';
+import { JobDetailsGuard } from './guards/job-details.guard';
 
 const routes: Routes = [
 	// { path: 'logout', component: LogoutComponent },

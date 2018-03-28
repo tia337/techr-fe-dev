@@ -1,4 +1,10 @@
-<div *ngIf="notificationType === 'NoteMention'" class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
+<div *ngIf="notificationType === 'NoteMention'" 
+  class="single-notification-wrap move" 
+  id="single-notification-wrap" 
+  (click)="close();setQueryParams(notificationContractId, notificationCandidateId)"   
+  (mouseover)="hideShowNotification($event)" 
+  (mouseout)="hideShowNotification($event)"
+  [routerLink]="['/jobs', notificationContractId]">
   <div class="single-notification-image-wrap">
     <img class="single-notification-image" src="../../../assets/icons/notification-note.png" alt="">
   </div>
@@ -10,7 +16,7 @@
   </div>
 </div>
 
-<div *ngIf="notificationType == 'ContractApply'" class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
+<div *ngIf="notificationType == 'ContractApply'" (click)="close()" class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
   <div class="single-notification-image-wrap">
     <img class="single-notification-image" src="../../../assets/icons/notification-applicant.png" alt=""> 
   </div>
@@ -21,7 +27,7 @@
   </div>
 </div>
 
-<div *ngIf="notificationType == 'ScoreMention'" class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
+<div *ngIf="notificationType == 'ScoreMention'" (click)="close()" class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
   <div class="single-notification-image-wrap">
     <img class="single-notification-image" src="../../../assets/icons/notification-scoring.png" alt="">
   </div>
@@ -33,7 +39,7 @@
   </div>
 </div>
 
-<div *ngIf="notificationType == 'EmployeeReferral'" class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
+<div *ngIf="notificationType == 'EmployeeReferral'" (click)="close()" class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">
   <div class="single-notification-image-wrap">
     <img  class="single-notification-image" src="../../../assets/icons/notification-referral.png" alt="">
   </div>
@@ -44,12 +50,18 @@
   </div>
 </div>
 
-<div *ngIf="notificationType == 'NewMessagePartner'" [routerLink]="['/chat', notificationDialogId]"  class="single-notification-wrap move" id="single-notification-wrap" (mouseover)="hideShowNotification($event)" (mouseout)="hideShowNotification($event)">  
+<div *ngIf="notificationType == 'NewMessagePartner'" 
+  [routerLink]="['/chat', notificationDialogId]"
+  class="single-notification-wrap move" 
+  id="single-notification-wrap" 
+  (mouseover)="hideShowNotification($event)" 
+  (mouseout)="hideShowNotification($event)"
+  (click)="close();">  
   <div class="single-notification-image-wrap">
     <img class="single-notification-image" src="../../../assets/icons/notification-message.png" alt="">
   </div>
   <div class="single-notification-data">
-    <p class="single-notification-data-title">{{notificationMessageSender}} wrote:</p>
+    <p class="single-notification-data-title">{{notificationMessageSender.firstName}} wrote:</p>
     <p class="single-notification-data-text">{{notificationMessage}}</p>
   </div>
 </div>

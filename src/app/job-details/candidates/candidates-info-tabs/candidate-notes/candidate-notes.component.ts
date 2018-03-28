@@ -197,7 +197,8 @@ export class CandidateNotesComponent implements OnInit, OnDestroy {
 				contract: this.contractId,
 				roomName: this.room,
 				isPrivate: this.isPrivate === 'true' ? true : false,
-				TaggedColleagues: tags
+				TaggedColleagues: tags,
+				notePipelineStage: localStorage.getItem('activeStage')
 			});
 			// this.addTags();
 			this.note = '';
