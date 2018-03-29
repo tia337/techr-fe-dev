@@ -52,6 +52,7 @@
 
 <div *ngIf="notificationType == 'NewMessagePartner'" 
   [routerLink]="['/chat', notificationDialogId]"
+  [queryParams]="[notificationMessageSender.firstName, notificationMessageSender.lastName, notificationMessageSender.avatarURL, notificationMessageSender.sessionStatus, notificationMessageSender.id ]"
   class="single-notification-wrap move" 
   id="single-notification-wrap" 
   (mouseover)="hideShowNotification($event)" 
