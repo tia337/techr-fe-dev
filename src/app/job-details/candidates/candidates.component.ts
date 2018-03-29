@@ -138,6 +138,10 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
                             	let tempArray = [];
 								console.log('Developers sorted: ', SuggestedCandidates.developersSorted);
 								this.copySuggestedCandidates = SuggestedCandidates.developersSorted;
+								this._candidatesService.currentNotificationCandidate.subscribe(data => {
+									const candidate = JSON.parse(data);
+									this.setNotificationCandidate(candidate, SuggestedCandidates.results);
+								});
 								this.SuggestedCandidates = Object.assign({},SuggestedCandidates);
                             	this.candidates = Object.assign({},SuggestedCandidates);
                             	this.candidates.results = [ ];
@@ -472,7 +476,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	userProfile(userId: string, candidateWeight: number, candidateDistance: number) {
-		console.log(userId, candidateWeight, candidateDistance);
 		this.userId = userId;
 		this.candidateWeight = candidateWeight;
 		this.candidateDistance = candidateDistance;

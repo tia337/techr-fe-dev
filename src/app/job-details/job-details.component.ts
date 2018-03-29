@@ -34,10 +34,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
-		this._route.queryParams.subscribe(queryParams => {
-			console.log(queryParams);
-			this._candidatesService.throwNotificationCandidate(queryParams);
-		});
+		this._candidatesService.throwNotificationCandidate(localStorage.getItem('queryParams'));
 		this._socket.emit('enterPipeLineGroup', {
 			'contract': this.contractId,
 		});
