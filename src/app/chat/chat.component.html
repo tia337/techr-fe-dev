@@ -49,8 +49,8 @@
             <span *ngIf="daymessage.author != undefined" class="message-block-message-name">{{daymessage.author}}</span>
             <span *ngIf="daymessage.author != undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEEE, MMMM d, y, h:mm:ss a'}}" matTooltipPosition="above" class="message-block-message-date">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
           </div>
-          <p class="message-block-text">
-            {{daymessage.get('message')}}
+          <p class="message-block-text" [innerHTML]="decodeMessage(daymessage.get('message'))">
+            <!-- {{decodeMessage(daymessage.get('message'))}} -->
             <span class="message-block-text-edited" *ngIf="daymessage.isEdited === true">(edited)</span>
             <span class="message-block-text-edited" *ngIf="daymessage.get('isEdited') === true">(edited)</span>
           </p>
@@ -83,14 +83,12 @@
   <div class="message-input-block" *ngIf="teamMember !== undefined">
     <textarea autosize
      #messageTextArea
-     [mention]="teammates" 
-     [mentionConfig]="{labelKey: 'name'}" 
      (keydown)="RecruiterColleagueTypes();"
      (keydown.enter)="sendColleagueMessage($event)"
      placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}"></textarea>
     <div class="subscriptions-block">
       <span id="mention-candidate">#</span>
-      <span id="mention-team-member">@</span>
+      <!-- <span id="mention-team-member">@</span> -->
     </div>
   </div>
   <span *ngIf="typing === true" class="typing-attention">{{teamMember.firstName}} {{teamMember.lastName}} is typing</span>
