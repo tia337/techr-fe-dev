@@ -84,15 +84,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit() {
-		// this._candidatesService.currentNotificationCandidate.subscribe(data => {
-		// 	if (data === {}) {
-		// 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
-		// 	} else {
-		// 		this.setNotificationCandidate(data);
-		// 		this.queryParams = data;
-		// 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], {queryParams: {candidateId: this.queryParams[1], contractId: this.queryParams[0] }, skipLocationChange: true });
-		// 	}
-		// });
 		
 		console.log('ON INIT')
 		this._candidatesService.contractId = this._jobDetailsService.contractId;
@@ -146,6 +137,10 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
                             	let tempArray = [];
 								console.log('Developers sorted: ', SuggestedCandidates.developersSorted);
 								this.copySuggestedCandidates = SuggestedCandidates.developersSorted;
+								this._candidatesService.currentNotificationCandidate.subscribe(data => {
+									const candidate = JSON.parse(data);
+									this.setNotificationCandidate(candidate, SuggestedCandidates.results);
+								});
 								this.SuggestedCandidates = Object.assign({},SuggestedCandidates);
                             	this.candidates = Object.assign({},SuggestedCandidates);
                             	this.candidates.results = [ ];
@@ -239,9 +234,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			}
 
 		});
-		this.copySuggestedCandidates = this.SuggestedCandidates;
-
-	}
+	};
 
 	loadCandidatesAtTheEnd(event) {
 		if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
@@ -463,14 +456,28 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	userProfile(userId: string, candidateWeight: number, candidateDistance: number) {
+		console.log(userId);
 		this.userId = userId;
 		this.candidateWeight = candidateWeight;
 		this.candidateDistance = candidateDistance;
 	}
 
-	setNotificationCandidate (candidate) {
-		console.log(candidate);
-		this.userId = candidate[1];
+	setNotificationCandidate (candidate, array) {
+		// for (let i = 0; i < array.length; i++ ) {
+		// 	if (array[i].id === candidate.candidateId) {
+		// 		console.log('CHECKED');				
+		// 		this.userId = array[i].id;
+		// 		this.candidateWeight = this.getPercentageMatch(array[i]);
+		// 		this.candidateDistance = this.getLocationMatch(array[i]);
+		// 	}
+		// };	
+		// array.forEach(suggested => {
+		// 	console.log(suggested.id);
+		// 	if (suggested.id === candidate.candidateId) {
+		// 		console.log('CHECKED');
+				
+		// 	};
+		// });
 	}
 
 	errorHandler(event) {
