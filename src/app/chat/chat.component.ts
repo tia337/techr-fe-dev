@@ -236,7 +236,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (event.target.value != '') {
       event.preventDefault();
       this._socket.emit('outgoing-to-colleague', {
-        message: event.target.value,
+        message: encodeURIComponent(event.target.value),
         sender: this._parse.getCurrentUser().id,
         dialog: this.dialogId,
         recipientId: this.teamMemberId,
@@ -440,7 +440,14 @@ export class ChatComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
-	};
+  };
+  
+  decodeMessage (message: string) {
+    let messageDecoded;
+
+    messageDecoded = decodeURIComponent(message.replace(/%0A/g, '<br/>'));
+    return messageDecoded;
+  }
 
   ngOnDestroy () {
     this._socket.emit('leave-chat-room', {
