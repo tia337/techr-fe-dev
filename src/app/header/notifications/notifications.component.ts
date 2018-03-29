@@ -91,6 +91,9 @@ export class NotificationsComponent implements OnInit {
     if (data.contractId) {
       notification.notificationContractId = data.contractId;
     };
+    if (data.notePipelineStage) {
+      notification.notificationNotePipelineStage = data.notePipelineStage;
+    };
   }
 
   createMessageNotification (data) {
