@@ -1,6 +1,7 @@
 import {Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef, OnDestroy} from '@angular/core';
 import { RootVCRService } from '../../../root_vcr.service';
 import { Router } from '@angular/router';
+import { JobDetailsService } from '../../../job-details/job-details.service';
 
 @Component({
 	selector: "notification",
@@ -17,13 +18,15 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 	public notificationMessage: string;
 	public notificationMessageSender: NotificationMessageSender;
 	public notificationDialogId: string;
+	public notificationNotePipelineStage: number;
 	private _onDestroy: Function;
 
 
 	constructor(
 		private _root_vcr: RootVCRService,
 		private _changesDetector: ChangeDetectorRef,
-		private _router: Router
+		private _router: Router,
+		private _jobDetailsService: JobDetailsService
 	) { }
 
 	ngOnInit() {
@@ -68,6 +71,10 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.notificationDialogId = value;
 	}
 
+	set notePipeLineStage (value: number) {
+		this.notificationNotePipelineStage = value;
+	}
+
 	set onDestroy(func: Function) {
 		this._onDestroy = func;
 	}
@@ -104,6 +111,10 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		return this.notificationDialogId;
 	}
 
+	get notePipeLineStage () {
+		return this.notificationNotePipelineStage;
+	}
+
 	navigateToDialog (dialogId) {
 		console.log(dialogId);
 		// this._router.navigate('[]')
@@ -134,11 +145,16 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 			notification.classList.add('move-after-hover');
 		}
 	}
-	setQueryParams (contractId, candidateId) {
-		let data = {
-			contractId: contractId,
-			candidateId: candidateId
-		}
+	setQueryParams (candidateId, weight, distance) {
+		const data = {
+			candidateId: candidateId,
+			weight: weight,
+			distance: distance
+		};
 		localStorage.setItem('queryParams', JSON.stringify(data));
+	}
+	setActiveStage (data) {
+		localStorage.setItem('queryParams', JSON.stringify(data));
+		this._jobDetailsService.activeStage = data;
 	}
 }

@@ -17,7 +17,7 @@ import * as _ from 'underscore';
 import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
 import { element } from 'protractor';
 
-
+import { Observable, } from 'rxjs/Rx';
 // tslint:disable
 
 
@@ -84,17 +84,9 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit() {
-		// this._candidatesService.currentNotificationCandidate.subscribe(data => {
-		// 	if (data === {}) {
-		// 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
-		// 	} else {
-		// 		this.setNotificationCandidate(data);
-		// 		this.queryParams = data;
-		// 		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], {queryParams: {candidateId: this.queryParams[1], contractId: this.queryParams[0] }, skipLocationChange: true });
-		// 	}
-		// });
 		
-		console.log('ON INIT')
+		console.log('ON INIT');
+
 		this._candidatesService.contractId = this._jobDetailsService.contractId;
 		this.contractId = this._jobDetailsService.contractId;
 		this._parse.getPartner(this._parse.Parse.User.current()).then( partner => {
@@ -113,7 +105,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		});
 
-		this._stageSubscription = this._jobDetailsService.activeStage.subscribe( activeStage => {
+		this._stageSubscription = this._jobDetailsService.activeStage.subscribe(activeStage => {
 			this._activeStage = activeStage;
 			if (this._candidatesCountObject) {
 				this._candidatesCount = this._candidatesCountObject.find( count => {
@@ -150,12 +142,13 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
                             	this.candidates = Object.assign({},SuggestedCandidates);
                             	this.candidates.results = [ ];
                             	this.candidates.weights = SuggestedCandidates.weights;
-                            	this.candidates.distances = SuggestedCandidates.distances;
+								this.candidates.distances = SuggestedCandidates.distances;
+								
                             	SuggestedCandidates.developersSorted.slice(this._from,this._limit).forEach(dev => {
                             		tempArray.push(dev.id);
 								});
 								this._candidatesService.getDevelopersById(tempArray).then(response => {
-                            		console.log('Response from server Get Developers', response.results);
+                            		// console.log('Response from server Get Developers', response.results);
                             		this.candidates.results = this.candidates.results.concat(response.results);
 									console.log('This.candidate.results', this.candidates.results);
 									const firstUser = this.candidates.results[0];
@@ -163,6 +156,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 									this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 								})
 								this.loadCountryList();
+								
 							} else {
 								this.hasCandidates = Loading.error;
 								this._jobDetailsService.isStagesDisabled = Loading.error;
@@ -239,9 +233,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			}
 
 		});
-		this.copySuggestedCandidates = this.SuggestedCandidates;
-
-	}
+	};
 
 	loadCandidatesAtTheEnd(event) {
 		if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
@@ -462,15 +454,28 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 		return this.candidates.distances[developerId] ? Math.round(this.candidates.distances[developerId] * unitCoefficient) : 0;
 	}
 
+	setNotificationCandidate (candidate, array) {
+		console.log('IN FUNCTION')
+		// this.userId = candidate.candidateId;
+		// this.candidateWeight = candidate.weight;
+		// this.candidateDistance = candidate.distance;	
+		for (let i = 0; i < array.length; i++) {
+			if (array[i].id === candidate.candidateId) {
+				console.log('CHEKCKED');
+				// this.userId = array[i].id;
+				// this.candidateWeight = this.getPercentageMatch(array[i]);
+				// this.candidateDistance = this.getLocationMatch(array[i]);
+				this.userProfile(array[i].id, this.getPercentageMatch(array[i]), this.getLocationMatch(array[i].id));
+			}
+		}
+		
+	}
+
 	userProfile(userId: string, candidateWeight: number, candidateDistance: number) {
+		console.log(userId, candidateWeight, candidateDistance);
 		this.userId = userId;
 		this.candidateWeight = candidateWeight;
 		this.candidateDistance = candidateDistance;
-	}
-
-	setNotificationCandidate (candidate) {
-		console.log(candidate);
-		this.userId = candidate[1];
 	}
 
 	errorHandler(event) {
