@@ -50,13 +50,12 @@
             <span *ngIf="daymessage.author != undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEEE, MMMM d, y, h:mm:ss a'}}" matTooltipPosition="above" class="message-block-message-date">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
           </div>
           <p class="message-block-text" [innerHTML]="decodeMessage(daymessage.get('message'))">
-            <!-- {{decodeMessage(daymessage.get('message'))}} -->
             <span class="message-block-text-edited" *ngIf="daymessage.isEdited === true">(edited)</span>
             <span class="message-block-text-edited" *ngIf="daymessage.get('isEdited') === true">(edited)</span>
           </p>
         </div>
         <div *ngIf="daymessage.editHidden === true" class="message-block-edit">
-          <input type="text" #editInput (keyup.enter)="editMessage($event.target.value, daymessage);" value="{{daymessage.get('message')}}">
+          <textarea autosize type="text" #editInput (keydown.enter)="editMessage($event.target.value, daymessage, encodeMessage($event.target.value));" value="{{decodeMessageForEditing(daymessage.get('message'))}}"></textarea>
           <div class="edit-buttons-wrap">
             <button (click)="daymessage.editHidden = false" class="message-block-edit-cancel">cancel</button> 
             <button (click)="editMessage(editInput.value, daymessage);" class="message-block-edit-save">save changes</button>

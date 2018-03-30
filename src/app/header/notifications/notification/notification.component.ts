@@ -115,11 +115,6 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		return this.notificationNotePipelineStage;
 	}
 
-	navigateToDialog (dialogId) {
-		console.log(dialogId);
-		// this._router.navigate('[]')
-	}
-
 	close() {
 		this._root_vcr.clear();
 	}
@@ -135,26 +130,29 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 	hideShowNotification(event) {
 		const notification = document.getElementById('single-notification-wrap');
 		if (event.type === 'mouseover') {
-		  notification.classList.remove('move');
-		  notification.classList.add('stay');
-		  if (notification.className.includes('move-after-hover')) {
+			notification.classList.remove('move');
+			notification.classList.add('stay');
+		if (notification.className.includes('move-after-hover')) {
 			notification.classList.remove('move-after-hover');
-		  }
+		}
 		} else if (event.type === 'mouseout') {
 			notification.classList.remove('stay');
 			notification.classList.add('move-after-hover');
 		}
 	}
-	setQueryParams (candidateId, weight, distance) {
+	setQueryParams (candidateId) {
 		const data = {
-			candidateId: candidateId,
-			weight: weight,
-			distance: distance
+			candidateId: candidateId
 		};
+		console.log(candidateId);
 		localStorage.setItem('queryParams', JSON.stringify(data));
 	}
 	setActiveStage (data) {
-		localStorage.setItem('queryParams', JSON.stringify(data));
 		this._jobDetailsService.activeStage = data;
+	}
+	decodeMessage (message: string) {
+		let messageDecoded;
+		messageDecoded = decodeURIComponent(message.replace(/%0A/g, '<br/>'));
+		return messageDecoded;
 	}
 }

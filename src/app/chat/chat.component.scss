@@ -75,6 +75,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin: 5px 0;
         div {
             flex-grow: 1;
             // width: 1px!important;
@@ -175,22 +176,6 @@
     }
 }
 
-textarea {
-    resize: none;
-    background: transparent;
-    border: none;
-    outline: none;
-    margin-left: 10px;
-    width: 90%;
-    height: 100%;
-    font-size: 14px;
-    width: 100%;
-    padding-right: 40px;
-    &::-webkit-input-placeholder {
-        color: #c1c1c2;
-        font-size: 14px;
-    }
-}
 
 .subscriptions-block {
     display: inline-flex;
@@ -304,7 +289,7 @@ textarea {
 .message-block {
     &-edit {
         width: 100%;
-        input {
+        textarea {
             width: 100%;
             padding: 5px 10px;
             outline: none;
@@ -313,6 +298,7 @@ textarea {
             border-radius: 3px;
             font-size: 14px;
             margin-bottom: 5px;
+            resize: none;
         }
         &-save {
             padding: 5px 10px;
