@@ -23,6 +23,10 @@
       box-shadow: 4px 6px 9px rgba(0, 0, 0, 0.8);
       cursor: pointer;
     }
+    &.message {
+      min-height: 125px;
+      max-height: 125px;
+    }
   }
   &-image {
       width: 75%;
@@ -47,6 +51,12 @@
     }
     &-text {
       text-align: left;
+      &.message {
+        width: 100%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
     &-candidate {
       text-align: left;

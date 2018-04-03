@@ -64,6 +64,14 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
+		this._chatService.updatedDialogId.subscribe(data => {
+			const sender = data;
+			this.teamMembers.forEach(member => {
+				if (member.dialogId === sender.sender) {
+					member.dialogId = sender.dialog;
+				}
+			});
+		});
 		this.recruterTyping().subscribe(data => {
 			this.addAnimationToTyping(data);
 			console.log(data);

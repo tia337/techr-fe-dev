@@ -129,6 +129,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			switch (activeStage) {
 
 				case DeveloperListType.suggested:
+
 					this._candidatesService.getSuggestedCandidatesWeb(this.contractId).then( SuggestedCandidates => {
 						console.log('SuggestedCandidates: ', SuggestedCandidates);
 						if (SuggestedCandidates && SuggestedCandidates.developersSorted.length > 0) {
@@ -138,10 +139,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
                             	let tempArray = [];
 								console.log('Developers sorted: ', SuggestedCandidates.developersSorted);
 								this.copySuggestedCandidates = SuggestedCandidates.developersSorted;
-								this._candidatesService.currentNotificationCandidate.subscribe(data => {
-									const candidate = JSON.parse(data);
-									this.setNotificationCandidate(candidate, SuggestedCandidates.results);
-								});
 								this.SuggestedCandidates = Object.assign({},SuggestedCandidates);
                             	this.candidates = Object.assign({},SuggestedCandidates);
                             	this.candidates.results = [ ];
@@ -157,7 +154,14 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 									console.log('This.candidate.results', this.candidates.results);
 									const firstUser = this.candidates.results[0];
 									this._candidatesService.userId = firstUser.id;
-									this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+									if (localStorage.getItem('queryParams') != null) {
+										console.log('in queryparams');
+										let data = JSON.parse(localStorage.getItem('queryParams'));
+										this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
+									} else if (!localStorage.getItem('queryParams')) {
+										console.log('NO PARAMS');
+										this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+									}
 								})
 								this.loadCountryList();
 								
@@ -176,7 +180,15 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 							this.candidates = suggestions;
 							const firstUser = suggestions.results[0];
 							this._candidatesService.userId = firstUser.id;
-							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							if (localStorage.getItem('queryParams') != null) {
+								console.log('in queryparams');
+								let data = JSON.parse(localStorage.getItem('queryParams'));
+								this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
+							} else if (!localStorage.getItem('queryParams')) {
+								console.log('NO PARAMS');
+								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							}
 						} else {
 							this.hasCandidates = Loading.error;
 							this._jobDetailsService.isStagesDisabled = Loading.error;
@@ -194,7 +206,15 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 							this.candidates = referrals;
 							const firstUser = referrals.results[0];
 							this._candidatesService.userId = firstUser.id;
-							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							if (localStorage.getItem('queryParams') != null) {
+								console.log('in queryparams');
+								let data = JSON.parse(localStorage.getItem('queryParams'));
+								this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
+							} else if (!localStorage.getItem('queryParams')) {
+								console.log('NO PARAMS');
+								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							}
 							console.log('employeeReferrals Users: ', this.getPercentageMatch(firstUser));
 							this.postLoader = false;							
 						} else {
@@ -226,7 +246,15 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 							});
 							const firstUser = res;
 							this._candidatesService.userId = firstUser.id;
-							this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							if (localStorage.getItem('queryParams') != null) {
+								console.log('in queryparams');
+								let data = JSON.parse(localStorage.getItem('queryParams'));
+								this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
+							} else if (!localStorage.getItem('queryParams')) {
+								console.log('NO PARAMS');
+								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+							}
 							this.postLoader = false;							
 						} else {
 							this.hasCandidates = Loading.error;
@@ -294,8 +322,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			this.postLoader = false;
 		}
 	}
-
-
 
 	loadMoreCandidates(candidatesBlock) {
 		if (this._limit > this._candidatesCount) {
@@ -447,32 +473,22 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 
 	getPercentageMatch(user: ParseUser): number {
 		const developerId = user.get('developer').id;
-
 		return this.candidates.weights[developerId] ? this.candidates.weights[developerId] : 0;
 	}
 
 	getLocationMatch(user: ParseUser): number {
 		const developerId = user.get('developer').id;
 		let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;
-
 		return this.candidates.distances[developerId] ? Math.round(this.candidates.distances[developerId] * unitCoefficient) : 0;
 	}
 
-	setNotificationCandidate (candidate, array) {
-		console.log('IN FUNCTION')
-		// this.userId = candidate.candidateId;
-		// this.candidateWeight = candidate.weight;
-		// this.candidateDistance = candidate.distance;	
-		for (let i = 0; i < array.length; i++) {
-			if (array[i].id === candidate.candidateId) {
-				console.log('CHEKCKED');
-				// this.userId = array[i].id;
-				// this.candidateWeight = this.getPercentageMatch(array[i]);
-				// this.candidateDistance = this.getLocationMatch(array[i]);
-				this.userProfile(array[i].id, this.getPercentageMatch(array[i]), this.getLocationMatch(array[i].id));
-			}
-		}
-		
+	getPercentageMatchQueryParams(user): number {
+		return this.candidates.weights[user] ? this.candidates.weights[user] : 0;
+	}
+
+	getLocationMatchQueryParams(user): number {
+		let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;
+		return this.candidates.distances[user] ? Math.round(this.candidates.distances[user] * unitCoefficient) : 0;
 	}
 
 	userProfile(userId: string, candidateWeight: number, candidateDistance: number) {
@@ -557,6 +573,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 		this._stageSubscription.unsubscribe();
 		this._candidatesCountSubscription.unsubscribe();
 		this._jobDetailsService = null;
+		// localStorage.removeItem('queryParams');
 	}
 
 	changeSortMethod(value) {

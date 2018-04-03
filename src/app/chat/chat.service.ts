@@ -16,6 +16,9 @@ previousScrollHeightMinusTop: number;
 readyFor: string;    
 toReset: boolean = false; 
 
+public dialogId: BehaviorSubject<any> = new BehaviorSubject(null);
+public updatedDialogId = this.dialogId.asObservable();
+
 constructor(
   private _parse: Parse
 ) {}
@@ -145,24 +148,8 @@ constructor(
       });
     }
 
-    init(node) {    
-      this.node = node;    
-      this.previousScrollHeightMinusTop = 0;    
-      this.readyFor = 'up';  
-    }   
-    restore() {    
-      if(this.toReset) {    
-          console.log("restore");   
-           if (this.readyFor === 'up') {  
-                this.node.scrollTop = this.node.scrollHeight - this.previousScrollHeightMinusTop;      
-           }        
-           this.toReset = false;    
-      }  
-    }  
-    prepareFor(direction) {    
-      this.toReset = true;    
-      this.readyFor = direction || 'up'; 
-      this.previousScrollHeightMinusTop = this.node.scrollHeight - this.node.scrollTop;  
-    }
+  updateDialogIdInCore(data) {
+    this.dialogId.next(data);
+  }
 
 }

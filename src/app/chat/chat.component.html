@@ -56,7 +56,7 @@
           </p>
         </div>
         <div *ngIf="daymessage.editHidden === true" class="message-block-edit">
-          <input type="text" #editInput (keyup.enter)="editMessage($event.target.value, daymessage);" value="{{decodeMessage(daymessage.get('message'))}}">
+          <textarea autosize #editInput (keyup.enter)="editMessage($event.target.value, daymessage);" value="{{decodeMessage(daymessage.get('message')) | sanitize}}"></textarea>
           <div class="edit-buttons-wrap">
             <button (click)="daymessage.editHidden = false" class="message-block-edit-cancel">cancel</button> 
             <button (click)="editMessage(editInput.value, daymessage);" class="message-block-edit-save">save changes</button>
