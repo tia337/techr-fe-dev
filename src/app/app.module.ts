@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule, MatMenuModule, MatSidenavModule } from '@angular/material';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 import 'hammerjs';
 
@@ -73,6 +74,7 @@ const config: SocketIoConfig = {
 	],
 	imports: [
 		BrowserModule,
+		MatGridListModule,
 		HttpModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
