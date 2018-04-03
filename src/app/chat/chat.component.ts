@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, QueryList, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, QueryList, AfterViewInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './chat.service';
 import { MentionModule } from 'angular2-mentions/mention';
@@ -10,7 +10,10 @@ import { CoreService } from '../core/core.service';
 import { Parse } from '../parse.service';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { RootVCRService } from '../root_vcr.service';
-
+import { Router } from '@angular/router';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { stat } from 'fs';
+import { FormControl } from '@angular/forms';
 // tslint:disable
 @Component({
   selector: 'app-chat',
@@ -38,11 +41,24 @@ export class ChatComponent implements OnInit, OnDestroy {
   public typing = false;
   private timer;
   private newMessagesCount: number = 0;
+  public jobMentionsHidden = true;
+  public textAreaValue = new FormControl;
+  public cursorHidden = true;
+  public space = 'editable!';
+  public sanitizedUrl; 
+  public jobMentionsArray;
+  public listenToChat = false;
+  public currentJobId;
+  public observer;
+  private focusOffset: number;
+  public placeholder: string;
 
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
   @ViewChild('messageBlock') private messageBlock: QueryList<any>;
   @ViewChild('messageInput') public messageTextArea: HTMLTextAreaElement;
-  
+  @ViewChild('jobMentions') public jobMentions: HTMLDivElement;
+  @ViewChild('fakeCursor') private fakeCursor: HTMLSpanElement;
+  @ViewChild('fakeInput') private fakeInput: HTMLDivElement;
 
   constructor(
     private _ar: ActivatedRoute,
@@ -50,13 +66,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _coreService: CoreService,
     private _socket: Socket,
     private _parse: Parse,
-    private _root_vcr: RootVCRService
+    private _root_vcr: RootVCRService,
+    private _sanitizer: DomSanitizer,
+    private _roter: Router,
+    private _elRef: ElementRef
   ) { }
+
 
   ngOnInit() {
 
     this.userId = this._parse.getCurrentUser().id;
-
+   
     this.editPartnersMessage().subscribe(data => {
       this.turnEditedMessage(data);
     });
@@ -91,13 +111,14 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.setDialogIdToLocalStorage(params);
         this.getMessages(params);
       }
-
     });
 
     this._ar.queryParams.subscribe(queryParams => {
       this.teamMemberQueryParams = queryParams;
       this.teamMemberId = queryParams[4];
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
+      this.placeholder = "Message " + this.teamMember.firstName + ' ' + this.teamMember.lastName;
+      console.log(this.placeholder);
     });
 
     this._chatService.getTeamMembers().then(team => this.teammates = team);
@@ -109,7 +130,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.getTeamMemberOffline().subscribe(data => {
         this.teamMember.sessionStatus = 'false';
     });
-
+    this.recieveJobTags().subscribe(data => {
+      console.log(data);
+      this.jobMentionsArray = data;
+    });
+    this.textAreaValue.setValue('');
   }
 
   setDialogIdToLocalStorage (params) {
@@ -118,19 +143,16 @@ export class ChatComponent implements OnInit, OnDestroy {
       this._socket.emit('enter-chat-room', {
         dialogId: params.id
       });
-      console.log('ENTERED THE ROOM', params.id);      
       return;
     } else {
       let dialogIdToLeave = localStorage.getItem('chatRoom');
       this._socket.emit('leave-chat-room', {
         dialogId: dialogIdToLeave
       });
-      console.log('LEAVED THE ROOM', dialogIdToLeave);
       localStorage.setItem('chatRoom', params.id);
       this._socket.emit('enter-chat-room', {
         dialogId: params.id
       });
-      console.log('ENTERED THE ROOM', params.id);
     }
   }
 
@@ -232,19 +254,20 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendColleagueMessage (event) {
-    if (event.target.value != '') {
+  sendColleagueMessage (value, event) {
+    event.preventDefault();
+    if (value.value != '') {
+      this.textAreaValue.setValue('');
       event.preventDefault();
       this._socket.emit('outgoing-to-colleague', {
-        message: encodeURIComponent(event.target.value),
+        message: encodeURIComponent(value.value),
         sender: this._parse.getCurrentUser().id,
         dialog: this.dialogId,
         recipientId: this.teamMemberId,
         type: 'AppChat'
       });
-      event.target.value = null;
     };
-    if (event.target.value === '') {
+    if (value.value === '') {
       event.preventDefault();
     };
   }
@@ -263,7 +286,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     Object.defineProperty(data, 'className', {value: 'Message'});
     let message = this._parse.Parse.Object.fromJSON(data);
     this.messageStorage.unshift(message);
+    console.log(this.messageStorage);
     this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
+      console.log(messagesSorted);
       this.messages = messagesSorted;
       if (this.messagesBlock.nativeElement.scrollHeight - this.messagesBlock.nativeElement.scrollTop - this.messagesBlock.nativeElement.offsetHeight <= 20) {
         this.scrollToBottom();
@@ -355,7 +380,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           <span style="margin-right: 10px; font-weight-bold">` + message.get('author').get('firstName') + ` ` +  message.get('author').get('lastName') + `</span>
           <span>` + message.get('createdAt') + `</span>
         </div>
-        <p class="message-block-text" style="height: 50%;">` + message.get('message') + ` </p>
+        <p class="message-block-text" style="min-height: 50%;">` + this.decodeMessage(message.get('message')) + ` </p>
       </div>
     </div>
     `;
@@ -444,9 +469,68 @@ export class ChatComponent implements OnInit, OnDestroy {
   
   decodeMessage (message: string) {
     let messageDecoded;
-
     messageDecoded = decodeURIComponent(message.replace(/%0A/g, '<br/>'));
     return messageDecoded;
+  }
+
+  getJobTags() {
+    let data = {};
+    this._socket.emit('get-job-tags', data);
+  };
+
+  recieveJobTags () {
+    const observable = new Observable(observer => {
+			this._socket.on('job-tags-found', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+  }
+
+  addSpaceToFakeInput (value: string, event) {
+      event.preventDefault();
+      let newValue = value;
+      newValue = newValue + '&nbsp;';
+      return newValue;
+  }
+
+  deleteSpaceFromFakeInput (value: string, event) {
+    event.preventDefault();
+    let newValue = value;
+    if (newValue.substring(newValue.length-6, newValue.length-0) === '&nbsp;') {
+      newValue = newValue.substring(0, newValue.length-6);
+    } else {
+      newValue = newValue.slice(0, -1);
+    }
+    return newValue;
+  }
+
+  addJobMentionLink (jobId: string, jobTitle: string, value: string) {
+      const self = this;
+      setTimeout(()=> {
+        const element = document.getElementById(jobId);
+        element.addEventListener('click', ()=> {
+          this.redirectToJob(jobId);
+        })
+      }, 1);
+      this.textAreaValue.setValue(this.textAreaValue.value + '<a class="job-link ' + jobId + '" id="'+jobId+'" href="javascript:void(0)">'+ jobTitle +'</a>');
+      this.jobMentionsHidden = true;
+  }
+
+  sanitizeUrl(url:string) {
+    return this._sanitizer.bypassSecurityTrustHtml(url);
+  }  
+
+  redirectToJob(jobId) {
+    this._roter.navigate(['/jobs', jobId]);
+  }
+
+  watch(event) {
+    if (event.key === "#") {
+      console.log(event)
+      this.jobMentionsHidden = false;
+      this.getJobTags();
+    }
   }
 
   ngOnDestroy () {

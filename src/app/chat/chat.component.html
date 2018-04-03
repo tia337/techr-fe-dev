@@ -49,7 +49,7 @@
             <span *ngIf="daymessage.author != undefined" class="message-block-message-name">{{daymessage.author}}</span>
             <span *ngIf="daymessage.author != undefined" matTooltip="{{daymessage.get('createdAt') | date: 'EEEE, MMMM d, y, h:mm:ss a'}}" matTooltipPosition="above" class="message-block-message-date">{{daymessage.get('createdAt') | date: 'hh:mm a'}}</span>
           </div>
-          <p class="message-block-text" [innerHTML]="decodeMessage(daymessage.get('message'))">
+          <p class="message-block-text" [innerHTML]="decodeMessage(daymessage.get('message')) | sanitize ">
             <!-- {{decodeMessage(daymessage.get('message'))}} -->
             <span class="message-block-text-edited" *ngIf="daymessage.isEdited === true">(edited)</span>
             <span class="message-block-text-edited" *ngIf="daymessage.get('isEdited') === true">(edited)</span>
@@ -80,17 +80,37 @@
   </div>
 </div>
 <div>
-  <div class="message-input-block" *ngIf="teamMember !== undefined">
-    <textarea autosize
-     #messageTextArea
-     (keydown)="RecruiterColleagueTypes();"
-     (keydown.enter)="sendColleagueMessage($event)"
-     placeholder="Message @{{teamMember.firstName}} {{teamMember.lastName}}"></textarea>
-    <div class="subscriptions-block">
-      <span id="mention-candidate">#</span>
-      <!-- <span id="mention-team-member">@</span> -->
-    </div>
+<div class="message-input-block">
+  <p 
+    (keydown)="watch($event)"
+    (keydown.enter)="sendColleagueMessage(textAreaValue, $event)"
+    class="message-input-block-fake"
+    contenteditable="true" 
+    [formControl]="textAreaValue"
+    ngDefaultControl
+    propValueAccessor="innerHTML">
+  </p>
+  <p class="placeholder" *ngIf="textAreaValue.value === ''">{{placeholder}}</p>
+  <div class="subscriptions-block">
+    <span id="mention-candidate" (click)="jobMentionsHidden = false; getJobTags();">#</span>
   </div>
-  <span *ngIf="typing === true" class="typing-attention">{{teamMember.firstName}} {{teamMember.lastName}} is typing</span>
-</div>  
+  <span *ngIf="typing === true && teamMember !== undefined" class="typing-attention">{{teamMember.firstName}} {{teamMember.lastName}} is typing</span>
+</div>
+
+<div class="job-mentions-wrap" (clickOutside)="jobMentionsHidden = true;" *ngIf="jobMentionsHidden === false">
+  <div class="job-mentions">
+    <ul>
+      <li class="job-mentions-item" 
+      *ngFor="let jobTag of jobMentionsArray"  
+      (click)="addJobMentionLink(jobTag._id, jobTag.title, textAreaValue);">
+        <span class="job-mentions-item-title">{{jobTag.title}}</span>
+        <p class="job-mentions-item-city-date">
+          <span>{{jobTag.JobLocationFEinput}}</span>
+          /
+          <span>Posted on {{jobTag.postedAt | date: 'MM.dd.yy'}}</span>
+        </p>
+      </li>
+    </ul>
+  </div>
+</div>
 

@@ -156,40 +156,30 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
-    textarea {
-        resize: none;
+    min-height: 40px;
+    &-fake {
         background: transparent;
         border: none;
         outline: none;
-        margin-left: 10px;
-        width: 90%;
+        width: 95%;
         height: 100%;
         font-size: 14px;
-        padding-top: 10px;
-        min-height: 40px;
         max-height: 300px;
-        &::-webkit-input-placeholder {
-            color: #c1c1c2;
-            font-size: 14px;
-        }
+        padding: 10px;    
+        padding-right: 0;
+        color: grey;
+        z-index: 10;
+        position: relative;
+        word-wrap: break-word;
+        line-break: auto;
+        -webkit-user-modify: read-write;
     }
 }
 
-textarea {
-    resize: none;
-    background: transparent;
-    border: none;
-    outline: none;
-    margin-left: 10px;
-    width: 90%;
-    height: 100%;
-    font-size: 14px;
-    width: 100%;
-    padding-right: 40px;
-    &::-webkit-input-placeholder {
-        color: #c1c1c2;
-        font-size: 14px;
-    }
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: black; }
 }
 
 .subscriptions-block {
@@ -331,4 +321,55 @@ textarea {
             cursor: pointer;
         }
     }
+}
+
+
+.job-mentions {
+    background: #d9d9d9;
+    border-radius: 3px;
+    box-shadow: 3px 4px 6px rgba(0,0,0,.35);
+    &-wrap {
+        position: absolute;
+        z-index: 999999;
+        left: 150px;
+        bottom: 33px;
+        max-height: calc(100vh - 129px);
+        overflow: auto;
+        width: 290px;
+    }
+    &-item {
+        padding: 10px 5px;
+        border-bottom: 1px solid #849fbf;
+        list-style: none;
+        cursor: pointer;
+        transition: .25s all ease-in-out;
+        &-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 3px;
+            display: inline-block;
+        }
+        &-city-date {
+            font-size: 12px;
+            opacity: .7;
+        }
+        &:first-child {
+            border-radius: 3px 3px 0 0;
+        }
+        &:last-child {
+            border-bottom: none;
+            border-radius: 0 0 3px 3px;
+        }
+        &:hover {
+            background: #3c3c3c;
+            color: #fff;
+        }
+    }
+}
+
+.placeholder {
+    color: grey;
+    position: absolute;
+    z-index: 9; 
+    left: 10px;
 }
