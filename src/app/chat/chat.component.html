@@ -56,7 +56,7 @@
           </p>
         </div>
         <div *ngIf="daymessage.editHidden === true" class="message-block-edit">
-          <input type="text" #editInput (keyup.enter)="editMessage($event.target.value, daymessage);" value="{{daymessage.get('message')}}">
+          <input type="text" #editInput (keyup.enter)="editMessage($event.target.value, daymessage);" value="{{decodeMessage(daymessage.get('message'))}}">
           <div class="edit-buttons-wrap">
             <button (click)="daymessage.editHidden = false" class="message-block-edit-cancel">cancel</button> 
             <button (click)="editMessage(editInput.value, daymessage);" class="message-block-edit-save">save changes</button>
@@ -80,8 +80,8 @@
   </div>
 </div>
 <div>
-<div class="message-input-block">
-  <p 
+<div class="message-input-block" id="message-input-block">
+  <p #fakeInput
     (keydown)="watch($event)"
     (keydown.enter)="sendColleagueMessage(textAreaValue, $event)"
     class="message-input-block-fake"

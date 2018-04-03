@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer, OnDestroy, HostListener, QueryList, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './chat.service';
@@ -58,8 +58,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('messageInput') public messageTextArea: HTMLTextAreaElement;
   @ViewChild('jobMentions') public jobMentions: HTMLDivElement;
   @ViewChild('fakeCursor') private fakeCursor: HTMLSpanElement;
-  @ViewChild('fakeInput') private fakeInput: HTMLDivElement;
-
+  @ViewChild('fakeInput') private fakeInput: ElementRef;
+  
   constructor(
     private _ar: ActivatedRoute,
     private _chatService: ChatService,
@@ -69,7 +69,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _root_vcr: RootVCRService,
     private _sanitizer: DomSanitizer,
     private _roter: Router,
-    private _elRef: ElementRef
+    private _elRef: ElementRef,
+    private _renderer: Renderer
   ) { }
 
 
@@ -257,7 +258,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   sendColleagueMessage (value, event) {
     event.preventDefault();
     if (value.value != '') {
-      this.textAreaValue.setValue('');
       event.preventDefault();
       this._socket.emit('outgoing-to-colleague', {
         message: encodeURIComponent(value.value),
@@ -265,7 +265,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         dialog: this.dialogId,
         recipientId: this.teamMemberId,
         type: 'AppChat'
-      });
+      }).then(this.textAreaValue.setValue(''));
     };
     if (value.value === '') {
       event.preventDefault();
@@ -286,9 +286,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     Object.defineProperty(data, 'className', {value: 'Message'});
     let message = this._parse.Parse.Object.fromJSON(data);
     this.messageStorage.unshift(message);
-    console.log(this.messageStorage);
     this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
-      console.log(messagesSorted);
       this.messages = messagesSorted;
       if (this.messagesBlock.nativeElement.scrollHeight - this.messagesBlock.nativeElement.scrollTop - this.messagesBlock.nativeElement.offsetHeight <= 20) {
         this.scrollToBottom();
@@ -507,13 +505,18 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   addJobMentionLink (jobId: string, jobTitle: string, value: string) {
       const self = this;
+      const randomId = Math.random().toString(2);
+      this.textAreaValue.setValue(this.textAreaValue.value + '<a class="job-link ' + jobId + '" href="javascript:void(0)">'+ jobTitle +'</a>');
       setTimeout(()=> {
-        const element = document.getElementById(jobId);
-        element.addEventListener('click', ()=> {
-          this.redirectToJob(jobId);
-        })
-      }, 1);
-      this.textAreaValue.setValue(this.textAreaValue.value + '<a class="job-link ' + jobId + '" id="'+jobId+'" href="javascript:void(0)">'+ jobTitle +'</a>');
+        const array = document.getElementsByClassName(jobId);
+        for (let i = 0; i < array.length; i++) {
+          console.log(array[i]);
+          array[i].addEventListener('click', (event)=> {
+              event.preventDefault();
+              self.redirectToJob(jobId);
+            })
+        }
+      }, 4);
       this.jobMentionsHidden = true;
   }
 
@@ -527,7 +530,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   watch(event) {
     if (event.key === "#") {
-      console.log(event)
       this.jobMentionsHidden = false;
       this.getJobTags();
     }

@@ -12,16 +12,22 @@ export class SanitizePipe implements PipeTransform {
   ) {
   }
   transform(content) {
-    if (content.indexOf('id=') > -1) {
+    if (content.indexOf('class="job-link') > -1) {
       console.log(content);
-      const start = content.indexOf('id=') + 4;
-      const finish = content.indexOf('id=') + 14;
+      const start = content.indexOf('class="job-link ') + 16;
+      const finish = content.indexOf('class="job-link ') + 26;
+      console.log(start, finish);
       const id = content.slice(start, finish);
+      console.log(id);
       setTimeout(()=> {
-        const element = document.getElementById(id);
-        element.addEventListener('click', () => {
-          this._router.navigate(['/jobs', id]);
-        });
+        const array = document.getElementsByClassName(id);
+        for (let i = 0; i < array.length; i++) {
+          console.log(array[i]);
+          array[i].addEventListener('click', (event)=> {
+              event.preventDefault();
+              this._router.navigate(['/jobs', id])
+            })
+        }
       },1)
     };
     return this.sanitizer.bypassSecurityTrustHtml(content);
