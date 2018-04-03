@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, QueryList, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, QueryList } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './chat.service';
 import { MentionModule } from 'angular2-mentions/mention';
@@ -10,7 +10,9 @@ import { CoreService } from '../core/core.service';
 import { Parse } from '../parse.service';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { RootVCRService } from '../root_vcr.service';
-
+import { Router } from '@angular/router';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { stat } from 'fs';
 // tslint:disable
 @Component({
   selector: 'app-chat',
@@ -38,10 +40,23 @@ export class ChatComponent implements OnInit, OnDestroy {
   public typing = false;
   private timer;
   private newMessagesCount: number = 0;
+  public jobMentionsHidden = true;
+  public textAreaValue = '';
+  public cursorHidden = true;
+  public space = '';
+  public sanitizedUrl; 
+  public jobMentionsArray;
+  public listenToChat = false;
+  public currentJobId;
+  public observer;
+  public bufferData = '';
 
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
   @ViewChild('messageBlock') private messageBlock: QueryList<any>;
   @ViewChild('messageInput') public messageTextArea: HTMLTextAreaElement;
+  @ViewChild('jobMentions') public jobMentions: HTMLDivElement;
+  @ViewChild('fakeCursor') private fakeCursor: HTMLSpanElement;
+  @ViewChild('fakeInput') private fakeInput: HTMLDivElement;
   
 
   constructor(
@@ -50,13 +65,17 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _coreService: CoreService,
     private _socket: Socket,
     private _parse: Parse,
-    private _root_vcr: RootVCRService
+    private _root_vcr: RootVCRService,
+    private _sanitizer: DomSanitizer,
+    private _roter: Router,
+    private _elRef: ElementRef
   ) { }
+
 
   ngOnInit() {
 
     this.userId = this._parse.getCurrentUser().id;
-
+   
     this.editPartnersMessage().subscribe(data => {
       this.turnEditedMessage(data);
     });
@@ -91,7 +110,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.setDialogIdToLocalStorage(params);
         this.getMessages(params);
       }
-
     });
 
     this._ar.queryParams.subscribe(queryParams => {
@@ -109,8 +127,51 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.getTeamMemberOffline().subscribe(data => {
         this.teamMember.sessionStatus = 'false';
     });
-
+    this.recieveJobTags().subscribe(data => {
+      console.log(data);
+      this.jobMentionsArray = data;
+    });
   }
+
+  @HostListener('document: keydown', ['$event']) onChatType (event: KeyboardEvent) {
+    console.log(event);
+    if (this.listenToChat === true) {
+      if (event.key === "Enter") {
+        this.sendColleagueMessage(this.textAreaValue);
+      };
+      if (event.key === '#') {
+        this.jobMentionsHidden = false;
+        let data = {};
+        this._socket.emit('get-job-tags', data);
+      };
+      if (event.keyCode >= 48 && event.keyCode <= 57) {
+        this.textAreaValue = this.textAreaValue + event.key;
+      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
+        this.textAreaValue = this.textAreaValue + event.key;
+      } else if (event.key === 'Backspace') {
+        if (this.bufferData != ''){  
+          const range = this.bufferData.length;
+          const start = this.textAreaValue.indexOf(this.bufferData);
+          this.textAreaValue.replace(this.bufferData, '');
+          // this.textAreaValue = this.textAreaValue.slice(start, start+range);
+          console.log(range, start);
+        } else if (this.textAreaValue.substring(this.textAreaValue.length-6, this.textAreaValue.length-0) === '&nbsp;') {
+          this.textAreaValue = this.textAreaValue.substring(0, this.textAreaValue.length-6);
+        } else if (this.textAreaValue.slice(-4,-1) === '</a') {
+          const jobId = this.textAreaValue.slice(-21,-11);
+          const start = this.textAreaValue.indexOf('<a class="job-link '+ jobId +'"');
+          this.textAreaValue = this.textAreaValue.slice(0, start);
+        } else {
+          this.textAreaValue = this.textAreaValue.slice(0,-1);
+        };
+      } else if (event.code === 'Space') {
+        this.textAreaValue = this.textAreaValue + '&nbsp;'
+      } else if (event.keyCode >= 186 && event.keyCode <=201) {
+        this.textAreaValue = this.textAreaValue + event.key;
+      }
+    }
+  }
+
 
   setDialogIdToLocalStorage (params) {
     if (!localStorage.getItem('chatRoom')){
@@ -118,19 +179,16 @@ export class ChatComponent implements OnInit, OnDestroy {
       this._socket.emit('enter-chat-room', {
         dialogId: params.id
       });
-      console.log('ENTERED THE ROOM', params.id);      
       return;
     } else {
       let dialogIdToLeave = localStorage.getItem('chatRoom');
       this._socket.emit('leave-chat-room', {
         dialogId: dialogIdToLeave
       });
-      console.log('LEAVED THE ROOM', dialogIdToLeave);
       localStorage.setItem('chatRoom', params.id);
       this._socket.emit('enter-chat-room', {
         dialogId: params.id
       });
-      console.log('ENTERED THE ROOM', params.id);
     }
   }
 
@@ -232,19 +290,19 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendColleagueMessage (event) {
-    if (event.target.value != '') {
+  sendColleagueMessage (value) {
+    if (value != '') {
+      this.textAreaValue = '';
       event.preventDefault();
       this._socket.emit('outgoing-to-colleague', {
-        message: encodeURIComponent(event.target.value),
+        message: encodeURIComponent(value),
         sender: this._parse.getCurrentUser().id,
         dialog: this.dialogId,
         recipientId: this.teamMemberId,
         type: 'AppChat'
       });
-      event.target.value = null;
     };
-    if (event.target.value === '') {
+    if (value === '') {
       event.preventDefault();
     };
   }
@@ -263,7 +321,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     Object.defineProperty(data, 'className', {value: 'Message'});
     let message = this._parse.Parse.Object.fromJSON(data);
     this.messageStorage.unshift(message);
+    console.log(this.messageStorage);
     this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
+      console.log(messagesSorted);
       this.messages = messagesSorted;
       if (this.messagesBlock.nativeElement.scrollHeight - this.messagesBlock.nativeElement.scrollTop - this.messagesBlock.nativeElement.offsetHeight <= 20) {
         this.scrollToBottom();
@@ -355,7 +415,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           <span style="margin-right: 10px; font-weight-bold">` + message.get('author').get('firstName') + ` ` +  message.get('author').get('lastName') + `</span>
           <span>` + message.get('createdAt') + `</span>
         </div>
-        <p class="message-block-text" style="height: 50%;">` + message.get('message') + ` </p>
+        <p class="message-block-text" style="min-height: 50%;">` + this.decodeMessage(message.get('message')) + ` </p>
       </div>
     </div>
     `;
@@ -444,9 +504,69 @@ export class ChatComponent implements OnInit, OnDestroy {
   
   decodeMessage (message: string) {
     let messageDecoded;
-
     messageDecoded = decodeURIComponent(message.replace(/%0A/g, '<br/>'));
     return messageDecoded;
+  }
+
+  checkNoteMention (event) {
+    if (event.key === '#') {
+      this.jobMentionsHidden = false;
+      this.getJobTags();
+    } else {
+      this.jobMentionsHidden = true;
+    };
+  }
+
+  getJobTags() {
+    let data = {};
+    this._socket.emit('get-job-tags', data);
+  };
+
+  recieveJobTags () {
+    const observable = new Observable(observer => {
+			this._socket.on('job-tags-found', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+  }
+
+  addSpaceToFakeInput (value: string, event) {
+      event.preventDefault();
+      let newValue = value;
+      newValue = newValue + '&nbsp;';
+      return newValue;
+  }
+
+  deleteSpaceFromFakeInput (value: string, event) {
+    event.preventDefault();
+    let newValue = value;
+    if (newValue.substring(newValue.length-6, newValue.length-0) === '&nbsp;') {
+      newValue = newValue.substring(0, newValue.length-6);
+    } else {
+      newValue = newValue.slice(0, -1);
+    }
+    return newValue;
+  }
+
+  addJobMentionLink (jobId: string, jobTitle: string, value: string) {
+      let url = "/jobs/ " + jobId;
+      let link = '<a class="job-link ' + jobId + '" id="'+jobId+'">'+ jobTitle +'<span class="hidden">'+ jobId +'</span></a>';
+      const self = this;
+      this.textAreaValue = this.textAreaValue + link;
+  }
+
+  sanitizeUrl(url:string) {
+    return this._sanitizer.bypassSecurityTrustHtml(url);
+  }  
+
+  redirectToJob(jobId) {
+    this._roter.navigate(['/jobs', jobId]);
+  }
+
+  selectText(event) {
+    console.log(document.getSelection().toString());
+    this.bufferData = document.getSelection().toString();
   }
 
   ngOnDestroy () {

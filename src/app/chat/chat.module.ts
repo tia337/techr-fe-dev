@@ -7,7 +7,9 @@ import { MatTooltipModule, MatProgressSpinnerModule } from '@angular/material';
 import { MentionModule } from 'angular2-mentions/mention';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { AutosizeModule } from '../shared/autosize/autosize.module';
-
+import { RouterModule } from '@angular/router';
+import { SanitizePipe } from './sanitize.pipe';
+import { SanitizeMessagePipe } from './sanitize-message.pipe';
 
 @NgModule({
   imports: [
@@ -16,9 +18,10 @@ import { AutosizeModule } from '../shared/autosize/autosize.module';
     MentionModule,
     MatProgressSpinnerModule,
     ClickOutsideModule,
-    AutosizeModule
+    AutosizeModule,
+    RouterModule,
   ],
-    declarations: [ChatComponent],
+    declarations: [ChatComponent, SanitizePipe, SanitizeMessagePipe],
     providers: [ChatService],
 })
 export class ChatModule { }

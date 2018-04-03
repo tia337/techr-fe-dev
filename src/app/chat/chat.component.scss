@@ -156,6 +156,7 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
+    // opacity: 0;
     textarea {
         resize: none;
         background: transparent;
@@ -163,33 +164,61 @@
         outline: none;
         margin-left: 10px;
         width: 90%;
-        height: 100%;
+        height: auto;
         font-size: 14px;
-        padding-top: 10px;
+        // padding-top: 10px;
         min-height: 40px;
         max-height: 300px;
+        position: absolute;
+        z-index: 99;
+        opacity: 0;
         &::-webkit-input-placeholder {
             color: #c1c1c2;
             font-size: 14px;
         }
     }
+    &-fake {
+        background: transparent;
+        border: none;
+        outline: none;
+        margin-left: 10px;
+        width: 90%;
+        height: 100%;
+        font-size: 14px;
+        // padding-top: 10px;
+        min-height: 40px;
+        max-height: 300px;
+        color: grey;
+        display: flex;
+        align-items: center;
+        &-cursor {
+            display: inline-block;
+            color: black;
+            height: 19px;
+            width: 1px;
+            border: 0.5px solid;
+            animation-name: blink-caret;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+            position: relative;
+        }
+        a {
+            font-weight: bold!important;
+            z-index: 999!important; 
+            position: relative!important;
+        }
+    }
 }
 
-textarea {
-    resize: none;
-    background: transparent;
-    border: none;
-    outline: none;
-    margin-left: 10px;
-    width: 90%;
-    height: 100%;
-    font-size: 14px;
-    width: 100%;
-    padding-right: 40px;
-    &::-webkit-input-placeholder {
-        color: #c1c1c2;
-        font-size: 14px;
-    }
+.job-link {
+    font-weight: bold;
+    z-index: 999; 
+    cursor: pointer;    
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: black; }
 }
 
 .subscriptions-block {
@@ -329,6 +358,50 @@ textarea {
             text-transform: uppercase;
             margin-right: 10px;
             cursor: pointer;
+        }
+    }
+}
+
+
+.job-mentions {
+    background: #d9d9d9;
+    border-radius: 3px;
+    box-shadow: 3px 4px 6px rgba(0,0,0,.35);
+    &-wrap {
+        position: absolute;
+        z-index: 999999;
+        left: 10px;
+        bottom: 33px;
+        max-height: calc(100vh - 129px);
+        overflow: auto;
+        width: 290px;
+    }
+    &-item {
+        padding: 10px 5px;
+        border-bottom: 1px solid #849fbf;
+        list-style: none;
+        cursor: pointer;
+        transition: .25s all ease-in-out;
+        &-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 3px;
+            display: inline-block;
+        }
+        &-city-date {
+            font-size: 12px;
+            opacity: .7;
+        }
+        &:first-child {
+            border-radius: 3px 3px 0 0;
+        }
+        &:last-child {
+            border-bottom: none;
+            border-radius: 0 0 3px 3px;
+        }
+        &:hover {
+            background: #3c3c3c;
+            color: #fff;
         }
     }
 }
