@@ -156,65 +156,26 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
-    // opacity: 0;
-    textarea {
-        resize: none;
-        background: transparent;
-        border: none;
-        outline: none;
-        margin-left: 10px;
-        width: 90%;
-        height: auto;
-        font-size: 14px;
-        // padding-top: 10px;
-        min-height: 40px;
-        max-height: 300px;
-        position: absolute;
-        z-index: 99;
-        opacity: 0;
-        &::-webkit-input-placeholder {
-            color: #c1c1c2;
-            font-size: 14px;
-        }
-    }
+    min-height: 40px;
     &-fake {
         background: transparent;
         border: none;
         outline: none;
-        margin-left: 10px;
-        width: 90%;
+        width: 95%;
         height: 100%;
         font-size: 14px;
-        // padding-top: 10px;
-        min-height: 40px;
         max-height: 300px;
+        padding: 10px;    
+        padding-right: 0;
         color: grey;
-        display: flex;
-        align-items: center;
-        &-cursor {
-            display: inline-block;
-            color: black;
-            height: 19px;
-            width: 1px;
-            border: 0.5px solid;
-            animation-name: blink-caret;
-            animation-duration: 1s;
-            animation-iteration-count: infinite;
-            position: relative;
-        }
-        a {
-            font-weight: bold!important;
-            z-index: 999!important; 
-            position: relative!important;
-        }
+        z-index: 10;
+        position: relative;
+        word-wrap: break-word;
+        line-break: auto;
+        -webkit-user-modify: read-write;
     }
 }
 
-.job-link {
-    font-weight: bold;
-    z-index: 999; 
-    cursor: pointer;    
-}
 
 @keyframes blink-caret {
     from, to { border-color: transparent }
@@ -370,7 +331,7 @@
     &-wrap {
         position: absolute;
         z-index: 999999;
-        left: 10px;
+        left: 150px;
         bottom: 33px;
         max-height: calc(100vh - 129px);
         overflow: auto;
@@ -404,4 +365,11 @@
             color: #fff;
         }
     }
+}
+
+.placeholder {
+    color: grey;
+    position: absolute;
+    z-index: 9; 
+    left: 10px;
 }

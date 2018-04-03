@@ -9,6 +9,7 @@ import {Parse} from "../parse.service";
 import {MatButtonModule} from '@angular/material';
 import {RootVCRService} from "../root_vcr.service";
 import { AlertComponent} from "../shared/alert/alert.component";
+import {MatGridListModule} from '@angular/material/grid-list';
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -32,11 +33,18 @@ export class UserSettingsComponent implements OnInit {
     reedPostEmail:string;
     reedPostKeyInitial:string;
     reedPostEmailInitial:string;
+    public tiles = [
+        {text: 'One', cols: 3, rows: 1, color: 'lightblue'},
+        {text: 'Two', cols: 1, rows: 2, color: 'lightgreen'},
+        {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
+        {text: 'Four', cols: 2, rows: 1, color: '#DDBDF1'},
+      ];
   constructor(private _parse: Parse,
               private _root_vcr: RootVCRService) {
   }
 
   ngOnInit() {
+      
       this.getCurrentPartner().then(partner=>{
           if (partner.has("candidateDistanceUnitPreferrences")){
              let codeOfUnit =  partner.get("candidateDistanceUnitPreferrences");

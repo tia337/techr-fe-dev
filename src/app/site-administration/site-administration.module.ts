@@ -121,9 +121,7 @@ import {
 
 
 // WYSIWYG pannel
-import {
-	CKEditorModule
-} from 'ng2-ckeditor';
+
 import {
 	TeamMembersModule
 } from "./user-management/team-members/team-members.module";
@@ -166,7 +164,6 @@ import {UserSettingsComponent} from "../user-settings/user-settings.component";
 		MatTooltipModule,
 		SubscriptionsCheckoutModule,
 		BillingModule,
-		CKEditorModule,
 		SubscriptionsUpgradeModule,
 		MatIconModule,
 		MatSlideToggleModule,

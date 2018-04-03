@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy, HostListener, QueryList, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './chat.service';
@@ -13,6 +13,7 @@ import { RootVCRService } from '../root_vcr.service';
 import { Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { stat } from 'fs';
+import { FormControl } from '@angular/forms';
 // tslint:disable
 @Component({
   selector: 'app-chat',
@@ -41,15 +42,16 @@ export class ChatComponent implements OnInit, OnDestroy {
   private timer;
   private newMessagesCount: number = 0;
   public jobMentionsHidden = true;
-  public textAreaValue = '';
+  public textAreaValue = new FormControl;
   public cursorHidden = true;
-  public space = '';
+  public space = 'editable!';
   public sanitizedUrl; 
   public jobMentionsArray;
   public listenToChat = false;
   public currentJobId;
   public observer;
-  public bufferData = '';
+  private focusOffset: number;
+  public placeholder: string;
 
   @ViewChild('messagesBlock') private messagesBlock: ElementRef;
   @ViewChild('messageBlock') private messageBlock: QueryList<any>;
@@ -57,7 +59,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('jobMentions') public jobMentions: HTMLDivElement;
   @ViewChild('fakeCursor') private fakeCursor: HTMLSpanElement;
   @ViewChild('fakeInput') private fakeInput: HTMLDivElement;
-  
 
   constructor(
     private _ar: ActivatedRoute,
@@ -116,6 +117,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.teamMemberQueryParams = queryParams;
       this.teamMemberId = queryParams[4];
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
+      this.placeholder = "Message " + this.teamMember.firstName + ' ' + this.teamMember.lastName;
+      console.log(this.placeholder);
     });
 
     this._chatService.getTeamMembers().then(team => this.teammates = team);
@@ -131,47 +134,8 @@ export class ChatComponent implements OnInit, OnDestroy {
       console.log(data);
       this.jobMentionsArray = data;
     });
+    this.textAreaValue.setValue('');
   }
-
-  @HostListener('document: keydown', ['$event']) onChatType (event: KeyboardEvent) {
-    console.log(event);
-    if (this.listenToChat === true) {
-      if (event.key === "Enter") {
-        this.sendColleagueMessage(this.textAreaValue);
-      };
-      if (event.key === '#') {
-        this.jobMentionsHidden = false;
-        let data = {};
-        this._socket.emit('get-job-tags', data);
-      };
-      if (event.keyCode >= 48 && event.keyCode <= 57) {
-        this.textAreaValue = this.textAreaValue + event.key;
-      } else if (event.keyCode >= 65 && event.keyCode <= 90) {
-        this.textAreaValue = this.textAreaValue + event.key;
-      } else if (event.key === 'Backspace') {
-        if (this.bufferData != ''){  
-          const range = this.bufferData.length;
-          const start = this.textAreaValue.indexOf(this.bufferData);
-          this.textAreaValue.replace(this.bufferData, '');
-          // this.textAreaValue = this.textAreaValue.slice(start, start+range);
-          console.log(range, start);
-        } else if (this.textAreaValue.substring(this.textAreaValue.length-6, this.textAreaValue.length-0) === '&nbsp;') {
-          this.textAreaValue = this.textAreaValue.substring(0, this.textAreaValue.length-6);
-        } else if (this.textAreaValue.slice(-4,-1) === '</a') {
-          const jobId = this.textAreaValue.slice(-21,-11);
-          const start = this.textAreaValue.indexOf('<a class="job-link '+ jobId +'"');
-          this.textAreaValue = this.textAreaValue.slice(0, start);
-        } else {
-          this.textAreaValue = this.textAreaValue.slice(0,-1);
-        };
-      } else if (event.code === 'Space') {
-        this.textAreaValue = this.textAreaValue + '&nbsp;'
-      } else if (event.keyCode >= 186 && event.keyCode <=201) {
-        this.textAreaValue = this.textAreaValue + event.key;
-      }
-    }
-  }
-
 
   setDialogIdToLocalStorage (params) {
     if (!localStorage.getItem('chatRoom')){
@@ -290,19 +254,20 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendColleagueMessage (value) {
-    if (value != '') {
-      this.textAreaValue = '';
+  sendColleagueMessage (value, event) {
+    event.preventDefault();
+    if (value.value != '') {
+      this.textAreaValue.setValue('');
       event.preventDefault();
       this._socket.emit('outgoing-to-colleague', {
-        message: encodeURIComponent(value),
+        message: encodeURIComponent(value.value),
         sender: this._parse.getCurrentUser().id,
         dialog: this.dialogId,
         recipientId: this.teamMemberId,
         type: 'AppChat'
       });
     };
-    if (value === '') {
+    if (value.value === '') {
       event.preventDefault();
     };
   }
@@ -508,15 +473,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     return messageDecoded;
   }
 
-  checkNoteMention (event) {
-    if (event.key === '#') {
-      this.jobMentionsHidden = false;
-      this.getJobTags();
-    } else {
-      this.jobMentionsHidden = true;
-    };
-  }
-
   getJobTags() {
     let data = {};
     this._socket.emit('get-job-tags', data);
@@ -550,10 +506,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   addJobMentionLink (jobId: string, jobTitle: string, value: string) {
-      let url = "/jobs/ " + jobId;
-      let link = '<a class="job-link ' + jobId + '" id="'+jobId+'">'+ jobTitle +'<span class="hidden">'+ jobId +'</span></a>';
       const self = this;
-      this.textAreaValue = this.textAreaValue + link;
+      setTimeout(()=> {
+        const element = document.getElementById(jobId);
+        element.addEventListener('click', ()=> {
+          this.redirectToJob(jobId);
+        })
+      }, 1);
+      this.textAreaValue.setValue(this.textAreaValue.value + '<a class="job-link ' + jobId + '" id="'+jobId+'" href="javascript:void(0)">'+ jobTitle +'</a>');
+      this.jobMentionsHidden = true;
   }
 
   sanitizeUrl(url:string) {
@@ -564,9 +525,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._roter.navigate(['/jobs', jobId]);
   }
 
-  selectText(event) {
-    console.log(document.getSelection().toString());
-    this.bufferData = document.getSelection().toString();
+  watch(event) {
+    if (event.key === "#") {
+      console.log(event)
+      this.jobMentionsHidden = false;
+      this.getJobTags();
+    }
   }
 
   ngOnDestroy () {

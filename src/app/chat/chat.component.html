@@ -80,47 +80,37 @@
   </div>
 </div>
 <div>
-  
-  <div class="message-input-block" *ngIf="teamMember !== undefined" (click)="cursorHidden = false; listenToChat = true;" [exclude]="'.job-mentions-item'" (clickOutside)="listenToChat = false; cursorHidden = true;">
-    <!-- <textarea autosize
-      #messageTextArea
-      [(value)]="textAreaValue"
-      (keydown)="RecruiterColleagueTypes(); checkNoteMention($event); textAreaValue = $event.target.value;"
-      (keydown.enter)="sendColleagueMessage($event);  textAreaValue = ''"
-      (keydown.space)="textAreaValue = addSpaceToFakeInput(textAreaValue, $event)"
-      (keydown.backspace)="textAreaValue = deleteSpaceFromFakeInput(textAreaValue, $event)"
-      placeholder="Message {{teamMember.firstName}} {{teamMember.lastName}}"
-      >
-    </textarea> -->
-     <div class="message-input-block-fake" (mouseup)="selectText($event)">
-      <span class="message-input-block-fake-cursor"  *ngIf="textAreaValue === '' && cursorHidden === false"></span>      
-      <span *ngIf="textAreaValue === ''">Message {{teamMember.firstName}} {{teamMember.lastName}}</span>
-      <p [innerHTML]="textAreaValue | sanitize">
-      </p>
-      <!-- {{textAreaValue}} -->
-      <span class="message-input-block-fake-cursor" *ngIf="textAreaValue !== ''">
-        <div class="job-mentions-wrap" (clickOutside)="jobMentionsHidden = true;" *ngIf="jobMentionsHidden === false">
-          <div class="job-mentions">
-            <ul>
-              <li class="job-mentions-item" 
-              *ngFor="let jobTag of jobMentionsArray"  
-              (click)="addJobMentionLink(jobTag._id, jobTag.title, textAreaValue); jobMentionsHidden = true;">
-                <span class="job-mentions-item-title">{{jobTag.title}}</span>
-                <p class="job-mentions-item-city-date">
-                  <span>{{jobTag.JobLocationFEinput}}</span>
-                  /
-                  <span>Posted on {{jobTag.postedAt | date: 'MM.dd.yy'}}</span>
-                </p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </span>
-     </div>
-    <div class="subscriptions-block">
-      <span id="mention-candidate" (click)="jobMentionsHidden = false; getJobTags();">#</span>
-    </div>
+<div class="message-input-block">
+  <p 
+    (keydown)="watch($event)"
+    (keydown.enter)="sendColleagueMessage(textAreaValue, $event)"
+    class="message-input-block-fake"
+    contenteditable="true" 
+    [formControl]="textAreaValue"
+    ngDefaultControl
+    propValueAccessor="innerHTML">
+  </p>
+  <p class="placeholder" *ngIf="textAreaValue.value === ''">{{placeholder}}</p>
+  <div class="subscriptions-block">
+    <span id="mention-candidate" (click)="jobMentionsHidden = false; getJobTags();">#</span>
   </div>
-  <span *ngIf="typing === true" class="typing-attention">{{teamMember.firstName}} {{teamMember.lastName}} is typing</span>
-</div>  
+  <span *ngIf="typing === true && teamMember !== undefined" class="typing-attention">{{teamMember.firstName}} {{teamMember.lastName}} is typing</span>
+</div>
+
+<div class="job-mentions-wrap" (clickOutside)="jobMentionsHidden = true;" *ngIf="jobMentionsHidden === false">
+  <div class="job-mentions">
+    <ul>
+      <li class="job-mentions-item" 
+      *ngFor="let jobTag of jobMentionsArray"  
+      (click)="addJobMentionLink(jobTag._id, jobTag.title, textAreaValue);">
+        <span class="job-mentions-item-title">{{jobTag.title}}</span>
+        <p class="job-mentions-item-city-date">
+          <span>{{jobTag.JobLocationFEinput}}</span>
+          /
+          <span>Posted on {{jobTag.postedAt | date: 'MM.dd.yy'}}</span>
+        </p>
+      </li>
+    </ul>
+  </div>
+</div>
 
