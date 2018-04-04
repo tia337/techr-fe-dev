@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { FormControl } from '@angular/forms';
 
 
 
@@ -9,10 +10,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class SanitizeMessagePipe implements PipeTransform {
   constructor(private _sanitizer: DomSanitizer) {}
 
-  transform(value: any, args?: any): any {
-    if (value.indexOf('id=') > -1) {
-      console.log(value);
-    }
+  transform(content) {
+    const value = new FormControl;
+    value.setValue(decodeURIComponent(content));
     return value;
   }
 

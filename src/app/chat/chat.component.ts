@@ -81,11 +81,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.listenToDialogIdUpdated().subscribe(data => {
       console.log(data);
       this.updateDialogId(data);
-      this._chatService.updateDialogIdInCore(data);
+      // this._chatService.updateDialogIdInCore(data);
     })
 
    
     this.editPartnersMessage().subscribe(data => {
+      console.log(data);
       this.turnEditedMessage(data);
     });
 
@@ -264,6 +265,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendColleagueMessage (value, event) {
     event.preventDefault();
+    console.log(value.value);
     if (value.value != '') {
       event.preventDefault();
       this._socket.emit('outgoing-to-colleague', {
@@ -346,9 +348,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (value === this.decodeMessageForEditing(message.get('message'))) {
       message.editHidden = false;
     }
-    if (value !== this.decodeMessageForEditing(message.get('message')) && value != "") {
+    console.log(Object.getOwnPropertyNames(message));
+    if (value !== message.get('message') && value != "") {
       message.set('message', value);
-      message.isEdited = true;
+        message.isEdited = true;
       message.editHidden = false;
       this._socket.emit('edit-message', {
         dialogId: this.dialogId, 
@@ -389,14 +392,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     <p style="margin-bottom: 10px; font-size: 18px;">Are you sure you want to delete this message? This cannot be undone.</p>
     <div style="display: flex;padding: 10px;border: 1px solid;border-radius: 5px; width: 100%;">
       <div style="display: flex;align-items: center;justify-content: center;">
-        <img style="border-radius: 3px;margin-right: 10px;" src="` + message.get('author').get('avatarURL') + `" alt="">
+        <img style="border-radius: 3px;margin-right: 10px; max-width: 50px;" src="` + message.get('author').get('avatarURL') + `" alt="">
       </div>
-    <div style="display: flex;flex-direction: column;justify-content: space-between;">
+    <div style="display: flex;flex-direction: column;justify-content: space-between; width:93%">
         <div style="display: flex; height: 50%;">
           <span style="margin-right: 10px; font-weight-bold">` + message.get('author').get('firstName') + ` ` +  message.get('author').get('lastName') + `</span>
           <span>` + message.get('createdAt') + `</span>
         </div>
-        <p class="message-block-text" style="min-height: 50%;">` + this.decodeMessage(message.get('message')) + ` </p>
+        <p class="message-block-text" style="min-height: 50%;max-height:50%; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">` + this.decodeMessage(message.get('message')) + ` </p>
       </div>
     </div>
     `;
@@ -494,7 +497,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   
   decodeMessage (message: string) {
     let messageDecoded;
-    messageDecoded = decodeURIComponent(message.replace(/%0A/g, '<br/>'));
+    messageDecoded = decodeURIComponent(message);
     return messageDecoded;
   }
 
@@ -517,6 +520,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
   getJobTags() {
     let data = {};
+    this.jobMentionsHidden = false;    
     this._socket.emit('get-job-tags', data);
   };
 
@@ -529,24 +533,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 		return observable;
   }
 
-  addSpaceToFakeInput (value: string, event) {
-      event.preventDefault();
-      let newValue = value;
-      newValue = newValue + '&nbsp;';
-      return newValue;
-  }
-
-  deleteSpaceFromFakeInput (value: string, event) {
-    event.preventDefault();
-    let newValue = value;
-    if (newValue.substring(newValue.length-6, newValue.length-0) === '&nbsp;') {
-      newValue = newValue.substring(0, newValue.length-6);
-    } else {
-      newValue = newValue.slice(0, -1);
-    }
-    return newValue;
-  }
-
   addJobMentionLink (jobId: string, jobTitle: string, value: string) {
       const self = this;
       const randomId = Math.random().toString(2);
@@ -554,12 +540,29 @@ export class ChatComponent implements OnInit, OnDestroy {
       setTimeout(()=> {
         const array = document.getElementsByClassName(jobId);
         for (let i = 0; i < array.length; i++) {
-          console.log(array[i]);
           array[i].addEventListener('click', (event)=> {
               event.preventDefault();
               self.redirectToJob(jobId);
-            })
-        }
+            });
+        };  
+            this._renderer.invokeElementMethod(this.fakeInput.nativeElement, 'focus');
+            const element = array[array.length-1];
+            const input = document.getElementById('chat-input');
+            const sel = window.getSelection();
+            let range = sel.getRangeAt(0);
+            range.deleteContents();
+            var frag = document.createDocumentFragment(), node, lastNode;
+            while ( (node = input.firstChild) ) {
+                lastNode = frag.appendChild(node);
+            }
+            range.insertNode(frag);
+            if (lastNode) {
+                range = range.cloneRange();
+                range.setStartAfter(lastNode);
+                range.collapse(true);
+                sel.removeAllRanges();
+                sel.addRange(range);
+            };
       }, 4);
       this.jobMentionsHidden = true;
   }
@@ -573,8 +576,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   watch(event) {
+    // console.log(document.getSelection().getRangeAt(0).startOffset);
     if (event.key === "#") {
-      this.jobMentionsHidden = false;
       this.getJobTags();
     }
   }
