@@ -174,6 +174,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 	setActiveStage() {
 		this._jobDetailsService.activeStage = this.currentInterviewStage;
 		console.log('SET ACTIVE STAGE');
+		localStorage.removeItem('queryParams');
 	}
 
 	get Loading() {
