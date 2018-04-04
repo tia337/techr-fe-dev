@@ -19,6 +19,7 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 	public notificationMessageSender: NotificationMessageSender;
 	public notificationDialogId: string;
 	public notificationNotePipelineStage: number;
+	public notificationScoringPipelineStage: number;
 	private _onDestroy: Function;
 
 
@@ -75,6 +76,10 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.notificationNotePipelineStage = value;
 	}
 
+	set scoringPipeLineStage (value: number) {
+		this.notificationScoringPipelineStage = value;
+	}
+
 	set onDestroy(func: Function) {
 		this._onDestroy = func;
 	}
@@ -115,6 +120,10 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		return this.notificationNotePipelineStage;
 	}
 
+	get scoringPipeLineStage () {
+		return this.notificationScoringPipelineStage;
+	}
+
 	close() {
 		this._root_vcr.clear();
 	}
@@ -140,9 +149,10 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 			notification.classList.add('move-after-hover');
 		}
 	}
-	setQueryParams (candidateId) {
+	setQueryParams (candidateId, scoring?: boolean) {
 		const data = {
-			candidateId: candidateId
+			candidateId: candidateId,
+			scoring: scoring ? true : false
 		};
 		console.log(candidateId);
 		localStorage.setItem('queryParams', JSON.stringify(data));

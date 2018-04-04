@@ -94,6 +94,9 @@ export class NotificationsComponent implements OnInit {
     if (data.notePipelineStage) {
       notification.notificationNotePipelineStage = data.notePipelineStage;
     };
+    if(data.scoringPipelineStage) {
+      notification.notificationScoringPipelineStage = data.scoringPipelineStage;
+    }
   }
 
   createMessageNotification (data) {

@@ -194,6 +194,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 		this._stageSubscription.unsubscribe();
 		this._stageDisableSubscription.unsubscribe();
 		this._socket.removeAllListeners('pipelineCountUpdate');
+		localStorage.removeItem('queryParams');
 	}
 
 }
