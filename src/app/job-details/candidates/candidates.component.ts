@@ -77,7 +77,16 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
         private _root_vcr: RootVCRService,
 		private _parse: Parse
 	) {
-		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
+		if (localStorage.getItem('queryParams')) {
+			const params = JSON.parse(localStorage.getItem('queryParams'));
+			if (params.scoring === true && localStorage.getItem('queryParams') != null) {
+				this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates', 'scoring'], { skipLocationChange: true });
+			} 
+			return;
+		} else {
+		   this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
+		}
+		
 	}
 
 	ngOnChanges () {

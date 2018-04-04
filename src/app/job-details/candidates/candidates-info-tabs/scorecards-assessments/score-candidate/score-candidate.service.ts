@@ -53,6 +53,7 @@ export class ScoreCandidateService {
 			weightedScore.set('Job', options.contract);
 			weightedScore.set('ClientName', currentUser.get('Client_Pointer').get('ClientName'));
 			weightedScore.set('FinalVerdict', options.finalMark);
+			weightedScore.set('scoringPipelineStage', parseFloat(localStorage.getItem('activeStage')));
 
 			scoringPromises.push(weightedScore.save());
 

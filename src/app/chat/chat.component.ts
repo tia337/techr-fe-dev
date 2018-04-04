@@ -81,7 +81,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.listenToDialogIdUpdated().subscribe(data => {
       console.log(data);
       this.updateDialogId(data);
-      // this._chatService.updateDialogIdInCore(data);
+      this._chatService.updateDialogIdInCore(data);
     })
 
    
@@ -274,7 +274,10 @@ export class ChatComponent implements OnInit, OnDestroy {
         dialog: this.dialogId,
         recipientId: this.teamMemberId,
         type: 'AppChat'
-      }).then(this.textAreaValue.setValue(''));
+      });
+      setTimeout(()=>{
+        this.textAreaValue.setValue('');
+      },4)
     };
     if (value.value === '') {
       event.preventDefault();

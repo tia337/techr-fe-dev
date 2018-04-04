@@ -200,8 +200,8 @@ $menu-height: calc(100vh - #{$header-height});
                 font-size: 1em;
                 .func-buttons {
                     border-bottom: 2px solid #94a4b5 !important;
-                    font-size: $font-size-19;
-                    //font-size: 1.3rem;
+                    // font-size: $font-size-19;
+                    font-size: 1.12rem;
                     font-family: 'ABeeZee', sans-serif;
                 }
                 .func-buttons:hover {
@@ -231,7 +231,7 @@ $menu-height: calc(100vh - #{$header-height});
                 .invite-button {
                     cursor: pointer;
                     font-family: 'ABeeZee', sans-serif;
-                    font-size: 1.3rem;
+                    font-size: 1.12rem;
                     font-weight: 100;
                     margin-top: 40%;
                     margin-bottom: 35%;
