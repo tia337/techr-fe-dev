@@ -68,6 +68,10 @@
 }
 
 .message-block {
+    &-text-wrap {
+        display: flex;
+        align-items: flex-end;
+    }
     &-text {
         word-break: break-all;
     }
@@ -77,7 +81,6 @@
         justify-content: space-between;
         div {
             flex-grow: 1;
-            // width: 1px!important;
             border-bottom: 1px solid #adb9ca;
         }
         span {
@@ -89,6 +92,8 @@
     &-text-edited {
         opacity: .7;
         font-size: 12px;
+        margin-left: 5px;
+        margin-bottom: 1px;
     }
     &-message {
         &.edit {
@@ -113,7 +118,6 @@
             width: 60px;
             display: flex;
             align-items: center;
-            // justify-content: center;
             flex-direction: column;
             justify-content: flex-start;
         }
@@ -167,7 +171,7 @@
         max-height: 300px;
         padding: 10px;    
         padding-right: 0;
-        color: grey;
+        color: #000000;
         z-index: 10;
         position: relative;
         word-wrap: break-word;
@@ -182,23 +186,30 @@
     50% { border-color: black; }
 }
 
-.subscriptions-block {
-    display: inline-flex;
-    justify-content: space-around;
-    color: #c1c1c2;
-    font-size: 16px;
-    position: absolute;
-    right: 15px;
-    bottom: 10px;
-}
+// .subscriptions-block {
+//     // display: inline-flex;
+//     // justify-content: space-around;
+//     // color: #c1c1c2;
+//     // font-size: 16px;
+//     // position: absolute;
+//     // right: 15px;
+//     // bottom: 10px;
+// }
 
 #mention-candidate {
     margin-right: 10px;
     cursor: pointer;
-}
-
-#mention-team-member {
-    cursor: pointer;
+    transition: .3s all ease-in-out;
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    color: #c1c1c2;
+    font-size: 16px;
+    &:hover {
+        font-size: 20px;
+        bottom: 7px;
+        color: #3e8ed8;
+    }
 }
 
 .loader-wrap {
@@ -294,9 +305,10 @@
 .message-block {
     &-edit {
         width: 100%;
-        input {
+        p {
             width: 100%;
             padding: 5px 10px;
+            background: #fff;
             outline: none;
             border: none;
             border: 1px solid;

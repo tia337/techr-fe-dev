@@ -12,17 +12,15 @@ export class SanitizePipe implements PipeTransform {
   ) {
   }
   transform(content) {
+    console.log(content);
+    if (content === undefined) return;
     if (content.indexOf('class="job-link') > -1) {
-      console.log(content);
       const start = content.indexOf('class="job-link ') + 16;
       const finish = content.indexOf('class="job-link ') + 26;
-      console.log(start, finish);
       const id = content.slice(start, finish);
-      console.log(id);
       setTimeout(()=> {
         const array = document.getElementsByClassName(id);
         for (let i = 0; i < array.length; i++) {
-          console.log(array[i]);
           array[i].addEventListener('click', (event)=> {
               event.preventDefault();
               this._router.navigate(['/jobs', id])
