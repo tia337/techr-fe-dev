@@ -23,5 +23,161 @@
   }
 }
 
+.grid-list {
+  display: flex;
+  align-items: flex-start;
+  flex-flow: row wrap;
+}
+
+.customize-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+mat-grid-tile {
+  width: 32%;
+  height: 230px;
+  margin-bottom: 20px!important;
+}
+
+mat-grid-tile img {
+  width: auto;
+  height: auto;
+  margin-right: 7px;
+}
+
+mat-grid-tile div:first-child {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 10px;
+  height: 50px;
+}
+
+mat-grid-tile div:last-child {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid #94a4b5;
+  background: #fff; 
+  height: 170px;
+  p {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 10px;
+    align-items: center;
+    height: 50%;
+  }
+  p:first-child {
+    border-bottom: 1px solid #94a4b5;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.my-jobs-holder,
+.my-company-jobs-holder {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-grid-tile:nth-child(1n+1) {
+  margin: 0 5px;
+}
+
+.image-wrap {
+  width: 65px;
+  margin-right: 10px;
+}
+
+.panel-container.notifications {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.image-holder {
+  margin-right: 15px;
+}
+
+.text-holder {
+  display: flex;  
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.frequency {
+  &-holder {
+    width: 77%;
+    margin-left: 35px;
+  }
+  &-title {
+    text-align: center;
+    background: #2196f3;
+    color: white;
+    padding: 10px 0;
+    border-radius: 3px 3px 0 0;
+    font-size: 18px;
+    user-select: none;
+    width: 430px;
+  }
+  &-buttons-wrap {
+    background: rgba(0, 0, 0, 0.12);
+    padding: 3px 3px;
+    width: 430px;
+    display: flex;
+    justify-content: space-between;
+    button {
+        border: 1px solid transparent;
+        padding: 10px 10px;
+        border: none;
+        outline: none;
+        border-radius: 2px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: .3s all ease-in-out;
+        &:hover {
+          background: rgba(0, 0, 0, 0.5);
+          color: white;
+        }
+        &.active {
+          background: #109617;
+          color: white;
+        }
+    }
+    button.switch-off {
+      background: #f92c2c96;
+      color: white;
+      border: 1px solid transparent;   
+      width: 106px!important;   
+      &:hover {
+        background: #fff;
+        color: #f92c2c96;
+        border: 1px solid #f92c2c96;
+      }
+      &.active {
+        background: #f92c2c96;
+        color: white;
+        border: 1px solid transparent; 
+      }
+    }
+  }
+}
+
+.realTimeNotifications {
+  &.deactivated {
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    color: #f92c2c96;
+  }
+  &.activated {
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    color: #109617;
+  }
+}
+
+
 
 

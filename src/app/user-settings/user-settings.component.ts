@@ -1,122 +1,92 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatInputModule} from '@angular/material/input';
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatListModule} from '@angular/material/list';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatSelectModule} from '@angular/material/select';
 import {Parse} from "../parse.service";
 import {MatButtonModule} from '@angular/material';
 import {RootVCRService} from "../root_vcr.service";
-import { AlertComponent} from "../shared/alert/alert.component";
-import {MatGridListModule} from '@angular/material/grid-list';
-
-
+import {AlertComponent} from "../shared/alert/alert.component";
 export class MyErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
         const isSubmitted = form && form.submitted;
         return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
     }
 }
-
+//tslint:disable 
 @Component({
   selector: 'app-user-settings',
   templateUrl: './user-settings.component.html',
   styleUrls: ['./user-settings.component.scss']
 })
 export class UserSettingsComponent implements OnInit {
-    isCheckedInitial;
-    isChecked;
-    isButtonDisabled:boolean = true;
+    settings; //current settings from user input
+    settingsInit; // initial state from DB on ngOnInit()
+    //settingsChanged; // uncomment if checkSettingsChanged() for button disable/enable is fixed
+    distanceUnits:boolean;
+    distanceUnitsInit:boolean;
+    isButtonDisabled:boolean = true; // i think deprecated: never used
     matcher = new MyErrorStateMatcher();
-    reedPostKey:string;
-    reedPostEmail:string;
-    reedPostKeyInitial:string;
-    reedPostEmailInitial:string;
-    public tiles = [
-        {text: 'One', cols: 3, rows: 1, color: 'lightblue'},
-        {text: 'Two', cols: 1, rows: 2, color: 'lightgreen'},
-        {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
-        {text: 'Four', cols: 2, rows: 1, color: '#DDBDF1'},
-      ];
-  constructor(private _parse: Parse,
-              private _root_vcr: RootVCRService) {
+    public currentEmailSetting; 
+    public clicked;
+    constructor(private _parse: Parse,
+                private _root_vcr: RootVCRService) {
+  }
+//for button disable/enable to work 'Partner' properties should be defined in DB
+async ngOnInit() {
+    this.settings = {};
+    this.settingsInit = {};
+    //this.settingsChanged = {};  // uncomment if checkSettingsChanged() for button disable/enable is fixed
+    let partner = await this.getCurrentPartner();
+    this.settings = partner.toJSON();
+    this.settingsInit = partner.toJSON();
+    console.log(this.settings);
+    this.distanceUnits = (this.settings.candidateDistanceUnitPreferrences == 2);
+    this.distanceUnitsInit = (this.settingsInit.candidateDistanceUnitPreferrences == 2);
+    this.clicked = this.settingsInit.emailNotificatoinsFrequency;
+    console.log(this.settingsInit.emailNotificatoinsFrequency);
+  }
+  getCurrentPartner() {
+      return this._parse.getPartner(this._parse.Parse.User.current());
+  }
+  async saveChanges() {
+    this.settings.candidateDistanceUnitPreferrences = (this.distanceUnits) ? 2 : 1;
+
+    await this._parse.execCloud('changeUserSettings', {settings: this.settings});
+    this.settingsInit = Object.assign({}, this.settings);
+    this.distanceUnitsInit = (this.settingsInit.candidateDistanceUnitPreferrences == 2);
+          const alert = this._root_vcr.createComponent(AlertComponent);
+          alert.title = 'Saved';
+          alert.icon = 'thumbs-o-up';
+          alert.type = 'simple';
+          alert.contentAlign = 'left';
+          alert.content = `<a style = "white-space:nowrap">Changes successfully saved.</a>`;
+          alert.addButton({
+              title: 'Ok',
+              type: 'primary',
+              onClick: () => this._root_vcr.clear()
+          });
   }
 
-  ngOnInit() {
-      
-      this.getCurrentPartner().then(partner=>{
-          if (partner.has("candidateDistanceUnitPreferrences")){
-             let codeOfUnit =  partner.get("candidateDistanceUnitPreferrences");
-              if(codeOfUnit == 1) {
-                  this.isCheckedInitial = false;
-              }
-              else if (codeOfUnit == 2) {
-                  this.isCheckedInitial = true;
-              }
-          }
-          else {
-              partner.set("candidateDistanceUnitPreferrences",1);
-              partner.save();
-          }
-          if (partner.has("reedPostingKey")){
-              this.reedPostKeyInitial = partner.get("reedPostingKey");
-              this.reedPostKey = partner.get("reedPostingKey");
-          }
-          else {
-              this.reedPostKeyInitial = '';
-          }
-          if (partner.has('reedPostEmail')) {
-              this.reedPostEmailInitial = partner.get("reedPostEmail");
-              this.reedPostEmail = partner.get("reedPostEmail");
-          }
-          else {
-              this.reedPostEmailInitial = '';
-          }
-          this.isChecked = this.isCheckedInitial;
-      });
+  checkSettingsChanged() {
+    if (this.distanceUnits !== this.distanceUnitsInit || this.currentEmailSetting != this.settingsInit.emailNotificatoinsFrequency) {
+      return true;
+    }
+    // add check for emailNotificatoinsFrequency
+    for (let setting in this.settingsInit) {
+      if (this.settingsInit[setting] !== this.settings[setting])
+        //with this line button is enabled always, and properties are not saved in settingsChanged
+        //this.settingsChanged[setting] = this.settings[setting];
+        return true;
+    }
   }
-    getCurrentPartner() {
-        return this._parse.getPartner(this._parse.Parse.User.current());
-    }
-
-    saveChanges() {
-        if (this.reedPostEmail != this.reedPostEmailInitial || this.reedPostKey != this.reedPostKeyInitial || this.isChecked != this.isCheckedInitial){
-            this.getCurrentPartner().then(partner => {
-                console.log('ISCHECKED',this.isChecked);
-                console.log('ISCHECKEDINITIAL',this.isCheckedInitial);
-                this.reedPostKeyInitial = this.reedPostKey;
-                this.reedPostEmailInitial = this.reedPostEmail;
-                if (this.isChecked == true) {
-                    partner.set("candidateDistanceUnitPreferrences",2);
-                }
-                else {
-                    partner.set("candidateDistanceUnitPreferrences",1);
-                }
-                this.isCheckedInitial = this.isChecked;
-                partner.set('reedPostingKey', this.reedPostKey);
-                partner.set('reedPostEmail', this.reedPostEmail);
-                partner.save();
-                const alert = this._root_vcr.createComponent(AlertComponent);
-                alert.title = 'Saved';
-                alert.icon = 'thumbs-o-up';
-                alert.type = 'simple';
-                alert.contentAlign = 'left';
-                alert.content = `<a style = "white-space:nowrap">Changes successfully saved.</a>`;
-                alert.addButton({
-                    title: 'Ok',
-                    type: 'primary',
-                    onClick: () => this._root_vcr.clear()
-                });
-            })
-        }
-    }
-    checkEmailStatus(){
-        return this.reedPostEmailInitial == this.reedPostEmail;
-    }
-
-    checkKeyStatus() {
-        return this.reedPostKeyInitial== this.reedPostKey;
-    }
-
+  click(a) {
+      this.settings.emailNotificatoinsFrequency = a;
+      console.log(this.settings.emailNotificatoinsFrequency);
+      this.currentEmailSetting = a;
+  }
 }
