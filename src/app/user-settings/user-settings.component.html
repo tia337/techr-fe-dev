@@ -1,50 +1,322 @@
 <div class="main-wrap">
-<div class="top-page-content">
-  <div class="user-settings-title">
-    <h1>User settings</h1>
+    <div class="top-page-content">
+      <div class="user-settings-title">
+        <h1>User settings</h1>
+      </div>
+      <button mat-raised-button color="primary" [disabled]="!checkSettingsChanged()" (click)="saveChanges()">Save changes</button>
+    </div>
+    <mat-accordion class="mat-extention">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            General settings
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="panel-container">
+          <ul>
+            <li> <h3 class="bold">Display candidate distance :</h3>  <div class="km-mile-switch"> Kilometers  <mat-slide-toggle [(ngModel)]="distanceUnits"></mat-slide-toggle>  Miles</div></li>
+          </ul>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            My Personal API keys
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="panel-container">
+          <form class="reed-form">
+            <mat-form-field class="mat-form-field-text-size">
+              <input matInput id="name"
+                     name="name"
+                     #name placeholder="Reed Posting API key" [(ngModel)]="settings.reedPostingKey">
+            </mat-form-field>
+            <br/>
+            <mat-form-field class="mat-form-field-text-size">
+              <input matInput placeholder="Reed Email Address" [errorStateMatcher]="matcher" name="reedPostEmailName" [(ngModel)]="settings.reedPostEmail">
+            </mat-form-field>
+          </form>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Notification settings
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="panel-container notifications">
+          <div style="display: flex; width:50%;">
+            <div class="image-holder">
+              <img src="../../assets/icons/email_digests.png" alt="">
+            </div>
+            <div class="text-holder">
+              <h2 class="bold" style="margin-bottom: 10px;">Email Digests</h2>
+              <div style="margin-bottom: 20px;">
+                Get an email digest with the latest Top candidates matching your <br> jobs and hiring profile
+              </div>
+            </div>
+          </div>
+          <div style="width: 50%;">
+            <div  class="frequency-holder">
+              <div class="frequency-title">
+                Select Service Frequency 
+              </div>
+              <div class="frequency-buttons-wrap">
+                <button [ngClass]="{'active': settings.emailNotificationsFrequency === 1}" (click)="click(1); settings.emailNotificationsFrequency = 1;">Daily</button>
+                <button [ngClass]="{'active': settings.emailNotificationsFrequency === 2}" (click)="click(2); settings.emailNotificationsFrequency = 2">Twice Weekly</button>
+                <button [ngClass]="{'active': settings.emailNotificationsFrequency === 3}" (click)="click(3); settings.emailNotificationsFrequency = 3">Weekly</button>
+                <button [ngClass]="{'active': settings.emailNotificationsFrequency === 4}" (click)="click(4); settings.emailNotificationsFrequency = 4">Monthly</button>
+                <button [ngClass]="{'active': settings.emailNotificationsFrequency === 0}" (click)="click(0); settings.emailNotificationsFrequency = 0" class="switch-off">Switch<span *ngIf="settings.emailNotificationsFrequency === 0">ed</span> Off</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-container notifications">
+          <div style="display: flex; width:50%;">
+            <div class="image-holder">
+              <img src="../../assets/icons/candidate_real_time_notifications.png" alt="">
+            </div>
+            <div class="text-holder">
+              <h2 class="bold" style="margin-bottom: 10px;">Real-Time Candidate Alerts</h2>
+              <div style="margin-bottom: 20px;">
+                Free Real-time emails and notifications when candidates change <br> their job hunting status to actively looking
+              </div>
+            </div>
+          </div>
+          <div style="width: 50%; display: flex; align-items: center;">
+            <mat-slide-toggle style="margin-left: 39px;" [(ngModel)]="settings.realTimeNotifications"></mat-slide-toggle>
+            <span class="realTimeNotifications deactivated" *ngIf="settings.realTimeNotifications === false">Deactivated</span>
+            <span class="realTimeNotifications activated" *ngIf="settings.realTimeNotifications === true">Activated</span>            
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Timeline
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="panel-container">
+          <h2 class="bold customize-title">CUSTOMIZE DATA & INSIGHTS GOING TO YOUR TIMELINE</h2>
+          <mat-grid-list cols="3" class="grid-list" rowHeight="2:1">
+            <mat-grid-tile>
+              <div>
+                <p class="image-wrap">
+                  <img src="../../assets/icons/applications.png" alt="">
+                </p>
+                <h4 class="bold">APPLICATIONS</h4>
+              </div>
+              <div>
+                <p>
+                  <span class="my-jobs-holder">
+                    My jobs
+                    <small>Updates for jobs you own</small>
+                  </span> 
+                  <mat-slide-toggle [(ngModel)]="settings.timelineOwnApplicantsNotifications"></mat-slide-toggle>
+                </p> 
+                <p>
+                  <span class="my-company-jobs-holder">
+                      My company jobs
+                      <small>Updates for jobs your colleagues owns</small>
+                  </span>
+                   <mat-slide-toggle [(ngModel)]="settings.timelineCompanyApplicantsNotifications"></mat-slide-toggle>
+                </p>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <div>
+                <p class="image-wrap">
+                  <img src="../../assets/icons/employee_referrals.png" alt="">
+                </p> 
+                <h4 class="bold">EMPLOYEE REFERRALS</h4>
+              </div>
+              <div>
+                <p>
+                  <span  class="my-jobs-holder">
+                    My jobs
+                    <small>Updates for jobs you own</small>                    
+                  </span>  
+                  <mat-slide-toggle [(ngModel)]="settings.timelineOwnErNotifications"></mat-slide-toggle>
+                </p>
+                <p>
+                  <span class="my-company-jobs-holder">
+                    My company jobs
+                    <small>Updates for jobs your colleagues owns</small>
+                  </span>
+                  <mat-slide-toggle [(ngModel)]="settings.timelineCompanyErNotifications"></mat-slide-toggle>
+                </p>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <div>
+                <p class="image-wrap">
+                  <img src="../../assets/icons/candidate_scorings.png" alt="">
+                </p>
+                <h4 class="bold">CANDIDATE STAGE UPDATES</h4>
+              </div>
+              <div>
+                <p>
+                  <span class="my-jobs-holder">
+                    My jobs 
+                    <small>Updates for jobs you own</small>                    
+                  </span>
+                  <mat-slide-toggle [(ngModel)]="settings.timelineOwnHiringStagingNotifications"></mat-slide-toggle>
+                </p>
+                <p>
+                  <span class="my-company-jobs-holder">
+                    My company jobs
+                    <small>Updates for jobs your colleagues owns</small>
+                  </span>
+                  <mat-slide-toggle [(ngModel)]="settings.timelineCompanyHiringStagingNotifications"></mat-slide-toggle>
+                </p>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <div>
+                <p class="image-wrap">
+                  <img src="../../assets/icons/candidate_notes.png" alt="">
+                </p>
+                <h4 class="bold">CANDIDATE NOTES</h4>
+              </div>
+              <div>
+                <p>
+                  <span class="my-jobs-holder">
+                      My jobs
+                      <small>Updates for jobs you own</small>                    
+                  </span>
+                  <mat-slide-toggle [(ngModel)]="settings.timelineOwnCandidateNotesNotifications"></mat-slide-toggle>
+                </p>
+                <p>
+                  <span class="my-company-jobs-holder">
+                    My company jobs
+                    <small>Updates for jobs your colleagues owns</small>
+                  </span>
+                  <mat-slide-toggle [(ngModel)]="settings.timelineCompanyCandidateNotesNotifications"></mat-slide-toggle>
+                </p>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <div>
+                <p class="image-wrap">
+                  <img src="../../assets/icons/candidate_scorings.png" alt="">
+                </p>
+                <h4 class="bold">CANDIDATE SCORINGS</h4>
+              </div>
+              <div>
+                <p>
+                  <span class="my-jobs-holder">
+                      My jobs
+                      <small>Updates for jobs you own</small>                    
+                  </span>
+                 <mat-slide-toggle [(ngModel)]="settings.timelineOwnCandidateScoringNotifications"></mat-slide-toggle>
+                </p>
+                <p>
+                  <span class="my-company-jobs-holder">
+                    My company jobs
+                    <small>Updates for jobs your colleagues owns</small>
+                  </span>
+                <mat-slide-toggle [(ngModel)]="settings.timelineCompanyCandidateScoringNotifications"></mat-slide-toggle>
+                </p>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <div>
+                <p class="image-wrap">
+                  <img src="../../assets/icons/distribution_in_job_boards.png" alt="">
+                </p>
+                <h4 class="bold">DISTRIBUTION IN JOBBOARDS</h4>
+              </div>
+              <div>
+                <p>
+                  <span class="my-jobs-holder">
+                    My jobs
+                    <small>Updates for jobs you own</small>                    
+                  </span>
+                  <mat-slide-toggle [(ngModel)]="settings.timelineOwnJobBoardPushNotifications"></mat-slide-toggle>
+                </p>
+                <p>
+                  <span class="my-company-jobs-holder">
+                    My company jobs
+                    <small>Updates for jobs your colleagues owns</small>
+                  </span>
+                <mat-slide-toggle [(ngModel)]="settings.timelineCompanyJobBoardPushNotifications"></mat-slide-toggle>
+                </p>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <div>
+                <p class="image-wrap">
+                  <img src="../../assets/icons/team_notes.png" alt="">
+                </p>
+                <h4 class="bold">TEAM MENTIONS</h4>
+              </div>
+              <div>
+                <p>
+                  Note mentions <mat-slide-toggle [(ngModel)]="settings.noteMentionNotifications"></mat-slide-toggle>
+                </p>
+                <p>
+                  Scoring mentions <mat-slide-toggle [(ngModel)]="settings.scoringMentionNotifications"></mat-slide-toggle>
+                </p>
+              </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <div>
+                <p class="image-wrap">
+                  <img src="../../assets/icons/job_posting_updates.png" alt="">
+                </p>
+                <h4 class="bold">JOB POSTING UPDATES</h4>
+              </div>
+              <div>
+                <p>
+                  <span class="my-jobs-holder">
+                    My jobs
+                    <small>Updates for jobs you own</small>                    
+                  </span>
+                  <mat-slide-toggle [(ngModel)]="settings.timelineOwnJobPostingNotifications"></mat-slide-toggle>
+                </p>
+                <p>
+                  <span class="my-company-jobs-holder">
+                    My company jobs
+                    <small>Updates for jobs your colleagues owns</small>
+                  </span>
+                  <mat-slide-toggle [(ngModel)]="settings.timelineCompanyJobPostingNotifications"></mat-slide-toggle>
+                </p>
+              </div>
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Team Chat
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="panel-container">
+            <mat-grid-tile>
+                <div>
+                  <p class="image-wrap">
+                    <img src="../../assets/icons/job_posting_updates.png" alt="">
+                  </p>
+                  <h4 class="bold"># TAGS</h4>
+                </div>
+                <div style="width: 32%!important;">
+                  <p>
+                    <span class="my-jobs-holder">
+                      My jobs
+                    </span>
+                    <mat-slide-toggle [(ngModel)]="settings.chatMyJobTags"></mat-slide-toggle>
+                  </p>
+                  <p>
+                    <span class="my-company-jobs-holder">
+                      My company jobs
+                    </span>
+                    <mat-slide-toggle [(ngModel)]="settings.chatMyCompanyJobTags"></mat-slide-toggle>
+                  </p>
+                </div>
+              </mat-grid-tile>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>
-  <button mat-raised-button color="primary" [disabled]="(isChecked == isCheckedInitial) && checkEmailStatus() && checkKeyStatus()" (click)="saveChanges()">Save changes</button>
-</div>
-  <mat-accordion class="mat-extention">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          General settings
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="panel-container">
-        <ul>
-          <li> <h3 class="bold">Display candidate distance :</h3>  <div class="km-mile-switch"> Kilometers  <mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>  Miles</div></li>
-        </ul>
-      </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          My Personal API keys
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="panel-container">
-        <form class="reed-form">
-          <mat-form-field class="mat-form-field-text-size">
-            <input matInput id="name"
-                   name="name"
-                   #name placeholder="Reed Posting API key" [(ngModel)]="reedPostKey" (ngModelChange)="checkKeyStatus()">
-          </mat-form-field>
-          <br/>
-          <mat-form-field class="mat-form-field-text-size">
-            <input matInput placeholder="Reed Email Address" [errorStateMatcher]="matcher" name="reedPostEmailName" [(ngModel)]="reedPostEmail" (ngModelChange)="checkEmailStatus()">
-          </mat-form-field>
-        </form>
-      </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-grid-list cols="4" rowHeight="100px">
-          <mat-grid-tile>1</mat-grid-tile>
-          <mat-grid-tile>1</mat-grid-tile>
-          <mat-grid-tile>1</mat-grid-tile>
-          <mat-grid-tile>1</mat-grid-tile>          
-        </mat-grid-list>
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
+  

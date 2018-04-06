@@ -51,6 +51,7 @@ import {
 } from './employee-referral/employee-referral-customize/employee-referral-customize.component';
 
 import { ChatComponent } from './chat/chat.component';
+import { TimelineComponent } from './timeline/timeline.component';
 
 // Componenet for testing
 import { TestComponent } from './test/test.component';
@@ -127,6 +128,7 @@ const routes: Routes = [
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 			{ path: 'chat/:id', component: ChatComponent, canActivate: [LoginGuard] },
 			{ path: 'chat/:id', component: NotificationComponent },
+			{ path: 'timeline', component: TimelineComponent },
 			{ path: 'test', component: TestComponent },
 			{ path: 'invitation', component: InviteUserPageComponent },
 			{ path: 'dashboard', component: DashboardComponent },
