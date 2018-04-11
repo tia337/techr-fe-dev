@@ -36,6 +36,7 @@ export class CandidateNotesService {
 		note.include('Author');
 		note.include('FileAttached');
 		return note.get(noteId).then((msg: ParseObject) => {
+			console.log(msg);
 			return msg;
 		});
 	}

@@ -232,16 +232,13 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 	}
 
 	goToJobDetails(contractId: string, stage: number) {
-		console.log(contractId);
 		this._jobBoxService.activeContract = this.contract;
 		if (this.contract.get('status') == ContractStatus.draft) {
-			console.log('IS DRAFT');
 			this._router.navigate(['/jobs', contractId]);
 			setTimeout(() => {
 				this._router.navigate(['/jobs', contractId, 'job-overview'], { skipLocationChange: true, relativeTo: this._route });
 			}, 1);
 		} else {
-			console.log('NOT DRAFT');
 			this._router.navigate(['/', 'jobs', contractId]);
 		}
 		this._jobDetailsService.activeStage = stage;

@@ -64,13 +64,11 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this._sidenav.setSidenav(this.sidenav);
+		this.listenToDialogIdUpdated().subscribe(data => {
+			this.updateDialogId(data);
+		});
 		this._chatService.updatedDialogId.subscribe(data => {
-			const sender = data;
-			this.teamMembers.forEach(member => {
-				if (member.dialogId === sender.sender) {
-					member.dialogId = sender.dialog;
-				}
-			});
+			this.updateDialogId(data);
 		});
 		this.recruterTyping().subscribe(data => {
 			this.addAnimationToTyping(data);
@@ -338,6 +336,23 @@ export class CoreComponent implements OnInit, OnDestroy {
 	}
 
 	addTeamMembersToLocalStorage (teamMembers) {
+	}
+
+	listenToDialogIdUpdated() {
+		const observable = new Observable(observer => {
+			this._socket.on('dialog-created', data => {
+			observer.next(data);
+			});
+		});
+		return observable;
+	};
+
+	updateDialogId(data) {
+		this.teamMembers.forEach(member => {
+			if (member.id === data.sender) {
+				member.dialogId = data.dialog;
+			}
+		});
 	}
 }
 

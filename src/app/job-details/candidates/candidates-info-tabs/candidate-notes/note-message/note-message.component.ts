@@ -33,6 +33,28 @@ export class NoteMessageComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
+		const notesQuery = new this._parse.Parse.Query('CandidateNotes');
+		notesQuery.equalTo('objectId', this.note.objectId);
+		notesQuery.include('isReadByTaggedColleagues');
+		notesQuery.find().then(result => {
+			if (result.length > 0) {
+				const taggedColleagues = result[0].attributes.TaggedColleagues;
+				taggedColleagues.forEach(colleague => {
+					if (colleague.id === this._parse.getCurrentUser().id) {
+						const array = result[0].attributes.isReadByTaggedColleagues;
+						if (array && !array.includes(this._parse.getCurrentUser().id)) {
+							array.push(this._parse.getCurrentUser().id);
+							result[0].set('isReadByTaggedColleagues', array);
+							result[0].save();
+							return;
+						} else if (array === undefined) {
+							result[0].set('isReadByTaggedColleagues', [this._parse.getCurrentUser().id]);
+							result[0].save();
+						}
+					}
+				});
+			}
+		});
 	}
 
 	ngOnChanges(changes: any) {

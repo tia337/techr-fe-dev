@@ -40,17 +40,14 @@ export class NotificationsComponent implements OnInit {
 
   ngOnInit() {
     this.getNoteMentionsNotificationsUpdated().subscribe(data => {
-      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getContractApplyNotifications().subscribe(data => {
-      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getScoringMentionNotifications().subscribe(data => {
-      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
