@@ -164,11 +164,9 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 									const firstUser = this.candidates.results[0];
 									this._candidatesService.userId = firstUser.id;
 									if (localStorage.getItem('queryParams') != null) {
-										console.log('in queryparams');
 										let data = JSON.parse(localStorage.getItem('queryParams'));
 										this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
 									} else if (!localStorage.getItem('queryParams')) {
-										console.log('NO PARAMS');
 										this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 									}
 								})
@@ -217,11 +215,9 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 							this._candidatesService.userId = firstUser.id;
 							// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 							if (localStorage.getItem('queryParams') != null) {
-								console.log('in queryparams');
 								let data = JSON.parse(localStorage.getItem('queryParams'));
 								this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
 							} else if (!localStorage.getItem('queryParams')) {
-								console.log('NO PARAMS');
 								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 							}
 							console.log('employeeReferrals Users: ', this.getPercentageMatch(firstUser));
@@ -257,11 +253,9 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 							this._candidatesService.userId = firstUser.id;
 							// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 							if (localStorage.getItem('queryParams') != null) {
-								console.log('in queryparams');
 								let data = JSON.parse(localStorage.getItem('queryParams'));
 								this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
 							} else if (!localStorage.getItem('queryParams')) {
-								console.log('NO PARAMS');
 								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 							}
 							this.postLoader = false;							

@@ -12,7 +12,6 @@ export class SanitizePipe implements PipeTransform {
   ) {
   }
   transform(content) {
-    console.log(content);
     if (content === undefined) return;
     if (content.indexOf('class="job-link') > -1) {
       const start = content.indexOf('class="job-link ') + 16;

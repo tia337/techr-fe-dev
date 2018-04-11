@@ -56,6 +56,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 			this.curUserId = this._parse.getCurrentUser().id;
 			this._ScoringService.getScoring(userId, this._contractId).then(result => {
 				this._scorings = result;
+				this.readScoringCard(this._scorings);
 			});
 		});
 		const query = this._parse.Query('Contract');
@@ -65,6 +66,31 @@ export class ScoringComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
+
+	readScoringCard (scorings: Array<any>) {
+		const scorecardQuery = new this._parse.Parse.Query('ScorecardWeightedScore');
+		const currentUser: ParseObject = this._parse.getCurrentUser();
+		scorings.forEach(scoring => {
+			scorecardQuery.equalTo('objectId', scoring.id).find().then(result => {
+				const taggedArray: Array<any> = result[0].get('TaggedColleagues');
+				taggedArray.forEach(tagged => {
+					if (tagged.id === currentUser.id) {
+						const arrayIsRead = result[0].get('isReadByTaggedColleagues');
+						if (arrayIsRead !== undefined && !arrayIsRead.includes(currentUser.id)) {
+							arrayIsRead.push(currentUser.id);
+							result[0].set('isReadByTaggedColleagues', arrayIsRead);
+							result[0].save();
+							return;
+						} else if (arrayIsRead === undefined) {
+							result[0].set('isReadByTaggedColleagues', [currentUser.id]);
+							result[0].save();
+						};
+					}
+				});
+			});
+		});
+	}
+
 	get FinalVerdict() {
 		return FinalVerdict;
 	}

@@ -17,17 +17,17 @@ export class ScoringService {
 		query2.equalTo("objectId", userId );
 		let userObj: ParseObject;
 		return query2.first().then(results => {
-			console.log(results);
+			// console.log(results);
 			userObj = results;
 			console.log(contractId);
 			let query1 = this._parse.Query("Contract");
 			query1.equalTo("objectId", contractId);
-			console.log(query1.first());
+			// console.log(query1.first());
 			return query1.first();
 		}).then(res => {
-			console.log(res);
+			// console.log(res);
 			let query = this._parse.Query("ScorecardWeightedScore");
-			console.log(userObj);
+			// console.log(userObj);
 			query.equalTo("Candidate", userObj);
 			query.equalTo("Job", res);
 			query.include("Scorecard");

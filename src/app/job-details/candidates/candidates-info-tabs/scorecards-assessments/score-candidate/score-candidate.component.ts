@@ -213,8 +213,9 @@ export class ScoreCandidateComponent implements OnInit, AfterViewInit, OnDestroy
 			taggedUsers: [],
 			areas: this._areas
 		};
+		console.log(options.taggedUsers);
 
-		if(this._scorecardWeightedScore) {
+		if (this._scorecardWeightedScore) {
 			options.ScorecardWeightedScore = this._scorecardWeightedScore;
 		}
 		_.mapObject(this._questions, areaQuestions => {

@@ -23,24 +23,21 @@ import { FormControl } from '@angular/forms';
 export class ChatComponent implements OnInit, OnDestroy {
 
   public messages;
+  private messageStorage = [];
+  public loadMessages = true;
   public teamMember: ChatTeamMember;
   public datesArrayToDisplay: Array<any> = [];
   public userId: string;
   public dialogId: string;
-  public loadMessages = true;
   public teamMemberParams;
   public teamMemberQueryParams;
-  public messageStorage = [];
-  public noMessages = false;
+  public noMessages = true;
   public teammates = [];
   public loader: boolean;
   public beginning = false;
-  public messagesRecievedStorage = [];
-  public tempMessage: LooseObject = {};
   public teamMemberId: string;
   public typing = false;
   private timer;
-  private newMessagesCount: number = 0;
   public jobMentionsHidden = true;
   public textAreaValue = new FormControl;
   public cursorHidden = true;
@@ -53,8 +50,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   private focusOffset: number;
   public placeholder: string;
 
-  @ViewChild('messagesBlock') private messagesBlock: ElementRef;
-  @ViewChild('messageBlock') private messageBlock: QueryList<any>;
+  @ViewChild('messagesBlock') public messagesBlock: ElementRef;
+  @ViewChild('messageBlock') public messageBlock: QueryList<any>;
   @ViewChild('messageInput') public messageTextArea: HTMLTextAreaElement;
   @ViewChild('jobMentions') public jobMentions: HTMLDivElement;
   @ViewChild('fakeCursor') private fakeCursor: HTMLSpanElement;
@@ -73,20 +70,29 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _renderer: Renderer
   ) { }
 
+  ngAfterViewInit() {
+    this._chatService.init(this.messagesBlock.nativeElement);
+    // let sub = this.messageBlock.changes.subscribe(data => {
+    //   this.updateTaskList();
+    // });
+  }
+  updateTaskList(){
+    this._chatService.restore();
+  }        
+  id(index, item){
+    return item.id
+  }
 
   ngOnInit() {
 
     this.userId = this._parse.getCurrentUser().id;
 
     this.listenToDialogIdUpdated().subscribe(data => {
-      console.log(data);
-      this.updateDialogId(data);
-      this._chatService.updateDialogIdInCore(data);
-    })
-
+      this.updateDialogId(data)
+      this.updateDialogInCore(data);
+    });
    
     this.editPartnersMessage().subscribe(data => {
-      console.log(data);
       this.turnEditedMessage(data);
     });
 
@@ -98,6 +104,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       console.log(data);
       clearTimeout(this.timer);
       this.typing = false;
+      console.log(this.dialogId);
       if (this.dialogId != undefined) {
         this.addMessageToChat(data);
       }
@@ -111,7 +118,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._ar.params.subscribe(params => {   
       if (params.id === 'false') {
         this.messages = [];
-        this.noMessages = false;
+        this.noMessages = true;
         this.beginning = true;
         this.dialogId = params.id;
         return;
@@ -123,11 +130,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this._ar.queryParams.subscribe(queryParams => {
+      this.messageStorage = [];
+      this.messages = [];
+      this.textAreaValue.setValue('');
       this.teamMemberQueryParams = queryParams;
       this.teamMemberId = queryParams[4];
       this.teamMember = this._chatService.createTeamMember(this.dialogId, this.teamMemberQueryParams);
       this.placeholder = "Message " + this.teamMember.firstName + ' ' + this.teamMember.lastName;
-      console.log(this.placeholder);
     });
 
     this._chatService.getTeamMembers().then(team => this.teammates = team);
@@ -140,10 +149,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.teamMember.sessionStatus = 'false';
     });
     this.recieveJobTags().subscribe(data => {
-      console.log(data);
       this.jobMentionsArray = data;
     });
-    this.textAreaValue.setValue('');
   }
 
   setDialogIdToLocalStorage (params) {
@@ -170,7 +177,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       let data = queryData;
       this._chatService.getUserMessages(data).then(messages => {
         if (messages.length > 0) {
-          this.noMessages = true;
+          // this.noMessages = true;
           this.loader = true;
           this.beginning = false;
           this.messageStorage = messages;
@@ -236,6 +243,8 @@ export class ChatComponent implements OnInit, OnDestroy {
               this._chatService.createMessagesArraySorted(this.messageStorage, this.messagesBlock).then(messages => {
                 this.messages = messages;
                 this.scrollAfterLoading(oldHeight);
+                this._chatService.prepareFor('up');
+                
               })
             }
           });
@@ -297,15 +306,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     this._coreService.closeTypingStatus(this.teamMemberId);
     Object.defineProperty(data, 'className', {value: 'Message'});
     let message = this._parse.Parse.Object.fromJSON(data);
-    if (this.dialogId === 'false') {
-      this.messageStorage = [];
-      this.messages = [];
+    if (this.messageStorage.length < 1) {
       this.messageStorage.push(message);
-      console.log('FALSE');
-      console.log(this.messageStorage);
-      this.noMessages = true;
+      this.noMessages = false;
     } else {
-      console.log('MESSAGE STORAGE EXISTS');
       this.messageStorage.unshift(message);
     }
     this._chatService.createMessagesArraySorted(this.messageStorage, this.messageBlock).then(messagesSorted => {
@@ -313,6 +317,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       if (this.messagesBlock.nativeElement.scrollHeight - this.messagesBlock.nativeElement.scrollTop - this.messagesBlock.nativeElement.offsetHeight <= 20) {
         this.scrollToBottom();
       };
+      this.noMessages = false;
     });
   }
 
@@ -347,11 +352,9 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   editMessage (value, message, encodedValue) {
-    console.log(value, encodedValue);
     if (value === this.decodeMessageForEditing(message.get('message'))) {
       message.editHidden = false;
     }
-    console.log(Object.getOwnPropertyNames(message));
     if (value !== message.get('message') && value != "") {
       message.set('message', value);
         message.isEdited = true;
@@ -517,9 +520,19 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   updateDialogId(data) {
-    this.dialogId = data.dialog;
-    let url = '/chat' + data.dialog + '?0=' + this.teamMember.firstName + '&1=' + this.teamMember.lastName + '&2=' + this.teamMember.avatar + '&3=' + this.teamMember.sessionStatus + '&4=' + this.teamMember.id;
-    window.history.pushState('object', 'title', url);
+    const self = this;
+    setTimeout(()=>{
+      self.dialogId = data.dialog;  
+      let url = '/chat/' + data.dialog + '?0=' + this.teamMember.firstName + '&1=' + this.teamMember.lastName + '&2=' + this.teamMember.avatar + '&3=' + this.teamMember.sessionStatus + '&4=' + this.teamMember.id;
+      window.history.pushState('object', 'title', url);
+    },4)
+  };
+  updateDialogInCore(data) {
+    const object = {
+      dialog: data.dialog,
+      sender: this.teamMemberId
+    }
+    this._chatService.updateDialogIdInCore(object);
   }
   getJobTags() {
     let data = {};
@@ -579,7 +592,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   watch(event) {
-    // console.log(document.getSelection().getRangeAt(0).startOffset);
     if (event.key === "#") {
       this.getJobTags();
     }

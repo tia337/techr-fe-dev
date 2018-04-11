@@ -59,6 +59,7 @@ export class CandidateNotesComponent implements OnInit, OnDestroy {
 		const notesUpdatedSubscription = this.getNotesUpdated().subscribe(data => {
 			if (!data['note'].IsPrivate || data['note'].Author.objectId === this.chatUser.id) {
 				this.notes.unshift(data['note']);
+				console.log(this.notes);
 			}
 			if (!this.hasMessages) {
 				this.hasMessages = Loading.success;
@@ -67,6 +68,7 @@ export class CandidateNotesComponent implements OnInit, OnDestroy {
 		const notesIncomingSubscription = this.getNotesIncoming().subscribe(data => {
 			if (!data['note'].IsPrivate || data['note'].Author.objectId === this.chatUser.id) {
 				this.notes.unshift(data);
+				console.log(this.notes);
 			}
 			if (!this.hasMessages) {
 				this.hasMessages = Loading.success;
@@ -77,7 +79,7 @@ export class CandidateNotesComponent implements OnInit, OnDestroy {
 			this.notes.find(checkNote);
 			this.notes.indexOf(this.notes.find(checkNote));
 			this.notes.splice(this.notes.indexOf(this.notes.find(checkNote)), 1);
-
+			console.log(this.notes);
 			function checkNote(note) {
 				return note.objectId == data['noteId'];
 			}

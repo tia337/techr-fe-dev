@@ -6,7 +6,6 @@
       {{teamMember.firstName}}
       {{teamMember.lastName}}
     </div>
-    <!-- <span class="new-messages-count">5</span>     -->
   </div>
 </div>
 <div *ngIf="teamMember !== undefined" class="messages-block" #messagesBlock (scroll)="onScrollUp($event)">
@@ -14,13 +13,22 @@
     <mat-progress-spinner class="candidates-loader"  color="primary" mode="indeterminate"></mat-progress-spinner>
   </div>
   <div class="info-block"  *ngIf="beginning === true">  
-      <div class="info-block-logo">
+      <div class="info-block-logo" *ngIf="teamMember.avatar !== 'undefined'">
         <img src="{{teamMember.avatar}}" alt="">
         <span class="name">
           {{teamMember.firstName}}
           {{teamMember.lastName}}
         </span>
       </div>
+      <div class="info-block-logo undefined" 
+        [style.background-color]="teamMember.background" 
+        *ngIf="teamMember.avatar === 'undefined'">
+        <span>{{teamMember.undefinedAvatar}}</span>
+      </div>
+      <!-- <span class="name">
+          {{teamMember.firstName}}
+          {{teamMember.lastName}}
+      </span> -->
       <p class="info-block-text">
         This is the very beginning of your direct message history with 
         <span class="info-block-text-name">
@@ -29,14 +37,17 @@
         </span>
       </p>
   </div>
-  <div *ngIf="noMessages === true && loader === false">
-    <div #messageBlock class="message-block" *ngFor="let message of messages; trackBy: message">
+  <div *ngIf="messages != [] || noMessages === false">
+    <div #messageBlock class="message-block" *ngFor="let message of messages;">
       <div class="message-block-date">
         <div></div>
         <span>{{message[0].date}}</span>
         <div></div>
       </div>
-      <div class="message-block-message" [ngClass]="{'edit': daymessage.editHidden === true, 'check': daymessage.optionsHidden === true }" *ngFor='let daymessage of message[1].messages; let i = index;'>
+      <div class="message-block-message" 
+      messagesBlock
+        [ngClass]="{'edit': daymessage.editHidden === true, 'check': daymessage.optionsHidden === true }" 
+        *ngFor='let daymessage of message[1].messages;  trackBy: id'>
         <div class="message-block-message-avatar-wrap">
           <img *ngIf="daymessage.author != undefined" class="message-block-message-avatar" src="{{daymessage.get('author').get('avatarURL')}}" alt="">
           <div *ngIf="daymessage.get('author').get('avatarURL') == undefined && daymessage.author != undefined" class="message-block-message-avatar-undefined" [ngStyle]="{'background-color': teamMember.background | json}">

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../parse.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
+import { ParseUser, ParsePromise, ParseObject, ParseObjectSubclass } from 'parse';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { JobDetailsService } from '../job-details.service';
 import { DeveloperListType } from '../../shared/utils';
@@ -83,12 +83,28 @@ export class CandidatesService {
 			referrals.equalTo('Client', this._parse.Parse.User.current().get('Client_Pointer'));
 			referrals.matchesQuery('candidate', userQuery);
 			referrals.include('candidate');
+			referrals.include('isRead');
 			referrals.include('candidate.developer');
 			referrals.include('candidate.developer.skills');
 			referrals.select('candidate');
 			return referrals.find();
 		}).then(referrals => {
-			// console.log(referrals);
+			constractQuery.equalTo('owner', this._parse.getCurrentUser());
+			constractQuery.find({
+				success: (result) => {
+					if (result.length === 0) {
+						return;
+					} else {
+						referrals.forEach(referral => {
+							console.log(referral);
+							if (referral.get('isRead') !== true) {
+								referral.set('isRead', true);
+								referral.save();
+							}
+						});
+					}
+				}
+			});
 			const res = { results: [], weights: {}, distances: {} };
 			const users = referrals.map(referral => {
 				// console.log(referral.get('candidate'));
@@ -108,7 +124,7 @@ export class CandidatesService {
 	getAppliedCandidates(contractId: string, from?: number, limit?: number) {
 		const contractQuery = new this._parse.Parse.Query('Contract');
 		contractQuery.equalTo('objectId', contractId);
-
+		contractQuery.equalTo('owner', this._parse.getCurrentUser());
 		const userQuery = new this._parse.Parse.Query(this._parse.Parse.User);
 		userQuery.exists('developer');
 
@@ -136,7 +152,20 @@ export class CandidatesService {
 
 		return contractApplyQuery.find().then(contractApplies => {
 			const res = { results: [], weights: {}, distances: {} };
-
+			contractQuery.find({
+				success: (result) => {
+					if (result.length === 0) {
+						return;
+					} else {
+						contractApplies.forEach(apply => {
+							if (apply.get('isRead') !== true) {
+								apply.set('isRead', true);
+								apply.save();
+							}
+						});
+					}
+				}
+			});
 			if (contractApplies && contractApplies.length > 0) {
 				const contract = contractApplies[0].get('contract');
 				const users = contractApplies.map(contractApply => {
