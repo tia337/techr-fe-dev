@@ -6,7 +6,7 @@ import { SocketIoConfig, Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import { HeaderService } from '../header.service';
 import { Router, NavigationEnd } from '@angular/router';
-
+import { Parse } from '../../parse.service';
 
 // tslint:disable:indent
 @Component({
@@ -19,15 +19,17 @@ export class NotificationsComponent implements OnInit {
 
 
   @Input() notifications: boolean;
-
   @Output() notificationsStatus: EventEmitter<boolean> = new EventEmitter();
+
+  public notificationsArray: Array<any> = [];
 
   constructor(
     private _elemenRef: ElementRef,
     private _renderer: Renderer,
     private _root_vcr: RootVCRService,
     public _socket: Socket,
-    public _headerService: HeaderService
+    public _headerService: HeaderService,
+    private _parse: Parse
   ) {
       this._renderer.listenGlobal('body', 'click', (event) => {
         if (this.notifications === true) {
@@ -61,6 +63,17 @@ export class NotificationsComponent implements OnInit {
       this.createMessageNotification(data);
       this._headerService.updateNotificationsCount('1');
     });
+    this._parse.execCloud('getAllNotifications', {userId: this._parse.getCurrentUser().id}).then(result => {
+      const data = JSON.parse(result);
+      console.log(data);
+      this.sortNotifications(data);
+    });
+    this._parse.execCloud('getAllNotifications', {userId: this._parse.getCurrentUser().id, clientId: this._parse.getCurrentUser().get('Client_Pointer').id}).then(result => {
+			const data = JSON.parse(result);
+			console.log(data);
+      this.notificationsArray =	this.sortNotifications(data);
+      this.notificationsArray = this.notificationsArray.reverse();
+		});
   }
 
   closeNotifications(notifications: boolean, event): void {
@@ -153,5 +166,38 @@ export class NotificationsComponent implements OnInit {
 		});
 		return observable;
   }
+
+  sortNotifications(data) {
+		const notificationsSorted = [];
+		const dates = this.createDatesArray(data);
+		let i = 0;
+		dates.forEach(date => {
+			const dayNotifications = [];
+			const notificationsArray = [];
+			dayNotifications.push({date: dates[i]});
+			i++;
+			data.forEach(notification => {
+				const notificationDate: Date = new Date (notification._created_at);
+				if (notificationDate.toLocaleDateString() === date) {
+					notificationsArray.push(notification);
+				}
+			});
+			dayNotifications.push({ notifications: notificationsArray });
+			notificationsSorted.push(dayNotifications);
+    });
+    return notificationsSorted.reverse();
+	}
+
+
+	createDatesArray (data) {
+		const dates = [];
+		data.forEach(notification => {
+			const day: Date = new Date(notification._created_at);
+			if (!dates.includes(day.toLocaleDateString())) {
+				dates.push(day.toLocaleDateString());
+			}
+		});
+		return dates;
+	}
 
 }

@@ -15,6 +15,8 @@ import { PostJobService } from 'app/post-job-page/post-job.service';
 
 import { ContactUsComponent } from 'app/contact-us/contact-us.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { Observable } from 'rxjs/Observable';
+import * as _ from 'underscore';
 
 
 
@@ -44,7 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	private _userMenuOpened = false;
 	private _closeUserAnim = false;
 	public _notificationsOpened: boolean = false;
-	public notificationsCount: number = 3;
+	public notificationsCount = 0;
 
 	constructor(
 		private router: Router,
@@ -75,9 +77,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
-		this._headerService.currentNotificationsCount.subscribe(data => {
+		this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
+			console.log(data);
 			this.notificationsCount++;
 		});
+
+		this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(result => {
+			const data = JSON.parse(result);
+			this.notificationsCount = data;
+		});
+
+		this._headerService.currentNotificationsCount.subscribe(data => {
+			console.log(data);
+			this.notificationsCount = parseFloat(data);
+		});
+
 
 		this.loadLogoSubsc = this._companySettingsService.logoUpdate.subscribe(() => {
 			this.getLogo();
@@ -250,6 +264,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this._notificationsOpened = notifications;
 	}
 
+	listenToIncrementUnreadNotificationsCounter () {
+		const observable = new Observable (observer => {
+			this._socket.on('incrementUnreadNotificationsCounter', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+	}
 
+	good() {
+		console.log('good:)');
+		this._parse.execCloud('getAllNotifications', {userId: this._parse.getCurrentUser().id, clientId: this._parse.getCurrentUser().get('Client_Pointer').id}).then(result => {
+			const data = JSON.parse(result);
+			console.log(data);
+		});
+	}
 
 }

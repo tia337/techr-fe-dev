@@ -9,6 +9,7 @@ import { RootVCRService } from '../../../../root_vcr.service';
 import { ScoreCandidateComponent } from '../scorecards-assessments/score-candidate/score-candidate.component';
 import { PreviewScoringComponent } from './preview-scoring/preview-scoring.component';
 import { GmailComponent } from 'app/gmail/gmail.component';
+import { HeaderService } from '../../../../header/header.service';
 import { PreviewScoringService } from 'app/job-details/candidates/candidates-info-tabs/scoring/preview-scoring/preview-scoring.service';
 import * as _ from 'underscore';
 import * as jsPDF from 'jspdf'
@@ -47,7 +48,8 @@ export class ScoringComponent implements OnInit, OnDestroy {
 		private _parse: Parse,
 		private _candidatesService: CandidatesService,
 		private _root_vcr: RootVCRService,
-		private _previewServ: PreviewScoringService
+		private _previewServ: PreviewScoringService,
+		private _headerService: HeaderService
 	) {
 	}
 	ngOnInit() {
@@ -79,11 +81,21 @@ export class ScoringComponent implements OnInit, OnDestroy {
 						if (arrayIsRead !== undefined && !arrayIsRead.includes(currentUser.id)) {
 							arrayIsRead.push(currentUser.id);
 							result[0].set('isReadByTaggedColleagues', arrayIsRead);
-							result[0].save();
+							result[0].save().then(next => {
+								this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(count => {
+									console.log(count);
+									this._headerService.updateNotificationsCount(JSON.parse(count));
+								});
+							});
 							return;
 						} else if (arrayIsRead === undefined) {
 							result[0].set('isReadByTaggedColleagues', [currentUser.id]);
-							result[0].save();
+							result[0].save().then(next => {
+								this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(count => {
+									console.log(count);
+									this._headerService.updateNotificationsCount(JSON.parse(count));
+								});
+							});
 						};
 					}
 				});

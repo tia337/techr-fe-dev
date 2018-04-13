@@ -49,7 +49,7 @@ export class JobDetailsService {
 		// return this._parse.Parse.Cloud.run('searchSuggestionCandidates', {profileType: profileType, contractId: contractId});
 		return this._parse.Parse.Cloud.run('countSuggestedCandidates', {contractId: contractId}).then(res => {
 			this._suggestionsCount = res;
-			console.log(res);
+			// console.log(res);
 			return res;
 		}, error => {
 			console.error(error);

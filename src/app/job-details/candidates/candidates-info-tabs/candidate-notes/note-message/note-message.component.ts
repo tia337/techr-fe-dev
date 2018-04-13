@@ -2,6 +2,7 @@ import { Socket } from 'ng-socket-io';
 import { CandidateNotesService } from './../candidate-notes.service';
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Parse } from './../../../../../parse.service';
+import { HeaderService } from '../../../../../header/header.service';
 
 @Component({
 	selector: 'app-note-message',
@@ -29,7 +30,8 @@ export class NoteMessageComponent implements OnInit, OnChanges {
 	constructor(
 		private CandidateNotesService: CandidateNotesService,
 		private _parse: Parse,
-		private _socket: Socket
+		private _socket: Socket,
+		private _headerService: HeaderService
 	) { }
 
 	ngOnInit() {
@@ -45,11 +47,21 @@ export class NoteMessageComponent implements OnInit, OnChanges {
 						if (array && !array.includes(this._parse.getCurrentUser().id)) {
 							array.push(this._parse.getCurrentUser().id);
 							result[0].set('isReadByTaggedColleagues', array);
-							result[0].save();
+							result[0].save().then(next => {
+								this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(count => {
+									console.log(count);
+									this._headerService.updateNotificationsCount(JSON.parse(count));
+								});
+							});
 							return;
 						} else if (array === undefined) {
 							result[0].set('isReadByTaggedColleagues', [this._parse.getCurrentUser().id]);
-							result[0].save();
+							result[0].save().then(next => {
+								this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(count => {
+									console.log(count);
+									this._headerService.updateNotificationsCount(JSON.parse(count));
+								});
+							});
 						}
 					}
 				});

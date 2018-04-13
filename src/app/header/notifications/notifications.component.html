@@ -1,10 +1,58 @@
 <div class="notifications-wrap" (click)="$event.stopImmediatePropagation()">
   <div class="notifications-title">Notifications
     <mat-icon class="clear-button" (click)="closeNotifications(notifications, $event)">clear</mat-icon> 
-    <ng-content></ng-content> 
   </div>
   <div class="notifications-box">
-    <div class="notifications-box__today">
+    <div class="notifications-box__today" *ngFor="let day of notificationsArray">
+        <div class="notifications-box__title">
+          <p class="notifications-box__hr"></p>
+          <p class="notifications-box__title-day">{{day[0].date}}</p>
+          <p class="notifications-box__hr"></p>
+        </div>
+          <div *ngFor="let notification of day[1].notifications">
+              <div  *ngIf="notification.type === 'apply'" [routerLink]="['/jobs', notification.contractId]" class="notification-item">
+                  <span class="notification-item__icon">
+                    <mat-icon class="application-icon">contacts</mat-icon>
+                  </span>
+                  <div class="notification-item__data-box">
+                    <p class="notification-item__data">New Candidate Applied for </p>
+                    <p *ngIf="notification.contractTitle">Job: {{notification.contractTitle}}</p>
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
+              <div *ngIf="notification.type === 'referral'" class="notification-item">
+                  <span class="notification-item__icon">
+                    <mat-icon class="referrals-icon">supervisor_account</mat-icon>
+                  </span>
+                  <div class="notification-item__data-box">
+                    <p class="notification-item__data">New Employee Referral from {{notification.employeeEmail}}</p>
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
+              <div *ngIf="notification.type === 'note'" class="notification-item">
+                  <span class="notification-item__icon">
+                      <img src="../../../assets/icons/candidate_notes.png" alt="">
+                  </span>
+                  <div class="notification-item__data-box">
+                      <p class="notification-item__data">New Note Mention</p>
+                      <p class="notification-item__data-text">Message: {{notification.Message}}</p>
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
+              <div *ngIf="notification.type === 'scoring'" class="notification-item">
+                  <span class="notification-item__icon">
+                      <img src="../../../assets/icons/notification-scoring.png" alt="">
+                  </span>
+                  <div class="notification-item__data-box">
+                      <p class="notification-item__data">Scoring Note Mention</p>
+                      <p class="notification-item__data-text">Final verdicts: {{notification.FinalVerdictNotes}}</p>
+                      <!-- <p class="notification-item__data-text">Message: {{notification.Message}}</p> -->
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
+          </div>
+    </div>
+    <!-- <div class="notifications-box__today">
        <p class="notifications-box__title">Today</p>
         <div class="notification-item">
           <span class="notification-item__icon">
@@ -120,6 +168,6 @@
           </div>
           <span class="notification-item__time">9:38am</span>
         </div>
-    </div>
+    </div> -->
   </div>
 </div>
