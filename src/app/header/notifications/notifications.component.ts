@@ -82,7 +82,9 @@ export class NotificationsComponent implements OnInit {
       this.createMessageNotification(data);
       this._headerService.updateNotificationsCount('1');
     });
-    this.loadNotifications();
+    if (this._parse.getCurrentUser()) {
+      this.loadNotifications();
+    }
   }
 
   closeNotifications(notifications: boolean, event): void {

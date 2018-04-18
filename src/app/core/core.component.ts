@@ -349,9 +349,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 	updateDialogId(data) {
 		this.teamMembers.forEach(member => {
+			if (member.id === data.recipient) {
+				member.dialogId = data.dialog;
+			};
 			if (member.id === data.sender) {
 				member.dialogId = data.dialog;
-			}
+			};
 		});
 	}
 }
