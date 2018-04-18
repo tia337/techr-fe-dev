@@ -30,13 +30,9 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 		private _jobDetailsService: JobDetailsService
 	) { }
 
-	ngOnInit() {
-		// this.contentBlock.nativeElement.innerHTML = this._content;
-	}
+	ngOnInit() {}
 
-	ngAfterViewInit() {
-		// this.contentBlock.nativeElement.innerHTML = this._content;
-	}
+	ngAfterViewInit() {}
 
 	set type(value: string) {
 		this.notificationType = value;
@@ -154,7 +150,6 @@ export class NotificationComponent implements OnInit, AfterViewInit, OnDestroy {
 			candidateId: candidateId,
 			scoring: scoring ? true : false
 		};
-		console.log(candidateId);
 		localStorage.setItem('queryParams', JSON.stringify(data));
 	}
 	setActiveStage (data) {

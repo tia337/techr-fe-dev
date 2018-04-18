@@ -1,7 +1,7 @@
 <div *ngIf="notificationType === 'NoteMention'" 
   class="single-notification-wrap move" 
   id="single-notification-wrap" 
-  (click)="close();setQueryParams(notificationCandidateId); setActiveStage(notificationNotePipelineStage)"   
+  (click)="close(); setQueryParams(notificationCandidateId); setActiveStage(notificationNotePipelineStage)"   
   (mouseover)="hideShowNotification($event)" 
   (mouseout)="hideShowNotification($event)"
   [routerLink]="['/jobs', notificationContractId]">

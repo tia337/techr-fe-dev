@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, OnChanges } from '@angular/core';
+import { ActivatedRoute, Router, NavigationEnd} from '@angular/router';
 import { JobDetailsService } from './job-details.service';
 import { DeveloperListType, Loading } from '../shared/utils';
 import * as _ from 'underscore';
@@ -12,7 +12,7 @@ import { CandidatesService } from './candidates/candidates.service';
 	templateUrl: './job-details.component.html',
 	styleUrls: ['./job-details.component.scss']
 })
-export class JobDetailsComponent implements OnInit, OnDestroy {
+export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 
 	contractId: string = this._route.snapshot.params['id'];
 	contract;
@@ -23,10 +23,12 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 	private _stageDisableSubscription;
 	stagesDisabled: number;
 	pipelineLoader = Loading.loading;
+	private previousUrl;
 
 	constructor(
 		private _jobDetailsService: JobDetailsService,
 		private _route: ActivatedRoute,
+		private _router: Router,
 		private _candidatesService: CandidatesService,
 		private _socket: Socket,
 		private _parse: Parse,
@@ -34,39 +36,55 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
-		this._candidatesService.throwNotificationCandidate(localStorage.getItem('queryParams'));
+		// this._route.params.subscribe(params => {
+		// 	this._stages = [];
+		// 	this.stages = [];
+		// 	this.currentInterviewStage = null;
+		// 	this.contract = null;
+		// 	this.stagesDisabled = null;
+		// 	this._stageDisableSubscription = null;
+		// 	this._stageSubscription = null;
+		// 	this._stageDisableSubscription = this._jobDetailsService.isStagesDisabled.subscribe(value => {
+		// 		console.log(value, 'VALUE');
+		// 		this.stagesDisabled = value;
+		// 		this._changeDetector.detectChanges();
+		// 	});
+		// 	this._stageSubscription = this._jobDetailsService.activeStage.subscribe(stage => {
+		// 		this.currentInterviewStage = stage;
+		// 	});
+		// 	this.contractId = params.id;
+		// 	this._jobDetailsService.contractId = this.contractId;
+		// 	this.initData();
+		// });
+
 		this._socket.emit('enterPipeLineGroup', {
 			'contract': this.contractId,
 		});
 		console.log('Entered the room');
+
 		this._stageDisableSubscription = this._jobDetailsService.isStagesDisabled.subscribe(value => {
 			this.stagesDisabled = value;
 			this._changeDetector.detectChanges();
 		});
+
 		this._stageSubscription = this._jobDetailsService.activeStage.subscribe(stage => {
 			this.currentInterviewStage = stage;
 		});
+
 		this._jobDetailsService.contractId = this.contractId;
 		this.initData();
 
 		this._jobDetailsService.getContract().then(contract => {
 			// Update numbers in pipeline
 			this._socket.on('pipelineCountUpdate', data => {
-				// console.log("Received emit from server!", data);
 				const userListQuery = new this._parse.Parse.Query('UserList');
 				userListQuery.get(data.userListId).then(userList => {
-					// console.log('UPDATED!: ', userList);
 					const oldStage = this.stages.find(stage => {
-						// console.log("stage.type", stage.type);
-						// console.log(userList.get('movingHistory'));
 						if (userList.get('movingHistory') && userList.get('movingHistory').length > 1) {
 							return stage.type === userList.get('movingHistory')[userList.get('movingHistory').length - 2].type;
 						}
 						return false;
 					});
-					// console.log('oldStage', oldStage);
-					// console.log('this.stages', this.stages);
-					// console.log(this.stages.indexOf(oldStage));
 					if (oldStage) {
 						if (this.stages[this.stages.indexOf(oldStage)].value > 0) {
 							this.stages[this.stages.indexOf(oldStage)].value -= 1;
@@ -83,7 +101,10 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 			});
 
 		});
+	}
 
+	ngOnChanges() {
+		console.log('CHANGED');
 	}
 
 	initData() {

@@ -48,6 +48,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	public _notificationsOpened: boolean = false;
 	public notificationsCount = 0;
 
+	private _notificationsLimits = {
+		from: 0,
+		to: 5
+	};
+
 	constructor(
 		private router: Router,
 		private _root_vcr: RootVCRService,
@@ -81,11 +86,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			console.log(data);
 			this.notificationsCount++;
 		});
-
-		this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(result => {
-			const data = JSON.parse(result);
-			this.notificationsCount = data;
-		});
+		if (this._parse.getCurrentUser().id) {
+			this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(result => {
+				const data = JSON.parse(result);
+				this.notificationsCount = data;
+			});
+		}
 
 		this._headerService.currentNotificationsCount.subscribe(data => {
 			console.log(data);
@@ -273,12 +279,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		return observable;
 	}
 
-	good() {
-		console.log('good:)');
-		this._parse.execCloud('getAllNotifications', {userId: this._parse.getCurrentUser().id, clientId: this._parse.getCurrentUser().get('Client_Pointer').id}).then(result => {
-			const data = JSON.parse(result);
-			console.log(data);
-		});
-	}
 
 }

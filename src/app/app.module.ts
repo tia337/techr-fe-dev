@@ -58,6 +58,7 @@ import { environment } from './../environments/environment';
 import { ChatModule } from './chat/chat.module';
 import { TimelineComponent } from './timeline/timeline.component';
 import { TimelineModule } from './timeline/timeline.module';
+import { ClearStringPipe } from './clear-string.pipe';
 
 
 const config: SocketIoConfig = {
@@ -73,7 +74,7 @@ const config: SocketIoConfig = {
 @NgModule({
 	declarations: [
 		AppComponent,
-		// UserSettingsComponent,
+		ClearStringPipe,
 	],
 	imports: [
 		BrowserModule,
@@ -85,7 +86,6 @@ const config: SocketIoConfig = {
 		MatMenuModule,
 		NotificationModule,
 		ChatModule,
-		// HeaderModule,
 		JobsPageModule,
 		DashboardModule,
 		PostJobPageModule,
@@ -99,7 +99,6 @@ const config: SocketIoConfig = {
 		StarRatingModule,
 		SocketIoModule.forRoot(config),
 		EmReferralModule,
-		// Testing component
 		TestModule,
 		AlertModule,
 		CheckoutPageModule,
@@ -115,11 +114,17 @@ const config: SocketIoConfig = {
 		ContactUsModule,
 		TimelineModule
 	],
-	providers: [SidenavService, RootVCRService, StripeService, Gapi, LoginGuard, BillingGuard, ActiveSubscriptionGuard],
-	bootstrap: [AppComponent],
-	exports: [
-		// AutosizeDirective
+	providers: [
+		SidenavService,
+		RootVCRService,
+		StripeService,
+		Gapi,
+		LoginGuard,
+		BillingGuard,
+		ActiveSubscriptionGuard
 	],
+	bootstrap: [AppComponent],
+	exports: [],
 
 })
 export class AppModule {
