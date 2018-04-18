@@ -79,9 +79,11 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	) {
 		if (localStorage.getItem('queryParams')) {
 			const params = JSON.parse(localStorage.getItem('queryParams'));
-			if (params.scoring === true && localStorage.getItem('queryParams') != null) {
+			if (params.infoTab === 'scoring' && localStorage.getItem('queryParams') != null) {
 				this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates', 'scoring'], { skipLocationChange: true });
-			} 
+			} else if (params.infoTab === 'note' && localStorage.getItem('queryParams') != null) {
+				this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates', 'notes'], { skipLocationChange: true });				
+			}
 			return;
 		} else {
 		   this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });

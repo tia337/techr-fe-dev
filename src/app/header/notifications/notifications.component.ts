@@ -260,10 +260,10 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
-  setQueryParams (candidateId, scoring?: boolean) {
+  setQueryParams (candidateId, infoTab?: string) {
 		const data = {
 			candidateId: candidateId,
-			scoring: scoring ? true : false
+			infoTab: infoTab ? infoTab : false
 		};
 		localStorage.setItem('queryParams', JSON.stringify(data));
 	}
