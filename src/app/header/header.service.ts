@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 export class HeaderService {
 	public unreadNotificationsCount: BehaviorSubject<string> = new BehaviorSubject('');
 	currentNotificationsCount = this.unreadNotificationsCount.asObservable();
-
+	
 	constructor(private _parse: Parse) { }
 
 	getClientLogo() {

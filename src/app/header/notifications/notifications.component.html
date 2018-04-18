@@ -1,125 +1,81 @@
 <div class="notifications-wrap" (click)="$event.stopImmediatePropagation()">
   <div class="notifications-title">Notifications
     <mat-icon class="clear-button" (click)="closeNotifications(notifications, $event)">clear</mat-icon> 
-    <ng-content></ng-content> 
   </div>
-  <div class="notifications-box">
-    <div class="notifications-box__today">
-       <p class="notifications-box__title">Today</p>
-        <div class="notification-item">
-          <span class="notification-item__icon">
-            <img src="../../../assets/icons/email-icon.png">
-          </span>
-          <div class="notification-item__data-box">
-            <p class="notification-item__data">Edward Ridgway left you a note about Peter Cavendish - Role: Senior CRM Developer</p>
-            <p class="notification-item__data-text">"Just spoke to him, what about shedule..."</p>
+  <div class="loader-wrap" *ngIf="loader === true">
+    <span>Loading...</span>
+  </div>
+  <div class="notifications-box" (scroll)="uploadMoreNotifications($event)">
+    <div class="notifications-box__today" #notificationsBox *ngFor="let day of notificationsArray">
+        <div class="notifications-box__title">
+          <p class="notifications-box__hr"></p>
+          <p class="notifications-box__title-day">{{day[0].date}}</p>
+          <p class="notifications-box__hr"></p>
+        </div>
+          <div *ngFor="let notification of day[1].notifications">
+              <div *ngIf="notification.type === 'apply'" 
+                   (click)="closeNotifications(notifications, $event);goToJobDetails(notification.contractId, -1); setActiveStage(-1)"
+                   class="notification-item">
+                  <span class="notification-item__icon">
+                    <mat-icon class="application-icon">contacts</mat-icon>
+                  </span>
+                  <div class="notification-item__data-box">
+                    <p class="notification-item__data">New Candidate Applied for </p>
+                    <p *ngIf="notification.contractTitle">Job: {{notification.contractTitle}}</p>
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
+              <div *ngIf="notification.type === 'referral'"
+                  (click)="closeNotifications(notifications, $event);setActiveStage(-5)"
+                  [routerLink]="['/jobs', notification._p_contract.slice(notification._p_contract.indexOf('$')+1)]"
+                   class="notification-item">
+                  <span class="notification-item__icon">
+                    <mat-icon class="referrals-icon">supervisor_account</mat-icon>
+                  </span>
+                  <div class="notification-item__data-box">
+                    <p class="notification-item__data">New Employee Referral from {{notification.employeeEmail}}</p>
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
+              <div *ngIf="notification.type === 'note' && notification.notePipelineStage === null"
+                   [routerLink]="['/jobs', notification._p_Job.slice(notification._p_Job.indexOf('$')+1)]"
+                   (click)="closeNotifications(notifications, $event); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1), 'note');"
+                   class="notification-item">
+                  <span class="notification-item__icon">
+                      <img src="../../../assets/icons/candidate_notes.png" alt="">
+                  </span>
+                  <div class="notification-item__data-box">
+                      <p class="notification-item__data">New Note Mention</p>
+                      <p class="notification-item__data-text">Message: {{notification.Message}}</p>
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
+              <div *ngIf="notification.type === 'note' && notification.notePipelineStage !== null"
+                   (click)="closeNotifications(notifications, $event); goToJobDetails(notification._p_Job.slice(notification._p_Job.indexOf('$')+1),notification.notePipelineStage); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1), 'note'); setActiveStage(notification.notePipelineStage)"
+                   class="notification-item">
+                  <span class="notification-item__icon">
+                      <img src="../../../assets/icons/candidate_notes.png" alt="">
+                  </span>
+                  <div class="notification-item__data-box">
+                      <p class="notification-item__data">New Note Mention</p>
+                      <p class="notification-item__data-text">Message: {{notification.Message}}</p>
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
+              <div *ngIf="notification.type === 'scoring'" 
+                    (click)="closeNotifications(notifications, $event); goToJobDetails(notification._p_Job.slice(notification._p_Job.indexOf('$')+1),notification.notePipelineStage); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1), 'scoring'); setActiveStage(notification.scoringPipelineStage)"
+                    class="notification-item">
+                  <span class="notification-item__icon">
+                      <img src="../../../assets/icons/notification-scoring.png" alt="">
+                  </span>
+                  <div class="notification-item__data-box">
+                    <p class="notification-item__data">Scoring Note Mention</p>
+                    <p class="notification-item__data-text">Job: {{notification.contractTitle}}</p>
+                      <p class="notification-item__data-text">Final verdicts: {{notification.FinalVerdictNotes}}</p>
+                  </div>
+                  <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
+              </div>
           </div>
-          <span class="notification-item__time">11:38am</span>
-        </div>
-        <div class="notification-item">
-            <span class="notification-item__icon">
-              <mat-icon class="message-icon">message</mat-icon>
-            </span>
-            <div class="notification-item__data-box">
-              <p class="notification-item__data">New Candidate Message</p>
-              <p class="notification-item__data-text">"Hi, Vadim! How about 6pm..."</p>
-            </div>
-            <span class="notification-item__time">9:38am</span>
-        </div>
-        <div class="notification-item">
-            <span class="notification-item__icon">
-              <mat-icon class="application-icon">contacts</mat-icon>
-            </span>
-            <div class="notification-item__data-box">
-              <p class="notification-item__data">New Candidate Applied</p>
-            </div>
-            <span class="notification-item__time">9:38am</span>
-        </div>
-        <div class="notification-item">
-          <span class="notification-item__icon">
-            <mat-icon class="referrals-icon">supervisor_account</mat-icon>
-          </span>
-          <div class="notification-item__data-box">
-            <p class="notification-item__data">New Employee Referral from mail@mail.com</p>
-          </div>
-          <span class="notification-item__time">9:38am</span>
-        </div>
-        <div class="notification-item">
-          <span class="notification-item__icon">
-            <img src="../../../assets/icons/email-icon.png">
-          </span>
-          <div class="notification-item__data-box">
-            <p class="notification-item__data">Edward Ridgway left you a note about Peter Cavendish - Role: Senior CRM Developer</p>
-            <p class="notification-item__data-text">"Just spoke to him, what about shedule..."</p>
-          </div>
-          <span class="notification-item__time">11:38am</span>
-        </div>
-        <div class="notification-item">
-            <span class="notification-item__icon">
-              <mat-icon class="message-icon">message</mat-icon>
-            </span>
-            <div class="notification-item__data-box">
-              <p class="notification-item__data">New Candidate Message</p>
-              <p class="notification-item__data-text">"Hi, Vadim! How about 6pm..."</p>
-            </div>
-            <span class="notification-item__time">9:38am</span>
-        </div>
-        <div class="notification-item">
-            <span class="notification-item__icon">
-              <mat-icon class="application-icon">contacts</mat-icon>
-            </span>
-            <div class="notification-item__data-box">
-              <p class="notification-item__data">New Candidate Applied</p>
-            </div>
-            <span class="notification-item__time">9:38am</span>
-        </div>
-        <div class="notification-item">
-          <span class="notification-item__icon">
-            <mat-icon class="referrals-icon">supervisor_account</mat-icon>
-          </span>
-          <div class="notification-item__data-box">
-            <p class="notification-item__data">New Employee Referral from mail@mail.com</p>
-          </div>
-          <span class="notification-item__time">9:38am</span>
-        </div>
-        <div class="notification-item">
-          <span class="notification-item__icon">
-            <img src="../../../assets/icons/email-icon.png">
-          </span>
-          <div class="notification-item__data-box">
-            <p class="notification-item__data">Edward Ridgway left you a note about Peter Cavendish - Role: Senior CRM Developer</p>
-            <p class="notification-item__data-text">"Just spoke to him, what about shedule..."</p>
-          </div>
-          <span class="notification-item__time">11:38am</span>
-        </div>
-        <div class="notification-item">
-            <span class="notification-item__icon">
-              <mat-icon class="message-icon">message</mat-icon>
-            </span>
-            <div class="notification-item__data-box">
-              <p class="notification-item__data">New Candidate Message</p>
-              <p class="notification-item__data-text">"Hi, Vadim! How about 6pm..."</p>
-            </div>
-            <span class="notification-item__time">9:38am</span>
-        </div>
-        <div class="notification-item">
-            <span class="notification-item__icon">
-              <mat-icon class="application-icon">contacts</mat-icon>
-            </span>
-            <div class="notification-item__data-box">
-              <p class="notification-item__data">New Candidate Applied</p>
-            </div>
-            <span class="notification-item__time">9:38am</span>
-        </div>
-        <div class="notification-item">
-          <span class="notification-item__icon">
-            <mat-icon class="referrals-icon">supervisor_account</mat-icon>
-          </span>
-          <div class="notification-item__data-box">
-            <p class="notification-item__data">New Employee Referral from mail@mail.com</p>
-          </div>
-          <span class="notification-item__time">9:38am</span>
-        </div>
     </div>
   </div>
 </div>

@@ -1,13 +1,16 @@
-import { Component, EventEmitter, OnInit, Output, Input, ElementRef, Renderer} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Input, ElementRef, Renderer, ViewChild} from '@angular/core';
 import { not } from '@angular/compiler/src/output/output_ast';
 import { NotificationComponent } from './notification/notification.component';
 import { RootVCRService } from '../../root_vcr.service';
 import { SocketIoConfig, Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import { HeaderService } from '../header.service';
-import { Router, NavigationEnd } from '@angular/router';
-
-
+import { Router, NavigationEnd, Route, ActivatedRoute } from '@angular/router';
+import { Parse } from '../../parse.service';
+import { JobDetailsService } from '../../job-details/job-details.service';
+import { ClearStringPipe } from '../../clear-string.pipe';
+import { DeveloperListType, JobType, ContractStatus } from '../../shared/utils';
+import { JobBoxService } from '../../jobs-page/job-box/job-box.service';
 // tslint:disable:indent
 @Component({
   selector: 'app-notifications',
@@ -19,15 +22,33 @@ export class NotificationsComponent implements OnInit {
 
 
   @Input() notifications: boolean;
-
   @Output() notificationsStatus: EventEmitter<boolean> = new EventEmitter();
+  @ViewChild('notificationsBox') private notificationsBox: ElementRef;
+
+  public notificationsArray: Array<any> = [];
+  private notificationsStorage: Array<any> = [];
+  private notificationsTempStorage: Array<any> = [];
+  public loader = false;
+  private _notificationsQueryLimits = {
+		from: 0,
+		to: 15
+  };
+  private _notificationsArrayLimits = {
+    from: 0,
+    to: 5
+  };
 
   constructor(
-    private _elemenRef: ElementRef,
-    private _renderer: Renderer,
+		private _jobDetailsService: JobDetailsService,
+    private _jobBoxService: JobBoxService,
+    public _headerService: HeaderService,
     private _root_vcr: RootVCRService,
+    private _elemenRef: ElementRef,
+    private _ar: ActivatedRoute,
+    private _renderer: Renderer,
+    private _router: Router,
     public _socket: Socket,
-    public _headerService: HeaderService
+    private _parse: Parse,
   ) {
       this._renderer.listenGlobal('body', 'click', (event) => {
         if (this.notifications === true) {
@@ -61,6 +82,9 @@ export class NotificationsComponent implements OnInit {
       this.createMessageNotification(data);
       this._headerService.updateNotificationsCount('1');
     });
+    if (this._parse.getCurrentUser()) {
+      this.loadNotifications();
+    }
   }
 
   closeNotifications(notifications: boolean, event): void {
@@ -153,5 +177,118 @@ export class NotificationsComponent implements OnInit {
 		});
 		return observable;
   }
+
+  sortNotifications(data) {
+		const notificationsSorted = [];
+		const dates = this.createDatesArray(data);
+		let i = 0;
+		dates.forEach(date => {
+			const dayNotifications = [];
+			const notificationsArray = [];
+			dayNotifications.push({date: dates[i]});
+			i++;
+			data.forEach(notification => {
+				const notificationDate: Date = new Date (notification._created_at);
+				if (notificationDate.toLocaleDateString() === date) {
+					notificationsArray.push(notification);
+				}
+			});
+			dayNotifications.push({ notifications: notificationsArray });
+			notificationsSorted.push(dayNotifications);
+    });
+    this.loader = false;
+    return notificationsSorted;
+	}
+
+
+	createDatesArray (data) {
+    const dates = [];
+		data.forEach(notification => {
+			const day: Date = new Date(notification._created_at);
+			if (!dates.includes(day.toLocaleDateString())) {
+				dates.push(day.toLocaleDateString());
+			}
+		});
+		return dates;
+  }
+
+  uploadMoreNotifications (event) {
+    if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
+      if (this._notificationsQueryLimits.from > this._notificationsArrayLimits.from) {
+        this.loader = true;
+        const slicedArray = this.notificationsStorage
+          .slice(this._notificationsArrayLimits.from, this._notificationsArrayLimits.to);
+        this.notificationsTempStorage = this.notificationsTempStorage.concat(slicedArray);
+        this.notificationsArray = this.sortNotifications(this.notificationsTempStorage);
+        this._notificationsArrayLimits.from += 5;
+        this._notificationsArrayLimits.to += 5;
+      } else if (this._notificationsQueryLimits.from === this._notificationsArrayLimits.from) {
+        this.loadNotifications();
+      };
+    };
+  };
+
+  loadNotifications () {
+    this.loader = true;
+    const date = new Date();
+    date.setMonth(date.getMonth() - 3);
+    this._parse.execCloud('getAllNotifications',
+      {
+        userId: this._parse.getCurrentUser().id,
+        clientId: this._parse.getCurrentUser().get('Client_Pointer').id,
+        limits: this._notificationsQueryLimits,
+        date: date
+      })
+      .then(result => {
+        const data = JSON.parse(result);
+        if (this.notificationsArray.length === 0) {
+          this.notificationsStorage = data;
+          this.notificationsTempStorage = this.notificationsStorage
+            .slice(this._notificationsArrayLimits.from, this._notificationsArrayLimits.to);
+          this.notificationsArray =	this.sortNotifications(this.notificationsTempStorage);
+        } else {
+          this.notificationsStorage = this.notificationsStorage.concat(data);
+          const slicedArray = this.notificationsStorage
+            .slice(this._notificationsArrayLimits.from, this._notificationsArrayLimits.to);
+          this.notificationsTempStorage = this.notificationsTempStorage.concat(slicedArray);
+          this.notificationsArray = this.sortNotifications(this.notificationsTempStorage);
+        }
+        this._notificationsQueryLimits.from += 15;
+        this._notificationsQueryLimits.to += 15;
+        this._notificationsArrayLimits.from += 5;
+        this._notificationsArrayLimits.to += 5;
+	  	}).catch(error => {
+        console.log(error);
+      });
+  }
+
+  setQueryParams (candidateId, infoTab?: string) {
+		const data = {
+			candidateId: candidateId,
+			infoTab: infoTab ? infoTab : false
+		};
+		localStorage.setItem('queryParams', JSON.stringify(data));
+	}
+	setActiveStage (data) {
+		this._jobDetailsService.activeStage = data;
+  }
+
+  goToJobDetails(contractId: string, stage: number) {
+    const contractQuery = this._parse.Query('Contract');
+    contractQuery.equalTo('objectId', contractId);
+    contractQuery.find().then(contract => {
+      this._router.navigate(['/jobs', contractId]);
+      this._jobBoxService.activeContract = contract;
+      if (contract.get('status') == ContractStatus.draft) {
+        this._router.navigate(['/jobs', contractId]);
+        setTimeout(() => {
+          this._router.navigate(['/jobs', contractId, 'job-overview'], { skipLocationChange: true, relativeTo: this._ar });
+        }, 1);
+      } else {
+      }
+      this._jobDetailsService.activeStage = stage;
+      localStorage.setItem('activeStage', stage.toString());
+    });
+	}
 
 }

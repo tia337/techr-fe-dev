@@ -91,7 +91,7 @@
             [ngClass]="{'active-dialog': teamMember.dialogActive === true}"
             (click)="highlightDialog(teamMember.id)" 
             [routerLink]="['/chat', teamMember.dialogId]" 
-            [queryParams]="[teamMember.firstName, teamMember.lastName, teamMember.avatarURL, teamMember.sessionStatus, teamMember.id ]"> 
+            [queryParams]="[teamMember.firstName, teamMember.lastName, teamMember.avatarURL, teamMember.sessionStatus, teamMember.id, teamMember.dialogId ]"> 
               <span *ngIf="teamMember.sessionStatus === false" class="team-member-status offline"></span>
               <span *ngIf="teamMember.sessionStatus === true" class="team-member-status online"></span>
               <span>{{ teamMember.firstName }}</span>  

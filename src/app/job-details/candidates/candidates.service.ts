@@ -4,52 +4,49 @@ import { ParseUser, ParsePromise, ParseObject, ParseObjectSubclass } from 'parse
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { JobDetailsService } from '../job-details.service';
 import { DeveloperListType } from '../../shared/utils';
+import { HeaderService } from '../../header/header.service';
 import * as _ from 'underscore';
 
 @Injectable()
 export class CandidatesService {
 
-	// private _contractId: BehaviorSubject<string> = new BehaviorSubject(null);
-	// private _userId: BehaviorSubject<string> = new BehaviorSubject(null);
 
 	private _contractId: string;
-	// private _userId: string;
 	private _userId: any = new BehaviorSubject(null);
 	public notificationCandidate: BehaviorSubject<any> = new BehaviorSubject(null);
 	public currentNotificationCandidate = this.notificationCandidate.asObservable();
 
-	constructor(private _parse: Parse, private _jobDetailsService: JobDetailsService) { }
+	constructor(
+		private _parse: Parse,
+		private _jobDetailsService: JobDetailsService,
+		private _headerService: HeaderService
+	) { }
 
 	// getSuggestedCandidates(contractId: string): ParsePromise {
-	getSuggestedCandidates(contractId: string, from?: number, limit?: number, sortBy?:string, skillsFit?:Array<string>, countries?:Array<string>): ParsePromise {
+	getSuggestedCandidates(contractId: string, from?: number, limit?: number, sortBy?: string, skillsFit?: Array<string>, countries?: Array<string>): ParsePromise {
 
-        return this._parse.execCloud('searchSuggestionCandidates',
-            {
-                profileType: 2,
-                contractId: contractId,
-                from: from,
-                limit: limit,
-                sortBy: sortBy,
-                skillsFit: skillsFit,
-                countries: countries
-            });
-    }
-    getSuggestedCandidatesWeb(contractId: string): ParsePromise {
+		return this._parse.execCloud('searchSuggestionCandidates',
+			{
+				profileType: 2,
+				contractId: contractId,
+				from: from,
+				limit: limit,
+				sortBy: sortBy,
+				skillsFit: skillsFit,
+				countries: countries
+			});
+	}
 
-        return this._parse.execCloud('searchSuggestionCandidatesWeb',
-            {
-                profileType: 2,
-                contractId: contractId
-            });
-    }
+	getSuggestedCandidatesWeb(contractId: string): ParsePromise {
+		return this._parse.execCloud('searchSuggestionCandidatesWeb', {
+			profileType: 2,
+			contractId: contractId
+		});
+	}
 
-    getDevelopersById(developerIds:Array<string>): ParsePromise {
-
-        return this._parse.execCloud('getDevelopersById',
-            {
-            	developerIds: developerIds
-            });
-    }
+	getDevelopersById(developerIds: Array<string>): ParsePromise {
+		return this._parse.execCloud('getDevelopersById', { developerIds: developerIds });
+	}
 
 	getUsersForList(contractId: string, listId: number) {
 		let contract;
@@ -96,10 +93,15 @@ export class CandidatesService {
 						return;
 					} else {
 						referrals.forEach(referral => {
-							console.log(referral);
 							if (referral.get('isRead') !== true) {
+								console.log('IS READ');
 								referral.set('isRead', true);
-								referral.save();
+								referral.save().then(next => {
+									this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(count => {
+										console.log(count);
+										this._headerService.updateNotificationsCount(JSON.parse(count));
+									});
+								});
 							}
 						});
 					}
@@ -160,7 +162,12 @@ export class CandidatesService {
 						contractApplies.forEach(apply => {
 							if (apply.get('isRead') !== true) {
 								apply.set('isRead', true);
-								apply.save();
+								apply.save().then(next => {
+									this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(count => {
+										console.log(count);
+										this._headerService.updateNotificationsCount(JSON.parse(count));
+									});
+								});
 							}
 						});
 					}

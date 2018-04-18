@@ -79,9 +79,11 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	) {
 		if (localStorage.getItem('queryParams')) {
 			const params = JSON.parse(localStorage.getItem('queryParams'));
-			if (params.scoring === true && localStorage.getItem('queryParams') != null) {
+			if (params.infoTab === 'scoring' && localStorage.getItem('queryParams') != null) {
 				this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates', 'scoring'], { skipLocationChange: true });
-			} 
+			} else if (params.infoTab === 'note' && localStorage.getItem('queryParams') != null) {
+				this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates', 'notes'], { skipLocationChange: true });				
+			}
 			return;
 		} else {
 		   this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
@@ -102,7 +104,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			this.unitPreference = partner.get('candidateDistanceUnitPreferrences');
 		});
 
-		this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe( candidatesCount => {
+		this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe(candidatesCount => {
 			if (candidatesCount) {
 				this._candidatesCountObject = candidatesCount;
 				if (this._activeStage) {
@@ -142,9 +144,12 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 					this._candidatesService.getSuggestedCandidatesWeb(this.contractId).then( SuggestedCandidates => {
 						console.log('SuggestedCandidates: ', SuggestedCandidates);
 						if (SuggestedCandidates && SuggestedCandidates.developersSorted.length > 0) {
-                            	this.hasCandidates = Loading.success;
-                            	this._jobDetailsService.isStagesDisabled = Loading.success;
-                            	SuggestedCandidates.developersSorted = _.sortBy(SuggestedCandidates.developersSorted, 'weight').reverse();
+								console.log('here');
+								this.hasCandidates = Loading.success;
+								console.log(this.hasCandidates, 'HAS CANDIDATES');
+								console.log(SuggestedCandidates.developersSorted, 'SuggestedCandidates.developersSorted');
+								SuggestedCandidates.developersSorted = _.sortBy(SuggestedCandidates.developersSorted, 'weight').reverse();
+								console.log('111');
                             	let tempArray = [];
 								console.log('Developers sorted: ', SuggestedCandidates.developersSorted);
 								this.copySuggestedCandidates = SuggestedCandidates.developersSorted;
@@ -153,12 +158,12 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
                             	this.candidates.results = [ ];
                             	this.candidates.weights = SuggestedCandidates.weights;
 								this.candidates.distances = SuggestedCandidates.distances;
-								
+								console.log(this.candidates);
                             	SuggestedCandidates.developersSorted.slice(this._from,this._limit).forEach(dev => {
-                            		tempArray.push(dev.id);
+									tempArray.push(dev.id);
 								});
 								this._candidatesService.getDevelopersById(tempArray).then(response => {
-                            		// console.log('Response from server Get Developers', response.results);
+									console.log('Response from server Get Developers', response);
                             		this.candidates.results = this.candidates.results.concat(response.results);
 									console.log('This.candidate.results', this.candidates.results);
 									const firstUser = this.candidates.results[0];
@@ -171,6 +176,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 									}
 								})
 								this.loadCountryList();
+								this._jobDetailsService.isStagesDisabled = Loading.success;
 								
 							} else {
 								this.hasCandidates = Loading.error;
@@ -181,6 +187,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 
 				case DeveloperListType.applied:
 					this._candidatesService.getAppliedCandidates(this.contractId).then(suggestions => {
+						console.log(suggestions);
 						if (suggestions && suggestions.results.length > 0) {
 							this.hasCandidates = Loading.success;
 							this._jobDetailsService.isStagesDisabled = Loading.success;
@@ -572,21 +579,15 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 		return Loading;
 	}
 
-	ngOnDestroy() {
-		this._stageSubscription.unsubscribe();
-		this._candidatesCountSubscription.unsubscribe();
-		this._jobDetailsService = null;
-		// localStorage.removeItem('queryParams');
-	}
+	
 
 	changeSortMethod(value) {
 		this.postLoader = true;
-		console.log('CHANGE SKILLS-LOCATION METHOD STARTED');
 		let someArray = [];
 		let copyLength = this.candidates.results.length;
 		let newCopy = this.SuggestedCandidates;
-		console.log(this.sortedArray, ' this.sortedArray');
-		console.log(this.SuggestedCandidates.developersSorted, ' this.SuggestedCandidates.developersSorted');
+		// console.log(this.sortedArray, ' this.sortedArray');
+		// console.log(this.SuggestedCandidates.developersSorted, ' this.SuggestedCandidates.developersSorted');
 		if (value == 'weight') {
 			this.sortMethod = 'weight';
 			
@@ -613,7 +614,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 				});
 				
 			}
-			console.log(newCopy.developersSorted);
+			// console.log(newCopy.developersSorted);
 		}
 		this._from = 0;
 		this._limit = 10;
@@ -805,5 +806,12 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			this.postLoader = false;
 			return this.candidates.results;
 		});
+	}
+
+	ngOnDestroy() {
+		console.log('DESTROYED');
+		this._stageSubscription.unsubscribe();
+		this._candidatesCountSubscription.unsubscribe();
+		this._jobDetailsService = null;
 	}
 }

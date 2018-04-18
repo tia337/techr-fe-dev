@@ -61,6 +61,7 @@ constructor(
           }
         })
         datesArray =  _.sortBy(datesArray, function (date) { return date }).reverse(); // sorting array by dates from descending to ascending
+        // console.log(datesArray);
         return datesArray;
       }
       
@@ -122,11 +123,8 @@ constructor(
       createTeamMember (params, queryParams): ChatTeamMember { // creating a team member object
         let teamMember;
         let undefinedAvatar = queryParams[0].charAt(0) + ' ' + queryParams[1].charAt(0); // if undefined avatar - take first letter of the name and surname 
-        console.log('undefined avatar',undefinedAvatar)
         const random = Math.floor(Math.random() * 15) + 0;
-        console.log('random', random)
         let randomColor = this.randomColorsArray[Math.floor(Math.random() * 15) + 0]; // random color of bg of undefined avatar
-        console.log('random color', randomColor);
         return teamMember = {
           firstName: queryParams[0],
           lastName: queryParams[1],
