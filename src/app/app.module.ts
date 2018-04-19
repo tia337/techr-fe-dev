@@ -59,7 +59,7 @@ import { ChatModule } from './chat/chat.module';
 import { TimelineComponent } from './timeline/timeline.component';
 import { TimelineModule } from './timeline/timeline.module';
 import { ClearStringPipe } from './clear-string.pipe';
-
+import { TimelineService } from './timeline/timeline.service';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -121,7 +121,8 @@ const config: SocketIoConfig = {
 		Gapi,
 		LoginGuard,
 		BillingGuard,
-		ActiveSubscriptionGuard
+		ActiveSubscriptionGuard,
+		TimelineService
 	],
 	bootstrap: [AppComponent],
 	exports: [],

@@ -1,59 +1,122 @@
-<div class="timeline-wrap">
-  <div class="timeline-day">
+<div class="timeline-wrap" (scroll)="uploadMoreTimeline($event)">
+  <div class="timeline-day" *ngFor="let timelineDay of timelineArray">
     <div class="timeline-day-date-wrap">
       <div class="timeline-day-date">
-        <span>March</span>
-        <span>18th</span>
+        <span>{{timelineDay[0].dateToDisplay | date: 'EEEE'}}</span>
+        <span>{{timelineDay[0].dateToDisplay | date: 'd'}}</span>
       </div>
       <div class="timeline-day-date-stripe"></div>
     </div>
     <div class="timeline-day-items-wrap">
-      <div class="timeline-day-item">
-        <div class="timeline-day-item-image">
-          <img src="https://media.licdn.com/dms/image/C5103AQFbTcj4UY1qkQ/profile-displayphoto-shrink_100_100/0?e=1526292000&v=alpha&t=K7vGvOVyiahuF6hUkrLUSedh_a9Bp0F8OTojZQdKt2A" alt="">
-        </div>
-        <div class="timeline-day-item-content">
-          <div class="timeline-day-item-content-text">
-            You posted
-            <span class="timeline-day-item-content-text bold">
-              "Microsoft dynamics AX - Senior Financial analyst"
-            </span>
+      <div *ngFor="let timelineItem of timelineDay[1].timeline">
+        <div class="timeline-day-item" 
+             *ngIf="timelineItem.type === 'application'"
+             (click)="goToJobDetails(timelineItem.contractId, -2);">
+          <div class="timeline-day-item-image">
+              <img src="../../assets/icons/timeline-applicant.svg" alt="">
+          </div>
+          <div class="timeline-day-item-content">
+            <div class="timeline-day-item-content-text">
+              You have a new applicant for job: 
+              <span class="timeline-day-item-content-text bold">
+                {{timelineItem.contractTitle}}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="timeline-day-item">
+        <div class="timeline-day-item">
           <div class="timeline-day-item-image">
-            <img src="https://media.licdn.com/dms/image/C5103AQFbTcj4UY1qkQ/profile-displayphoto-shrink_100_100/0?e=1526292000&v=alpha&t=K7vGvOVyiahuF6hUkrLUSedh_a9Bp0F8OTojZQdKt2A" alt="">
+              <img src="../../assets/icons/timeline-applicant.svg" alt="">
+          </div>
+          {{timelineItem | json}}
+          <!-- <div class="timeline-day-item-content">
+            <div class="timeline-day-item-content-text">
+              You have a new applicant for job: 
+              <span class="timeline-day-item-content-text bold">
+                {{timelineItem.contractTitle}}
+              </span>
+            </div>
+          </div> -->
+        </div>
+
+        <div class="timeline-day-item"
+              *ngIf="timelineItem.type === 'job created' && timelineItem.userId === currentUser.id">
+          <div class="timeline-day-item-image">
+              <img src="https://media.licdn.com/dms/image/C5103AQFbTcj4UY1qkQ/profile-displayphoto-shrink_100_100/0?e=1526292000&v=alpha&t=K7vGvOVyiahuF6hUkrLUSedh_a9Bp0F8OTojZQdKt2A" alt="">
+          </div>
+          <div class="timeline-day-item-content">
+            <div class="timeline-day-item-content-text">
+              You created the job:
+              <span class="timeline-day-item-content-text bold">
+                "{{timelineItem.title}}"
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-day-item"
+              *ngIf="timelineItem.type === 'job created' && timelineItem.userId === currentUser.id">
+          <div class="timeline-day-item-image">
+              <img src="https://media.licdn.com/dms/image/C5103AQFbTcj4UY1qkQ/profile-displayphoto-shrink_100_100/0?e=1526292000&v=alpha&t=K7vGvOVyiahuF6hUkrLUSedh_a9Bp0F8OTojZQdKt2A" alt="">
           </div>
           <div class="timeline-day-item-content">
             <div class="timeline-day-item-content-text">
               You published
               <span class="timeline-day-item-content-text bold">
-                "Microsoft dynamics AX - Senior Financial analyst"
+                 "{{timelineItem.title}}"
               </span>
-              to SwipeIn and Indeed Free job boards
+              to SwipeIn job board
             </div>
           </div>
-      </div>
-      <div class="timeline-day-item">
+        </div>
+        <div class="timeline-day-item"
+              *ngIf="timelineItem.type === 'job created'">
           <div class="timeline-day-item-image">
-            <img src="../../assets/icons/timeline-applicant.svg" alt="">
+              <img src="https://media.licdn.com/dms/image/C5103AQFbTcj4UY1qkQ/profile-displayphoto-shrink_100_100/0?e=1526292000&v=alpha&t=K7vGvOVyiahuF6hUkrLUSedh_a9Bp0F8OTojZQdKt2A" alt="">
           </div>
           <div class="timeline-day-item-content">
-            <div class="timeline-day-item-content-text notification">
-              <span class="timeline-day-item-content-title">
-                You have a new application
+            <div class="timeline-day-item-content-text">
+              {{timelineItem.userFullName}} created the job:
+              <span class="timeline-day-item-content-text bold">
+                 "{{timelineItem.title}}"
               </span>
-              <p>
-                <span class="timeline-day-item-content-bold">Job: </span>
-                <span>Senior Recruitement Consultant</span>
-              </p>
-              <p>
-                <span class="timeline-day-item-content-bold">Source: </span>
-                <span>Indeed</span>
-              </p>
             </div>
           </div>
+        </div>
+        <div class="timeline-day-item"
+              *ngIf="timelineItem.type === 'job created'">
+          <div class="timeline-day-item-image">
+              <img src="https://media.licdn.com/dms/image/C5103AQFbTcj4UY1qkQ/profile-displayphoto-shrink_100_100/0?e=1526292000&v=alpha&t=K7vGvOVyiahuF6hUkrLUSedh_a9Bp0F8OTojZQdKt2A" alt="">
+          </div>
+          <div class="timeline-day-item-content">
+            <div class="timeline-day-item-content-text">
+              {{timelineItem.userFullName}} published 
+              <span class="timeline-day-item-content-text bold">
+                 "{{timelineItem.title}}"
+              </span>
+              to SwipeIn job board
+            </div>
+          </div>
+        </div>
+        <div class="timeline-day-item"
+              *ngIf="timelineItem.type === 'scoring mention' && timelineItem.scoringAuthorId === currentUser.id">
+          <div class="timeline-day-item-image">
+              <img [src]="currentUser.get('avatarUrl')" alt="">
+          </div>
+          <div class="timeline-day-item-content">
+            <div class="timeline-day-item-content-text">
+             <span class="timeline-day-item-content-text bold">You scored </span>
+             {{timelineItem.candidateFullName}} with 
+             <span class="timeline-day-item-content-text bold">{{timelineItem.WeightedScore}} </span> 
+            stars 
+              <span class="timeline-day-item-content-text bold">
+                 "{{timelineItem.title}}"
+              </span>
+              to SwipeIn job board
+            </div>
+          </div>
+        </div>
+
+
       </div>
     </div>
   </div>
