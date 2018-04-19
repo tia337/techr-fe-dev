@@ -39,42 +39,39 @@
               </div>
               <div *ngIf="notification.type === 'note' && notification.notePipelineStage === null"
                    [routerLink]="['/jobs', notification._p_Job.slice(notification._p_Job.indexOf('$')+1)]"
-                   (click)="closeNotifications(notifications, $event); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1));"
+                   (click)="closeNotifications(notifications, $event); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1), 'note');"
                    class="notification-item">
                   <span class="notification-item__icon">
                       <img src="../../../assets/icons/candidate_notes.png" alt="">
                   </span>
                   <div class="notification-item__data-box">
-                    {{notification.notePipelineStage}}
                       <p class="notification-item__data">New Note Mention</p>
                       <p class="notification-item__data-text">Message: {{notification.Message}}</p>
                   </div>
                   <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
               </div>
               <div *ngIf="notification.type === 'note' && notification.notePipelineStage !== null"
-                   
-                   (click)="closeNotifications(notifications, $event); goToJobDetails(notification._p_Job.slice(notification._p_Job.indexOf('$')+1),notification.notePipelineStage); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1)); setActiveStage(notification.notePipelineStage)"
+                   (click)="closeNotifications(notifications, $event); goToJobDetails(notification._p_Job.slice(notification._p_Job.indexOf('$')+1),notification.notePipelineStage); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1), 'note'); setActiveStage(notification.notePipelineStage)"
                    class="notification-item">
                   <span class="notification-item__icon">
                       <img src="../../../assets/icons/candidate_notes.png" alt="">
                   </span>
                   <div class="notification-item__data-box">
-                    {{notification.notePipelineStage}}
                       <p class="notification-item__data">New Note Mention</p>
                       <p class="notification-item__data-text">Message: {{notification.Message}}</p>
                   </div>
                   <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
               </div>
               <div *ngIf="notification.type === 'scoring'" 
-                    (click)="closeNotifications(notifications, $event); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1), true); setActiveStage(notification.scoringPipelineStage)"
+                    (click)="closeNotifications(notifications, $event); goToJobDetails(notification._p_Job.slice(notification._p_Job.indexOf('$')+1),notification.notePipelineStage); setQueryParams(notification._p_Candidate.slice(notification._p_Candidate.indexOf('$')+1), 'scoring'); setActiveStage(notification.scoringPipelineStage)"
                     class="notification-item">
                   <span class="notification-item__icon">
                       <img src="../../../assets/icons/notification-scoring.png" alt="">
                   </span>
                   <div class="notification-item__data-box">
-                      <p class="notification-item__data">Scoring Note Mention</p>
+                    <p class="notification-item__data">Scoring Note Mention</p>
+                    <p class="notification-item__data-text">Job: {{notification.contractTitle}}</p>
                       <p class="notification-item__data-text">Final verdicts: {{notification.FinalVerdictNotes}}</p>
-                      <!-- <p class="notification-item__data-text">Message: {{notification.Message}}</p> -->
                   </div>
                   <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
               </div>

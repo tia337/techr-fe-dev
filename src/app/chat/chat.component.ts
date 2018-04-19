@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer, OnDestroy, HostListener, QueryList, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink, NavigationEnd, Event, ResolveEnd } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { ChatService } from './chat.service';
 import { MentionModule } from 'angular2-mentions/mention';
@@ -65,7 +65,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private _parse: Parse,
     private _root_vcr: RootVCRService,
     private _sanitizer: DomSanitizer,
-    private _roter: Router,
+    private _router: Router,
     private _elRef: ElementRef,
     private _renderer: Renderer
   ) { }
@@ -85,11 +85,19 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    // this._router.events.subscribe(event => {
+    //   console.log(event);
+    //   if (event instanceof ResolveEnd) {
+    //     const a = event.state.root.children[0].parent.children[0].firstChild.params.id;
+    //     console.log(a);
+    //   };
+    // });
+
     this.userId = this._parse.getCurrentUser().id;
 
     this.listenToDialogIdUpdated().subscribe(data => {
       this.updateDialogId(data)
-      this.updateDialogInCore(data);
+      // this.updateDialogInCore(data);
     });
    
     this.editPartnersMessage().subscribe(data => {
@@ -101,10 +109,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.recieveColleagueMessage().subscribe(data => {
-      console.log(data);
+      // console.log(data);
       clearTimeout(this.timer);
       this.typing = false;
-      console.log(this.dialogId);
+      // console.log(this.dialogId);
       if (this.dialogId != undefined) {
         this.addMessageToChat(data);
       }
@@ -115,12 +123,13 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.checkIfTyping(data);
     });
 
+
     this._ar.params.subscribe(params => {   
       if (params.id === 'false') {
-        this.messages = [];
-        this.noMessages = true;
-        this.beginning = true;
-        this.dialogId = params.id;
+        // this.messages = [];
+        // this.noMessages = true;
+        // this.beginning = true;
+        // this.dialogId = params.id;
         return;
       } else {
         this.dialogId = params.id;
@@ -130,6 +139,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this._ar.queryParams.subscribe(queryParams => {
+      if (queryParams[5] === 'false') {
+        this.dialogId = 'false';
+        this.messages = [];
+        this.noMessages = true;
+        this.beginning = true;
+      }
+      console.log(queryParams[5]);
       this.messageStorage = [];
       this.messages = [];
       this.textAreaValue.setValue('');
@@ -276,6 +292,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     event.preventDefault();
     console.log(value.value);
     if (value.value != '') {
+      console.log(this.dialogId, 'DIALOG ID SEND MESSAGE')
       event.preventDefault();
       this._socket.emit('outgoing-to-colleague', {
         message: encodeURIComponent(value.value),
@@ -588,7 +605,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }  
 
   redirectToJob(jobId) {
-    this._roter.navigate(['/jobs', jobId]);
+    this._router.navigate(['/jobs', jobId]);
   }
 
   watch(event) {

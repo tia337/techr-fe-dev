@@ -86,7 +86,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			console.log(data);
 			this.notificationsCount++;
 		});
-		if (this._parse.getCurrentUser().id) {
+		if (this._parse.getCurrentUser()) {
 			this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(result => {
 				const data = JSON.parse(result);
 				this.notificationsCount = data;

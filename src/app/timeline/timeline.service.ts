@@ -1,32 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
-import { JobBoxService } from '../jobs-page/job-box/job-box.service';
-import { JobDetailsService } from '../job-details/job-details.service';
-import { Parse } from '../parse.service';
-import { Router, Route, ActivatedRoute } from '@angular/router';
-import { DeveloperListType, JobType, ContractStatus } from '../shared/utils';
-
     // tslint:disable:indent
 
 @Injectable()
 export class TimelineService {
 
   constructor (
-    private _jobBoxService: JobBoxService,
-    private _jobDetailsService: JobDetailsService,
-    private _ar: ActivatedRoute,
-    private _socket: Socket,
-    private _router: Router,
-    private _parse: Parse,
-    private _route: Route,
+    private _socket: Socket
   ) { }
 
   emitSocketEventForRecievingTimeline (startFrom) {
     this._socket.emit('give-me-timeline', {startFrom: startFrom});
   }
 
-  recieveTimelineFromSocket () {
+  recieveTimelineFromSocket (): Observable<any> {
     const observable = new Observable (observer => {
       this._socket.on('timeline-fetched', data => {
         observer.next(data);
@@ -36,31 +24,31 @@ export class TimelineService {
   }
 
   createDatesArray (data) {
-    const dates = [];
+    const datesToCompare = [];
     const datesToDisplay = [];
 		data.forEach(notification => {
 			const day: Date = new Date(notification._created_at);
-			if (!dates.includes(day.toLocaleDateString())) {
-        dates.push(day.toLocaleDateString());
+			if (!datesToCompare.includes(day.toLocaleDateString())) {
+        datesToCompare.push(day.toLocaleDateString());
         datesToDisplay.push(day);
       }
 		});
 		return {
-      dates: dates,
+      datesToCompare: datesToCompare,
       datesToDisplay: datesToDisplay
     };
   }
 
   sortTimeline(data) {
 		const timelineSorted = [];
-    const dates = this.createDatesArray(data).dates;
+    const datesToCompare = this.createDatesArray(data).datesToCompare;
     const datesToDisplay = this.createDatesArray(data).datesToDisplay;
 		let i = 0;
-		dates.forEach(date => {
+		datesToCompare.forEach(date => {
 			const dayTimeline = [];
 			const timelineArray = [];
 			dayTimeline.push({
-        date: dates[i],
+        date: datesToCompare[i],
         dateToDisplay: datesToDisplay[i]
       });
 			i++;
@@ -75,24 +63,6 @@ export class TimelineService {
     });
     return timelineSorted;
   }
-  
-  goToJobDetails(contractId: string, stage: number) {
-    const contractQuery = this._parse.Query('Contract');
-    contractQuery.equalTo('objectId', contractId);
-    contractQuery.find().then(contract => {
-      this._router.navigate(['/jobs', contractId]);
-      this._jobBoxService.activeContract = contract;
-      if (contract.get('status') == ContractStatus.draft) {
-        this._router.navigate(['/jobs', contractId]);
-        setTimeout(() => {
-          this._router.navigate(['/jobs', contractId, 'job-overview'], { skipLocationChange: true, relativeTo: this._ar });
-        }, 1);
-      } else {
-      }
-      this._jobDetailsService.activeStage = stage;
-      localStorage.setItem('activeStage', stage.toString());
-    });
-	}
-
 
 }
+

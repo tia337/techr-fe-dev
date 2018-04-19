@@ -82,7 +82,9 @@ export class NotificationsComponent implements OnInit {
       this.createMessageNotification(data);
       this._headerService.updateNotificationsCount('1');
     });
-    this.loadNotifications();
+    if (this._parse.getCurrentUser()) {
+      this.loadNotifications();
+    }
   }
 
   closeNotifications(notifications: boolean, event): void {
@@ -260,10 +262,10 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
-  setQueryParams (candidateId, scoring?: boolean) {
+  setQueryParams (candidateId, infoTab?: string) {
 		const data = {
 			candidateId: candidateId,
-			scoring: scoring ? true : false
+			infoTab: infoTab ? infoTab : false
 		};
 		localStorage.setItem('queryParams', JSON.stringify(data));
 	}
