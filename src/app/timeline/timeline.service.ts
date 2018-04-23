@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
-    // tslint:disable:indent
+import { Parse } from '../parse.service';
+import { resolve } from 'path';
+import { JobBoxService } from '../jobs-page/job-box/job-box.service';
+
+// tslint:disable:indent
 
 @Injectable()
 export class TimelineService {
 
   constructor (
-    private _socket: Socket
+    private _socket: Socket,
+    private _parse: Parse,
+    private _jobBoxService: JobBoxService
   ) { }
 
-  emitSocketEventForRecievingTimeline (startFrom) {
-    this._socket.emit('give-me-timeline', {startFrom: startFrom});
-  }
-
-  recieveTimelineFromSocket (): Observable<any> {
-    const observable = new Observable (observer => {
-      this._socket.on('timeline-fetched', data => {
-        observer.next(data);
-      });
-    });
-    return observable;
+  getTimeline (data) {
+    return this._parse.execCloud('getTimeline', data);
   }
 
   createDatesArray (data) {
@@ -62,6 +59,16 @@ export class TimelineService {
 			timelineSorted.push(dayTimeline);
     });
     return timelineSorted;
+  }
+
+  setQueryParams (candidateId: string, infoTab?: string) {
+    if (candidateId !== undefined) {
+      const data = {
+        candidateId: candidateId,
+        infoTab: infoTab ? infoTab : null
+      };
+      localStorage.setItem('queryParams', JSON.stringify(data));
+    }
   }
 
 }

@@ -31,11 +31,11 @@ export class NotificationsComponent implements OnInit {
   public loader = false;
   private _notificationsQueryLimits = {
 		from: 0,
-		to: 15
+		to: 100
   };
   private _notificationsArrayLimits = {
     from: 0,
-    to: 5
+    to: 20
   };
 
   constructor(
@@ -73,12 +73,10 @@ export class NotificationsComponent implements OnInit {
       this._headerService.updateNotificationsCount('1');
     });
     this.getEmployeeReferralsNotifications().subscribe(data => {
-      console.log(data);
       this.createOn(data);
       this._headerService.updateNotificationsCount('1');
     });
     this.getTeamMemberMessageNotifications().subscribe(data => {
-      console.log(data);
       this.createMessageNotification(data);
       this._headerService.updateNotificationsCount('1');
     });
@@ -122,7 +120,7 @@ export class NotificationsComponent implements OnInit {
 
   createMessageNotification (data) {
     if (window.location.href.indexOf(data.dialogId) > -1) {
-      console.log('Do not show Notification');
+      return;
     } else {
       this._root_vcr.clear();
       const notification = this._root_vcr.createComponent(NotificationComponent);
@@ -253,10 +251,10 @@ export class NotificationsComponent implements OnInit {
           this.notificationsTempStorage = this.notificationsTempStorage.concat(slicedArray);
           this.notificationsArray = this.sortNotifications(this.notificationsTempStorage);
         }
-        this._notificationsQueryLimits.from += 15;
-        this._notificationsQueryLimits.to += 15;
-        this._notificationsArrayLimits.from += 5;
-        this._notificationsArrayLimits.to += 5;
+        this._notificationsQueryLimits.from += 100;
+        this._notificationsQueryLimits.to += 100;
+        this._notificationsArrayLimits.from += 20;
+        this._notificationsArrayLimits.to += 20;
 	  	}).catch(error => {
         console.log(error);
       });

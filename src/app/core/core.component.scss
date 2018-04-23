@@ -199,7 +199,7 @@ $menu-height: calc(100vh - #{$header-height});
                 margin: 50px 0;
                 font-size: 1em;
                 .func-buttons {
-                    border-bottom: 2px solid #94a4b5 !important;
+                    border-bottom: 2px solid #94a4b5 ;
                     // font-size: $font-size-19;
                     font-size: 1.12rem;
                     font-family: 'ABeeZee', sans-serif;
@@ -208,7 +208,7 @@ $menu-height: calc(100vh - #{$header-height});
                     p {
                         color: #94a4b5;
                     }
-                    border-bottom: 2px solid #5ea3ed !important;
+                    border-bottom: 2px solid #5ea3ed;
                 }
                 ul {
                     list-style-type: none;

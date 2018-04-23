@@ -27,6 +27,7 @@ import * as _ from 'underscore';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
+	private _theme = 'old';
 	cartAmount: number;
 	CartTotal: number;
 	currency: string;
@@ -81,6 +82,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+
+		if (localStorage.getItem('theme')) {
+			const theme = localStorage.getItem('theme');
+			if (theme === 'old') {
+				this._theme = 'old';
+			};
+			if (theme === 'new') {
+				this._theme = 'new';
+			};
+			this.changeTheme(theme);
+		}
 
 		this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
 			console.log(data);
@@ -277,6 +289,20 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			});
 		});
 		return observable;
+	}
+
+	changeTheme(theme?: string) {
+		if (this._theme === 'old' || theme === 'old') {
+			this._theme = 'new';
+			const body = document.getElementById('body');
+			body.classList.add('new');
+			localStorage.setItem('theme', 'new');
+		} else if (this._theme === 'new' || theme === 'new') {
+			this._theme = 'old';
+			const body = document.getElementById('body');
+			body.classList.remove('new');
+			localStorage.setItem('theme', 'old');
+		}
 	}
 
 
