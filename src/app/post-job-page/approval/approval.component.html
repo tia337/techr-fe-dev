@@ -1,0 +1,69 @@
+<div class="request-approval-modal-overlay">
+    <div class="request-approval-modal">
+        <div class="request-approval-modal__title">
+            <mat-icon>done_all</mat-icon>
+            <div class="request-approval-modal__title-text">
+                Request
+                <span class="bold">job review</span> and
+                <span class="bold">approval</span> to internal managers or External Clients
+            </div>
+        </div>
+        <div class="request-approval-modal__content">
+            <div class="request-approval-modal__content-inputs">
+                <div class="request-approval-modal__content-inputs-team">
+                    <div class="request-approval-modal__content-inputs-team-wrap">
+                        <div class="request-approval-modal__content-inputs-team-approver-btn" 
+                            (click)="approversHidden = false;" 
+                            *ngIf="approversHidden === true">
+                           SwipeIn User Approver
+                           <mat-icon class="icon-down">play_arrow</mat-icon>
+                       </div>
+                       <div class="request-approval-modal__content-inputs-team-approver-btn opened" 
+                            (click)="approversHidden = true;" 
+                            *ngIf="approversHidden === false">
+                           Add Approver
+                           <mat-icon class="icon-up">play_arrow</mat-icon>
+                       </div>
+                       <div class="request-approval-modal__content-inputs-team-list"
+                            *ngIf="approversHidden === false">
+                           <p class="request-approval-modal__content-inputs-team-approver" 
+                              *ngFor="let member of teamMembers"
+                              (click)="addToCheckedMembers(member);"
+                              (clickOutside)="approversHidden = true"
+                              [delayClickOutsideInit]="true"
+                              [exclude]="'.request-approval-modal__content-inputs-team-list, .request-approval-modal__content-inputs-team-approver-btn, .request-approval-modal__content-inputs-team-approver'">
+                              {{member.name}}
+                              <span class="checked-box">
+                                  <mat-icon class="icon" *ngIf="member.checked === true">check</mat-icon>
+                              </span>
+                           </p>
+                       </div>
+                       <div style="margin-top: 10px;" *ngIf="checkedTeamMembers.length > 0 && approversHidden === true">
+                            <p class="request-approval-modal__content-inputs-team-approver added" 
+                              *ngFor="let member of checkedTeamMembers">
+                              {{member.name}}
+                              <span class="checked-box">
+                                <mat-icon class="remove-icon" (click)="removeFromCheckedTeamMembers(member)">clear</mat-icon>
+                                </span>
+                           </p>
+                       </div>
+                    </div>
+                    <span style="margin-top: 10px;">OR</span>
+                    <div>
+                        <input type="text" placeholder="Enter email addresses" 
+                              class="request-approval-modal-email" 
+                              (keydown.enter)="addEmailToCheckedMembers($event.target.value); $event.target.value = null;" > 
+                        <div class="approvers-wrap">
+                            <p>{{checkedTeamMembers.length}} approvers</p>
+                            <button class="request-approval" (click)="closeRequestApproval()">
+                                Request 
+                                <br>
+                                Approval
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

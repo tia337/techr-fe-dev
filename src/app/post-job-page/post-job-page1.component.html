@@ -7,6 +7,9 @@
                 </span>
                 Create job
             </button>
+            <p class="request-approval" (click)="openRequestApproval()">
+                Request <br> Approval
+            </p>
         </div>
         <div class="edit-buttons-container">
             <button class="create-button nowrap" *ngIf="(!editable && contractObj.get('status') != 3)" (click)="enableEdit(true)">Edit</button>
@@ -497,3 +500,4 @@
         <img class="speaker" src="../../../assets/icons/speaker.png">
     </div>
 </div>
+

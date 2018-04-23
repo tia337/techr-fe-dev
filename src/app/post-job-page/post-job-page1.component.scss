@@ -13,16 +13,20 @@ input[type=file] {
 
 .top-create-job-btn {
     z-index: 1;
-    width: 15%;
-    margin-left: 80%;
+    width: 24%;
+    margin-left: 76%;
     display: block;
     position: sticky;
     top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 15px;
     .create-button {
         cursor: pointer;
         border: none;
         font-size: $font-size-14;
         padding: 8px 30px;
+        margin-right: 15px;
         background-color: #3688f7;
         color: white;
         border-radius: 3px;
@@ -34,6 +38,22 @@ input[type=file] {
     }
     .create-button:hover{
         background-color: #2264bd;
+    }
+    .request-approval {
+        background: #c35a29;
+        width: 100px;
+        color: #fff;
+        font-size: 15px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: .3s all ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:hover {
+            opacity: .7;
+        }
     }
 }
 
@@ -1314,3 +1334,4 @@ input[type=file] {
 //   .cdk-overlay-container{
 //       color: blue;
 //   }
+
