@@ -20,7 +20,7 @@
                     <mat-icon class="application-icon">contacts</mat-icon>
                   </span>
                   <div class="notification-item__data-box">
-                    <p class="notification-item__data">New Candidate Applied for </p>
+                    <p class="notification-item__data">New Application </p>
                     <p *ngIf="notification.contractTitle">Job: {{notification.contractTitle}}</p>
                   </div>
                   <span class="notification-item__time">{{notification._created_at | date: 'hh:mm a'}}</span>
@@ -69,7 +69,7 @@
                       <img src="../../../assets/icons/notification-scoring.png" alt="">
                   </span>
                   <div class="notification-item__data-box">
-                    <p class="notification-item__data">Scoring Note Mention</p>
+                    <p class="notification-item__data">New Scoring Mention</p>
                     <p class="notification-item__data-text">Job: {{notification.contractTitle}}</p>
                       <p class="notification-item__data-text">Final verdicts: {{notification.FinalVerdictNotes}}</p>
                   </div>
