@@ -189,8 +189,43 @@
   padding: 10px;
   border-bottom: 1px solid rgb(96, 96, 206);
 }
-.approver-status{
+.approver-status {
   display: flex;
   justify-content: space-between;
   padding:10px;
 }
+
+.published-jobs {
+  display:flex;
+  width: 300px;
+  margin-left: 10px;
+  padding: 10px;
+  justify-content: space-between;
+  border-radius: 4px;
+  border: 1px solid #A0A0A0;
+}
+
+.hiring-target p:last-child{
+  font-weight: bold;
+}
+
+.target-header{
+  margin-bottom: 10px;
+}
+.play-arrow {  
+  transform: rotate(90deg);
+}
+
+.likelihood-achieve{
+  margin-top:-5px;
+}
+.likelihood-percentage {
+  display: flex;
+  justify-content: center;
+}
+.percentages{
+  border: 2px solid rgb(36, 32, 32);
+  text-align: center;
+  width:50px; 
+}
+ 

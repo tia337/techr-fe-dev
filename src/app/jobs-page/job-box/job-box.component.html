@@ -109,5 +109,26 @@
           <span>Yes</span>
       </div>
     </div>
-  </div> 
+  </div>
+  
+  <div class="published-jobs" *ngIf="status ==='none'">
+    <div class="hiring-target">
+      <p >Hiring Target:</p>
+      <p>Nov 2017</p>
+    </div>
+    <div class="likelihood-achieve">
+      <p >Likelihood to achieve <mat-icon class="play-arrow">play_arrow</mat-icon></p> 
+      <div class="likelihood-percentage">
+        <div class="percentages"> 
+          <p>0%</p>
+          <p>25%</p>
+          <p>50%</p>
+          <p>75%</p>
+          <p>90%</p>
+          <p>100%</p>
+        </div>
+      </div>
+    </div>   
+  </div>  
 </div>
+
