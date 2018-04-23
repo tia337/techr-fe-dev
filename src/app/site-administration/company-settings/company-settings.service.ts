@@ -8,6 +8,32 @@ export class CompanySettingsService {
 
 	erpBaseLink;
 	logoUpdate: EventEmitter<any> = new EventEmitter();
+	private tableRows = [
+		{
+			stagePercentage: 10,
+			stageDescription: 'Job published on relevant job boards'
+		},
+		{
+			stagePercentage: 25,
+			stageDescription: 'Qualified applicants identified'
+		},
+		{
+			stagePercentage: 40,
+			stageDescription: 'Qualified applicants scheduled to phone interview'
+		},
+		{
+			stagePercentage: 70,
+			stageDescription: 'Qualified applicants scheduled to F2F interview'
+		},
+		{
+			stagePercentage: 90,
+			stageDescription: 'Job Offerd'
+		},
+		{
+			stagePercentage: 100,
+			stageDescription: 'Job offer Accepted'
+		}
+	];
 
 	constructor(private _parse: Parse) {
 		this.erpBaseLink = _parse.ErpCompanyPageLink;
@@ -93,5 +119,13 @@ export class CompanySettingsService {
 		const client = this._parse.getCurrentUser().get('Client_Pointer');
 		client.set('erpPageStyle', val);
 		client.save();
+	}
+
+	getTableRows() {
+		return [...this.tableRows];
+	}
+
+	addNewTableRow() {
+
 	}
 }

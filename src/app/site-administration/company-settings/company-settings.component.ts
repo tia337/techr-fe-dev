@@ -24,6 +24,9 @@ import { ContactUsComponent } from "app/contact-us/contact-us.component";
 })
 export class CompanySettingsComponent implements OnInit {
 
+	tableRows;
+	editTableMode = false;
+
 	isInCompany = true;
 	curLogo: any;
 	logo: any;
@@ -106,6 +109,7 @@ export class CompanySettingsComponent implements OnInit {
 			this.companyBenefits = '';
 
 		}
+		this.tableRows = this._CompanySettingsService.getTableRows();
 	}
 
 	saveSettings() {

@@ -140,6 +140,31 @@
                 </div>
             </div>
         </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Pipeline Stage Configuration
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="table-wrapper">
+                <table class="pipeline-stage-table">
+                    <tr>
+                        <th>Likely to fill %</th>
+                        <th>Description of stage</th>
+                    </tr>
+                    <tr *ngFor="let tableRow of tableRows"> 
+                        <td class="stage-percentage">{{tableRow.stagePercentage}}%</td>
+                        <td class="stage-description">{{tableRow.stageDescription}}</td>
+                    </tr>
+                </table>
+                <div class="edit-table">
+                    <button mat-raised-button color="primary">Edit</button>
+                    <button mat-raised-button color="primary">Add likelihood stage</button>
+                </div>
+            </div>
+            
+
+        </mat-expansion-panel>
     </mat-accordion>
 </div>
 <div class="triangle-wrap">

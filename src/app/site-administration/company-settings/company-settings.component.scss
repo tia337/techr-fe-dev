@@ -8,6 +8,57 @@ $dashed-border: 1px dashed #ccc;
     color: white;
 }
 
+.table-wrapper{
+    display: flex;
+    align-items: center;
+}
+
+.edit-table{
+    display:flex;
+    flex-direction: column;
+    align-self: flex-start;
+    margin-left: 10px;
+}
+
+.edit-table button{
+    margin-bottom:10px;
+}
+.pipeline-stage-table{
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+.pipeline-stage-table td, .pipeline-stage-table th{
+    border: 1px solid #dddddd;
+    padding: 7px;
+}
+
+
+
+.pipeline-stage-table tr:nth-child(odd){
+    background-color: #bec1c7;
+
+}
+.pipeline-stage-table tr:nth-child(even){
+    background-color: #e8ebf1;
+
+
+}
+
+.pipeline-stage-table th{
+    background-color: #6a82ad;
+    color:white;
+    text-align: left;
+}
+
+.stage-percentage {
+    text-align: center;
+}
+.stage-description {
+    text-align: left;
+}
+
+
 input {
     width: 100%;
     border: 1px solid #eeeeee;
