@@ -140,3 +140,370 @@ app-chat .dropdown-menu {
 .hidden {
     display: none;
 }
+
+// NEW THEME STYLES START
+
+
+.new {
+    font-family: 'Roboto Condensed', sans-serif!important;
+}
+
+.new header {
+    background: #FAFAFA!important;
+    padding: 5px 0;
+    border-bottom:none;
+}
+
+.new header .logo {
+    border: 0.5px solid #E0E0E0;
+    background: #EEEEEE;
+    padding: 0 15px;
+    border-radius: 0px;
+}
+
+.new .cartamount {
+    color: #616161!important;
+    border-left: 1px solid #94a4b5!important;
+}
+
+.new .settings-icon {
+    color: #616161!important;
+}
+
+.new header .buttons-wrap .profile-icons-wrap .notifications-icon {
+    color: #616161!important;
+    margin-top: -2px!important;
+    margin-left: -6px!important;
+}
+
+.new header .buttons-wrap .profile-icons-wrap .shopping-cart-icon {
+    color: #616161!important;
+}
+
+.new header .buttons-wrap .profile-icons-wrap .profile-span .user-name {
+    cursor: pointer;
+    color: #616161!important;
+    font-family: 'Roboto Condensed', sans-serif!important;
+    margin-left: 20px!important;
+}
+
+.new header .buttons-wrap .profile-icons-wrap .notifications-span-count {
+    background: #E64A19!important;
+    top: 8px!important;
+}
+
+.new header .buttons-wrap .sign-out-btn {
+    background-color: #263238!important;
+    &:hover {
+        background: #007ab6!important;
+    }
+}
+
+.new .login-page-content .top-block .logo-name-container {
+    display: none!important;
+}
+
+.new .main-nav .sidenav {
+    background: none!important;
+    background-color: #616161!important;
+}
+
+.new .main-nav .sidenav .sidenav-toggle {
+    background: none!important;    
+    background-color: #616161!important;
+}
+
+.new .checkbox:checked + .pin__track {
+    background: #B2EBF2!important;
+}
+
+.new .checkbox:checked + .pin__track .pin {
+    background: #fafafa!important;
+}
+
+.new .checkbox:checked + .pin__track .pin__component--top {
+    background: #00ACC1!important;
+}
+
+.new .pin__component--top:before {
+    border-bottom: 2px solid #fff!important;
+}
+
+.new .checkbox:checked + .pin__track .pin__component--top:after {
+    border-top: 2px solid #00ACC1!important;
+}
+
+.checkbox:checked + .pin__track .pin__component--bottom {
+    border-top: 6px solid #00acc1!important;
+}
+
+.new .pin__track {
+    background: #0097A7!important;
+}
+
+.new .pin {
+    background: #00838F!important;
+}
+
+.new .pin__component--top {
+    background: #fff!important;
+}
+
+.new .pin__component--top:before {
+    border-bottom: 2px solid #4dadc2 !important;
+}
+
+.new .pin__component--top:after {
+    border-top: 2px solid #fff!important;
+}
+
+.new .main-nav .sidenav .sidenav-content-inner .side-nav ul span li {
+    color: #ECEFF1!important;
+    border-bottom: 2px dotted #94a4b5 !important;
+    transition: .1s all ease-in-out!important;
+    // font-family: 'Roboto Condensed', sans-serif!important;
+    letter-spacing: 0.4px!important;
+}
+
+.new .main-nav .sidenav .sidenav-content-inner .team-section .team-section-header,
+.new .main-nav .sidenav .sidenav-content-inner .team-members .team-member,
+.new .main-nav .sidenav .sidenav-content-inner .side-nav .invite-button {
+    color: #ECEFF1!important;
+}
+
+.new .main-nav .sidenav .sidenav-content-inner .team-members .team-member-status.offline {
+    border: 2px solid #ECEFF1!important;
+}
+
+.new .main-nav .sidenav .sidenav-content-inner .team-members .team-member-status.online {
+    background: #43A047!important;
+}
+
+.new .main-nav .sidenav .sidenav-content-inner .side-nav .func-buttons,
+.new .main-nav .sidenav .sidenav-content-inner .side-nav .invite-button {
+    border-bottom: 2px dotted #94a4b5 !important;
+    transition: .1s all ease-in-out!important;
+    font-family: 'Roboto Condensed', sans-serif!important;
+    letter-spacing: 0.4px!important;
+}
+
+.new .main-nav .sidenav .sidenav-content-inner .side-nav .func-buttons:hover,
+.new .main-nav .sidenav .sidenav-content-inner .side-nav ul span li:hover,
+.new .main-nav .sidenav .sidenav-content-inner .side-nav .invite-button:hover {
+    border-bottom: 2px dotted transparent!important;
+}
+
+.new .main-nav .sidenav .sidenav-toggle mat-icon {
+    color: #ECEFF1!important;
+}
+
+.new .main-content {
+    background-color: #CFD8DC!important;
+}
+
+.new .timeline-day-item {
+    min-height: 70px!important;
+    margin-bottom: 60px!important;
+    background: #FAFAFA !important;
+    border:none!important;
+    border-radius: 0!important;
+    transition: .3s all ease-in-out!important;
+    &:hover {
+        opacity: .7!important;
+    }
+}
+
+.new .timeline-day-items-wrap {
+    padding-top: 115px!important;
+}
+
+.new .timeline-day-item-image img {
+    border-radius: 50%!important;
+}
+
+.new .timeline-day-item-image {
+    margin-top: -75px!important;
+    margin-left: -38px!important;
+}
+
+.new .timeline-day-date {
+    border: none!important;
+    background: #FAFAFA !important;
+    width: 90px!important;
+    height: 90px!important;
+}
+
+.new .timeline-day-date-stripe {
+    background: #fafafa!important;
+}
+
+.new .main-content .header {
+    border-bottom: 1px solid #adb9ca
+}
+
+.new .team-member-status {
+    border-right: 1px solid #455A64!important;
+    color: #455A64!important;
+}
+
+.new .team-member-name {
+    color: #455A64!important;
+}
+
+.new .info-block-text {
+    color: #455A64!important;
+}
+
+.new .info-block-text-name {
+    font-size: 16px!important;
+    color: #212121!important;
+}
+
+.new .message-block-date span {
+    color: #212121!important;
+    font-size: 15px!important;
+}
+
+.new .message-block-text {
+    font-family: 'Slabo 27px', serif;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+.new .message-block-message-name-date {
+    font-size: 16px!important;
+}
+
+.new .message-input-block-fake {
+    font-family: 'Slabo 27px', serif;
+    letter-spacing: 0.5px;
+    color: #212121!important;
+    letter-spacing: 0.5px;    
+    font-size: 16px!important;
+}
+
+.new .message-input-block {
+    border:none!important;
+    border-radius: 0!important;
+}
+
+.new .options-button{
+    border: 1px solid #adb9ca!important;
+    background: #fafafa!important;
+}
+
+.new .message-block-message:hover {
+    background: #ECEFF1!important;
+}
+
+.new .post-job-inner-page .black-line {
+    background-color: #fafafa!important;
+    color: #424242!important;
+}
+
+.new .post-job-inner-page .black-line a {
+    border-bottom: 2px dotted #424242!important;
+}
+
+.new .options-table textarea,
+.new .options-table input {
+    box-shadow: 2px 2px 2px #757575!important;
+    border: none!important;
+}
+
+.new input.mat-input-element {
+    box-shadow: none!important;
+    background: transparent!important;
+}
+
+.new .post-job-inner-page .mat-button-toggle-group,
+.new .post-job-inner-page .mat-button-toggle-standalone,
+.new .post-job-inner-page .mat-fab:not([class*=mat-elevation-z]), 
+.new .post-job-inner-page .mat-mini-fab:not([class*=mat-elevation-z]), 
+.new .post-job-inner-page .mat-raised-button:not([class*=mat-elevation-z]) {
+    background: #fafafa!important;
+    border-radius: 0!important;
+}
+
+.new .post-job-inner-page .first-section .left-section .options-table .switch input:checked + .slider {
+    background-color: #00838F!important;
+}
+
+.new .post-job-inner-page .top-create-job-btn .create-button {
+    background-color: #00838F!important;
+    transition: .3 all ease-in-out!important;
+    &:hover {
+        background: #00ACC1!important;
+    }
+}
+
+.new #tabs {
+    background-color: #FAFAFA !important;
+}
+
+.new #tab_one button {
+    background-color: #e0e0e0!important;
+}
+
+.new .login-page-content {
+    .mat-button-toggle-group, .mat-button-toggle-standalone {
+        background: #FAFAFA!important;
+        color: #424242!important;
+    }
+    .jobs-inner-page .pagination_block button {
+        color: #424242!important;
+    }
+}
+
+.new .job-details-inner-page .job-dashboards-wrap .job-offer {
+    background: #fafafa!important;
+}
+
+.new .job-details-inner-page .job-details-tabs .job-details-tab {
+    background: #fafafa!important;
+    color:#424242;
+}
+
+.new .job-details-inner-page .job-details-tabs {
+    border-bottom: none!important;
+}
+
+.new header .logo {
+    cursor: pointer;
+    max-height: 100%;
+    margin-left: 0!important;
+    top: 0;
+    outline: none;
+    padding: 0px 58px;
+}
+
+
+.new header  {
+    height: 60px;
+    padding: 0;
+}
+
+.new header .buttons-wrap .profile-icons-wrap .shopping-cart-icon {
+    font-size: 2.35em!important;
+    margin-bottom: -5px;
+}
+
+.new .cartamount {
+    padding: 2px 8px!important;
+    border-radius: 0!important;
+    margin-right: 5px!important;
+}
+
+.new header .buttons-wrap .profile-icons-wrap .option-span .settings-span, 
+.new header .buttons-wrap .profile-icons-wrap .notifications-span {
+    padding: 0px 15px 0px 15px!important;
+}
+
+.new .settings-icon {
+    color: #616161!important;
+}
+
+
+
+
+// NEW THEME STYLES END
