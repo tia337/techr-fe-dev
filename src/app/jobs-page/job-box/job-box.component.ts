@@ -24,6 +24,8 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 	@Output('statusChange') statusChange: EventEmitter<any> = new EventEmitter();
 	@ViewChild('menu') menu: ElementRef;
 	@ViewChild('jobBox') jobBox: ElementRef;
+
+	showLikelihood= false;
 	private _stages = [];
 	stages = [
 		{

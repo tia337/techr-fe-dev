@@ -6,6 +6,7 @@
 .job-box-wrapper{
   display:flex;
 }
+
 .job-offer {
   //height: 171px;
   //max-height: 500px;
@@ -183,12 +184,14 @@
   text-align: center;
   padding:10px;
 }
+
 .approval-header{
   display: flex;
   justify-content: space-between;
   padding: 10px;
   border-bottom: 1px solid rgb(96, 96, 206);
 }
+
 .approver-status {
   display: flex;
   justify-content: space-between;
@@ -214,18 +217,30 @@
 }
 .play-arrow {  
   transform: rotate(90deg);
+  display: inline-block;
+  width:16px;
+  height:16px;
 }
 
 .likelihood-achieve{
-  margin-top:-5px;
+  margin-top:-8px;
 }
+
+.likelihood-achieve p {
+  cursor: pointer;
+}
+
 .likelihood-percentage {
   display: flex;
   justify-content: center;
 }
+
 .percentages{
   border: 2px solid rgb(36, 32, 32);
   text-align: center;
-  width:50px; 
+  width:50px;
 }
- 
+
+.percentage{
+  border:1px solid #ddd; 
+}
