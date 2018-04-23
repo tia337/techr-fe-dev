@@ -19,6 +19,7 @@ import { PreloaderComponent } from '../../shared/preloader/preloader.component';
 })
 export class JobBoxComponent implements OnInit, OnDestroy {
 
+	@Input('status') status;
 	@Input('contract') contract;
 	@Output('statusChange') statusChange: EventEmitter<any> = new EventEmitter();
 	@ViewChild('menu') menu: ElementRef;

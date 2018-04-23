@@ -110,8 +110,11 @@
 
   <div class="buttons-wrap">
     <mat-button-toggle-group [(ngModel)]="contractStatus" (change)="updateContracts()" [disabled]="isDataLoaded == Loading.loading">
-      <mat-button-toggle [value]="ContractStatus.active">
+      <mat-button-toggle [value]="ContractStatus.active" (click)="statusContract = 'none'">
         Published
+      </mat-button-toggle>
+      <mat-button-toggle [value]="ContractStatus.active" (click)="statusContract = 'pending'">
+        Pending Approval
       </mat-button-toggle>
       <mat-button-toggle [value]="ContractStatus.archived">
         Archived
@@ -146,7 +149,7 @@
     </div>
     <div class="jobs-wrap" *ngFor="let offer of separatedOffers[ind]">
       <div class="job-box-wrap">
-        <job-box [contract]="offer" (statusChange)="removeContractFromList($event)"></job-box>
+        <job-box [status]="statusContract" [contract]="offer" (statusChange)="removeContractFromList($event)"></job-box>
       </div>
     </div>
     <div *ngIf="separatedOffers.length > 11 && separatedOffers[ind].length > 2" class="pagination_block">
