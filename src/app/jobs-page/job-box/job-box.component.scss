@@ -205,7 +205,7 @@
   padding: 10px;
   justify-content: space-between;
   border-radius: 4px;
-  border: 1px solid #A0A0A0;
+  // border: 1px solid #A0A0A0;
 }
 
 .published-job-box__hiring-target p:last-child{
@@ -230,17 +230,60 @@
   cursor: pointer;
 }
 
-.likelihood-percentage {
-  display: flex;
-  justify-content: center;
+.likelihood-info-icon {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 50%;
+  background-color: beige;
+  width: 22px;
+  height: 22px;
+  margin-left: 10px;
+  padding: 3px;
+  text-align: center; 
 }
 
-.percentages{
+
+
+.likelihood-percentages {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.likelihood-info {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 10px;
+  line-height: 2em;
+  z-index: 1;
+  position: absolute;
+  top: -30px;
+  left: -120px;
+  // text-align: center;
+  width:300px;
+  background-color: beige;
+}
+.likelihood-info p{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.percentages {
   border: 2px solid rgb(36, 32, 32);
   text-align: center;
   width: 50px;
 }
 
-.percentage{
+.percentage {
   border: 1px solid #ddd; 
 }
+
+.likelihood-percentage {
+  font-weight: bold;
+  text-align: left; 
+  margin-right: 7px;
+}
+

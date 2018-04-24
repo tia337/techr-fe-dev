@@ -26,6 +26,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 	@ViewChild('jobBox') jobBox: ElementRef;
 
 	showLikelihood= false;
+	showLikelihoodInfo = false;
 	private _stages = [];
 	stages = [
 		{
