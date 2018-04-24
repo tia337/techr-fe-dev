@@ -27,6 +27,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 
 	showLikelihood= false;
 	showLikelihoodInfo = false;
+	selectedLikelihoodPercentage = '70%';
 	private _stages = [];
 	stages = [
 		{
@@ -363,7 +364,12 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		} );
 	}
 
-	ngOnDestroy() {
+	onLikelihoodPercentageSelect(event) {
+		this.selectedLikelihoodPercentage = event.target.innerHTML;
+		this.showLikelihood = false;
+	}
+
+	ngOnDestroy() { 
 		this._socket.removeAllListeners('pipelineMainCountUpdate');
 	}
 

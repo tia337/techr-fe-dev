@@ -220,10 +220,12 @@
   display: inline-block;
   width: 16px;
   height: 16px;
+  line-height: 0.5;
+
 }
 
 .published-job-box__likelihood-achieve{
-  margin-top: -8px;
+  margin-top: -4px;
 }
 
 .published-job-box__likelihood-achieve p {
@@ -285,5 +287,12 @@
   font-weight: bold;
   text-align: left; 
   margin-right: 7px;
+}
+
+.selected-likelihood-percentage {
+  font-weight: bolder;
+  font-size: 20px;
+  margin-top: 20px;
+  text-align: center;
 }
 
