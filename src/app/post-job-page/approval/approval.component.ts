@@ -19,6 +19,7 @@ import { RootVCRService } from '../../root_vcr.service';
   export class ApprovalComponent implements OnInit {
 
     approversHidden = true;
+    request = 'pending';
     public teamMembers: Array<any> = [];
     public checkedTeamMembers: Array<any> = [];
   
@@ -51,9 +52,9 @@ import { RootVCRService } from '../../root_vcr.service';
             team[i] = {
                 name: `${teamMember.get('firstName')} ${teamMember.get('lastName')}`,
                 teamMemberPoint: teamMember.toPointer(),
+                id: teamMember.id,
                 checked: false,
-                email: false,
-                id: teamMember.id
+                type: 'user',
             };
             i++;
             });
@@ -77,7 +78,7 @@ import { RootVCRService } from '../../root_vcr.service';
             this.checkedTeamMembers.push({
                 name: email,
                 id: id,
-                email: true
+                type: 'email',
             });
         }
     } 
@@ -89,13 +90,17 @@ import { RootVCRService } from '../../root_vcr.service';
                 this.checkedTeamMembers.splice(id, 1);   
             }
         });
-        if (member.email === false) {
+        if (member.type === 'user') {
             this.teamMembers.forEach(teamMember => {
                 if (teamMember.id === member.id) {
                     teamMember.checked = false;
                 }
             });
         }
+    }
+
+    sendRequest() {
+        this.closeRequestApproval();
     }
 
     closeRequestApproval() {
