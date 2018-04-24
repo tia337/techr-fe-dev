@@ -177,13 +177,23 @@
                             *ngIf="editStageEnabled"                        class="pipeline-stage-table_set-description">
                             <input type="text" [value]="tableRow.stageDescription">
                         </td>
-
+                    </tr>
+                    <tr class="pipeline-stage-table_add-likelihood-stage"                            *ngIf="newLikelihood"> 
+                        <td>
+                            <input type="text" class="add-likelihood-stage_new-value"                   placeholder="50%">
+                        </td>
+                        <td>
+                            <input type="text" class="add-likelihood-stage_new-description"             placeholder="Description of stage">
+                        </td>
                     </tr>
                 </table>
                 <div class="pipeline-stage-table_func-buttons">
                     <button mat-raised-button color="primary" 
                         (click)="onEditStageClick()">Edit</button>
-                    <button mat-raised-button color="primary">Add likelihood stage</button>
+                    <button mat-raised-button color="primary"
+                        (click)="onAddLikelihoodStage()">
+                        Add likelihood stage
+                    </button>
                 </div>
             </div>
         </mat-expansion-panel>

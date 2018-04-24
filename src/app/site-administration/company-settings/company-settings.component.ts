@@ -27,6 +27,7 @@ export class CompanySettingsComponent implements OnInit {
 	tableRows;
 	editTableMode = false;
 	editStageEnabled = false;
+	newLikelihood = false;
 
 	@ViewChild('inputStage') inputStage;
 
@@ -232,5 +233,8 @@ export class CompanySettingsComponent implements OnInit {
 
 	onEditStageClick() {
 		this.editStageEnabled = !this.editStageEnabled;
+	}
+	onAddLikelihoodStage() {
+		this.newLikelihood =! this.newLikelihood; 
 	}
 }

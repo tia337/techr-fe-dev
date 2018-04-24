@@ -54,6 +54,21 @@ $dashed-border: 1px dashed #ccc;
     width:100%;
 }
 
+.pipeline-stage-table_add-likelihood-stage > td {
+    text-align: center;
+}
+
+.add-likelihood-stage_new-value{
+    width:45px;
+    text-align: center;
+    padding: 3px 5px;
+}
+
+.add-likelihood-stage_new-description {
+    padding: 3px 5px;
+    width:100%;
+}
+
 .pipeline-stage-table_func-buttons {
     display: flex;
     flex-direction: column;
