@@ -89,9 +89,9 @@
     </div>
   </div>
 
-  <div class="pending-jobs" *ngIf="status ==='pending'">
-    <span class="pending-header">3 Pending Approvals</span>
-    <div class="approval-info">
+  <div class="pending-job-box" *ngIf="status === 'pending'">
+    <span class="pending-job-box__header">3 Pending Approvals</span>
+    <div class="pending-job-box__approval-info">
       <div class="approval-header">
         <span>Approver</span>
         <span>Approved</span>
@@ -111,13 +111,13 @@
     </div>
   </div>
   
-  <div class="published-jobs" *ngIf="status === 'none'">
-    <div class="hiring-target">
+  <div class="published-job-box" *ngIf="status === 'none'">
+    <div class="published-job-box__hiring-target">
       <p >Hiring Target:</p>
       <p>Nov 2017</p>
     </div>
-    <div class="likelihood-achieve">
-      <p (click)="!showLikelihood = !showLikelihood" >Likelihood to achieve <mat-icon class="play-arrow">play_arrow</mat-icon></p> 
+    <div class="published-job-box__likelihood-achieve">
+      <p (click)="showLikelihood = !showLikelihood" >Likelihood to achieve <mat-icon class="play-arrow">play_arrow</mat-icon></p> 
       <div class="likelihood-percentage">
         <div class="percentages" *ngIf="showLikelihood">  
           <p class="percentage" style="background-color:rgb(250, 126, 55); color:white">0%</p>
