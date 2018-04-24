@@ -17,7 +17,7 @@
             <button type="submit" class="create-button nowrap" *ngIf="editable && contractObj && contractObj.get('status') != 3" (click)="showEditAlert()">Save Changes</button>
             <button class="create-button nowrap" *ngIf="editable && contractObj && contractObj.get('status') == 3" (click)="postJob()">
                 <!-- <span *ngIf="postingLoader === true"> -->
-                <
+                
                 Post Job
             </button>
         </div>
@@ -421,10 +421,75 @@
                 </table>
             </section>
             <!-- !!!!RIGHT SECTION START!!!! -->
-            <!--<section class="right-section">-->
-                <!--<div *ngIf="editable" class="skills-buttons">-->
-                <!--</div>-->
-            <!--</section>-->
+            <section class="right-section">
+                <div class="settings-wrap">
+                    <div class="settings-item">
+                        <span class="settings-item__title">Department</span>
+                        <div class="settings-item__select-holder">
+                            <p class="settings-item__button" 
+                                    *ngIf="department === ''"
+                                    (click)="departmentListShown = true">Select Department</p>
+                            <p class="settings-item__button" 
+                                    *ngIf="department !== ''"
+                                    (click)="departmentListShown = true">{{department}}</p>                        
+                            <ul class="settings-item__office-list" 
+                                *ngIf="departmentListShown" 
+                                (clickOutside)="departmentListShown = false"
+                                [delayClickOutsideInit]="true">
+                                <li (click)="department = 'General & Administration'; departmentListShown = false;">General & Administration</li>
+                                <li (click)="department = 'Marketing'; departmentListShown = false;">Marketing</li>
+                                <li (click)="department = 'Sales'; departmentListShown = false;">Sales</li>
+                                <li (click)="department = 'R&D'; departmentListShown = false;">R&D</li>
+                                <li (click)="department = 'Hardware Engineering'; departmentListShown = false;">Hardware Engineering</li>
+                                <li (click)="department = 'Software Engineering'; departmentListShown = false;">Software Engineering</li>
+                                <li (click)="department = 'Operations'; departmentListShown = false;">Operations</li>
+                                <li (click)="department = 'Human Resources'; departmentListShown = false;">Human Resources</li>                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item__title">Office</span>
+                        <div class="settings-item__select-holder">
+                            <p class="settings-item__button" 
+                                    *ngIf="office === ''"
+                                    (click)="officeListShown = true">Select Office</p>
+                            <p class="settings-item__button" 
+                                    *ngIf="office !== ''"
+                                    (click)="officeListShown = true">{{office}}</p>                        
+                            <ul class="settings-item__office-list" 
+                                *ngIf="officeListShown"
+                                (clickOutside)="officeListShown = false"
+                                [delayClickOutsideInit]="true">
+                                <li (click)="office = 'Warsaw'; officeListShown = false;">Warsaw</li>
+                                <li (click)="office = 'Kiev'; officeListShown = false;">Kiev</li>
+                                <li (click)="office = 'Madrid'; officeListShown = false;">Madrid</li>
+                                <li (click)="office = 'California'; officeListShown = false;">California</li>
+                                <li (click)="office = 'Sevilla'; officeListShown = false;">Sevilla</li>
+                                <li (click)="office = 'Toronto'; officeListShown = false;">Toronto</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item__title">Hiring target</span>
+                        <mat-form-field class="example-full-width" style="visibility: hidden; position: absolute; width: 0;">
+                            <input matInput  #settingsDatePickerInput [matDatepicker]="settingsDatePicker" placeholder="Choose a date">
+                            <mat-datepicker #settingsDatePicker></mat-datepicker>
+                        </mat-form-field>
+                        <button mat-raised-button class="settings-item__button width_40" 
+                                *ngIf="settingsDatePickerInput.value  === ''"
+                                (click)="settingsDatePicker.open(); $event.preventDefault();">Select Date</button>
+                        <button mat-raised-button class="settings-item__button width_40" 
+                                *ngIf="settingsDatePickerInput.value  !== ''"
+                                (click)="settingsDatePicker.open(); $event.preventDefault();">{{settingsDatePickerInput.value}}</button>                        
+                        <span class="settings-item__notice">Internal visibility only</span>
+                    </div>
+                    <div class="settings-item">
+                        <span class="settings-item__title">Purchase order</span>
+                        <input type="text" class="settings-item__input width_40" placeholder="Enter PO/Internal Ref">
+                        <span class="settings-item__notice">Internal visibility only</span>                        
+                    </div>
+                </div>
+            </section> 
         </section>
         <div class="black-line"><a><i>COMPANY DETAILS</i></a></div>
         <!-- COMPANY DETAILS SECTION -->

@@ -62,7 +62,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	@Input() contractObj;
 
 
-	adminLevel:number;
+	adminLevel: number;
 	requestApprovalOpened = false;
 
 	contractForm: FormGroup;
@@ -161,6 +161,11 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	toShowInfoSourcing = false;
 	toShowInfoPermit = false;
 	isJobPostShowAlert = true;
+
+	office = '';
+	officeListShown = false;
+	department = '';
+	departmentListShown = false;
 
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
 	@ViewChild('categoriesDropdown') categoriesDropdown: ElementRef;
