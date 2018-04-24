@@ -18,7 +18,7 @@ export class CompanySettingsService {
 			stageDescription: 'Qualified applicants identified'
 		},
 		{
-			stagePercentage: 40,
+			stagePercentage: 50,
 			stageDescription: 'Qualified applicants scheduled to phone interview'
 		},
 		{
@@ -37,7 +37,7 @@ export class CompanySettingsService {
 
 	constructor(private _parse: Parse) {
 		this.erpBaseLink = _parse.ErpCompanyPageLink;
-	}
+	} 
 
 	setNewSettings(website, career, logo, companyDescription, companyBenefits, greeting) {
 		console.log(website);

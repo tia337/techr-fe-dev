@@ -26,6 +26,9 @@ export class CompanySettingsComponent implements OnInit {
 
 	tableRows;
 	editTableMode = false;
+	editStageEnabled = false;
+
+	@ViewChild('inputStage') inputStage;
 
 	isInCompany = true;
 	curLogo: any;
@@ -225,5 +228,9 @@ export class CompanySettingsComponent implements OnInit {
 	}
 	setStep(index: number) {
 		this.step = index;
-	  }
+	}
+
+	onEditStageClick() {
+		this.editStageEnabled = !this.editStageEnabled;
+	}
 }
