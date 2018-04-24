@@ -132,6 +132,7 @@ import {
 	ChangePasswordComponent
 } from './company-settings/change-password/change-password.component';
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
+import { ReportsComponent } from './reports/reports.component';
 
 
 @NgModule({
@@ -150,6 +151,7 @@ import {UserSettingsComponent} from "../user-settings/user-settings.component";
 		// AccessLevelModalComponent,
 		AccessLevelPageComponent,
 		ChangePasswordComponent,
+		ReportsComponent,
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 	],
