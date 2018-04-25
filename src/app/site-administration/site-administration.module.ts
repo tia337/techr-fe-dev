@@ -119,6 +119,7 @@ import {
 	InviteUserModule
 } from './user-management/invite-user/invite-user.module';
 
+import { ClickOutsideModule } from 'ng-click-outside';
 
 // WYSIWYG pannel
 
@@ -132,6 +133,7 @@ import {
 	ChangePasswordComponent
 } from './company-settings/change-password/change-password.component';
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
+import { ReportsComponent } from './reports/reports.component';
 
 
 @NgModule({
@@ -150,6 +152,7 @@ import {UserSettingsComponent} from "../user-settings/user-settings.component";
 		// AccessLevelModalComponent,
 		AccessLevelPageComponent,
 		ChangePasswordComponent,
+		ReportsComponent,
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 	],
@@ -173,7 +176,8 @@ import {UserSettingsComponent} from "../user-settings/user-settings.component";
 		MatInputModule,
 		MatRadioModule,
 		MatExpansionModule,
-		MatButtonModule
+		MatButtonModule,
+		ClickOutsideModule
 	],
 	providers: [
 
