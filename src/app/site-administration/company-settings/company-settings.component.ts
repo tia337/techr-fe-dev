@@ -2,6 +2,7 @@ import { Component, OnInit, Renderer } from '@angular/core';
 import { CompanySettingsService } from './company-settings.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RootVCRService } from '../../root_vcr.service';
+import { FormGroup, FormControl } from '@angular/forms';
 
 import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
@@ -31,6 +32,10 @@ export class CompanySettingsComponent implements OnInit {
 
 	@ViewChild('newPercentageValue') newPercentageValue: ElementRef;
 	@ViewChild('newDescriptionValue') newDescriptionValue: ElementRef;
+
+	@ViewChild('departmentNameInput') departmentNameInput: ElementRef;
+	departments;
+	departmentFormGroup: FormGroup;
 
 
 	isInCompany = true;
@@ -116,6 +121,8 @@ export class CompanySettingsComponent implements OnInit {
 
 		}
 		this.tableRows = this._CompanySettingsService.getTableRows();
+		this.departments = this._CompanySettingsService.getDepartments();
+		this.formGroupInit();
 	}
 
 	saveSettings() {
@@ -231,6 +238,32 @@ export class CompanySettingsComponent implements OnInit {
 	}
 	setStep(index: number) {
 		this.step = index;
+	}
+
+	formGroupInit(department = null) {
+		this.departmentFormGroup = new FormGroup({
+			'departmentName' : new FormControl(department !== null ? department.name : '')
+		});
+	}
+
+	editDepartment(department) {
+		if (department.edit) {
+			department.name = this.departmentFormGroup.value.departmentName;
+			department.edit = false;
+
+		} else {
+			this.formGroupInit(department);
+			department.edit = true;
+		}
+	}
+
+	removeDepartment(id) {
+		this.departments.forEach(department => {
+			if (department.id === id) {
+				const index = this.departments.indexOf(department);
+				this.departments.splice(index, 1);
+			}
+		});
 	}
 
 	onEditStageClick() {

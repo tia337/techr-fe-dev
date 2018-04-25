@@ -149,6 +149,41 @@
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
+                    Careers Website Page
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="carrers-website-page">
+                <div class="carrers-website-page-status"></div>
+                <div class="carrers-website-page-info">
+                    <p> All jobs (default)</p>
+                    <p> <a href="https://careers.swipein.hr/CreatechGroup">https://careers.swipein.hr/CreatechGroup</a></p>
+                </div>
+            </div>
+            <div class="carrers-departments">
+                <form class="carrers-departments-form" [formGroup]="departmentFormGroup">
+                    <p class="carrers-departments-form__header"><span>Departments</span><button type="submit" mat-raised-button color="primary">Add new department</button></p>
+                    <div class="carrers-departments-form__body" *ngFor = "let department of departments"> 
+                            <span *ngIf="!department.edit">{{department.name}}</span>
+                            <input 
+                                #departmentNameInput 
+                                *ngIf="department.edit" 
+                                class="carrers-departments-form__body__edit-department-input" 
+                                type="text" 
+                                [value]="department.name"
+                                formControlName="departmentName"
+                                (keydown.enter)="editDepartment(department)">  
+                        <p>
+                            <span class="carrers-departments-form__body_options" (click)="editDepartment(department)">Edit</span>
+                            <span class="carrers-departments-form__body_options" (click)="removeDepartment(department.id)">Remove</span>
+                            <span class="carrers-departments-form__body_options">Add subdepartments</span> 
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
                     Probability to fill job vacancy
                 </mat-panel-title>
             </mat-expansion-panel-header>

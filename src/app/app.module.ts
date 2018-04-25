@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { Gapi } from './gmail-auth2.service';
 import { TextInputHighlightModule } from 'angular-text-input-highlight';
 import { TemplatesModule } from './templates/templates.module';
@@ -112,7 +113,8 @@ const config: SocketIoConfig = {
 		TextInputHighlightModule,
 		InvitationPageModule,
 		ContactUsModule,
-		TimelineModule
+		TimelineModule,
+		ReactiveFormsModule
 	],
 	providers: [
 		SidenavService,
