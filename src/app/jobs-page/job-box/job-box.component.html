@@ -120,17 +120,21 @@
       <p (click)="showLikelihood = !showLikelihood" >Likelihood to achieve <mat-icon class="play-arrow">play_arrow</mat-icon></p> 
         
       <div class="likelihood-percentages">
-        <div class="percentages" *ngIf="showLikelihood">  
-          <p (click)="onLikelihoodPercentageSelect($event)" class="percentage" style="background-color:rgb(250, 126, 55); color:white">0%</p>
-          <p (click)="onLikelihoodPercentageSelect($event)" class="percentage" style="background-color:rgb(250, 126, 55); color:white">10%</p>
-          <p (click)="onLikelihoodPercentageSelect($event)" class="percentage" style="background-color:rgb(250, 126, 55); color:white">25%</p>
-          <p (click)="onLikelihoodPercentageSelect($event)" class="percentage" style="background-color:rgb(141, 132, 53);  color:white">50%</p>
-          <p (click)="onLikelihoodPercentageSelect($event)" class="percentage" style="background-color:rgb(61, 156, 24); color:white">70%</p>
-          <p (click)="onLikelihoodPercentageSelect($event)" class="percentage" style="background-color:rgb(61, 156, 24); color:white">90%</p>
-          <p (click)="onLikelihoodPercentageSelect($event)" class="percentage" style="background-color:rgb(61, 156, 24); color:white">100%</p>
+        <div class="percentages" 
+             *ngIf="showLikelihood"
+             (clickOutside)="showLikelihood = false"
+             [exclude]="'.percentage'"
+             [delayClickOutsideInit]="true">  
+          <p (click)="onLikelihoodPercentageSelect(0)" class="percentage" style="background-color:rgb(250, 126, 55); color:white">0%</p>
+          <p (click)="onLikelihoodPercentageSelect(10)" class="percentage" style="background-color:rgb(250, 126, 55); color:white">10%</p>
+          <p (click)="onLikelihoodPercentageSelect(25)" class="percentage" style="background-color:rgb(250, 126, 55); color:white">25%</p>
+          <p (click)="onLikelihoodPercentageSelect(50)" class="percentage" style="background-color:rgb(141, 132, 53); color:white">50%</p>
+          <p (click)="onLikelihoodPercentageSelect(70)" class="percentage" style="background-color:rgb(61, 156, 24); color:white">70%</p>
+          <p (click)="onLikelihoodPercentageSelect(90)" class="percentage" style="background-color:rgb(61, 156, 24); color:white">90%</p>
+          <p (click)="onLikelihoodPercentageSelect(100)" class="percentage" style="background-color:rgb(61, 156, 24); color:white">100%</p>
         </div>
         <div class="likelihood-info" *ngIf="showLikelihoodInfo" (click)="showLikelihoodInfo = !showLikelihoodInfo">
-            <p><span class="likelihood-percentage" >10%</span> <span class="likelihood-percentage-info">Job published on relevant job boards</span></p>
+            <p><span class="likelihood-percentage">10%</span> <span class="likelihood-percentage-info">Job published on relevant job boards</span></p>
             <p><span class="likelihood-percentage">25%</span> <span class="likelihood-percentage-info">Qualified applicants identified</span></p>
             <p><span class="likelihood-percentage">50%</span> <span class="likelihood-percentage-info">Qualified applicants scheduled to phone interview</span></p>
             <p><span class="likelihood-percentage">70%</span> <span class="likelihood-percentage-info">Qualified applicants scheduled to F2F interview</span></p>
@@ -138,7 +142,9 @@
             <p><span class="likelihood-percentage">100%</span> <span class="likelihood-percentage-info">Job offer accepted</span></p>
           </div>
         <div class="likelihood-info-icon" title="Info" *ngIf="showLikelihood" (click)="showLikelihoodInfo = !showLikelihoodInfo">i</div>
-        <span class="selected-likelihood-percentage" *ngIf="!showLikelihood">{{selectedLikelihoodPercentage}}</span>   
+        <span class="selected-likelihood-percentage percentage_orange" *ngIf="!showLikelihood && selectedLikelihoodPercentage < 50">{{selectedLikelihoodPercentage}}%</span>   
+        <span class="selected-likelihood-percentage percentage_light-green" *ngIf="!showLikelihood && selectedLikelihoodPercentage === 50">{{selectedLikelihoodPercentage}}%</span>   
+        <span class="selected-likelihood-percentage percentage_green" *ngIf="!showLikelihood && selectedLikelihoodPercentage > 50">{{selectedLikelihoodPercentage}}%</span>   
       </div> 
  
     </div>

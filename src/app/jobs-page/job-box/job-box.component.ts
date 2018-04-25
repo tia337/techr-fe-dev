@@ -12,6 +12,7 @@ import { Socket } from 'ng-socket-io';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { PreloaderComponent } from '../../shared/preloader/preloader.component';
 
+
 @Component({
 	selector: 'job-box',
 	templateUrl: './job-box.component.html',
@@ -27,7 +28,11 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 
 	showLikelihood= false;
 	showLikelihoodInfo = false;
-	selectedLikelihoodPercentage = '70%';
+	selectedLikelihoodPercentage:number = 70;
+	percentageGreen = false;
+	percentageOrange = false;
+	percentageNetural = false;
+
 	private _stages = [];
 	stages = [
 		{
@@ -364,12 +369,12 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		} );
 	}
 
-	onLikelihoodPercentageSelect(event) {
-		this.selectedLikelihoodPercentage = event.target.innerHTML;
+	onLikelihoodPercentageSelect(value) {
+		this.selectedLikelihoodPercentage = value;
 		this.showLikelihood = false;
 	}
 
-	ngOnDestroy() { 
+	ngOnDestroy() {
 		this._socket.removeAllListeners('pipelineMainCountUpdate');
 	}
 

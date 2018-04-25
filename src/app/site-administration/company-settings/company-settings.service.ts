@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs/Subject';
 import { Injectable, EventEmitter } from '@angular/core';
 import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
@@ -35,9 +36,10 @@ export class CompanySettingsService {
 		}
 	];
 
+
 	constructor(private _parse: Parse) {
 		this.erpBaseLink = _parse.ErpCompanyPageLink;
-	} 
+	}
 
 	setNewSettings(website, career, logo, companyDescription, companyBenefits, greeting) {
 		console.log(website);
@@ -128,4 +130,6 @@ export class CompanySettingsService {
 	addNewTableRow() {
 
 	}
+
+
 }

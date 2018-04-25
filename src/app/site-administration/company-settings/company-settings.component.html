@@ -162,8 +162,7 @@
                         <td *ngIf="!editStageEnabled" class="stage-percentage">{{tableRow.stagePercentage}}%</td>
                         <td *ngIf="editStageEnabled">
                             <div class="pipeline-stage-table_edit-stage-percentage-box">
-                                <input type="text" [value]="tableRow.stagePercentage"
-                                #inputStage>
+                                <input type="text" [value]="tableRow.stagePercentage">
                                 <div class="pipeline-stage-table_set-value">
                                     <p class="set-value" (click)="tableRow.stagePercentage = tableRow.stagePercentage + 5">+</p>
                                     <p class="set-value" (click)="tableRow.stagePercentage = tableRow.stagePercentage - 5">-</p>
@@ -174,16 +173,16 @@
                             {{tableRow.stageDescription}}
                         </td>
                         <td 
-                            *ngIf="editStageEnabled"                        class="pipeline-stage-table_set-description">
+                            *ngIf="editStageEnabled" class="pipeline-stage-table_set-description">
                             <input type="text" [value]="tableRow.stageDescription">
                         </td>
                     </tr>
-                    <tr class="pipeline-stage-table_add-likelihood-stage"                            *ngIf="newLikelihood"> 
+                    <tr class="pipeline-stage-table_add-likelihood-stage" *ngIf="newLikelihood"> 
                         <td>
-                            <input type="text" class="add-likelihood-stage_new-value"                   placeholder="50%">
+                            <input #newPercentageValue type="text" class="add-likelihood-stage_new-value" placeholder="50%">
                         </td>
                         <td>
-                            <input type="text" class="add-likelihood-stage_new-description"             placeholder="Description of stage">
+                            <input #newDescriptionValue type="text" class="add-likelihood-stage_new-description" placeholder="Description of stage">
                         </td>
                     </tr>
                 </table>
