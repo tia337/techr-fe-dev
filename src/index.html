@@ -24,6 +24,25 @@
     <script type="text/javascript" src="//platform.linkedin.com/in.js">
         api_key: 77nkibz74seedy
         authorize: false
+        onLoad: onLinkedInLoad
+    </script>
+
+    <script type="text/javascript">
+        function onLinkedInLoad() {
+          IN.Event.on(IN, "auth", getProfileData);
+        }
+
+        function getProfileData() {
+          IN.API.Raw("/people/~").result(onSuccess).error(onError);
+        }
+
+        function onSuccess(data) {
+          console.log(data);
+        }
+
+        function onError(error) {
+          console.error(error);
+        }
     </script>
 
     <!-- Google auth -->
