@@ -36,6 +36,51 @@ export class CompanySettingsService {
 		}
 	];
 
+	private departments = [
+		{
+			id: 'general_administration_1',
+			name: 'General & Administration',
+			edit: false,
+			subDepartments: []
+		},
+		{
+			id: 'marketing_2',
+			name: 'Marketing',
+			edit: false,
+			subDepartments: []
+		},
+		{
+			id: 'sales_3',
+			name: 'Sales',
+			edit: false,
+			subDepartments: []
+		},
+		{
+			id: 'r_d_engineering_4',
+			name: 'R&D and Engineering',
+			edit: false,
+			subDepartments: []
+		},
+		{
+			id: 'software_engineering_5',
+			name: 'Software Engineering',
+			edit: false,
+			subDepartments: []
+		},
+		{
+			id: 'operations_6',
+			name: 'Operations',
+			edit: false,
+			subDepartments: []
+		},
+		{
+			id: 'human_resource_7',
+			name: 'Human Resource',
+			edit: false,
+			subDepartments: []
+		},
+	];
+
 
 	constructor(private _parse: Parse) {
 		this.erpBaseLink = _parse.ErpCompanyPageLink;
@@ -127,9 +172,8 @@ export class CompanySettingsService {
 		return [...this.tableRows];
 	}
 
-	addNewTableRow() {
-
+	getDepartments() {
+		return [...this.departments];
 	}
-
 
 }
