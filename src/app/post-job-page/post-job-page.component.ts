@@ -25,7 +25,8 @@ import { DashboardService } from 'app/dashboard/dashboard.service';
 import { ContractStatus } from 'app/shared/utils';
 import { MatSnackBar } from '@angular/material';
 
-import { Modal1Component } from './modal1/modal1.component'
+import { Modal1Component } from './modal1/modal1.component';
+import { ApprovalComponent } from './approval/approval.component';
 
 @Component({
 	selector: 'app-post-job-page',
@@ -61,7 +62,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	@Input() contractObj;
 
 
-	adminLevel:number;
+	adminLevel: number;
+	requestApprovalOpened = false;
 
 	contractForm: FormGroup;
 
@@ -159,6 +161,11 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	toShowInfoSourcing = false;
 	toShowInfoPermit = false;
 	isJobPostShowAlert = true;
+
+	office = '';
+	officeListShown = false;
+	department = '';
+	departmentListShown = false;
 
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
 	@ViewChild('categoriesDropdown') categoriesDropdown: ElementRef;
@@ -1472,7 +1479,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		let changedValueArray = [this.range[0],this.range[1]];
 		changedValueArray[index] = value;
 		if (changedValueArray[0] <= changedValueArray[1] && this.rangeSlider) {
-            this.range = changedValueArray;
+			this.range = changedValueArray;
 		}
+	}
+	openRequestApproval () {
+		this._root_vcr.createComponent(ApprovalComponent);
 	}
 }
