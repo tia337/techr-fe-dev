@@ -72,7 +72,7 @@ import { PrivacyPolicyComponent } from './info-pages/privacy-policy/privacy-poli
 import { InvitationPageComponent } from './invitation-page/invitation-page.component';
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
-
+import { ReportsComponent } from './site-administration/reports/reports.component';
 import { NotificationComponent } from './header/notifications/notification/notification.component';
 import { CandidatesComponent } from './job-details/candidates/candidates.component';
 import { CandidateNotesComponent } from './job-details/candidates/candidates-info-tabs/candidate-notes/candidate-notes.component';
@@ -272,6 +272,10 @@ const routes: Routes = [
 						path: 'app-integrations',
 						component: AppIntegrationsComponent,
 						canActivate: [ActiveSubscriptionGuard]
+					},
+					{
+						path: 'reports',
+						component: ReportsComponent
 					}
 				]
 			},
