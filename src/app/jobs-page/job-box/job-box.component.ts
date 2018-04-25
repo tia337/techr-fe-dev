@@ -12,6 +12,7 @@ import { Socket } from 'ng-socket-io';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { PreloaderComponent } from '../../shared/preloader/preloader.component';
 
+
 @Component({
 	selector: 'job-box',
 	templateUrl: './job-box.component.html',
@@ -19,10 +20,19 @@ import { PreloaderComponent } from '../../shared/preloader/preloader.component';
 })
 export class JobBoxComponent implements OnInit, OnDestroy {
 
+	@Input('status') status;
 	@Input('contract') contract;
 	@Output('statusChange') statusChange: EventEmitter<any> = new EventEmitter();
 	@ViewChild('menu') menu: ElementRef;
 	@ViewChild('jobBox') jobBox: ElementRef;
+
+	showLikelihood= false;
+	showLikelihoodInfo = false;
+	selectedLikelihoodPercentage:number = 70;
+	percentageGreen = false;
+	percentageOrange = false;
+	percentageNetural = false;
+
 	private _stages = [];
 	stages = [
 		{
@@ -357,6 +367,11 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 					}
 				})
 		} );
+	}
+
+	onLikelihoodPercentageSelect(value) {
+		this.selectedLikelihoodPercentage = value;
+		this.showLikelihood = false;
 	}
 
 	ngOnDestroy() {

@@ -1,3 +1,4 @@
+import { ClickOutsideModule } from 'ng-click-outside';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { JobBoxComponent } from './job-box.component';
@@ -8,6 +9,7 @@ import { ShareDirective } from '../../shared/share/share.component';
 import { ShareModule } from '../../shared/share/share.module';
 import { UploadCvModule } from 'app/upload-cv/upload-cv.module';
 
+
 @NgModule({
 	imports: [
 		CommonModule,
@@ -15,7 +17,8 @@ import { UploadCvModule } from 'app/upload-cv/upload-cv.module';
 		MatTooltipModule,
 		RouterModule,
 		ShareModule,
-		UploadCvModule
+		UploadCvModule,
+		ClickOutsideModule
 	],
 	declarations: [ JobBoxComponent ],
 	providers: [ JobBoxService ],

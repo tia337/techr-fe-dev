@@ -52,6 +52,8 @@ import { GraphicsService } from 'app/graphics/graphics.service';
 	styleUrls: ['./jobs-page.component.scss']
 })
 export class JobsPageComponent implements OnInit, OnDestroy {
+	
+	statusContract = 'none';
 	// selectedContract: {
 	// 	name: string,
 	// 	id: string

@@ -8,6 +8,111 @@ $dashed-border: 1px dashed #ccc;
     color: white;
 }
 
+.table-wrapper {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.pipeline-stage-table_edit-stage-percentage-box{
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.pipeline-stage-table_edit-stage-percentage-box input{
+    margin-right: 5px;
+    width:45px;
+    text-align: center;
+    padding: 3px 5px;
+}
+
+.pipeline-stage-table_set-value {
+    display: flex;
+    flex-direction: column;
+}
+
+.set-value {
+    padding: 2px;
+    margin: 1px;
+    cursor: pointer;
+    background-color: #ddd;
+    font-weight: bold;
+    text-align: center;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.pipeline-stage-table_set-description {
+    width:336px;
+}
+.pipeline-stage-table_set-description input {
+    padding: 3px 5px;
+    width:100%;
+}
+
+.pipeline-stage-table_add-likelihood-stage > td {
+    text-align: center;
+}
+
+.add-likelihood-stage_new-value{
+    width:45px;
+    text-align: center;
+    padding: 3px 5px;
+}
+
+.add-likelihood-stage_new-description {
+    padding: 3px 5px;
+    width:100%;
+}
+
+.pipeline-stage-table_func-buttons {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    margin-left: 10px;
+}
+
+.pipeline-stage-table_func-buttons button {
+    margin-bottom: 10px;
+}
+
+.pipeline-stage-table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+.pipeline-stage-table td,
+.pipeline-stage-table th {
+    border: 1px solid #dddddd;
+    padding: 7px;
+}
+
+.pipeline-stage-table tr:nth-child(odd) {
+    background-color: #bec1c7;
+}
+
+.pipeline-stage-table tr:nth-child(even) {
+    background-color: #e8ebf1;
+}
+
+.pipeline-stage-table th {
+    background-color: #6a82ad;
+    color: white;
+    text-align: left;
+}
+
+.stage-percentage {
+    text-align: center;
+}
+
+.stage-description {
+    text-align: left;
+}
+
 input {
     width: 100%;
     border: 1px solid #eeeeee;
@@ -231,8 +336,7 @@ input {
     width: 15%;
     display: block;
     position: sticky;
-    top: 20px;
-    // margin-top: -90px;
+    top: 20px; // margin-top: -90px;
     margin-bottom: 20px;
     margin-left: 75%;
 }
@@ -301,16 +405,19 @@ input {
     width: 20px;
     transform: rotate(-45deg);
 }
-.classic-img{
+
+.classic-img {
     border: 1px solid black;
 }
-.access-check-div{
-    position:absolute; 
-    left:0; 
-    right:0; 
-    top:0; 
-    bottom:0;
+
+.access-check-div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
-.relative{
-    position:  relative !important;
+
+.relative {
+    position: relative !important;
 }

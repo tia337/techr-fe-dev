@@ -54,6 +54,18 @@
   .buttons-wrap {
     margin: 10px 0;
   }
+  .buttons-wrap__mat-btn {
+    padding: 0px 20px;
+  }
+  .buttons-wrap__mat-btn__jobs-number {
+    position: absolute;
+    top:-13px;
+    right: 2px;
+    font-size: 10px;
+    padding: 3px;
+    font-weight: bold;
+  } 
+
   .pagination_block {
     margin: 20px 0 20px 0;
     @include displayFlex();
