@@ -62,7 +62,7 @@ export class CompanySettingsComponent implements OnInit {
 	erpPageGreeting = '';
 	erpPageGreetingDef = '';
 
-	step = 0;
+	step;
 
 	constructor(
 		private _parse: Parse,
