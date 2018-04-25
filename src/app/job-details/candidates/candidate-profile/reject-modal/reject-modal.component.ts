@@ -1,30 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-
+// tslint:disable:indent
 @Component({
-  selector: 'app-reject-modal',
+  selector: 'modal',
   templateUrl: './reject-modal.component.html',
   styleUrls: ['./reject-modal.component.scss']
 })
 export class RejectModalComponent implements OnInit {
 
-  private _candidate;
-	private _icon: string;
+  public candidate;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  set icon(value: string) {
-		this._icon = value;
+  set setCandidate (candidate) {
+    this.candidate = candidate;
+    console.log(this.candidate);
   }
-  
-  get icon() {
-		return this._icon;
-	}
-  
+
   get setCandidate () {
-    return this._candidate;
+    return this.candidate;
   }
 
 }
+
+

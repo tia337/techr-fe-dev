@@ -269,8 +269,7 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 
 	openRejection(candidate) {
 		const rejectionModal = this._root_vcr.createComponent(RejectModalComponent);
-		// rejectionModal.setCandidate(candidate);
-		rejectionModal.icon('cool');
+		rejectionModal.setCandidate = candidate;
 	}
 
 }
