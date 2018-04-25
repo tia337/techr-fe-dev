@@ -6,7 +6,7 @@ import { RootVCRService } from '../../root_vcr.service';
 import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
-
+import * as _ from 'underscore';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { ChangePasswordComponent } from 'app/site-administration/company-settings/change-password/change-password.component';
 import { ViewChild } from '@angular/core';
@@ -23,6 +23,15 @@ import { ContactUsComponent } from "app/contact-us/contact-us.component";
 	styleUrls: ['./company-settings.component.scss']
 })
 export class CompanySettingsComponent implements OnInit {
+
+	tableRows;
+	editTableMode = false;
+	editStageEnabled = false;
+	newLikelihood = false;
+
+	@ViewChild('newPercentageValue') newPercentageValue: ElementRef;
+	@ViewChild('newDescriptionValue') newDescriptionValue: ElementRef;
+
 
 	isInCompany = true;
 	curLogo: any;
@@ -53,7 +62,7 @@ export class CompanySettingsComponent implements OnInit {
 	erpPageGreeting = '';
 	erpPageGreetingDef = '';
 
-	step = 0;
+	step;
 
 	constructor(
 		private _parse: Parse,
@@ -106,6 +115,7 @@ export class CompanySettingsComponent implements OnInit {
 			this.companyBenefits = '';
 
 		}
+		this.tableRows = this._CompanySettingsService.getTableRows();
 	}
 
 	saveSettings() {
@@ -221,5 +231,30 @@ export class CompanySettingsComponent implements OnInit {
 	}
 	setStep(index: number) {
 		this.step = index;
-	  }
+	}
+
+	onEditStageClick() {
+		if (this.editStageEnabled !== true) {
+			return this.editStageEnabled = !this.editStageEnabled;
+		}
+		this.editStageEnabled = false;
+
+	}
+	onAddLikelihoodStage() {
+		if (this.newLikelihood !== true) {
+			return this.newLikelihood = !this.newLikelihood;
+		}
+		const percentageValue = this.newPercentageValue.nativeElement.value;
+		const DescriptionValue = this.newDescriptionValue.nativeElement.value;
+
+		if ( percentageValue !== '' && DescriptionValue !== '' ) {
+			const newStageValue = {
+				stagePercentage: percentageValue,
+				stageDescription: DescriptionValue
+			};
+			this.tableRows.push(newStageValue);
+			this.tableRows = _.sortBy(this.tableRows, function (i) {return i.stagePercentage; });
+		}
+		this.newLikelihood = false;
+	}
 }
