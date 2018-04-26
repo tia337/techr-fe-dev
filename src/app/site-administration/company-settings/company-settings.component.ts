@@ -37,6 +37,13 @@ export class CompanySettingsComponent implements OnInit {
 	departments;
 	departmentFormGroup: FormGroup;
 
+	offices;
+	officesFormGroup: FormGroup;
+	newOffice = false;
+
+
+	newDepartment = false;
+	newSubdepartment = false;
 
 	isInCompany = true;
 	curLogo: any;
@@ -122,7 +129,10 @@ export class CompanySettingsComponent implements OnInit {
 		}
 		this.tableRows = this._CompanySettingsService.getTableRows();
 		this.departments = this._CompanySettingsService.getDepartments();
-		this.formGroupInit();
+		this.offices = this._CompanySettingsService.getOffices();
+
+		this.departmentFormGroupInit();
+		this.officesFormGroupInit();
 	}
 
 	saveSettings() {
@@ -240,9 +250,11 @@ export class CompanySettingsComponent implements OnInit {
 		this.step = index;
 	}
 
-	formGroupInit(department = null) {
+	departmentFormGroupInit(department = null) {
 		this.departmentFormGroup = new FormGroup({
-			'departmentName' : new FormControl(department !== null ? department.name : '')
+			'departmentName' : new FormControl(department !== null ? department.name : ''),
+			'newDepartmentName' : new FormControl(''),
+			'subdepartmentName' : new FormControl('')
 		});
 	}
 
@@ -252,8 +264,42 @@ export class CompanySettingsComponent implements OnInit {
 			department.edit = false;
 
 		} else {
-			this.formGroupInit(department);
+			this.departmentFormGroupInit(department);
 			department.edit = true;
+		}
+	}
+
+	addNewDepartment() {
+		if (this.newDepartment) {
+			if (this.departmentFormGroup.value.newDepartmentName !== '') {
+				const newDepartment = {
+					id: this.departmentFormGroup.value.newDepartmentName + Math.floor((Math.random() * 100)).toString(),
+					name: this.departmentFormGroup.value.newDepartmentName,
+					edit: false,
+					subDepartments: []
+				};
+				this.departments.push(newDepartment);
+				this.newDepartment = false;
+				this.departmentFormGroup.reset();
+			} else {
+				this.newDepartment = false;
+				}
+		} else {
+			this.newDepartment = true;
+		}
+	}
+	addSubdepartments(department) {
+		if (department.newSubdepartment) {
+			if (this.departmentFormGroup.value.subdepartmentName !== '') {
+				const newSubdepartment = this.departmentFormGroup.value.subdepartmentName;
+				department.subDepartments.push(newSubdepartment);
+				department.newSubdepartment = false;
+				this.departmentFormGroup.reset();
+			} else {
+				department.newSubdepartment = false;
+			}
+		}else {
+			department.newSubdepartment = true;
 		}
 	}
 
@@ -264,6 +310,24 @@ export class CompanySettingsComponent implements OnInit {
 				this.departments.splice(index, 1);
 			}
 		});
+	}
+
+	officesFormGroupInit(office = null) {
+		this.officesFormGroup = new FormGroup({
+			'officeName' : new FormControl(office !== null ? office.name : ''),
+			'newOfficeName' : new FormControl('')
+		});
+	}
+
+	addNewOffice() {
+
+	}
+
+	editOffice(office) {
+
+	}
+	removeOffice(id) {
+
 	}
 
 	onEditStageClick() {

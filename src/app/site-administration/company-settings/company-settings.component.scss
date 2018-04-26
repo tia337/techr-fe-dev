@@ -13,6 +13,7 @@ $dashed-border: 1px dashed #ccc;
     align-items: center;
     width: 300px;
     height: 50px;
+    margin-bottom: 20px;
 }
 
 .carrers-website-page-status {
@@ -24,8 +25,12 @@ $dashed-border: 1px dashed #ccc;
     
 }
 
+.departments-offices-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
 .carrers-departments {
-    width: 500px;
+    width: 60%;
     padding: 13px;
     background-color: #ddd;
     line-height: 3;
@@ -43,15 +48,78 @@ $dashed-border: 1px dashed #ccc;
 .carrers-departments-form__body span:first-child {
     justify-content: left;
 }
+.carrers-departments-form__body__department {
+    display: flex;
+    flex-direction: column;
+}
 
 .carrers-departments-form__body__edit-department-input {
-    width: 40%;
+    width: 80%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-departments-form__new-department__new-department-input {
+    width: 35%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-departments-form__body__subdepartment-input {
+    margin-left: 50px;
+    width: 63%;
     margin-top: 9px;
     margin-bottom: 5px;
     padding: 3px 12px;
 }
 
 .carrers-departments-form__body_options{
+    text-align: right;
+    margin: 0px 4px;
+    cursor: pointer;
+}
+
+.careers-offices {
+    width: 30%;
+    padding: 13px;
+    background-color: #ddd;
+    line-height: 3;
+    margin-right: 30px;
+}
+.carrers-offices-form__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.carrers-offices-form__body {
+    display: flex;
+    justify-content: space-between;
+}
+.carrers-offices-form__body span:first-child {
+    justify-content: left;
+}
+.carrers-offices-form__body__office {
+    display: flex;
+    flex-direction: column;
+}
+
+.carrers-offices-form__body__edit-office-input {
+    width: 80%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-offices-form__new-office__new-office-input {
+    width: 35%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-offices-form__body_options{
     text-align: right;
     margin: 0px 4px;
     cursor: pointer;
@@ -72,7 +140,7 @@ $dashed-border: 1px dashed #ccc;
     margin-right: 5px;
     width:45px;
     text-align: center;
-    padding: 3px 5px;
+    padding: 3px 5px; 
 }
 
 .pipeline-stage-table_set-value {

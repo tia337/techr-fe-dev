@@ -156,30 +156,80 @@
                 <div class="carrers-website-page-status"></div>
                 <div class="carrers-website-page-info">
                     <p> All jobs (default)</p>
-                    <p> <a href="https://careers.swipein.hr/CreatechGroup">https://careers.swipein.hr/CreatechGroup</a></p>
+                    <p> <a href="javascript:void(0)">https://careers.swipein.hr/Miratech</a></p>
                 </div>
             </div>
-            <div class="carrers-departments">
-                <form class="carrers-departments-form" [formGroup]="departmentFormGroup">
-                    <p class="carrers-departments-form__header"><span>Departments</span><button type="submit" mat-raised-button color="primary">Add new department</button></p>
-                    <div class="carrers-departments-form__body" *ngFor = "let department of departments"> 
-                            <span *ngIf="!department.edit">{{department.name}}</span>
+            <div class="departments-offices-wrapper">
+                <div class="carrers-departments">
+                    <form class="carrers-departments-form" [formGroup]="departmentFormGroup">
+                        <p class="carrers-departments-form__header"><span>Departments</span><button (click)="addNewDepartment()" mat-raised-button color="primary">Add new department</button></p>
+                        <div class="carrers-departments-form__body" *ngFor = "let department of departments"> 
+                            <div class="carrers-departments-form__body__department"> 
+                                <span *ngIf="!department.edit">{{department.name}}</span>
+                                <input 
+                                    #departmentNameInput 
+                                    *ngIf="department.edit" 
+                                    class="carrers-departments-form__body__edit-department-input" 
+                                    type="text" 
+                                    [value]="department.name"
+                                    formControlName="departmentName"
+                                    (keydown.enter)="editDepartment(department)">
+                                <input 
+                                    *ngIf="department.newSubdepartment" 
+                                    type="text" 
+                                    class="carrers-departments-form__body__subdepartment-input"
+                                    formControlName="subdepartmentName"
+                                    placeholder="New Subdepartment"
+                                    (keydown.enter)="addSubdepartments(department)"> 
+                            </div>    
+                            <p>
+                                <span class="carrers-departments-form__body_options" (click)="editDepartment(department)">Edit</span>
+                                <span class="carrers-departments-form__body_options" (click)="removeDepartment(department.id)">Remove</span>
+                                <span class="carrers-departments-form__body_options" (click)="addSubdepartments(department)">Add subdepartments</span> 
+                            </p>
+                        </div>
+                        <div class="carrers-departments-form__new-department">
                             <input 
-                                #departmentNameInput 
-                                *ngIf="department.edit" 
-                                class="carrers-departments-form__body__edit-department-input" 
                                 type="text" 
-                                [value]="department.name"
-                                formControlName="departmentName"
-                                (keydown.enter)="editDepartment(department)">  
-                        <p>
-                            <span class="carrers-departments-form__body_options" (click)="editDepartment(department)">Edit</span>
-                            <span class="carrers-departments-form__body_options" (click)="removeDepartment(department.id)">Remove</span>
-                            <span class="carrers-departments-form__body_options">Add subdepartments</span> 
-                        </p>
-                    </div>
-                </form>
-            </div>
+                                *ngIf="newDepartment"
+                                class="carrers-departments-form__new-department__new-department-input"
+                                formControlName="newDepartmentName"
+                                (keydown.enter)="addNewDepartment()"
+                                placeholder="New Department">
+                        </div>
+                    </form>
+                </div>
+                <div class="careers-offices">
+                    <form class="carrers-offices-form" [formGroup]="officesFormGroup">
+                        <p class="carrers-offices-form__header"><span>Offices</span><button (click)="addNewOffice()" mat-raised-button color="primary">Add new office</button></p>
+                        <div class="carrers-offices-form__body" *ngFor = "let office of offices"> 
+                            <div class="carrers-offices-form__body__office"> 
+                                <span *ngIf="!office.edit">{{office.name}}</span>
+                                <input 
+                                    *ngIf="office.edit" 
+                                    class="carrers-offices-form__body__edit-office-input" 
+                                    type="text" 
+                                    [value]="office.name"
+                                    formControlName="officeName"
+                                    (keydown.enter)="editOffice(office)">
+                            </div>    
+                            <p>
+                                <span class="carrers-offices-form__body_options" (click)="editOffice(office)">Edit</span>
+                                <span class="carrers-offices-form__body_options" (click)="removeOffice(office.id)">Remove</span>
+                            </p>
+                        </div>
+                        <div class="carrers-offices-form__new-office">
+                            <input 
+                                type="text" 
+                                *ngIf="newOffice"
+                                class="carrers-offices-form__new-office__new-office-input"
+                                formControlName="newOfficeName"
+                                (keydown.enter)="addNewOffice()"
+                                placeholder="New Office">
+                        </div>
+                    </form>
+                </div>
+           </div> 
         </mat-expansion-panel>
         <mat-expansion-panel>
             <mat-expansion-panel-header>

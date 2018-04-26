@@ -41,44 +41,84 @@ export class CompanySettingsService {
 			id: 'general_administration_1',
 			name: 'General & Administration',
 			edit: false,
+			newSubdepartment: false,
 			subDepartments: []
 		},
 		{
 			id: 'marketing_2',
 			name: 'Marketing',
 			edit: false,
+			newSubdepartment: false,
 			subDepartments: []
 		},
 		{
 			id: 'sales_3',
 			name: 'Sales',
 			edit: false,
+			newSubdepartment: false,
 			subDepartments: []
 		},
 		{
 			id: 'r_d_engineering_4',
 			name: 'R&D and Engineering',
 			edit: false,
+			newSubdepartment: false,
 			subDepartments: []
 		},
 		{
 			id: 'software_engineering_5',
 			name: 'Software Engineering',
 			edit: false,
+			newSubdepartment: false,
 			subDepartments: []
 		},
 		{
 			id: 'operations_6',
 			name: 'Operations',
 			edit: false,
+			newSubdepartment: false,
 			subDepartments: []
 		},
 		{
 			id: 'human_resource_7',
 			name: 'Human Resource',
 			edit: false,
+			newSubdepartment: false,
 			subDepartments: []
 		},
+	];
+
+	private offices = [
+		{
+			id: 'warsaw_1',
+			name: 'Warsaw',
+			edit: false
+		},
+		{
+			id: 'kiev_2',
+			name: 'Kiev',
+			edit: false
+		},
+		{
+			id: 'madrid_3',
+			name: 'Madrid',
+			edit: false
+		},
+		{
+			id: 'california_4',
+			name: 'California',
+			edit: false
+		},
+		{
+			id: 'sevilla_5',
+			name: 'Sevilla',
+			edit: false
+		},
+		{
+			id: 'toronto_6',
+			name: 'Toronto',
+			edit: false
+		}
 	];
 
 
@@ -176,4 +216,7 @@ export class CompanySettingsService {
 		return [...this.departments];
 	}
 
+	getOffices() {
+		return [...this.offices];
+	}
 }
