@@ -4,9 +4,9 @@
   <div class="logo-wrap">
     <img *ngIf="currentUser && clientLogo" class="client-logo" routerLink="/" src="{{clientLogo._url}}"/>
   </div>
-  <button (click)="changeTheme()">
+  <!-- <button style="margin-right: 40px;" (click)="changeTheme()">
     Change theme
-  </button>
+  </button> -->
   <div class="buttons-wrap">
     <div *ngIf="!currentUser" class="linkedin-signin-button" (click)="signIn()">
       <img src="../../assets/img/linkedin-logo-icon.png"/>

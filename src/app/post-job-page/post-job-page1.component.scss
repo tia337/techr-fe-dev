@@ -177,11 +177,15 @@ input[type=file] {
             .salary-input {
                 min-width: 80px;
                 margin-right: 20px;
+                position: relative;
+                z-index: 9;
             }
             .salary-slider {
                 min-width: 400px;
                 margin-left: 15px;
                 font-size: 14px;
+                position: relative;
+                z-index: 9;
             }
             .salary-slider {
                 #noui-range /deep/ {
@@ -1415,4 +1419,9 @@ input[type=file] {
             }
         }
     }
+}
+
+.hide-on-job {
+    position: relative;
+    z-index: 9;
 }

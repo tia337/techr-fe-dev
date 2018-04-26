@@ -32,7 +32,6 @@
                 <p>
                   {{currentUser.get('firstName')}}'s Timeline
                 </p>
-                <!-- <mat-icon class="fa fa-file-text-o "></mat-icon> -->
               </li>
           </span>
           <span (click)="postJob()">
@@ -40,7 +39,6 @@
               <p>
                 Post Job
               </p>
-              <!-- <mat-icon class="fa fa-file-text-o "></mat-icon> -->
             </li>
           </span>
           
@@ -49,13 +47,11 @@
                 <p>
                   Jobs
                 </p>
-                <!-- <mat-icon class="fa fa-file-text-o "></mat-icon> -->
               </li>
             </span>
           <span [routerLink]="['/', 'scorecards']">
             <li class="func-buttons ">
               <p>Scorecards</p>
-              <!-- <mat-icon class="fa fa-address-card-o "></mat-icon> -->
             </li>
           </span>
           <span [routerLink]="['/', 'empref']">
@@ -63,7 +59,6 @@
               <p>
                 Employee Referral Programs
               </p>
-              <!-- <mat-icon class="fa fa-address-card-o "></mat-icon> -->
             </li>
           </span>
           <span [routerLink]="['/', 'templates']">
@@ -71,13 +66,11 @@
               <p>
                 Templates
               </p>
-              <!-- <mat-icon class="fa fa-address-card-o "></mat-icon> -->
             </li>
           </span>
         </ul>
         <span class="invite-button " (click)="changeLocationToInviteuser() ">
           <p>+Invite People</p>
-          <!-- <mat-icon>add_circle_outline</mat-icon>     -->
         </span>
       </nav>
       <div class="team-section ">

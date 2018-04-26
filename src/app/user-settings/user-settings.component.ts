@@ -29,6 +29,7 @@ export class UserSettingsComponent implements OnInit {
     //settingsChanged; // uncomment if checkSettingsChanged() for button disable/enable is fixed
     distanceUnits:boolean;
     distanceUnitsInit:boolean;
+    themeStyle: boolean;
     isButtonDisabled:boolean = true; // i think deprecated: never used
     matcher = new MyErrorStateMatcher();
     public currentEmailSetting; 
@@ -89,4 +90,18 @@ async ngOnInit() {
       console.log(this.settings.emailNotificatoinsFrequency);
       this.currentEmailSetting = a;
   }
+
+  changeTheme() {
+      if (this.themeStyle === true) {
+            const body = document.getElementById('body');
+			body.classList.add('new');
+			localStorage.setItem('theme', 'new');
+      };
+      if (this.themeStyle === false) {
+            const body = document.getElementById('body');
+			body.classList.remove('new');
+			localStorage.setItem('theme', 'old');
+      }
+  }
+
 }

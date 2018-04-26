@@ -5,7 +5,7 @@
                 <span *ngIf = "postingLoader">
                     <mat-spinner  [diameter] = '25' [strokeWidth] = '3' class = "spinner-post-job"></mat-spinner>
                 </span>
-                Create job
+                Publish job
             </button>
             <p class="request-approval" (click)="openRequestApproval()">
                 Request <br> Approval
@@ -333,7 +333,7 @@
                                 <mat-select *ngIf="editable" class="salary-input currency-switch" formControlName="SalaryCurrency" (change)="currencyChange()">
                                     <mat-option *ngFor="let currency of salaryCurrencies" [value]="currency">{{currency.get('Name')}}</mat-option>
                                 </mat-select>
-                                <label *ngIf="editable"><a class = "nowrap">
+                                <label class="hide-on-job" *ngIf="editable"><a class = "nowrap">
                                 Hide on job ad
                                 <input type="checkbox" formControlName="salaryPreferencesHidden" /></a>
                         </label>
@@ -469,6 +469,26 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="settings-item">
+                            <span class="settings-item__title">Client</span>
+                            <div class="settings-item__select-holder">
+                                    <p class="settings-item__button" 
+                                            *ngIf="clientBank === ''"
+                                            (click)="clientListShown = true">Select Client</p>
+                                    <p class="settings-item__button" 
+                                            *ngIf="clientBank !== ''"
+                                            (click)="clientListShown = true">{{clientBank}}</p>                        
+                                    <ul class="settings-item__office-list" 
+                                        *ngIf="clientListShown" 
+                                        (clickOutside)="clientListShown = false"
+                                        [delayClickOutsideInit]="true">
+                                        <li (click)="clientBank = 'PrivatBank'; clientListShown = false;">PrivatBank</li>
+                                        <li (click)="clientBank = 'Ukrsib'; clientListShown = false;">Ukrsib</li>
+                                        <li (click)="clientBank = 'AlfaBank'; clientListShown = false;">AlfaBank</li>
+                                        <li (click)="clientBank = 'Monobank'; clientListShown = false;">Monobank</li>
+                                    </ul>
+                            </div>
+                        </div>
                     <div class="settings-item">
                         <span class="settings-item__title">Hiring target</span>
                         <mat-form-field class="example-full-width" style="visibility: hidden; position: absolute; width: 0;">

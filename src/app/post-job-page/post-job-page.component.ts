@@ -166,6 +166,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	officeListShown = false;
 	department = '';
 	departmentListShown = false;
+	clientBank = '';
+	clientListShown = false;
 
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
 	@ViewChild('categoriesDropdown') categoriesDropdown: ElementRef;
