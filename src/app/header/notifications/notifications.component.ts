@@ -80,7 +80,7 @@ export class NotificationsComponent implements OnInit {
       this.createMessageNotification(data);
       this._headerService.updateNotificationsCount('1');
     });
-    if (this._parse.getCurrentUser()) {
+    if (this._parse.getCurrentUser() && this._parse.getCurrentUser().get('Client_Pointer')) {
       this.loadNotifications();
     }
   }

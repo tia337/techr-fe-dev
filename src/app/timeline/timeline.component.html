@@ -4,7 +4,7 @@
   <button (click)="timelineStyle = 'minimalistic'">Minimalistic</button>
 </div>
  
- <div class="timeline-wrap" *ngIf="timelineStyle === 'old'" (scroll)="uploadMoreTimeline($event)">
+ <div class="timeline-wrap" *ngIf="timelineStyle === 'old' && timelineArray.length > 0" (scroll)="uploadMoreTimeline($event)">
   <div class="timeline-day" *ngFor="let timelineDay of timelineArray">
     <div class="timeline-day-date-wrap">
       <div class="timeline-day-date">
@@ -15,9 +15,9 @@
     </div>
     <div class="timeline-day-items-wrap">
       <div *ngFor="let timelineItem of timelineDay[1].timeline">
-        <!-- <div class="timeline-day-item">
+        <div class="timeline-day-item">
             {{timelineItem | json}}
-        </div> -->
+        </div>
         <div class="timeline-day-item" *ngIf="timelineItem.type === 'note mention'" style="display: none;">
             <!-- {{timelineItem | json}} -->
             note mention
@@ -29,6 +29,7 @@
         <div class="timeline-day-item" 
              *ngIf="timelineItem.type === 'application' && timelineItem.userId === currentUser.id"
              (click)="route(timelineItem.contractId, -1)">
+             TYPE: {{timelineItem.type}}
           <div class="timeline-day-item-image">
               <img src="../../assets/icons/timeline-applicant.svg" alt="">
           </div>
@@ -47,6 +48,8 @@
         <div class="timeline-day-item" 
              *ngIf="timelineItem.type === 'application' && timelineItem._p_contractOwner.slice(timelineItem._p_contractOwner.indexOf('$')+1) !== currentUser.id"
              (click)="route(timelineItem.contractId, -1)">
+             TYPE: {{timelineItem.type}}
+             
           <div class="timeline-day-item-image">
               <img [src]="timelineItem.contractOwnerAvatarURL" alt="">
           </div>
@@ -76,6 +79,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'job created' && timelineItem.userId === currentUser.id"
               (click)="route(timelineItem._id, -2)">
+             TYPE: {{timelineItem.type}}
+              
           <div class="timeline-day-item-image">
             <img [src]="currentUser.get('avatarURL')" alt="">  
           </div>
@@ -91,6 +96,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'job created' && timelineItem.userId === currentUser.id"
               (click)="route(timelineItem._id, -2)">
+             TYPE: {{timelineItem.type}}
+              
           <div class="timeline-day-item-image">
               <img [src]="currentUser.get('avatarURL')" alt="">
           </div>
@@ -110,6 +117,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'job created' && timelineItem._p_owner.slice(timelineItem._p_owner.indexOf('$')+1) !== currentUser.id"
               (click)="route(timelineItem._id, -2)">
+             TYPE: {{timelineItem.type}}
+              
           <div class="timeline-day-item-image">
               <img [src]="timelineItem.ownerAvatarURL" alt="">
           </div>
@@ -128,6 +137,8 @@
         <div class="timeline-day-item" 
               *ngIf="timelineItem.type === 'job created' && timelineItem._p_owner.slice(timelineItem._p_owner.indexOf('$')+1) !== currentUser.id"
               (click)="route(timelineItem._id, -2)">
+             TYPE: {{timelineItem.type}}
+              
           <div class="timeline-day-item-image">
               <img [src]="timelineItem.ownerAvatarURL" alt="">
           </div>
@@ -146,6 +157,8 @@
         </div>
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'scoring mention' && timelineItem.scoringAuthorId === currentUser.id">
+             TYPE: {{timelineItem.type}}
+              
           <div class="timeline-day-item-image">
               <img [src]="currentUser.get('avatarURL')" alt="">
           </div>
@@ -171,6 +184,8 @@
         </div>
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'scoring mention' && timelineItem.scoringAuthorId !== currentUser.id">
+             TYPE: {{timelineItem.type}}
+              
           <div class="timeline-day-item-image">
               <img [src]="timelineItem.avatarURL" alt="">
           </div>
@@ -198,6 +213,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'referral' && timelineItem.userId === currentUser.id"
               (click)="route(timelineItem._p_contract.slice(timelineItem._p_contract.indexOf('$')+1), 5)">
+             TYPE: {{timelineItem.type}}
+              
           <div class="timeline-day-item-image">
             <img src="../../assets/icons/timeline_referral.svg" alt="">
           </div>
@@ -221,6 +238,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'referral' && timelineItem._p_contractOwner.slice(timelineItem._p_contractOwner.indexOf('$')+1) !== currentUser.id"
               (click)="route(timelineItem._p_contract.slice(timelineItem._p_contract.indexOf('$')+1), 5)">
+             TYPE: {{timelineItem.type}}
+              
             <div class="timeline-day-item-image">
               <img src="{{timelineItem.contractOwnerAvatarURL}}" alt="">
             </div>
@@ -247,6 +266,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'note created' && timelineItem._p_Author.slice(timelineItem._p_Author.indexOf('$')+1) === currentUser.id"
               (click)="route(timelineItem._p_Job.slice(timelineItem._p_Job.indexOf('$')+1), timelineItem.notePipelineStage,  'note')">
+             TYPE: {{timelineItem.type}}
+              
             <div class="timeline-day-item-image">
               <img [src]="currentUser.get('avatarURL')" alt="">
             </div>
@@ -280,6 +301,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'note created' && timelineItem._p_Author.slice(timelineItem._p_Author.indexOf('$')+1) !== currentUser.id"
               (click)="route(timelineItem._p_Job.slice(timelineItem._p_Job.indexOf('$')+1), timelineItem.notePipelineStage,  'note')">
+             TYPE: {{timelineItem.type}}
+              
             <div class="timeline-day-item-image">
               <img [src]="timelineItem.authorAvatarURL" alt="">
             </div>
@@ -313,6 +336,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'candidate scored' && timelineItem.userId === currentUser.id"
               (click)="route(timelineItem._p_Job.slice(timelineItem._p_Job.indexOf('$')+1), timelineItem.scoringPipelineStage, timelineItem._p_Candidate.slice(timelineItem._p_Candidate.indexOf('$')+1), 'scoring')">
+             TYPE: {{timelineItem.type}}
+              
             <div class="timeline-day-item-image">
               <img [src]="currentUser.get('avatarURL')" alt="">
             </div>
@@ -340,6 +365,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'candidate scored' && timelineItem.userId !== currentUser.id"
               (click)="route(timelineItem._p_Job.slice(timelineItem._p_Job.indexOf('$')+1), timelineItem.scoringPipelineStage, timelineItem._p_Candidate.slice(timelineItem._p_Candidate.indexOf('$')+1), 'note')">
+             TYPE: {{timelineItem.type}}
+              
             <div class="timeline-day-item-image">
               <img [src]="currentUser.get('avatarURL')" alt="">
             </div>
@@ -366,6 +393,8 @@
         <div class="timeline-day-item"
               *ngIf="timelineItem.type === 'job board publish' && timelineItem._p_Author.slice(timelineItem._p_Author.indexOf('$')+1) !== currentUser.id"
               (click)="route(timelineItem._id, -2)">
+             TYPE: {{timelineItem.type}}
+              
           <div class="timeline-day-item-image">
               <img [src]="timelineItem.authorAvatarURL" alt="">
           </div>
@@ -385,6 +414,8 @@
         <div class="timeline-day-item"
             *ngIf="timelineItem.type === 'job board publish' && timelineItem._p_Author.slice(timelineItem._p_Author.indexOf('$')+1) === currentUser.id"
             (click)="route(timelineItem._id, -2)">
+            TYPE: {{timelineItem.type}}
+            
             <div class="timeline-day-item-image">
                 <img [src]="currentUser.get('avatarURL')" alt="">
             </div>
@@ -662,3 +693,7 @@
         </div>
     </div>
 </div> 
+
+<div class="timeline-wrap" *ngIf="timelineArray.length === 0">
+    Your timeline is empty.
+</div>

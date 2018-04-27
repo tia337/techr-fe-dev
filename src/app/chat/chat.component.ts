@@ -85,19 +85,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    // this._router.events.subscribe(event => {
-    //   console.log(event);
-    //   if (event instanceof ResolveEnd) {
-    //     const a = event.state.root.children[0].parent.children[0].firstChild.params.id;
-    //     console.log(a);
-    //   };
-    // });
-
     this.userId = this._parse.getCurrentUser().id;
 
     this.listenToDialogIdUpdated().subscribe(data => {
+      console.log('DATA DIALOG ID IN CHAT', data);
       this.updateDialogId(data)
-      // this.updateDialogInCore(data);
     });
    
     this.editPartnersMessage().subscribe(data => {
@@ -109,13 +101,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.recieveColleagueMessage().subscribe(data => {
-      // console.log(data);
+      console.log('MESSAGE RECIEVED IN CHAT', data);
       clearTimeout(this.timer);
       this.typing = false;
-      // console.log(this.dialogId);
-      if (this.dialogId != undefined) {
-        this.addMessageToChat(data);
-      }
+      this.addMessageToChat(data);
+      // if (this.dialogId != undefined) {
+      // }
     });
 
     this.listenToRecruiterColleagueTypes().subscribe(data => {
@@ -126,10 +117,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this._ar.params.subscribe(params => {   
       if (params.id === 'false') {
-        // this.messages = [];
-        // this.noMessages = true;
-        // this.beginning = true;
-        // this.dialogId = params.id;
         return;
       } else {
         this.dialogId = params.id;
@@ -145,7 +132,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.noMessages = true;
         this.beginning = true;
       }
-      console.log(queryParams[5]);
       this.messageStorage = [];
       this.messages = [];
       this.textAreaValue.setValue('');
@@ -193,7 +179,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       let data = queryData;
       this._chatService.getUserMessages(data).then(messages => {
         if (messages.length > 0) {
-          // this.noMessages = true;
           this.loader = true;
           this.beginning = false;
           this.messageStorage = messages;
@@ -290,9 +275,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendColleagueMessage (value, event) {
     event.preventDefault();
-    console.log(value.value);
     if (value.value != '') {
-      console.log(this.dialogId, 'DIALOG ID SEND MESSAGE')
       event.preventDefault();
       this._socket.emit('outgoing-to-colleague', {
         message: encodeURIComponent(value.value),
@@ -542,8 +525,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       self.dialogId = data.dialog;  
       let url = '/chat/' + data.dialog + '?0=' + this.teamMember.firstName + '&1=' + this.teamMember.lastName + '&2=' + this.teamMember.avatar + '&3=' + this.teamMember.sessionStatus + '&4=' + this.teamMember.id;
       window.history.pushState('object', 'title', url);
-    },4)
+    }, 4)
   };
+
   updateDialogInCore(data) {
     const object = {
       dialog: data.dialog,
@@ -586,7 +570,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             range.deleteContents();
             var frag = document.createDocumentFragment(), node, lastNode;
             while ( (node = input.firstChild) ) {
-                lastNode = frag.appendChild(node);
+              lastNode = frag.appendChild(node);
             }
             range.insertNode(frag);
             if (lastNode) {
