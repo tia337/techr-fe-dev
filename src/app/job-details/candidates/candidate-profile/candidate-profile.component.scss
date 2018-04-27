@@ -70,7 +70,7 @@
                 }
                 .candidate-name-position {
                     @include displayFlex();
-                    @include flex(0, 0, 60%);
+                    @include flex(0, 0, 53%);
                     @include flex-direction(column);
                     @include flex-align-items(flex-start);
                     @include flex-justify-content(center);
@@ -95,6 +95,7 @@
                     margin-left: auto;
                     padding: 0;
                     padding-right: 0 7px;
+                    align-items: center;
                     // @include flex(0, 0, 20%);
                     // @include flex-justify-content(flex-end);
                     // font-size: $font-size-24;
@@ -102,6 +103,19 @@
                         cursor: pointer;
                         padding: 0;
                         padding-left: 7px;
+                    }
+                    .reject-candidate-button {
+                        border-radius: 50%;
+                        height: 37px;
+                        width: 37px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-top: -3px;
+                        transition: .4s all ease-in-out;
+                        // &:hover {
+                        //     transform: rotate(180deg);
+                        // }
                     }
                     .move-candidate-button {
                         position: relative;

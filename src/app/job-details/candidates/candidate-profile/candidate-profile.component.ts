@@ -14,7 +14,7 @@ import { Socket } from 'ng-socket-io';
 
 import { AlertComponent } from '../../../shared/alert/alert.component';
 import { JobDetailsService } from '../../job-details.service';
-
+import { RejectModalComponent } from './reject-modal/reject-modal.component';
 @Component({
 	selector: 'app-candidate-profile',
 	templateUrl: './candidate-profile.component.html',
@@ -265,6 +265,11 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 
 	ngOnDestroy() {
 		this._socket.removeAllListeners('pipelineUpdate');
+	}
+
+	openRejection(candidate) {
+		const rejectionModal = this._root_vcr.createComponent(RejectModalComponent);
+		rejectionModal.setCandidate = candidate;
 	}
 
 }

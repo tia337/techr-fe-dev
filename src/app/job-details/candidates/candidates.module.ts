@@ -25,6 +25,8 @@ import { StarRatingModule } from '../../shared/star-rating/star-rating.module';
 import { RouterModule } from '@angular/router';
 import { LoaderModule } from '../../shared/loader/loader.module';
 import { DashboardModule } from 'app/dashboard/dashboard.module';
+import { RejectModalComponent } from './candidate-profile/reject-modal/reject-modal.component';
+import { RejectModalModule } from './candidate-profile/reject-modal/reject-modal.module';
 
 @NgModule({
   declarations: [
@@ -37,8 +39,8 @@ import { DashboardModule } from 'app/dashboard/dashboard.module';
     FormsModule,
     RouterModule,
     MatTabsModule,
-      MatCheckboxModule,
-      ScorecardsAssessmentsModule,
+    MatCheckboxModule,
+    ScorecardsAssessmentsModule,
     ScoringModule,
     SkillsModule,
     CandidateCvModule,
@@ -48,14 +50,15 @@ import { DashboardModule } from 'app/dashboard/dashboard.module';
     StarRatingModule,
     LoaderModule,
     DashboardModule,
-      MatFormFieldModule,
-      MatSelectModule,
-      MatButtonModule,
-      MatProgressSpinnerModule
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    RejectModalModule
   ],
   exports: [CandidatesComponent],
   providers: [Parse, CandidatesService, CandidateProfileService],
-  entryComponents: [GmailComponent]
+  entryComponents: [GmailComponent, RejectModalComponent]
 
 })
 export class CandidatesModule { }
