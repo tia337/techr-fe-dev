@@ -91,7 +91,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			if (theme === 'new') {
 				this._theme = 'new';
 			};
-			this.changeTheme(theme);
+			// this.changeTheme(theme);
 		}
 
 		this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
@@ -291,19 +291,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		return observable;
 	}
 
-	changeTheme(theme?: string) {
-		if (this._theme === 'old' || theme === 'old') {
-			this._theme = 'new';
-			const body = document.getElementById('body');
-			body.classList.add('new');
-			localStorage.setItem('theme', 'new');
-		} else if (this._theme === 'new' || theme === 'new') {
-			this._theme = 'old';
-			const body = document.getElementById('body');
-			body.classList.remove('new');
-			localStorage.setItem('theme', 'old');
-		}
-	}
+	// changeTheme(theme?: string) {
+	// 	if (this._theme === 'old' || theme === 'old') {
+	// 		this._theme = 'new';
+	// 		const body = document.getElementById('body');
+	// 		body.classList.add('new');
+	// 		localStorage.setItem('theme', 'new');
+	// 	} else if (this._theme === 'new' || theme === 'new') {
+	// 		this._theme = 'old';
+	// 		const body = document.getElementById('body');
+	// 		body.classList.remove('new');
+	// 		localStorage.setItem('theme', 'old');
+	// 	}
+	// }
 
 
 }
