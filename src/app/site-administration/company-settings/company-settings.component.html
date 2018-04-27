@@ -15,7 +15,7 @@
                 <mat-panel-title>
                     Company Settings
                 </mat-panel-title>
-            </mat-expansion-panel-header>
+            </mat-expansion-panel-header> 
             <!-- <div class="title-line"><a><i>Company Settings</i></a></div> -->
 
             <div class="file-input">
@@ -162,40 +162,91 @@
             <div class="departments-offices-wrapper">
                 <div class="carrers-departments">
                     <form class="carrers-departments-form" [formGroup]="departmentFormGroup">
-                        <p class="carrers-departments-form__header"><span>Departments</span><button (click)="addNewDepartment()" mat-raised-button color="primary">Add new department</button></p>
+                        <p class="carrers-departments-form__header">
+                            <span>Departments</span>
+                            <button *ngIf="!newDepartment" 
+                                (click)="addNewDepartment()" 
+                                mat-raised-button 
+                                color="primary">Add new department
+                            </button>
+                            <button 
+                                class= "carrers-departments-form__header__save-department-btn" 
+                                *ngIf="newDepartment"
+                                (click)="saveNewDepartment()" 
+                                mat-raised-button>
+                                Save
+                            </button>
+                        </p>
                         <div class="carrers-departments-form__body" *ngFor = "let department of departments"> 
                             <div class="carrers-departments-form__body__department"> 
                                 <span *ngIf="!department.edit">{{department.name}}</span>
                                 <input 
-                                    #departmentNameInput 
+                                    id="editDepartmentInput" 
                                     *ngIf="department.edit" 
                                     class="carrers-departments-form__body__edit-department-input" 
                                     type="text" 
                                     [value]="department.name"
                                     formControlName="departmentName"
-                                    (keydown.enter)="editDepartment(department)">
+                                    (keydown.enter)="editDepartment(department)"
+                                    (clickOutside)="department.edit = false"
+                                    [delayClickOutsideInit]="true"
+                                    >
+                                <div
+                                    class= "carrers-departments-form__body__department__subdepartment"
+                                    *ngFor = "let subdepartment of department.subDepartments">
+                                    <span *ngIf="!subdepartment.edit">{{subdepartment.name}}</span>
+                                    <input
+                                        id="editSubdepartmentInput" 
+                                        class="carrers-departments-form__body__department__subdepartment__edit-subdepartment-input"
+                                        ngIf="subdepartment.edit" 
+                                        type="text" 
+                                        [value]="subdepartment.name"
+                                        formControlName= "subdepartmentName"
+                                        (keydown.enter)= "editSubdepartment(subdepartment)"
+                                        (clickOutside)="subdepartment.edit = false"
+                                        [delayClickOutsideInit]="true">
+                                    <div class="carrers-departments-form__body__department__subdepartment_options"> 
+                                        <span (click)="editSubdepartment(subdepartment)">Edit</span>
+                                        <span>Remove</span>
+                                    </div>
+                                </div>   
                                 <input 
+                                    id= "newSubdepartmentInput"
                                     *ngIf="department.newSubdepartment" 
                                     type="text" 
                                     class="carrers-departments-form__body__subdepartment-input"
                                     formControlName="subdepartmentName"
                                     placeholder="New Subdepartment"
-                                    (keydown.enter)="addSubdepartments(department)"> 
+                                    (keydown.enter)="addSubdepartments(department)"
+                                    (clickOutside)="department.newSubdepartment = false"
+                                    [delayClickOutsideInit]="true"> 
                             </div>    
                             <p>
-                                <span class="carrers-departments-form__body_options" (click)="editDepartment(department)">Edit</span>
+                                <span *ngIf="!department.edit"
+                                    class="carrers-departments-form__body_options" 
+                                    (click)="editDepartment(department)">
+                                    Edit
+                                </span>
+                                <span *ngIf="department.edit"
+                                    class="carrers-departments-form__body_options" 
+                                    (click)="editDepartment(department)">
+                                   Save
+                                </span>
                                 <span class="carrers-departments-form__body_options" (click)="removeDepartment(department.id)">Remove</span>
                                 <span class="carrers-departments-form__body_options" (click)="addSubdepartments(department)">Add subdepartments</span> 
                             </p>
                         </div>
                         <div class="carrers-departments-form__new-department">
                             <input 
+                                id="newDepartmentInput"
                                 type="text" 
                                 *ngIf="newDepartment"
                                 class="carrers-departments-form__new-department__new-department-input"
                                 formControlName="newDepartmentName"
-                                (keydown.enter)="addNewDepartment()"
-                                placeholder="New Department">
+                                (keydown.enter)="saveNewDepartment()"
+                                placeholder="New Department"
+                                (clickOutside)="newDepartment = false"
+                                [delayClickOutsideInit]="true">
                         </div>
                     </form>
                 </div>

@@ -40,6 +40,11 @@ $dashed-border: 1px dashed #ccc;
     display: flex;
     justify-content: space-between;
 }
+.carrers-departments-form__header__save-department-btn {
+    background-color: rgb(23, 197, 7);
+    color:white;
+} 
+
 
 .carrers-departments-form__body {
     display: flex;
@@ -54,7 +59,7 @@ $dashed-border: 1px dashed #ccc;
 }
 
 .carrers-departments-form__body__edit-department-input {
-    width: 80%;
+    width: 85%;
     margin-top: 9px;
     margin-bottom: 5px;
     padding: 3px 12px;
@@ -67,8 +72,33 @@ $dashed-border: 1px dashed #ccc;
     padding: 3px 12px;
 }
 
+.carrers-departments-form__body__department__subdepartment {
+    display: flex;
+    justify-content: space-around;
+    width: 100px;
+    margin-left: 30px;
+    position: relative;
+}
+
+.carrers-departments-form__body__department__subdepartment__edit-subdepartment-input{
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-departments-form__body__department__subdepartment_options {
+    margin-left: 30px;
+    position: absolute;
+    right: -224.2px;
+}
+
+.carrers-departments-form__body__department__subdepartment_options span{
+    margin: 0px 4px;
+    cursor: pointer;
+}
+
 .carrers-departments-form__body__subdepartment-input {
-    margin-left: 50px;
+    margin-left: 30px;
     width: 63%;
     margin-top: 9px;
     margin-bottom: 5px;
@@ -92,6 +122,7 @@ $dashed-border: 1px dashed #ccc;
     display: flex;
     justify-content: space-between;
 }
+
 
 .carrers-offices-form__body {
     display: flex;

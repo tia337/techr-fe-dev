@@ -33,7 +33,6 @@ export class CompanySettingsComponent implements OnInit {
 	@ViewChild('newPercentageValue') newPercentageValue: ElementRef;
 	@ViewChild('newDescriptionValue') newDescriptionValue: ElementRef;
 
-	@ViewChild('departmentNameInput') departmentNameInput: ElementRef;
 	departments;
 	departmentFormGroup: FormGroup;
 
@@ -250,56 +249,105 @@ export class CompanySettingsComponent implements OnInit {
 		this.step = index;
 	}
 
-	departmentFormGroupInit(department = null) {
+	departmentFormGroupInit(department = null, subdepartment = null ) {
 		this.departmentFormGroup = new FormGroup({
 			'departmentName' : new FormControl(department !== null ? department.name : ''),
 			'newDepartmentName' : new FormControl(''),
-			'subdepartmentName' : new FormControl('')
+			'subdepartmentName' : new FormControl (subdepartment !== null ? subdepartment : ''),
+			'newSubdepartmentName' : new FormControl('')
 		});
 	}
 
 	editDepartment(department) {
 		if (department.edit) {
-			department.name = this.departmentFormGroup.value.departmentName;
-			department.edit = false;
+			if (this.departmentFormGroup.value.departmentName !== null && this.departmentFormGroup.value.departmentName !== '') {
+				department.name = this.departmentFormGroup.value.departmentName;
+				department.edit = false;
+			} else {
+				this.departmentFormGroupInit(department);
+				department.edit = false;
+			}
 
 		} else {
 			this.departmentFormGroupInit(department);
 			department.edit = true;
+			setTimeout(() => {
+				const editDepartmentId = document.getElementById('editDepartmentInput');
+				this.renderer.invokeElementMethod(editDepartmentId, 'focus');
+			}, 4);
 		}
 	}
 
 	addNewDepartment() {
-		if (this.newDepartment) {
-			if (this.departmentFormGroup.value.newDepartmentName !== '') {
-				const newDepartment = {
-					id: this.departmentFormGroup.value.newDepartmentName + Math.floor((Math.random() * 100)).toString(),
-					name: this.departmentFormGroup.value.newDepartmentName,
-					edit: false,
-					subDepartments: []
-				};
-				this.departments.push(newDepartment);
-				this.newDepartment = false;
-				this.departmentFormGroup.reset();
-			} else {
-				this.newDepartment = false;
-				}
-		} else {
-			this.newDepartment = true;
-		}
+		this.departmentFormGroup.reset();
+		this.newDepartment = true;
+		setTimeout(() => {
+			const newDepartmentInput = document.getElementById('newDepartmentInput');
+			this.renderer.invokeElementMethod(newDepartmentInput, 'focus');
+		}, 4);
+
 	}
+	saveNewDepartment() {
+		if (this.departmentFormGroup.value.newDepartmentName !== null && this.departmentFormGroup.value.newDepartmentName !== '') {
+			const newDepartment = {
+				id: this.departmentFormGroup.value.newDepartmentName + Math.floor((Math.random() * 100)).toString(),
+				name: this.departmentFormGroup.value.newDepartmentName,
+				edit: false,
+				newSubdepartment: false,
+				subDepartments: []
+			};
+			this.departments.push(newDepartment);
+			this.departmentFormGroup.reset();
+			this.newDepartment = false;
+		} else {
+			this.departmentFormGroup.reset();
+			this.newDepartment = false;
+			}
+	}
+
 	addSubdepartments(department) {
 		if (department.newSubdepartment) {
-			if (this.departmentFormGroup.value.subdepartmentName !== '') {
-				const newSubdepartment = this.departmentFormGroup.value.subdepartmentName;
-				department.subDepartments.push(newSubdepartment);
-				department.newSubdepartment = false;
-				this.departmentFormGroup.reset();
-			} else {
-				department.newSubdepartment = false;
-			}
-		}else {
+			this.saveSubdepartment(department);
+		} else {
 			department.newSubdepartment = true;
+			setTimeout(() => {
+				const newSubdepartmentInput = document.getElementById('newSubdepartmentInput');
+				this.renderer.invokeElementMethod(newSubdepartmentInput, 'focus');
+			}, 4);
+		}
+	}
+
+	saveSubdepartment(department) {
+		if (this.departmentFormGroup.value.newSubdepartmentName !== null && this.departmentFormGroup.value.newSubdepartmentName !== '') {
+			const newSubdepartment = {
+				id: this.departmentFormGroup.value.newSubdepartmentName + Math.floor(Math.random() * 100).toString(),
+				name: this.departmentFormGroup.value.newSubdepartmentName,
+				edit: false
+			};
+			department.subDepartments.push(newSubdepartment);
+			department.newSubdepartment = false;
+			this.departmentFormGroup.reset();
+		} else {
+			department.newSubdepartment = false;
+		}
+	}
+
+	editSubdepartment(subdepartment) {
+		if (subdepartment.edit) {
+			if (this.departmentFormGroup.value.subdepartmentName !== null && this.departmentFormGroup.value.subdepartmentName !== '') {
+				subdepartment.name = this.departmentFormGroup.value.subdepartmentName;
+				subdepartment.edit = false;
+			} else {
+				subdepartment.edit = false;
+			}
+		} else {
+			this.departmentFormGroupInit(null, subdepartment);
+			subdepartment.edit = true;
+
+			setTimeout(() => {
+				const editSubdepartmentInput = document.getElementById('editSubdepartmentInput');
+				this.renderer.invokeElementMethod(editSubdepartmentInput, 'focus');
+			}, 4);
 		}
 	}
 
@@ -337,6 +385,7 @@ export class CompanySettingsComponent implements OnInit {
 		this.editStageEnabled = false;
 
 	}
+
 	onAddLikelihoodStage() {
 		if (this.newLikelihood !== true) {
 			return this.newLikelihood = !this.newLikelihood;
