@@ -538,3 +538,73 @@ input {
 .relative {
     position: relative !important;
 }
+
+.job-offer-stages {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(stretch);
+    text-align: center;
+    background-color: #F2F2F2;
+    margin: 5px 5px;
+    .job-stage {
+      @include flex(1, 1, 120px);
+      cursor: pointer;
+      .job-stage-inner {
+        height: 100%;
+        border: 1px solid rgb(201, 201, 201);
+        //border-radius: 2px;
+        padding: 15px 0;
+        font-size: 15px;
+        background-color: #F2F2F2;
+        position: relative;
+        .delete-stage {
+            position: absolute;
+            top: 3px;
+            right: 7px;
+            z-index: 99;
+            font-size: 19px;
+            height: 20px;
+            width: 12px;
+        }
+      }
+      
+      .job-stage-inner:hover {
+        cursor: pointer;
+        background-color: rgb(238, 236, 236) !important;
+      }
+    }
+    .job-stage.add-new-stage {
+        .job-stage-inner {
+            padding: 0!important;
+            display: flex;
+            align-items: center;
+            background: #21b721;
+            color: #fafafa;
+            &:hover {
+                color: #000;
+            }
+        }
+    }
+  }
+
+.dndDragging {
+    cursor: move!important;
+}
+
+.delete-stage {
+    font-size: 50px;
+    height: 50px;
+    width: 50px;
+    margin-bottom: 50px;
+}
+
+.pipeline-title {
+    font-size: 24px;
+    margin-bottom: 40px;
+    padding-right: 15px;
+}
+
+.standart-note {
+    padding-left: 6px;
+    margin-bottom: 40px;
+}

@@ -23,3 +23,13 @@ type NotificationMessageSender = {
     lastName: string,
     sessionStatus: boolean
 }
+
+type StagesArray  = Array<{ index: number, type: string, title: string, value: number, editable: boolean}>;
+
+type Stage = {
+    index: number, 
+    type: string, 
+    title: string, 
+    value: number,
+    editable: boolean
+}

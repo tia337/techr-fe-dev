@@ -63,6 +63,7 @@
         "ng2-pdf-viewer": "^1.2.6",
         "ngx-facebook": "^2.4.0",
         "ngx-file-drop": "^1.0.15",
+        "ngx-drag-and-drop-lists": "^1.1.7",
         "nouislider": "^9.2.0",
         "parse": "^1.9.2",
         "pdfjs-dist": "^1.9.583",
@@ -91,6 +92,7 @@
         "node-sass": "^4.5.3",
         "protractor": "^5.1.2",
         "ts-node": "~2.0.0",
-        "tslint": "~4.5.0"
+        "tslint": "~4.5.0",
+        "ngx-drag-and-drop-lists": "^1.1.7"
     }
 }

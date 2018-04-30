@@ -134,6 +134,7 @@ import {
 } from './company-settings/change-password/change-password.component';
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
 import { ReportsComponent } from './reports/reports.component';
+import { DndListModule } from 'ngx-drag-and-drop-lists';
 
 
 @NgModule({
@@ -177,7 +178,8 @@ import { ReportsComponent } from './reports/reports.component';
 		MatRadioModule,
 		MatExpansionModule,
 		MatButtonModule,
-		ClickOutsideModule
+		ClickOutsideModule,
+		DndListModule
 	],
 	providers: [
 

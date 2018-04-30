@@ -163,7 +163,7 @@
                 <div class="carrers-departments">
                     <form class="carrers-departments-form" [formGroup]="departmentFormGroup">
                         <p class="carrers-departments-form__header"><span>Departments</span><button (click)="addNewDepartment()" mat-raised-button color="primary">Add new department</button></p>
-                        <div class="carrers-departments-form__body" *ngFor = "let department of departments"> 
+                        <div class="carrers-departments-form__body" *ngFor="let department of departments"> 
                             <div class="carrers-departments-form__body__department"> 
                                 <span *ngIf="!department.edit">{{department.name}}</span>
                                 <input 
@@ -282,6 +282,79 @@
                     </button>
                 </div>
             </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                   Hiring pipeline stages
+                </mat-panel-title>
+            </mat-expansion-panel-header>                
+                <div class="pipeline-wrapper">
+                   <p class="pipeline-title">
+                       Standart Hiring Workflow
+                   </p>
+                    <div class="job-offer-stages" 
+                            [dndList]="{
+                                disabled: false,
+                                effectAllowed: 'move',
+                                externalSources: true}"
+                                [dndModel]="stages">
+                        <div class="job-stage disabled">
+                            <div class="job-stage-inner">
+                                <div class="property-value">—</div>
+                                <div class="property-title">Suggested</div>
+                            </div>
+                        </div>
+                        <div class="job-stage disabled">
+                            <div class="job-stage-inner">
+                                <div class="property-value">—</div>
+                                <div class="property-title">Applied</div>
+                            </div>
+                        </div>
+                        <div class="job-stage disabled">
+                            <div class="job-stage-inner">
+                                <div class="property-value">—</div>
+                                <div class="property-title">Employee Referrals</div>
+                            </div>
+                        </div>
+                        <div class="job-stage" 
+                                *ngFor="let stage of stages; let i = index;"
+                                [dndType]="'stage'"
+                                [dndDraggable]="{draggable:true, effectAllowed:'move'}"
+                                [dndObject]="stage"
+                                (dndMoved)="removeMovedItem(stage)"
+                                (dndSelected)="openStageEdit(stage)"
+                                (dndInserted)="log('inserted')"
+                                (dndDrop)="log('dropped')">
+                          <div class="job-stage-inner">
+                            <mat-icon (click)="stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>                              
+                            <div *ngIf="stage.value !== 0" class="property-value">{{stage.value}}</div>
+                            <div *ngIf="stage.value === 0" class="property-value">—</div>
+                            <div class="property-title">{{stage.title}}</div>
+                            <input 
+                                id="editStageTitleInput"
+                                type="text" 
+                                #editStageTitleInput
+                                (keydown.enter)="editStageTitle(editStageTitleInput.value, stage.title, i)" 
+                                *ngIf="stage.editable" 
+                                [placeholder]="stage.title"
+                                (clickOutside)="stage.editable = false">
+                          </div>
+                        </div>
+                        <div class="job-stage add-new-stage">
+                            <div class="job-stage-inner"
+                                (click)="addNewStage()">
+                                <div class="property-title">
+                                    +Add new stage
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="standart-note">
+                        Note: This workflow will appear on all your job vacancies except for those <br> 
+                        have a custom workflow specified 
+                    </p>
+                </div>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

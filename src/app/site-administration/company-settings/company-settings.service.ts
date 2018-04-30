@@ -121,6 +121,44 @@ export class CompanySettingsService {
 		}
 	];
 
+	private stages = [
+		{
+			index: 3,
+			type: 'shortlist',
+			value: 0,
+			title: 'Shortlist',
+			editable: false
+		},
+		{
+			index: 4,
+			type: 'phoneInterview',
+			value: 0,
+			title: 'Phone Interview',
+			editable: false
+		},
+		{
+			index: 5,
+			type: 'f2fInterview',
+			value: 0,
+			title: 'F2F Interview',
+			editable: false
+		},
+		{
+			index: 6,
+			type: 'jobOffered',
+			value: 0,
+			title: 'Job Offered',
+			editable: false
+		},
+		{
+			index: 7,
+			type: 'hired',
+			value: 0,
+			title: 'Hired',
+			editable: false
+		}
+	];
+
 
 	constructor(private _parse: Parse) {
 		this.erpBaseLink = _parse.ErpCompanyPageLink;
@@ -196,6 +234,9 @@ export class CompanySettingsService {
 				}
 			});
 		});
+	}
+	getStages() {
+		return this.stages;
 	}
 	setPasswordState(state: boolean) {
 		const client = this._parse.getCurrentUser().get('Client_Pointer');

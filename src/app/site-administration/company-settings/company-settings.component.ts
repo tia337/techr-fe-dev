@@ -14,7 +14,6 @@ import { ViewChild } from '@angular/core';
 import { ElementRef, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
-
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
 import { ContactUsComponent } from "app/contact-us/contact-us.component";
 
@@ -76,6 +75,9 @@ export class CompanySettingsComponent implements OnInit {
 
 	step;
 
+	public stages: StagesArray;
+	stagesRemoved = [];
+
 	constructor(
 		private _parse: Parse,
 		private _CompanySettingsService: CompanySettingsService,
@@ -133,10 +135,52 @@ export class CompanySettingsComponent implements OnInit {
 
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
+		this.stages = this._CompanySettingsService.getStages();
 	}
 
 	saveSettings() {
 	}
+
+	openStageEdit(stage: Stage) {
+		stage.editable = true;
+		setTimeout(() => {
+			const input = document.getElementById('editStageTitleInput') as HTMLInputElement;
+			this.renderer.invokeElementMethod(input, 'focus');
+		}, 4);
+	}
+
+	editStageTitle(newValue, oldValue, index) {
+		if (newValue === '' || newValue === null || newValue === oldValue) {
+			this.stages[index].editable = false;
+			return;
+		} else {
+			this.stages[index].title = newValue;
+			this.stages[index].type = newValue;
+			this.stages[index].editable = false;
+		}
+		console.log(this.stages);
+	}
+
+	removeMovedItem(item) {
+		this.stages.splice(this.stages.indexOf(item), 1);
+		console.log(this.stages);
+	}
+
+	addNewStage() {
+		const newStage: Stage = {
+			index: this.stages.length,
+			value: 0,
+			title: 'New Stage',
+			editable: false,
+			type: null
+		};
+		this.stages.push(newStage);
+	}
+
+	log (value: string) {
+		console.log(value);
+	}
+
 
 	setChanges() {
 		if (this.website != this.websiteDef || this.careers != this.careersDef || this.picUrlDef != this.picUrl ||
@@ -355,3 +399,6 @@ export class CompanySettingsComponent implements OnInit {
 		this.newLikelihood = false;
 	}
 }
+
+
+
