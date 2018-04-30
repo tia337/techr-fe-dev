@@ -198,7 +198,7 @@
                                     <input
                                         id="editSubdepartmentInput" 
                                         class="carrers-departments-form__body__department__subdepartment__edit-subdepartment-input"
-                                        ngIf="subdepartment.edit" 
+                                        *ngIf="subdepartment.edit" 
                                         type="text" 
                                         [value]="subdepartment.name"
                                         formControlName= "subdepartmentName"
@@ -207,7 +207,7 @@
                                         [delayClickOutsideInit]="true">
                                     <div class="carrers-departments-form__body__department__subdepartment_options"> 
                                         <span (click)="editSubdepartment(subdepartment)">Edit</span>
-                                        <span>Remove</span>
+                                        <span (click) = "removeSubdepartment(department,subdepartment)">Remove</span>
                                     </div>
                                 </div>   
                                 <input 
@@ -215,7 +215,7 @@
                                     *ngIf="department.newSubdepartment" 
                                     type="text" 
                                     class="carrers-departments-form__body__subdepartment-input"
-                                    formControlName="subdepartmentName"
+                                    formControlName="newSubdepartmentName"
                                     placeholder="New Subdepartment"
                                     (keydown.enter)="addSubdepartments(department)"
                                     (clickOutside)="department.newSubdepartment = false"
@@ -257,26 +257,32 @@
                             <div class="carrers-offices-form__body__office"> 
                                 <span *ngIf="!office.edit">{{office.name}}</span>
                                 <input 
+                                    id= "editOfficeInput"
                                     *ngIf="office.edit" 
                                     class="carrers-offices-form__body__edit-office-input" 
                                     type="text" 
                                     [value]="office.name"
                                     formControlName="officeName"
-                                    (keydown.enter)="editOffice(office)">
+                                    (keydown.enter)="editOffice(office)"
+                                    (clickOutside)="office.edit = false"
+                                    [delayClickOutsideInit] = "true" >
                             </div>    
                             <p>
                                 <span class="carrers-offices-form__body_options" (click)="editOffice(office)">Edit</span>
-                                <span class="carrers-offices-form__body_options" (click)="removeOffice(office.id)">Remove</span>
+                                <span class="carrers-offices-form__body_options" (click)="removeOffice(office)">Remove</span>
                             </p>
                         </div>
                         <div class="carrers-offices-form__new-office">
                             <input 
+                                id= "newOfficeInput"
                                 type="text" 
                                 *ngIf="newOffice"
                                 class="carrers-offices-form__new-office__new-office-input"
                                 formControlName="newOfficeName"
                                 (keydown.enter)="addNewOffice()"
-                                placeholder="New Office">
+                                placeholder="New Office"
+                                (clickOutside) = "newOffice = false"
+                                [delayClickOutsideInit]="true">
                         </div>
                     </form>
                 </div>

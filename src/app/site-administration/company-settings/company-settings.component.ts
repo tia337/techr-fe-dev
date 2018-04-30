@@ -253,14 +253,14 @@ export class CompanySettingsComponent implements OnInit {
 		this.departmentFormGroup = new FormGroup({
 			'departmentName' : new FormControl(department !== null ? department.name : ''),
 			'newDepartmentName' : new FormControl(''),
-			'subdepartmentName' : new FormControl (subdepartment !== null ? subdepartment : ''),
+			'subdepartmentName' : new FormControl (subdepartment !== null ? subdepartment.name : ''),
 			'newSubdepartmentName' : new FormControl('')
 		});
 	}
 
 	editDepartment(department) {
 		if (department.edit) {
-			if (this.departmentFormGroup.value.departmentName !== null && this.departmentFormGroup.value.departmentName !== '') {
+			if (this.departmentFormGroup.value.departmentName !== null && this.departmentFormGroup.value.departmentName.trim() !== '') {
 				department.name = this.departmentFormGroup.value.departmentName;
 				department.edit = false;
 			} else {
@@ -288,7 +288,7 @@ export class CompanySettingsComponent implements OnInit {
 
 	}
 	saveNewDepartment() {
-		if (this.departmentFormGroup.value.newDepartmentName !== null && this.departmentFormGroup.value.newDepartmentName !== '') {
+		if (this.departmentFormGroup.value.newDepartmentName !== null && this.departmentFormGroup.value.newDepartmentName.trim() !== '') {
 			const newDepartment = {
 				id: this.departmentFormGroup.value.newDepartmentName + Math.floor((Math.random() * 100)).toString(),
 				name: this.departmentFormGroup.value.newDepartmentName,
@@ -318,23 +318,25 @@ export class CompanySettingsComponent implements OnInit {
 	}
 
 	saveSubdepartment(department) {
-		if (this.departmentFormGroup.value.newSubdepartmentName !== null && this.departmentFormGroup.value.newSubdepartmentName !== '') {
+		if (this.departmentFormGroup.value.newSubdepartmentName !== null && this.departmentFormGroup.value.newSubdepartmentName.trim() !== '') {
 			const newSubdepartment = {
 				id: this.departmentFormGroup.value.newSubdepartmentName + Math.floor(Math.random() * 100).toString(),
 				name: this.departmentFormGroup.value.newSubdepartmentName,
 				edit: false
 			};
-			department.subDepartments.push(newSubdepartment);
+			const index = this.departments.indexOf(department);
+			this.departments[index].subDepartments.push(newSubdepartment);
 			department.newSubdepartment = false;
 			this.departmentFormGroup.reset();
 		} else {
+			this.departmentFormGroup.reset();
 			department.newSubdepartment = false;
 		}
 	}
 
 	editSubdepartment(subdepartment) {
 		if (subdepartment.edit) {
-			if (this.departmentFormGroup.value.subdepartmentName !== null && this.departmentFormGroup.value.subdepartmentName !== '') {
+			if (this.departmentFormGroup.value.subdepartmentName !== null && this.departmentFormGroup.value.subdepartmentName.trim() !== '') {
 				subdepartment.name = this.departmentFormGroup.value.subdepartmentName;
 				subdepartment.edit = false;
 			} else {
@@ -349,6 +351,11 @@ export class CompanySettingsComponent implements OnInit {
 				this.renderer.invokeElementMethod(editSubdepartmentInput, 'focus');
 			}, 4);
 		}
+	}
+	removeSubdepartment(department, subdepartment) {
+		const depIndex = this.departments.indexOf(department);
+		const subdepIndex = this.departments[depIndex].subDepartments.indexOf[subdepartment];
+		this.departments[depIndex].subDepartments.splice(subdepIndex, 1);
 	}
 
 	removeDepartment(id) {
@@ -368,14 +375,49 @@ export class CompanySettingsComponent implements OnInit {
 	}
 
 	addNewOffice() {
-
+		if (this.newOffice) {
+			if (this.officesFormGroup.value.newOfficeName !== null && this.officesFormGroup.value.newOfficeName.trim() !== '' ) {
+				const newOffice = {
+					id: this.officesFormGroup.value.newOfficeName + Math.floor(Math.random() * 100).toString(),
+					name : this.officesFormGroup.value.newOfficeName,
+					edit: false
+				};
+				this.offices.push(newOffice);
+				this.officesFormGroup.reset();
+				this.newOffice = false;
+			} else {
+				this.officesFormGroup.reset();
+				this.newOffice = false;
+			}
+		} else {
+			this.officesFormGroup.reset();
+			this.newOffice = true;
+			setTimeout(() => {
+				const newOfficeInput = document.getElementById('newOfficeInput');
+				this.renderer.invokeElementMethod(newOfficeInput, 'focus');
+				}, 4);
+		}
 	}
 
 	editOffice(office) {
-
+		if (office.edit) {
+			if (this.officesFormGroup.value.officeName !== null && this.officesFormGroup.value.officeName.trim() !== '') {
+				office.name = this.officesFormGroup.value.officeName;
+				office.edit = false;
+			} else {
+				office.edit = false;
+			}
+			} else {
+				office.edit = true;
+				setTimeout(() => {
+					const editOfficeInput = document.getElementById('editOfficeInput');
+					this.renderer.invokeElementMethod(editOfficeInput, 'focus');
+				});
+			}
 	}
-	removeOffice(id) {
-
+	removeOffice(office) {
+		const officeIndex = this.offices.indexOf(office);
+		this.offices.splice(officeIndex, 1);
 	}
 
 	onEditStageClick() {
