@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
 import { ContactUsComponent } from "app/contact-us/contact-us.component";
+import { NewWorkflowComponent } from './new-workflow/new-workflow.component';
 
 @Component({
 	selector: 'app-company-settings',
@@ -76,7 +77,9 @@ export class CompanySettingsComponent implements OnInit {
 	step;
 
 	public stages: StagesArray;
-	stagesRemoved = [];
+	public clients: ClientsArray;
+	public projects: ProjectsArray;
+	public workflowArray: Array<any> = [];
 
 	constructor(
 		private _parse: Parse,
@@ -100,9 +103,9 @@ export class CompanySettingsComponent implements OnInit {
 				this.disabled = true;
 			}
 			return this._CompanySettingsService.getAdmins();
-		}).then(admins=>{
+		}).then(admins => {
 			this.admins = admins;
-		})
+		});
 		if (!this._CompanySettingsService.getCompany()) {
 			this.isInCompany = false;
 		} else {
@@ -136,6 +139,12 @@ export class CompanySettingsComponent implements OnInit {
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
 		this.stages = this._CompanySettingsService.getStages();
+		this.clients = this._CompanySettingsService.getClients();
+		this.projects = this._CompanySettingsService.getProjects();
+		this._CompanySettingsService.currentClient.subscribe(data => {
+			console.log(data);
+			this.createNewWorkFlow(data);
+		});
 	}
 
 	saveSettings() {
@@ -176,6 +185,47 @@ export class CompanySettingsComponent implements OnInit {
 		};
 		this.stages.push(newStage);
 	}
+
+	openNewWorkFlowModal() {
+		const newWorkFlow = this._root_vcr.createComponent(NewWorkflowComponent);
+		newWorkFlow.clients = this.clients;
+		newWorkFlow.projects = this.projects;
+	}
+
+	createNewWorkFlow (client) {
+		console.log(client);
+		if (client === null) {
+			return;
+		} else {
+			console.log(client);
+			const stages = this.stages;
+			const id = Math.random().toFixed(36).substring(5, 10);
+			const data = {
+				name: client.name,
+				stages: stages,
+				id: id
+			};
+			console.log(data);
+			this.workflowArray.push(data);
+			console.log(this.workflowArray);
+		}
+	}
+
+	addNewStageInCustomWorkFlow(workflow) {
+		this.workflowArray.forEach(item => {
+			if (item.id === workflow.id) {
+				const newStage: Stage = {
+					index: this.stages.length,
+					value: 0,
+					title: 'New Stage',
+					editable: false,
+					type: null
+				};
+				item.stages.push(newStage);
+			}
+		});
+	}
+
 
 	log (value: string) {
 		console.log(value);

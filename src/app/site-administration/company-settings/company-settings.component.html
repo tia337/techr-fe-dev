@@ -328,8 +328,7 @@
                                 (dndDrop)="log('dropped')">
                           <div class="job-stage-inner">
                             <mat-icon (click)="stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>                              
-                            <div *ngIf="stage.value !== 0" class="property-value">{{stage.value}}</div>
-                            <div *ngIf="stage.value === 0" class="property-value">—</div>
+                            <div class="property-value">—</div>
                             <div class="property-title">{{stage.title}}</div>
                             <input 
                                 id="editStageTitleInput"
@@ -354,6 +353,72 @@
                         Note: This workflow will appear on all your job vacancies except for those <br> 
                         have a custom workflow specified 
                     </p>
+                    <p class="pipeline-title">
+                        Custom hiring workflows
+                    </p>
+                    <button class="create-new-workflow" (click)="openNewWorkFlowModal()">
+                        Create New
+                    </button>
+                    <div *ngIf="workflowArray.length > 0">
+                            <div *ngFor="let workflow of workflowArray">
+                                <h1>{{workflow.name}}</h1>
+                                <div class="job-offer-stages" 
+                                    [dndList]="{
+                                        disabled: false,
+                                        effectAllowed: 'move',
+                                        externalSources: true}"
+                                        [dndModel]="workflow.stages">
+                                    <div class="job-stage disabled">
+                                        <div class="job-stage-inner">
+                                            <div class="property-value">—</div>
+                                            <div class="property-title">Suggested</div>
+                                        </div>
+                                    </div>
+                                    <div class="job-stage disabled">
+                                        <div class="job-stage-inner">
+                                            <div class="property-value">—</div>
+                                            <div class="property-title">Applied</div>
+                                        </div>
+                                    </div>
+                                    <div class="job-stage disabled">
+                                        <div class="job-stage-inner">
+                                            <div class="property-value">—</div>
+                                            <div class="property-title">Employee Referrals</div>
+                                        </div>
+                                    </div>
+                                    <div class="job-stage" 
+                                            *ngFor="let flow of workflow.stages; let i = index;"
+                                            [dndType]="'stage'"
+                                            [dndDraggable]="{draggable:true, effectAllowed:'move'}"
+                                            [dndObject]="flow"
+                                            (dndMoved)="removeMovedItem(flow)"
+                                            (dndSelected)="openStageEdit(flow)"
+                                            (dndInserted)="log('inserted')"
+                                            (dndDrop)="log('dropped')">
+                                    <div class="job-stage-inner">
+                                        <mat-icon (click)="workflow.stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>                              
+                                        <div class="property-value">—</div>
+                                        <div class="property-title">{{flow.title}}</div>
+                                        <input 
+                                            id="editStageTitleInput"
+                                            type="text" 
+                                            #editStageTitleInput
+                                            (keydown.enter)="editStageTitle(editStageTitleInput.value, flow.title, i)" 
+                                            *ngIf="flow.editable" 
+                                            [placeholder]="flow.title"
+                                            (clickOutside)="stage.editable = false">
+                                    </div>
+                                    </div>
+                                    <div class="job-stage add-new-stage">
+                                        <div class="job-stage-inner" (click)="addNewStageInCustomWorkFlow(workflow)">
+                                            <div class="property-title">
+                                                +Add new stage
+                                            </div>
+                                        </div>
+                                </div>
+                                </div>
+                            </div> 
+                        </div>
                 </div>
         </mat-expansion-panel>
     </mat-accordion>

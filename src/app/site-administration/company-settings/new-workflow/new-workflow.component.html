@@ -1,0 +1,23 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+  <div class="modal-section">
+    <button class="blue-btn" (click)="currentArray = clientsArray;">for client <mat-icon class="icon">play</mat-icon> </button>
+    <button class="blue-btn" (click)="currentArray = projectsArray;">for project <mat-icon class="icon">play</mat-icon> </button>
+    <button class="blue-btn">for user role <mat-icon class="icon">play</mat-icon> </button>
+  </div>
+  <div class="modal-section" *ngIf="currentArray === projectsArray">
+    <button class="blue-btn" *ngFor="let item of currentArray" (click)="currentClientsArray = item.clients">{{item.name}}</button>
+  </div>
+  <div class="modal-section" *ngIf="currentArray === clientsArray">
+      <button *ngFor="let item of currentArray" (click)="currentClient = item">{{item.name}}</button>
+  </div>
+  <div class="modal-section" *ngIf="currentArray === projectsArray">
+    <ul style="list-style: none;">
+      <li style="cursor: pointer;" *ngFor="let client of currentClientsArray" (click)="currentClient = client">{{client.name}}</li>
+    </ul>
+  </div>
+  <div class="modal-section">
+    <button class="add-custom-workflow" (click)="addCustomWorkFlow()">add custom workflow</button>
+  </div>
+  </div>
+</div>

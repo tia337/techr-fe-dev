@@ -545,7 +545,7 @@ input {
     @include flex-align-items(stretch);
     text-align: center;
     background-color: #F2F2F2;
-    margin: 5px 5px;
+    margin-bottom: 10px;
     .job-stage {
       @include flex(1, 1, 120px);
       cursor: pointer;
@@ -605,6 +605,18 @@ input {
 }
 
 .standart-note {
-    padding-left: 6px;
     margin-bottom: 40px;
+}
+
+
+.create-new-workflow {
+    background: #007ab6;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 10px;
+    transition: .3s all ease-in-out;
+    &:hover {
+        opacity: .7;
+    }
 }

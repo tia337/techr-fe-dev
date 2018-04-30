@@ -3,10 +3,13 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class CompanySettingsService {
 
+	client: BehaviorSubject<any> = new BehaviorSubject(null);
+	currentClient = this.client.asObservable();
 	erpBaseLink;
 	logoUpdate: EventEmitter<any> = new EventEmitter();
 	private tableRows = [
@@ -121,7 +124,7 @@ export class CompanySettingsService {
 		}
 	];
 
-	private stages = [
+	private stages: StagesArray = [
 		{
 			index: 3,
 			type: 'shortlist',
@@ -156,6 +159,57 @@ export class CompanySettingsService {
 			value: 0,
 			title: 'Hired',
 			editable: false
+		}
+	];
+
+	private clients: ClientsArray = [
+		{
+			id: 0,
+			name: 'Privat Bank'
+		},
+		{
+			id: 1,
+			name: 'OTP Bank'
+		},
+		{
+			id: 2,
+			name: 'Dynamo Kiev'
+		},
+		{
+			id: 3,
+			name: 'Metro Bank'
+		},
+		{
+			id: 4,
+			name: 'Polytechnic University'
+		}
+	];
+
+	private projects: ProjectsArray = [
+		{
+			id: 0,
+			name: 'Digital Transformation',
+			clients: this.clients
+		},
+		{
+			id: 1,
+			name: 'POS Upgrade',
+			clients: this.clients
+		},
+		{
+			id: 2,
+			name: 'E-tickets',
+			clients: this.clients
+		},
+		{
+			id: 3,
+			name: 'Call Centre Outsorcing',
+			clients: this.clients
+		},
+		{
+			id: 4,
+			name: 'Cloud migration',
+			clients: this.clients
 		}
 	];
 
@@ -238,6 +292,12 @@ export class CompanySettingsService {
 	getStages() {
 		return this.stages;
 	}
+	getClients() {
+		return this.clients;
+	}
+	getProjects() {
+		return this.projects;
+	}
 	setPasswordState(state: boolean) {
 		const client = this._parse.getCurrentUser().get('Client_Pointer');
 		client.set('passwordSecured', state);
@@ -259,5 +319,9 @@ export class CompanySettingsService {
 
 	getOffices() {
 		return [...this.offices];
+	}
+
+	throwClient (client) {
+		this.client.next(client);
 	}
 }

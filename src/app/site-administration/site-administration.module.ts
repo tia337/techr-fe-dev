@@ -135,6 +135,8 @@ import {
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
 import { ReportsComponent } from './reports/reports.component';
 import { DndListModule } from 'ngx-drag-and-drop-lists';
+import { NewWorkflowModule } from './company-settings/new-workflow/new-workflow.module';
+import { NewWorkflowComponent } from './company-settings/new-workflow/new-workflow.component';
 
 
 @NgModule({
@@ -179,7 +181,8 @@ import { DndListModule } from 'ngx-drag-and-drop-lists';
 		MatExpansionModule,
 		MatButtonModule,
 		ClickOutsideModule,
-		DndListModule
+		DndListModule,
+		NewWorkflowModule
 	],
 	providers: [
 
@@ -203,7 +206,8 @@ import { DndListModule } from 'ngx-drag-and-drop-lists';
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 		ChangePasswordComponent,
-		AlertComponent
+		AlertComponent,
+		NewWorkflowComponent
 	],
 	exports: [
 		SiteAdministrationComponent,

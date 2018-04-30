@@ -32,4 +32,15 @@ type Stage = {
     title: string, 
     value: number,
     editable: boolean
-}
+};
+
+type ClientsArray = Array< {
+    id: number,
+    name: string
+}>;
+
+type ProjectsArray = Array< {
+    id: number,
+    name: string,
+    clients: ClientsArray
+} >
