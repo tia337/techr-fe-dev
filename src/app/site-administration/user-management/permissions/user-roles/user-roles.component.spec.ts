@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserRoleComponent } from './user-role.component';
+import { UserRolesComponent } from './user-roles.component';
 
-describe('UserRoleComponent', () => {
-  let component: UserRoleComponent;
-  let fixture: ComponentFixture<UserRoleComponent>;
+describe('UserRolesComponent', () => {
+  let component: UserRolesComponent;
+  let fixture: ComponentFixture<UserRolesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UserRoleComponent ]
+      declarations: [ UserRolesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserRoleComponent);
+    fixture = TestBed.createComponent(UserRolesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

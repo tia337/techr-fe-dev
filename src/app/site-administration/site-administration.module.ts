@@ -14,6 +14,7 @@ import {
 	ReactiveFormsModule,
 	FormsModule
 } from '@angular/forms';
+import { UserRolesModule } from './user-management/permissions/user-roles/user-roles.module';
 import {
 	MatIconModule,
 	MatTooltipModule,
@@ -134,6 +135,9 @@ import {
 } from './company-settings/change-password/change-password.component';
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
 import { ReportsComponent } from './reports/reports.component';
+import { UserRolesComponent } from './user-management/permissions/user-roles/user-roles.component';
+import { UserRolesEditComponent } from './user-management/permissions/user-roles-edit/user-roles-edit.component';
+import { UserRolesEditModule } from './user-management/permissions/user-roles-edit/user-roles-edit.module';
 
 
 @NgModule({
@@ -153,6 +157,8 @@ import { ReportsComponent } from './reports/reports.component';
 		AccessLevelPageComponent,
 		ChangePasswordComponent,
 		ReportsComponent,
+		UserRolesComponent,
+		UserRolesEditComponent,
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 	],
@@ -177,7 +183,9 @@ import { ReportsComponent } from './reports/reports.component';
 		MatRadioModule,
 		MatExpansionModule,
 		MatButtonModule,
-		ClickOutsideModule
+		ClickOutsideModule,
+		UserRolesModule,
+		UserRolesEditModule
 	],
 	providers: [
 
@@ -201,7 +209,9 @@ import { ReportsComponent } from './reports/reports.component';
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 		ChangePasswordComponent,
-		AlertComponent
+		AlertComponent,
+		UserRolesComponent,
+		UserRolesEditComponent
 	],
 	exports: [
 		SiteAdministrationComponent,
