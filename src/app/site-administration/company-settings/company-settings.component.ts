@@ -75,11 +75,11 @@ export class CompanySettingsComponent implements OnInit {
 	erpPageGreetingDef = '';
 
 	step;
-
+	public stagesLength;
 	public stages: StagesArray;
 	public clients: ClientsArray;
 	public projects: ProjectsArray;
-	public workflowArray: Array<any> = [];
+	public workflowArray: Array<{id: string, name: string, stages: StagesArray}> = [];
 
 	constructor(
 		private _parse: Parse,
@@ -138,11 +138,11 @@ export class CompanySettingsComponent implements OnInit {
 
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
+		this.stagesLength = this._CompanySettingsService.getStages().length;
 		this.stages = this._CompanySettingsService.getStages();
 		this.clients = this._CompanySettingsService.getClients();
 		this.projects = this._CompanySettingsService.getProjects();
 		this._CompanySettingsService.currentClient.subscribe(data => {
-			console.log(data);
 			this.createNewWorkFlow(data);
 		});
 	}
@@ -150,7 +150,7 @@ export class CompanySettingsComponent implements OnInit {
 	saveSettings() {
 	}
 
-	openStageEdit(stage: Stage) {
+	openStageEdit(stage: Stage, array: StagesArray) {
 		stage.editable = true;
 		setTimeout(() => {
 			const input = document.getElementById('editStageTitleInput') as HTMLInputElement;
@@ -158,21 +158,19 @@ export class CompanySettingsComponent implements OnInit {
 		}, 4);
 	}
 
-	editStageTitle(newValue, oldValue, index) {
+	editStageTitle(newValue, oldValue, index, array) {
 		if (newValue === '' || newValue === null || newValue === oldValue) {
-			this.stages[index].editable = false;
+			array[index].editable = false;
 			return;
 		} else {
-			this.stages[index].title = newValue;
-			this.stages[index].type = newValue;
-			this.stages[index].editable = false;
+			array[index].title = newValue;
+			array[index].type = newValue;
+			array[index].editable = false;
 		}
-		console.log(this.stages);
 	}
 
-	removeMovedItem(item) {
-		this.stages.splice(this.stages.indexOf(item), 1);
-		console.log(this.stages);
+	removeMovedItem(item, array) {
+		array.splice(array.indexOf(item), 1);
 	}
 
 	addNewStage() {
@@ -193,21 +191,17 @@ export class CompanySettingsComponent implements OnInit {
 	}
 
 	createNewWorkFlow (client) {
-		console.log(client);
 		if (client === null) {
 			return;
 		} else {
-			console.log(client);
-			const stages = this.stages;
+			const stages: StagesArray = this._CompanySettingsService.getStages();
 			const id = Math.random().toFixed(36).substring(5, 10);
 			const data = {
 				name: client.name,
 				stages: stages,
 				id: id
 			};
-			console.log(data);
 			this.workflowArray.push(data);
-			console.log(this.workflowArray);
 		}
 	}
 
@@ -215,7 +209,7 @@ export class CompanySettingsComponent implements OnInit {
 		this.workflowArray.forEach(item => {
 			if (item.id === workflow.id) {
 				const newStage: Stage = {
-					index: this.stages.length,
+					index: this._CompanySettingsService.getStages().length,
 					value: 0,
 					title: 'New Stage',
 					editable: false,

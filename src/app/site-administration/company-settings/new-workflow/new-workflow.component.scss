@@ -28,6 +28,7 @@
     z-index: 999999;
     position: relative;
     max-width: 90%;  
+    min-width: 65%;
     display: flex;  
     &-section {
         width: 25%;
@@ -36,6 +37,7 @@
             text-transform: uppercase;
             background: #007ab6;
             color: #fff;
+            width: 100%;
             border: none;
             border-radius: 0;
             padding: 10px;

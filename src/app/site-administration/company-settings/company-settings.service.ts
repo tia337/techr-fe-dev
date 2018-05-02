@@ -289,14 +289,14 @@ export class CompanySettingsService {
 			});
 		});
 	}
-	getStages() {
-		return this.stages;
+	getStages(): StagesArray {
+		return this.stages.slice();
 	}
-	getClients() {
-		return this.clients;
+	getClients(): ClientsArray {
+		return [...this.clients];
 	}
-	getProjects() {
-		return this.projects;
+	getProjects(): ProjectsArray {
+		return [...this.projects];
 	}
 	setPasswordState(state: boolean) {
 		const client = this._parse.getCurrentUser().get('Client_Pointer');
