@@ -1,0 +1,88 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <p class="modal__title">
+      Select rejection reason
+    </p>
+    <ul class="pagination" *ngIf="paginationArray.length > 1">
+      <li *ngFor="let pagination of paginationArray" [ngClass]="{'active': currentPage === pagination.page}" (click)="showPage(pagination.sliceNumber); currentPage = pagination.page;">{{pagination.page}}</li>
+    </ul>
+    <div class="rejection-options">
+      <div class="info-box">
+        <span class="rejected-candidates-count" style="width: 50%;"><span style="font-size: 15px; font-weight: bold;">{{candidatesTempArray.length}}</span> rejected candidates</span>
+        <span class="rejection-reason-count" style="width: 66%;">You gave <span style="color:red; font-weight: bold; font-size: 15px;">{{rejectionReasons.length}}</span> rejection reasons</span>
+        <div class="bulk-reasons">
+          <div class="bulk-reasons__selector" 
+               style="width: 100%;"
+              [ngClass]="{'opened': bulkRejectionReasonsList === true}"
+              *ngIf="currentBulkReason === null"
+              (click)="bulkRejectionReasonsList = !bulkRejectionReasonsList">
+            Select bulk reason
+          </div>
+          <div class="bulk-reasons__selector" 
+              style="width: 100%;"
+              [ngClass]="{'opened': bulkRejectionReasonsList === true}"
+              *ngIf="currentBulkReason !== null"              
+              (click)="bulkRejectionReasonsList = !bulkRejectionReasonsList">
+              {{currentBulkReason.reason}}
+          </div>
+          <ul class="bulk-reasons__list" *ngIf="bulkRejectionReasonsList">
+            <li class="bulk-reasons__item" 
+                *ngFor="let reason of bulkRejectionReasons" 
+                (click)="setBulkRejectionReason(reason); $event.stopImmediatePropagation();">
+                {{reason.reason}}
+            </li>
+          </ul>
+        </div>
+        <p class="reject-candidates-btn" (click)="closeModal()">Reject Candidates</p>
+      </div>
+    </div>
+    <div class="bulk-candidates-list">
+        <div class="candidate-box" *ngFor="let candidate of candidatesArray">
+          <div class="candidate-wrap">
+              <div class="candidate__avatar-wrap">
+                  <img *ngIf="candidate.get('avatarURL') === undefined" src="../../../../../assets/img/default-userpic.png" class="avatar" alt="">
+                  <img *ngIf="candidate.get('avatarURL') !== undefined" [src]="candidate.get('avatarURL')" class="avatar" alt="profile pic">
+              </div>
+              <div class="candidate__candidate-name-position">
+                  <div class="candidate__candidate-name">
+                      {{candidate.get('firstName')}} {{candidate.get('lastName')}}
+                  </div>
+                  <div class="candidate__candidate-position">
+                      {{candidate.get('headline')}}
+                  </div>
+                  <div class="candidate__company-name">
+                      <span class="candidate__company-title" *ngFor="let companyName of candidate.get('companyNames')">
+                          {{companyName}}
+                      </span>
+                  </div>
+              </div>
+          </div>
+          <div class="rejection-reason">
+              <div class="rejection-reason__selector" 
+                   [ngClass]="{'opened': candidate.rejectionList.opened === true}"
+                   (click)="candidate.rejectionList.opened = true" 
+                   *ngIf="candidate.rejectionReason === null">
+                Select rejection reason
+              </div>
+              <div class="rejection-reason__selector reason-selected" 
+                   [ngClass]="{'opened': candidate.rejectionList.opened === true}"
+                   (click)="candidate.rejectionList.opened = true" 
+                   *ngIf="candidate.rejectionReason !== null">
+                  {{candidate.rejectionReason.reason}}
+              </div>
+              <div *ngIf="candidate.rejectionList.opened">
+                <ul class="rejection-reason__list">
+                    <li class="rejection-reason__item" 
+                        *ngFor="let reason of candidate.rejectionList.reasons" 
+                        (click)="setRejectionReason(candidate, reason); $event.stopImmediatePropagation();">
+                        {{reason.reason}}
+                    </li>
+                </ul>
+              </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+

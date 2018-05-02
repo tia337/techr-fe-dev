@@ -1,0 +1,233 @@
+.modal-overlay {
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100vw;
+    height: 100%;
+    padding-top: 80px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    z-index: 999;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    * {
+        transition: .3s all ease-in-out;
+    }
+} 
+
+.modal {
+    background: #fff;
+    border-radius: 3px;
+    padding: 15px 25px;
+    z-index: 999999;
+    position: relative;
+    width: 65%;  
+    min-height: 851px;
+    margin-bottom: 40px;
+    margin-top: 40px;
+    &__title {
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 0;
+        margin-bottom: 20px;
+        background: #595959;
+        color: #fff;
+    } 
+}
+
+.bulk-candidates-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: auto;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    li {
+        padding: 10px;
+        background: #4da3ec;
+        color: #fff;
+        cursor: pointer;
+        transition: .3s all ease-in-out;
+        margin-right: 5px;
+        opacity: .4;
+        &:last-child {
+            margin-right: 0;
+        }
+        &:hover {
+            opacity: .7;
+        }
+        &.active {
+            opacity: 1;
+        }
+    }
+}
+
+.candidate {
+    &-box {
+        width: 48%;
+        background: rgba(0,0,0,.1);
+        margin-bottom: 15px;
+    }
+    &-wrap {
+        display: flex;
+        padding: 10px;
+    }
+    &-box:nth-child(odd) {
+        margin-right: 15px;
+    } 
+    &__candidate-name-position {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        color: #000;
+        margin-left: 20px;    
+        div {
+            margin-bottom: 5px;
+        }
+        div:last-child {
+            margin-bottom: 0;
+        }
+    }
+    &__avatar-wrap {
+        img {
+            border-radius: 50%;
+            max-width: 70px;
+            max-height: 70px;
+        }
+    }    
+    &__candidate-name {
+        font-size: 15px;
+    }
+    &__candidate-position {
+        font-size: 13px;
+        word-break: break-word;
+        text-align: center;
+    }
+    &__company-name {
+        font-size: 13px;
+        opacity: .7;
+    } 
+}
+
+.rejection-reason {
+    position: relative;
+    width: 100%;
+    &__selector {
+        background: #595959;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        padding: 5px 0;
+        cursor: pointer;
+        &.opened {
+            background: #4da3ec;
+        }
+        &.reason-selected {
+            background: #4da3ec;            
+        }
+    }
+    &__item {
+        background: #4da3ec;    
+        list-style: none;
+        color: #fff;
+        padding: 5px;      
+        width: 100%;     
+        cursor: pointer;
+        transition: .1s all ease-in-out;
+        &:hover {
+            background: #FFF;
+            color: #4da3ec;
+        }     
+    }
+    &__list {
+        position: absolute;
+        width: 100%;
+        z-index: 9;
+    }
+}
+
+.rejection-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pagination {
+    margin-right: 20px;
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.bulk-reasons {
+    position: relative;
+    width: 100%;
+    &__selector {
+        background: #4da3ec;    
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        padding: 5px 0;
+        cursor: pointer;
+        width: 25%;
+        &.opened {
+            color: #4da3ec;
+            background: #fff;
+        }
+    }
+    &__item {
+        background: #4da3ec;    
+        list-style: none;
+        color: #fff;
+        padding: 5px;      
+        width: 100%;     
+        cursor: pointer;
+        transition: .1s all ease-in-out;
+        &:hover {
+            background: #FFF;
+            color: #4da3ec;
+        }     
+    }
+    &__list {
+        position: absolute;
+        width: 100%;
+        z-index: 9;
+    }
+}
+
+.reject-candidates-btn {
+    background: red;    
+    color: #fff;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: .3s all ease-in-out;
+    margin-left: 40px;
+    width: 50%;
+    text-align: center;
+    text-transform: uppercase;
+    &:hover {
+        opacity: .7;
+    }
+}

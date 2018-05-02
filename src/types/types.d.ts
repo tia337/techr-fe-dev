@@ -44,3 +44,16 @@ type ProjectsArray = Array< {
     name: string,
     clients: ClientsArray
 } >
+
+type BulkActionsArray = Array<{
+    className: string,
+    id: string,
+    rejectionList: {opened: boolean, reasons: Array<{ type: string, reason: string }>},
+    rejectionReason: string,
+    hasRejectionReason: boolean,
+    personalRejectionReason: boolean,
+    source: string,
+    _objCount: string
+    attributes: Object,
+    createdAt: Date
+  }>;

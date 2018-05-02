@@ -389,9 +389,9 @@
                                         <mat-icon (click)="workflow.stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>                              
                                         <div class="property-value">—</div>
                                         <div class="property-title" *ngIf="!flow.editable">{{flow.title}}</div>
-                                        <input 
+                                        <input
                                             id="editStageTitleInputFlow"
-                                            type="text" 
+                                            type="text"
                                             #editStageTitleInputFlow
                                             (keydown.enter)="editStageTitle(editStageTitleInputFlow.value, flow.title, i, workflow.stages)" 
                                             *ngIf="flow.editable" 
