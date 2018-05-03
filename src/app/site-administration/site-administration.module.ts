@@ -14,6 +14,7 @@ import {
 	ReactiveFormsModule,
 	FormsModule
 } from '@angular/forms';
+import { UserRolesModule } from './user-management/permissions/user-roles/user-roles.module';
 import {
 	MatIconModule,
 	MatTooltipModule,
@@ -134,10 +135,18 @@ import {
 } from './company-settings/change-password/change-password.component';
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
 import { ReportsComponent } from './reports/reports.component';
+<<<<<<< HEAD
+import { UserRolesComponent } from './user-management/permissions/user-roles/user-roles.component';
+import { UserRolesEditComponent } from './user-management/permissions/user-roles-edit/user-roles-edit.component';
+import { UserRolesEditModule } from './user-management/permissions/user-roles-edit/user-roles-edit.module';
+import { UserRolesDeleteComponent } from './user-management/permissions/user-roles-delete/user-roles-delete.component';
+import { UserRolesDeleteModule } from './user-management/permissions/user-roles-delete/user-roles-delete.module';
+=======
 import { NewWorkflowModule } from './company-settings/new-workflow/new-workflow.module';
 import { NewWorkflowComponent } from './company-settings/new-workflow/new-workflow.component';
 import { NgxDnDModule } from '@swimlane/ngx-dnd';
 
+>>>>>>> 03ee82030961be5145ef3a4b9ee6a965400ab70e
 
 @NgModule({
 	declarations: [
@@ -156,6 +165,9 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 		AccessLevelPageComponent,
 		ChangePasswordComponent,
 		ReportsComponent,
+		UserRolesComponent,
+		UserRolesEditComponent,
+		UserRolesDeleteComponent
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 	],
@@ -181,8 +193,14 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 		MatExpansionModule,
 		MatButtonModule,
 		ClickOutsideModule,
+<<<<<<< HEAD
+		UserRolesModule,
+		UserRolesEditModule,
+		UserRolesDeleteModule
+=======
 		NewWorkflowModule,
 		NgxDnDModule
+>>>>>>> 03ee82030961be5145ef3a4b9ee6a965400ab70e
 	],
 	providers: [
 
@@ -207,7 +225,13 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 		// InvitationConfirmAlertComponent,
 		ChangePasswordComponent,
 		AlertComponent,
+<<<<<<< HEAD
+		UserRolesComponent,
+		UserRolesEditComponent,
+		UserRolesDeleteComponent
+=======
 		NewWorkflowComponent
+>>>>>>> 03ee82030961be5145ef3a4b9ee6a965400ab70e
 	],
 	exports: [
 		SiteAdministrationComponent,

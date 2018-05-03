@@ -6,6 +6,7 @@ import * as _ from 'underscore';
 import { Socket } from 'ng-socket-io';
 import { Parse } from '../parse.service';
 import { CandidatesService } from './candidates/candidates.service';
+import { CompanySettingsService } from 'app/site-administration/company-settings/company-settings.service';
 
 @Component({
 	selector: 'app-job-details',
@@ -25,6 +26,12 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 	pipelineLoader = Loading.loading;
 	private previousUrl;
 
+	likelihoodPercentages = [];
+	likelihoodEnabled = false;
+
+	selectedPercentage = false;
+	selectedLikelihoodPercentage = 50;
+
 	constructor(
 		private _jobDetailsService: JobDetailsService,
 		private _route: ActivatedRoute,
@@ -32,7 +39,8 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 		private _candidatesService: CandidatesService,
 		private _socket: Socket,
 		private _parse: Parse,
-		private _changeDetector: ChangeDetectorRef
+		private _changeDetector: ChangeDetectorRef,
+		private _companySettingsService: CompanySettingsService
 	) { }
 
 	ngOnInit() {
@@ -101,6 +109,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 			});
 
 		});
+	this.likelihoodPercentages = this._companySettingsService.getTableRows();
 	}
 
 	ngOnChanges() {
@@ -200,6 +209,12 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 
 	get Loading() {
 		return Loading;
+	}
+
+	setLikelihoodPercentage(likelihoodPercentage) {
+		this.selectedPercentage = true;
+		this.likelihoodEnabled = false;
+		this.selectedLikelihoodPercentage = likelihoodPercentage;
 	}
 
 	ngOnDestroy() {

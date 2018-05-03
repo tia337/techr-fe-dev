@@ -1,0 +1,40 @@
+<div 
+  class="modal-overlay" 
+  (click)="closeModal()">
+  <form 
+    class="user-role-modal" 
+    [formGroup]="userRolesFormGroup"
+    (ngSubmit)="editUserRole()"
+    (click)="$event.stopPropagation()"  >
+    
+    <h2>Edit user role</h2>
+    <mat-form-field>
+      <input 
+        type= "text" 
+        matInput 
+        placeholder= "Name" 
+        required
+        formControlName= "roleName"> 
+    </mat-form-field>
+    <mat-form-field>
+      <textarea  
+        matInput 
+        placeholder= "Description" 
+        required 
+        formControlName= "roleDescription">
+      </textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select 
+        placeholder= "Rights" 
+        multiple 
+        required
+        formControlName= "roleRights">
+        <mat-option (click)="$event.stopPropagation()" *ngFor ="let userRolesRight of userRolesRights" [value]="userRolesRight">
+            {{userRolesRight}}
+        </mat-option>
+      </mat-select> 
+    </mat-form-field>
+    <button type="submit" mat-raised-button [disabled]="!userRolesFormGroup.valid">Save changes</button>
+  </form>  
+</div>

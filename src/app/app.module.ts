@@ -76,8 +76,8 @@ const config: SocketIoConfig = {
 @NgModule({
 	declarations: [
 		AppComponent,
-		ClearStringPipe,
-	],
+		ClearStringPipe
+		],
 	imports: [
 		BrowserModule,
 		MatGridListModule,

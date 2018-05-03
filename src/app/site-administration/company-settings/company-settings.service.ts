@@ -45,49 +45,91 @@ export class CompanySettingsService {
 			name: 'General & Administration',
 			edit: false,
 			newSubdepartment: false,
-			subDepartments: []
+			subDepartments: [
+				{
+					id: 'sub_1',
+					name: 'Sub1',
+					edit: false
+				}
+			]
 		},
 		{
 			id: 'marketing_2',
 			name: 'Marketing',
 			edit: false,
 			newSubdepartment: false,
-			subDepartments: []
+			subDepartments: [
+				{
+					id: 'sub_1',
+					name: 'Sub1',
+					edit: false
+				}
+			]
 		},
 		{
 			id: 'sales_3',
 			name: 'Sales',
 			edit: false,
 			newSubdepartment: false,
-			subDepartments: []
+			subDepartments: [
+				{
+					id: 'sub_1',
+					name: 'Sub1',
+					edit: false
+				}
+			]
 		},
 		{
 			id: 'r_d_engineering_4',
 			name: 'R&D and Engineering',
 			edit: false,
 			newSubdepartment: false,
-			subDepartments: []
+			subDepartments: [
+				{
+					id: 'sub_1',
+					name: 'Sub1',
+					edit: false
+				}
+			]
 		},
 		{
 			id: 'software_engineering_5',
 			name: 'Software Engineering',
 			edit: false,
 			newSubdepartment: false,
-			subDepartments: []
+			subDepartments: [
+				{
+					id: 'sub_1',
+					name: 'Sub1',
+					edit: false
+				}
+			]
 		},
 		{
 			id: 'operations_6',
 			name: 'Operations',
 			edit: false,
 			newSubdepartment: false,
-			subDepartments: []
+			subDepartments: [
+				{
+					id: 'sub_1',
+					name: 'Sub1',
+					edit: false
+				}
+			]
 		},
 		{
 			id: 'human_resource_7',
 			name: 'Human Resource',
 			edit: false,
 			newSubdepartment: false,
-			subDepartments: []
+			subDepartments: [
+				{
+					id: 'sub_1',
+					name: 'Sub1',
+					edit: false
+				}
+			]
 		},
 	];
 

@@ -2,7 +2,7 @@
     <h2>Site Administration</h2>
     <div class="header-buttons-wrap">
         <a [routerLink]="[{ outlets: { 'user-management-sections': ['team-members'] } }]" skipLocationChange class="header-button" [class.active]="activeUrl == 'team-members' || activeUrl == 'user'">User management</a>
-        <a [routerLink]="[{ outlets: { 'user-management-sections': ['permissions'] } }]" skipLocationChange class="header-button" [class.active]="activeUrl == 'permissions' || activeUrl == 'access-level'">Permissions</a>
+        <a [routerLink]="[{ outlets: { 'user-management-sections': ['permissions'] } }]" skipLocationChange class="header-button" [class.active]="activeUrl == 'permissions' || activeUrl == 'access-level'">User Roles</a>
 
     </div>
 </div>

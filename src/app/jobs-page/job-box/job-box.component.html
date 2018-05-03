@@ -133,7 +133,13 @@
           <p (click)="onLikelihoodPercentageSelect(90)" class="percentage" style="background-color:rgb(61, 156, 24); color:white">90%</p>
           <p (click)="onLikelihoodPercentageSelect(100)" class="percentage" style="background-color:rgb(61, 156, 24); color:white">100%</p>
         </div>
-        <div class="likelihood-info" *ngIf="showLikelihoodInfo" (click)="showLikelihoodInfo = !showLikelihoodInfo">
+        <div 
+          class="likelihood-info" 
+          *ngIf="showLikelihoodInfo" 
+          (click)="showLikelihoodInfo = !showLikelihoodInfo"
+          (clickOutside)="showLikelihoodInfo = false"
+          [exclude]="'.likelihood-info'"
+          [delayClickOutsideInit]="true">
             <p><span class="likelihood-percentage">10%</span> <span class="likelihood-percentage-info">Job published on relevant job boards</span></p>
             <p><span class="likelihood-percentage">25%</span> <span class="likelihood-percentage-info">Qualified applicants identified</span></p>
             <p><span class="likelihood-percentage">50%</span> <span class="likelihood-percentage-info">Qualified applicants scheduled to phone interview</span></p>
