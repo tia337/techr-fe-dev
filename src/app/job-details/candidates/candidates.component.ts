@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, Input, OnChanges} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges } from '@angular/core';
 import { CandidatesService } from './candidates.service';
 import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { JobDetailsService } from '../job-details.service';
@@ -16,6 +16,7 @@ import { LoaderDirective } from '../../shared/loader/loader.directive';
 import * as _ from 'underscore';
 import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
 import { element } from 'protractor';
+import { BulkActionsComponent } from './candidate-profile/bulk-actions/bulk-actions.component';
 
 import { Observable, } from 'rxjs/Rx';
 // tslint:disable
@@ -527,14 +528,12 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
         if (e.checked) {
         console.log('Id of dev', value);
         this.arrayOfDevs.push(value);
-        console.log('Array if true', this.arrayOfDevs);
         }
         else {
             let index = this.arrayOfDevs.indexOf(value);
             if (index !== -1) {
                 this.arrayOfDevs.splice(index,1);
             }
-            console.log('Array if false', this.arrayOfDevs);
         }
     }
     sendEmail(){
@@ -569,9 +568,12 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 
     selectionFunc(selectedAllValue) {
     	this.selectedAll = selectedAllValue;
-    	if(!selectedAllValue) {
+    	if (!selectedAllValue) {
     		this.arrayOfDevs = [];
-    		console.log('ArraYOFDEVSS', this.arrayOfDevs);
+		} else {
+			this.candidates.results.forEach(candidate => {
+				this.arrayOfDevs.push(candidate.id);
+			})
 		}
 	}
 
@@ -806,6 +808,26 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			this.postLoader = false;
 			return this.candidates.results;
 		});
+	}
+
+	openRejectionModal() {
+		console.log(this.arrayOfDevs);
+		if (this.arrayOfDevs.length === 0) {
+			return;
+		} 
+		if (this.arrayOfDevs.length > 0) {
+			let checkedCandidates = [];
+			this.arrayOfDevs.forEach(id => {
+				this.candidates.results.forEach(candidate => {
+					if (candidate.id === id) {
+						checkedCandidates.push(candidate);
+					}
+				})
+			});
+			const bulkActions = this._root_vcr.createComponent(BulkActionsComponent);
+			bulkActions.candidates = checkedCandidates;
+		}
+		
 	}
 
 	ngOnDestroy() {

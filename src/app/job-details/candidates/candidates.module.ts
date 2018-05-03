@@ -27,6 +27,8 @@ import { LoaderModule } from '../../shared/loader/loader.module';
 import { DashboardModule } from 'app/dashboard/dashboard.module';
 import { RejectModalComponent } from './candidate-profile/reject-modal/reject-modal.component';
 import { RejectModalModule } from './candidate-profile/reject-modal/reject-modal.module';
+import { BulkActionsModule } from './candidate-profile/bulk-actions/bulk-actions.module';
+import { BulkActionsComponent } from './candidate-profile/bulk-actions/bulk-actions.component';
 
 @NgModule({
   declarations: [
@@ -54,11 +56,12 @@ import { RejectModalModule } from './candidate-profile/reject-modal/reject-modal
     MatSelectModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    RejectModalModule
+    RejectModalModule,
+    BulkActionsModule
   ],
   exports: [CandidatesComponent],
   providers: [Parse, CandidatesService, CandidateProfileService],
-  entryComponents: [GmailComponent, RejectModalComponent]
+  entryComponents: [GmailComponent, RejectModalComponent, BulkActionsComponent]
 
 })
 export class CandidatesModule { }

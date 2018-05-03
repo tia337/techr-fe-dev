@@ -72,7 +72,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 		});
 		this.recruterTyping().subscribe(data => {
 			this.addAnimationToTyping(data);
-			console.log(data);
 		});
 		this._coreService.currentTypingStatus.subscribe(data => {
 			this.teamMembers.forEach(member => {
@@ -132,7 +131,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				this.currentUser = profile;
-				console.log(this.currentUser);
 				this._coreService.getTeamMembers().then(members => {
 					this.teamMembers = members;
 					this.teamMembers = this.teamMembers.filter(member => {

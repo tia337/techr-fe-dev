@@ -134,6 +134,9 @@ import {
 } from './company-settings/change-password/change-password.component';
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
 import { ReportsComponent } from './reports/reports.component';
+import { NewWorkflowModule } from './company-settings/new-workflow/new-workflow.module';
+import { NewWorkflowComponent } from './company-settings/new-workflow/new-workflow.component';
+import { NgxDnDModule } from '@swimlane/ngx-dnd';
 
 
 @NgModule({
@@ -177,7 +180,9 @@ import { ReportsComponent } from './reports/reports.component';
 		MatRadioModule,
 		MatExpansionModule,
 		MatButtonModule,
-		ClickOutsideModule
+		ClickOutsideModule,
+		NewWorkflowModule,
+		NgxDnDModule
 	],
 	providers: [
 
@@ -201,7 +206,8 @@ import { ReportsComponent } from './reports/reports.component';
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 		ChangePasswordComponent,
-		AlertComponent
+		AlertComponent,
+		NewWorkflowComponent
 	],
 	exports: [
 		SiteAdministrationComponent,

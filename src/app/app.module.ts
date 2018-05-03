@@ -61,6 +61,7 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { TimelineModule } from './timeline/timeline.module';
 import { ClearStringPipe } from './clear-string.pipe';
 import { TimelineService } from './timeline/timeline.service';
+import { NgxDnDModule } from '@swimlane/ngx-dnd';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -114,7 +115,8 @@ const config: SocketIoConfig = {
 		InvitationPageModule,
 		ContactUsModule,
 		TimelineModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		NgxDnDModule		
 	],
 	providers: [
 		SidenavService,

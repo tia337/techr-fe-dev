@@ -538,3 +538,142 @@ input {
 .relative {
     position: relative !important;
 }
+
+.job-offer-stages {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(stretch);
+    text-align: center;
+    background-color: #F2F2F2;
+    margin-bottom: 10px;
+    .job-stage {
+      @include flex(1, 1, 120px);
+      cursor: move!important;
+      .job-stage-inner {
+        height: 100%;
+        cursor: move!important;
+        border: 1px solid rgb(201, 201, 201);
+        padding: 15px 0;
+        font-size: 15px;
+        background-color: #F2F2F2;
+        position: relative;
+        .delete-stage {
+            position: absolute;
+            top: 3px;
+            right: 7px;
+            z-index: 99;
+            font-size: 19px;
+            height: 20px;
+            width: 12px;
+        }
+    }
+      
+      .job-stage-inner:hover {
+        cursor: pointer;
+        background-color: rgb(238, 236, 236) !important;
+      }
+    }
+    .job-stage.add-new-stage {
+        .job-stage-inner {
+            padding: 0!important;
+            display: flex;
+            align-items: center;
+            background: #21b721;
+            color: #fafafa;
+            &:hover {
+                color: #000;
+            }
+        }
+    }
+  }
+
+
+
+  .job-offer-stages .job-stage.delete-stage .job-stage-inner {
+    font-size: 50px;
+    height: 50px;
+    width: 50px;
+    margin-bottom: 50px;
+}
+
+.pipeline-title {
+    font-size: 24px;
+    margin-bottom: 40px;
+    padding-right: 15px;
+}
+
+.standart-note {
+    margin-bottom: 40px;
+}
+
+
+.create-new-workflow {
+    background: #007ab6;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 10px;
+    transition: .3s all ease-in-out;
+    cursor: pointer;
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.workflow-title {
+    margin: 20px 0;
+}
+
+.move-disabled {
+    cursor: default!important;
+}
+
+/**
+ * @swimlane/ngx-dnd v"3.1.0" (https://github.com/swimlane/ngx-dnd)
+ * Copyright 2017
+ * Licensed under MIT
+ */
+//  .ngx-dnd-item {
+//     margin: 10px;
+//     padding: 10px;
+//     background-color: rgba(0, 0, 0, 0.2);
+//     transition: opacity 0.4s ease-in-out;
+//     border: 1px solid lightblue;
+//     display: block; }
+//     .ngx-dnd-item:not(.has-handle):not(.move-disabled),
+//     .ngx-dnd-item.has-handle [ngxdraghandle],
+//     .ngx-dnd-item.has-handle [ngxDragHandle] {
+//       cursor: move;
+//       cursor: grab;
+//       cursor: -webkit-grab; }
+//     .ngx-dnd-item .ngx-dnd-content {
+//       -webkit-user-select: none;
+//          -moz-user-select: none;
+//           -ms-user-select: none;
+//               user-select: none; }
+//     .ngx-dnd-item:hover {
+//       border: 1px solid blue; }
+  
+//   .gu-mirror {
+//     position: fixed !important;
+//     margin: 0 !important;
+//     z-index: 9999 !important;
+//     opacity: 0.8;
+//     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+//     filter: alpha(opacity=80); }
+  
+//   .gu-hide {
+//     display: none !important; }
+  
+//   .gu-unselectable {
+//     -webkit-user-select: none !important;
+//     -moz-user-select: none !important;
+//     -ms-user-select: none !important;
+//     user-select: none !important; }
+  
+//   .gu-transit {
+//     opacity: 0.2;
+//     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+//     filter: alpha(opacity=20); }
+  
+  /*# sourceMappingURL=index.map*/
