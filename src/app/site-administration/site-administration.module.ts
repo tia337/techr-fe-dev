@@ -138,7 +138,8 @@ import { ReportsComponent } from './reports/reports.component';
 import { UserRolesComponent } from './user-management/permissions/user-roles/user-roles.component';
 import { UserRolesEditComponent } from './user-management/permissions/user-roles-edit/user-roles-edit.component';
 import { UserRolesEditModule } from './user-management/permissions/user-roles-edit/user-roles-edit.module';
-
+import { UserRolesDeleteComponent } from './user-management/permissions/user-roles-delete/user-roles-delete.component';
+import { UserRolesDeleteModule } from './user-management/permissions/user-roles-delete/user-roles-delete.module';
 
 @NgModule({
 	declarations: [
@@ -159,6 +160,7 @@ import { UserRolesEditModule } from './user-management/permissions/user-roles-ed
 		ReportsComponent,
 		UserRolesComponent,
 		UserRolesEditComponent,
+		UserRolesDeleteComponent
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 	],
@@ -185,7 +187,8 @@ import { UserRolesEditModule } from './user-management/permissions/user-roles-ed
 		MatButtonModule,
 		ClickOutsideModule,
 		UserRolesModule,
-		UserRolesEditModule
+		UserRolesEditModule,
+		UserRolesDeleteModule
 	],
 	providers: [
 
@@ -211,7 +214,8 @@ import { UserRolesEditModule } from './user-management/permissions/user-roles-ed
 		ChangePasswordComponent,
 		AlertComponent,
 		UserRolesComponent,
-		UserRolesEditComponent
+		UserRolesEditComponent,
+		UserRolesDeleteComponent
 	],
 	exports: [
 		SiteAdministrationComponent,

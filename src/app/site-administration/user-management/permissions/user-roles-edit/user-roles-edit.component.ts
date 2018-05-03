@@ -14,6 +14,7 @@ export class UserRolesEditComponent implements OnInit {
   userRolesFormGroup: FormGroup;
 
   currentUserRole;
+  currentUserRoles = [];
   
   constructor(
     private _siteAdministrationService: SiteAdministrationService,
@@ -31,6 +32,9 @@ export class UserRolesEditComponent implements OnInit {
   set userRole(userRole) {
     this.currentUserRole = userRole;
   }
+  set userRoles(userRoles) {
+    this.currentUserRoles = userRoles;
+  }
 
   get userRole() {
     return this.currentUserRole;
@@ -42,8 +46,11 @@ export class UserRolesEditComponent implements OnInit {
       roleDescription: this.userRolesFormGroup.value.roleDescription,
       roleRights: [...this.userRolesFormGroup.value.roleRights]
     };
+    const index = this.currentUserRoles.indexOf(this.currentUserRole);
 
-    this._siteAdministrationService.addUserRoles(userRole);
+    this.currentUserRoles[index] = userRole;
+    
+    // this._siteAdministrationService.addUserRoles(userRole);
     this.userRolesFormGroup.reset();
     this.closeModal();
   }

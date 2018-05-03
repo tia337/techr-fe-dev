@@ -1,3 +1,4 @@
+import { UserRolesDeleteComponent } from './user-roles-delete/user-roles-delete.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserRolesComponent } from './user-roles/user-roles.component';
@@ -39,10 +40,19 @@ export class PermissionsComponent implements OnInit, OnDestroy {
    const userRoles = this._root_vcr.createComponent(UserRolesComponent);
   }
 
-  editUserRoles(userRole) {
+  editUserRoles(userRole, userRoles) {
    const userRoleEdit = this._root_vcr.createComponent(UserRolesEditComponent);
    userRoleEdit.userRole = userRole;
+   userRoleEdit.userRoles = userRoles;
   }
+
+  deleteUserRoles(userRole, userRoles) {
+    const userRoleDelete = this._root_vcr.createComponent(UserRolesDeleteComponent);
+
+    userRoleDelete.userRole = userRole;
+    userRoleDelete.userRoles = userRoles;
+  }
+
   ngOnDestroy() {
     this.newUserRoleSubscription.unsubscribe();
   }

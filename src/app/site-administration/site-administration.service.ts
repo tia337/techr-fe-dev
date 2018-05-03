@@ -70,5 +70,6 @@ constructor(private _parse: Parse) { }
   addUserRoles(user) {
     this.userRoles.push(user);
     this.newUserRoleSubject.next(user);
+    
   }
 }

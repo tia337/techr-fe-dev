@@ -61,7 +61,6 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { TimelineModule } from './timeline/timeline.module';
 import { ClearStringPipe } from './clear-string.pipe';
 import { TimelineService } from './timeline/timeline.service';
-import { UserRolesEditComponent } from './src/app/site-administration/user-management/permissions/user-roles-edit/user-roles-edit.component';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -76,9 +75,8 @@ const config: SocketIoConfig = {
 @NgModule({
 	declarations: [
 		AppComponent,
-		ClearStringPipe,
-		UserRolesEditComponent,
-	],
+		ClearStringPipe
+		],
 	imports: [
 		BrowserModule,
 		MatGridListModule,

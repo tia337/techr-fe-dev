@@ -3,7 +3,6 @@
     <h3 class="">User Roles</h3>
     <button (click)="openUserRolesModal()" mat-raised-button color="primary">Add new role</button>
   </div> 
-
   <table>
     <tr>
       <th>Role</th>
@@ -29,11 +28,14 @@
       <td>{{userRole.roleName}}</td>
       <td><div class="permission-label">{{userRole.roleName}}</div></td>
       <td><span *ngFor= "let right of userRole.roleRights">{{right}}. </span></td>
-      <td><span (click)="editUserRoles(userRole)">edit</span><span>delete</span></td> 
+      <td class="user-role-options">
+        <span (click)="editUserRoles(userRole, userRoles)">
+          edit
+        </span>
+        <span (click)="deleteUserRoles(userRole, userRoles)">
+          delete
+        </span>
+      </td> 
     </tr>
   </table>
 </section>
-
-
-
-   
