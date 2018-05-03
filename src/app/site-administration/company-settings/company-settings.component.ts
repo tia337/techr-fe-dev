@@ -14,9 +14,9 @@ import { ViewChild } from '@angular/core';
 import { ElementRef, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatExpansionModule } from '@angular/material/expansion';
-
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
 import { ContactUsComponent } from "app/contact-us/contact-us.component";
+import { NewWorkflowComponent } from './new-workflow/new-workflow.component';
 
 @Component({
 	selector: 'app-company-settings',
@@ -74,7 +74,48 @@ export class CompanySettingsComponent implements OnInit {
 	erpPageGreetingDef = '';
 
 	step;
-
+	public stagesLength = 7;
+	public stages: StagesArray;
+	public clients: ClientsArray;
+	public projects: ProjectsArray;
+	public workflowArray: Array<{id: string, name: string, stages: StagesArray}> = [];
+	stagesTemp: StagesArray = [
+		{
+			index: 3,
+			type: 'shortlist',
+			value: 0,
+			title: 'Shortlist',
+			editable: false
+		},
+		{
+			index: 4,
+			type: 'phoneInterview',
+			value: 0,
+			title: 'Phone Interview',
+			editable: false
+		},
+		{
+			index: 5,
+			type: 'f2fInterview',
+			value: 0,
+			title: 'F2F Interview',
+			editable: false
+		},
+		{
+			index: 6,
+			type: 'jobOffered',
+			value: 0,
+			title: 'Job Offered',
+			editable: false
+		},
+		{
+			index: 7,
+			type: 'hired',
+			value: 0,
+			title: 'Hired',
+			editable: false
+		}
+	];
 	constructor(
 		private _parse: Parse,
 		private _CompanySettingsService: CompanySettingsService,
@@ -97,9 +138,9 @@ export class CompanySettingsComponent implements OnInit {
 				this.disabled = true;
 			}
 			return this._CompanySettingsService.getAdmins();
-		}).then(admins=>{
+		}).then(admins => {
 			this.admins = admins;
-		})
+		});
 		if (!this._CompanySettingsService.getCompany()) {
 			this.isInCompany = false;
 		} else {
@@ -132,10 +173,111 @@ export class CompanySettingsComponent implements OnInit {
 
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
+		this.stages = this._CompanySettingsService.getStages();
+		this.clients = this._CompanySettingsService.getClients();
+		this.projects = this._CompanySettingsService.getProjects();
+		this._CompanySettingsService.currentClient.subscribe(data => {
+			this.createNewWorkFlow(data);
+		});
 	}
 
 	saveSettings() {
 	}
+
+	openStageEdit(stage: Stage) {
+		stage.editable = true;
+		setTimeout(() => {
+			const input = document.getElementById('editStageTitleInput') as HTMLInputElement;
+			this.renderer.invokeElementMethod(input, 'focus');
+		}, 4);
+	}
+
+	editStageTitle(newValue, oldValue, index, array) {
+		if (newValue === '' || newValue === null || newValue === oldValue) {
+			array[index].editable = false;
+			return;
+		} else {
+			array[index].title = newValue;
+			array[index].type = newValue;
+			array[index].editable = false;
+		}
+	}
+
+	removeMovedItem(item, array) {
+		array.splice(array.indexOf(item), 1);
+	}
+
+	addNewStage() {
+		if (this.stages.length > 0) {
+			const newStage: Stage = {
+				index: this.stages[this.stages.length - 1].index + 1,
+				value: 0,
+				title: 'New Stage',
+				editable: false,
+				type: null
+			};
+			this.stages.push(newStage);
+		} else if (this.stages.length === 0) {
+			const newStage: Stage = {
+				index: 3,
+				value: 0,
+				title: 'New Stage',
+				editable: false,
+				type: null
+			};
+			this.stages.push(newStage);
+		}
+	}
+
+	openNewWorkFlowModal() {
+		const newWorkFlow = this._root_vcr.createComponent(NewWorkflowComponent);
+		newWorkFlow.clients = this.clients;
+		newWorkFlow.projects = this.projects;
+	}
+
+	createNewWorkFlow (client) {
+		if (client === null) {
+			return;
+		} else {
+			const stages: StagesArray = this.stagesTemp;
+			const id = Math.random().toFixed(36).substring(5, 10);
+			const data = {
+				name: client.name,
+				stages: stages,
+				id: id
+			};
+			this.workflowArray.push(data);
+		}
+	}
+
+	addNewStageInCustomWorkFlow(stages) {
+		console.log(stages[stages.length - 1]);
+		if (stages.length > 0) {
+			const newStage: Stage = {
+				index: stages[stages.length - 1].index + 1,
+				value: 0,
+				title: 'New Stage',
+				editable: false,
+				type: null
+			};
+			stages.push(newStage);
+		} else if (stages.length === 0) {
+			const newStage: Stage = {
+				index: 3,
+				value: 0,
+				title: 'New Stage',
+				editable: false,
+				type: null
+			};
+			stages.push(newStage);
+		}
+	}
+
+
+	log (value) {
+		console.log(value);
+	}
+
 
 	setChanges() {
 		if (this.website != this.websiteDef || this.careers != this.careersDef || this.picUrlDef != this.picUrl ||
@@ -446,3 +588,6 @@ export class CompanySettingsComponent implements OnInit {
 		this.newLikelihood = false;
 	}
 }
+
+
+

@@ -50,9 +50,9 @@ constructor(private _parse: Parse) { }
           admins.push(teamMember);
         }
       }
-      if (admins.length > 1){
+      if (admins.length > 1) {
           return admins[0].get('firstName') + ' ' + admins[0].get('lastName') + ' or ' + admins[1].get('firstName') + ' ' + admins[1].get('lastName');
-        }else{
+        }else {
           return admins[0].get('firstName') + ' ' + admins[0].get('lastName');
         }
       });
@@ -60,6 +60,8 @@ constructor(private _parse: Parse) { }
 }
 
   getUserRolesRights() {
+    this._parse.execCloud('getUserRights', { })
+      .then(userRights => console.log('UserRights are', userRights));
     return this.userRolesRights.slice();
   }
 
@@ -70,6 +72,5 @@ constructor(private _parse: Parse) { }
   addUserRoles(user) {
     this.userRoles.push(user);
     this.newUserRoleSubject.next(user);
-    
   }
 }
