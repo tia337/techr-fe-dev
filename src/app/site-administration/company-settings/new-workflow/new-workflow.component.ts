@@ -14,6 +14,7 @@ export class NewWorkflowComponent implements OnInit {
   currentArray: Array<any>;
   currentClientsArray: Array<any>;
   currentClient = null;
+  currentName = null;
 
   constructor(
     private _root_vcr: RootVCRService,

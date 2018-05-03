@@ -61,7 +61,7 @@ import { TimelineComponent } from './timeline/timeline.component';
 import { TimelineModule } from './timeline/timeline.module';
 import { ClearStringPipe } from './clear-string.pipe';
 import { TimelineService } from './timeline/timeline.service';
-import { DndListModule } from 'ngx-drag-and-drop-lists';
+import { NgxDnDModule } from '@swimlane/ngx-dnd';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -116,7 +116,7 @@ const config: SocketIoConfig = {
 		ContactUsModule,
 		TimelineModule,
 		ReactiveFormsModule,
-		DndListModule
+		NgxDnDModule		
 	],
 	providers: [
 		SidenavService,

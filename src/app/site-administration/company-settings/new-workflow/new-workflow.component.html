@@ -1,23 +1,55 @@
 <div class="modal-overlay" (click)="closeModal()">
   <div class="modal" (click)="$event.stopPropagation()">
   <div class="modal-section">
-    <button class="blue-btn" (click)="currentArray = clientsArray;">for client <mat-icon class="icon">play</mat-icon> </button>
-    <button class="blue-btn" (click)="currentArray = projectsArray;">for project <mat-icon class="icon">play</mat-icon> </button>
+    <button class="blue-btn" 
+      [ngClass]="{'active': currentArray === clientsArray }" 
+      (click)="currentArray = clientsArray; currentClient = null;">for client <mat-icon class="icon">play</mat-icon> 
+    </button>
+    <button class="blue-btn" 
+      [ngClass]="{'active': currentArray === projectsArray }" 
+      (click)="currentArray = projectsArray; currentClient = null;">for project <mat-icon class="icon">play</mat-icon> 
+    </button>
     <button class="blue-btn">for user role <mat-icon class="icon">play</mat-icon> </button>
   </div>
-  <div class="modal-section" *ngIf="currentArray === projectsArray">
-    <button class="blue-btn" *ngFor="let item of currentArray" (click)="currentClientsArray = item.clients">{{item.name}}</button>
-  </div>
   <div class="modal-section" *ngIf="currentArray === clientsArray">
-      <button class="blue-btn" *ngFor="let item of currentArray" (click)="currentClient = item">{{item.name}}</button>
+    <ul style="list-style: none;">
+      <li style="cursor: pointer;"
+        [ngClass]="{'active': currentClient === item}"
+        *ngFor="let item of currentArray" 
+        (click)="currentClient = item">
+        {{item.name}}
+      </li>
+    </ul>
+      <!-- <button class="blue-btn" 
+        [ngClass]="{'active': currentClient === item}"
+        *ngFor="let item of currentArray" 
+        (click)="currentClient = item">
+        {{item.name}}
+      </button> -->
+  </div>
+  <div class="modal-section" *ngIf="currentArray === projectsArray">
+    <button class="blue-btn"
+      [ngClass]="{'active': activeLink === item.name }" 
+      *ngFor="let item of currentArray" 
+      (click)="currentClientsArray = item.clients; activeLink = item.name">
+      {{item.name}}
+    </button>
   </div>
   <div class="modal-section" *ngIf="currentArray === projectsArray">
     <ul style="list-style: none;">
-      <li style="cursor: pointer; margin-bottom: 5px;" *ngFor="let client of currentClientsArray" (click)="currentClient = client">{{client.name}}</li>
+      <li style="cursor: pointer; margin-bottom: 5px;" 
+        [ngClass]="{'active': currentClient === client}"
+        *ngFor="let client of currentClientsArray" 
+        (click)="currentClient = client">
+        {{client.name}}
+      </li>
     </ul>
   </div>
   <div class="modal-section" *ngIf="currentClient !== null">
-    <button class="add-custom-workflow" (click)="addCustomWorkFlow()">add custom workflow</button>
+    <button class="add-custom-workflow" (click)="addCustomWorkFlow()">
+      add custom workflow <br>
+    </button>
+    <span style="text-transform: initial;">For client: {{currentClient.name}}</span> 
   </div>
   </div>
 </div>

@@ -2,7 +2,7 @@
     <h1> Company Settings </h1>
 </div>
 <div class="first" (click)="accessCheck()">
-    <button (click)="setChanges()" [ngClass]="{'grey': website == websiteDef && careers == careersDef && picUrlDef === picUrl && 
+    <button (click)="setChanges()" [ngClass]="{'grey': website == websiteDef && careers == careersDef && picUrlDef === picUrl &&
     companyBenefits == companyBenefitsDef && companyDescription == companyDescriptionDef &&
     isSafeDef === isSafe && erpPageStyleDef === erpPageStyle && erpPageGreetingDef === erpPageGreeting
     }" class="primary-button save-changes nowrap" *ngIf="!disabled">Save changes</button>
@@ -163,34 +163,34 @@
                 <div class="carrers-departments">
                     <form class="carrers-departments-form" [formGroup]="departmentFormGroup">
                         <p class="carrers-departments-form__header"><span>Departments</span><button (click)="addNewDepartment()" mat-raised-button color="primary">Add new department</button></p>
-                        <div class="carrers-departments-form__body" *ngFor="let department of departments"> 
-                            <div class="carrers-departments-form__body__department"> 
+                        <div class="carrers-departments-form__body" *ngFor="let department of departments">
+                            <div class="carrers-departments-form__body__department">
                                 <span *ngIf="!department.edit">{{department.name}}</span>
-                                <input 
-                                    #departmentNameInput 
-                                    *ngIf="department.edit" 
-                                    class="carrers-departments-form__body__edit-department-input" 
-                                    type="text" 
+                                <input
+                                    #departmentNameInput
+                                    *ngIf="department.edit"
+                                    class="carrers-departments-form__body__edit-department-input"
+                                    type="text"
                                     [value]="department.name"
                                     formControlName="departmentName"
                                     (keydown.enter)="editDepartment(department)">
-                                <input 
-                                    *ngIf="department.newSubdepartment" 
-                                    type="text" 
+                                <input
+                                    *ngIf="department.newSubdepartment"
+                                    type="text"
                                     class="carrers-departments-form__body__subdepartment-input"
                                     formControlName="subdepartmentName"
                                     placeholder="New Subdepartment"
-                                    (keydown.enter)="addSubdepartments(department)"> 
-                            </div>    
+                                    (keydown.enter)="addSubdepartments(department)">
+                            </div>
                             <p>
                                 <span class="carrers-departments-form__body_options" (click)="editDepartment(department)">Edit</span>
                                 <span class="carrers-departments-form__body_options" (click)="removeDepartment(department.id)">Remove</span>
-                                <span class="carrers-departments-form__body_options" (click)="addSubdepartments(department)">Add subdepartments</span> 
+                                <span class="carrers-departments-form__body_options" (click)="addSubdepartments(department)">Add subdepartments</span>
                             </p>
                         </div>
                         <div class="carrers-departments-form__new-department">
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 *ngIf="newDepartment"
                                 class="carrers-departments-form__new-department__new-department-input"
                                 formControlName="newDepartmentName"
@@ -202,25 +202,25 @@
                 <div class="careers-offices">
                     <form class="carrers-offices-form" [formGroup]="officesFormGroup">
                         <p class="carrers-offices-form__header"><span>Offices</span><button (click)="addNewOffice()" mat-raised-button color="primary">Add new office</button></p>
-                        <div class="carrers-offices-form__body" *ngFor = "let office of offices"> 
-                            <div class="carrers-offices-form__body__office"> 
+                        <div class="carrers-offices-form__body" *ngFor = "let office of offices">
+                            <div class="carrers-offices-form__body__office">
                                 <span *ngIf="!office.edit">{{office.name}}</span>
-                                <input 
-                                    *ngIf="office.edit" 
-                                    class="carrers-offices-form__body__edit-office-input" 
-                                    type="text" 
+                                <input
+                                    *ngIf="office.edit"
+                                    class="carrers-offices-form__body__edit-office-input"
+                                    type="text"
                                     [value]="office.name"
                                     formControlName="officeName"
                                     (keydown.enter)="editOffice(office)">
-                            </div>    
+                            </div>
                             <p>
                                 <span class="carrers-offices-form__body_options" (click)="editOffice(office)">Edit</span>
                                 <span class="carrers-offices-form__body_options" (click)="removeOffice(office.id)">Remove</span>
                             </p>
                         </div>
                         <div class="carrers-offices-form__new-office">
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 *ngIf="newOffice"
                                 class="carrers-offices-form__new-office__new-office-input"
                                 formControlName="newOfficeName"
@@ -229,7 +229,7 @@
                         </div>
                     </form>
                 </div>
-           </div> 
+           </div>
         </mat-expansion-panel>
         <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -257,12 +257,12 @@
                         <td *ngIf="!editStageEnabled" class="stage-description">
                             {{tableRow.stageDescription}}
                         </td>
-                        <td 
+                        <td
                             *ngIf="editStageEnabled" class="pipeline-stage-table_set-description">
                             <input type="text" #inputDescription [value]="tableRow.stageDescription" (keydown)="tableRow.stageDescription = inputDescription.value">
                         </td>
                     </tr>
-                    <tr class="pipeline-stage-table_add-likelihood-stage" *ngIf="newLikelihood"> 
+                    <tr class="pipeline-stage-table_add-likelihood-stage" *ngIf="newLikelihood">
                         <td>
                             <input #newPercentageValue type="text" class="add-likelihood-stage_new-value" placeholder="50%">
                         </td>
@@ -288,52 +288,50 @@
                 <mat-panel-title>
                    Hiring pipeline stages
                 </mat-panel-title>
-            </mat-expansion-panel-header>                
+            </mat-expansion-panel-header>
                 <div class="pipeline-wrapper">
                    <p class="pipeline-title">
                        Standart Hiring Workflow
                    </p>
-                    <div class="job-offer-stages" 
-                                [dndList]
-                                [dndModel]="stages">
-                        <div class="job-stage disabled">
+                    <div class="job-offer-stages" ngxDroppable [model]="stages">
+                        <div class="job-stage disabled move-disabled" (click)="log(stages)" ngxDraggable [moves]="false">
                             <div class="job-stage-inner">
                                 <div class="property-value">—</div>
                                 <div class="property-title">Suggested</div>
                             </div>
                         </div>
-                        <div class="job-stage disabled">
+                        <div class="job-stage disabled move-disabled" ngxDraggable [moves]="false">
                             <div class="job-stage-inner">
                                 <div class="property-value">—</div>
                                 <div class="property-title">Applied</div>
                             </div>
                         </div>
-                        <div class="job-stage disabled">
+                        <div class="job-stage disabled move-disabled" ngxDraggable [moves]="false">
                             <div class="job-stage-inner">
                                 <div class="property-value">—</div>
                                 <div class="property-title">Employee Referrals</div>
                             </div>
                         </div>
-                        <div class="job-stage" 
-                                *ngFor="let stage of stages; let i = index;"
-                                [dndType]="'stage'"
-                                [dndDraggable]="{draggable:true, effectAllowed:'move'}"
-                                [dndObject]="stage"
-                                (dndMoved)="removeMovedItem(stage, stages)"
-                                (dndSelected)="openStageEdit(stage, stages)">
-                          <div class="job-stage-inner">
-                            <mat-icon (click)="stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>                              
-                            <div class="property-value">—</div>
-                            <div class="property-title" *ngIf="!stage.editable">{{stage.title}}</div>
-                            <input 
-                                id="editStageTitleInput"
-                                type="text" 
-                                #editStageTitleInput
-                                (keydown.enter)="editStageTitle(editStageTitleInput.value, stage.title, i, stages)" 
-                                *ngIf="stage.editable" 
-                                [placeholder]="stage.title"
-                                (clickOutside)="stage.editable = false">
-                          </div>
+                        <div class="job-stage"
+                                *ngFor="let stage of stages; let i = index;" 
+                                ngxDraggable 
+                                [model]="stage">
+                            <div class="job-stage-inner" (click)="openStageEdit(stage)">
+                                <mat-icon (click)="stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>
+                                <div class="property-value">—</div>
+                                <div class="property-title" *ngIf="!stage.editable">{{stage.title}}</div>
+                                <input
+                                    id="editStageTitleInput"
+                                    type="text"
+                                    #editStageTitleInput
+                                    (keydown.enter)="editStageTitle(editStageTitleInput.value, stage.title, i, stages)"
+                                    *ngIf="stage.editable"
+                                    [placeholder]="stage.title"
+                                    (clickOutside)="stage.editable = false"
+                                    [exclude]="'.job-stage-inner'"
+                                    [delayClickOutsideInit]="true"
+                                    [excludeBeforeClick]="true">
+                            </div>
                         </div>
                         <div class="job-stage add-new-stage">
                             <div class="job-stage-inner"
@@ -345,8 +343,8 @@
                         </div>
                     </div>
                     <p class="standart-note">
-                        Note: This workflow will appear on all your job vacancies except for those <br> 
-                        have a custom workflow specified 
+                        Note: This workflow will appear on all your job vacancies except for those <br>
+                        have a custom workflow specified
                     </p>
                     <p class="pipeline-title">
                         Custom hiring workflows
@@ -357,57 +355,57 @@
                     <div *ngIf="workflowArray.length > 0">
                             <div *ngFor="let workflow of workflowArray">
                                 <h1 class="workflow-title">{{workflow.name}}</h1>
-                                <div class="job-offer-stages" 
-                                        [dndList]
-                                        [dndModel]="workflow.stages">
-                                    <div class="job-stage disabled">
+                                <div class="job-offer-stages" ngxDroppable [model]="workflow.stages">
+                                    <div class="job-stage disabled move-disabled" style="cursor: default;" ngxDraggable [moves]="false">
                                         <div class="job-stage-inner">
                                             <div class="property-value">—</div>
                                             <div class="property-title">Suggested</div>
                                         </div>
                                     </div>
-                                    <div class="job-stage disabled">
+                                    <div class="job-stage disabled move-disabled" style="cursor: default;" ngxDraggable [moves]="false">
                                         <div class="job-stage-inner">
                                             <div class="property-value">—</div>
                                             <div class="property-title">Applied</div>
                                         </div>
                                     </div>
-                                    <div class="job-stage disabled">
+                                    <div class="job-stage disabled move-disabled" style="cursor: default;" ngxDraggable [moves]="false">
                                         <div class="job-stage-inner">
                                             <div class="property-value">—</div>
                                             <div class="property-title">Employee Referrals</div>
                                         </div>
                                     </div>
-                                    <div class="job-stage" 
-                                            *ngFor="let flow of workflow.stages; let i = index;"
-                                            [dndType]="workflow.id"
-                                            [dndDraggable]
-                                            [dndObject]="flow"
-                                            (dndMoved)="removeMovedItem(flow, workflow.stages)"
-                                            (dndSelected)="openStageEdit(flow, workflow.stages)">
-                                    <div class="job-stage-inner">
-                                        <mat-icon (click)="workflow.stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>                              
-                                        <div class="property-value">—</div>
-                                        <div class="property-title" *ngIf="!flow.editable">{{flow.title}}</div>
-                                        <input
-                                            id="editStageTitleInputFlow"
-                                            type="text"
-                                            #editStageTitleInputFlow
-                                            (keydown.enter)="editStageTitle(editStageTitleInputFlow.value, flow.title, i, workflow.stages)" 
-                                            *ngIf="flow.editable" 
-                                            [placeholder]="flow.title"
-                                            (clickOutside)="flow.editable = false">
-                                    </div>
-                                    </div>
+                                        <div class="job-stage" 
+                                                *ngFor="let flow of workflow.stages; let i = index;"
+                                                ngxDraggable 
+                                                [model]="flow"
+                                                style="cursor: move;"                                                
+                                                (click)="flow.editable = true">
+                                            <div class="job-stage-inner" (click)="openStageEdit(flow)">
+                                                <mat-icon (click)="workflow.stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>
+                                                <div class="property-value">—</div>
+                                                <div class="property-title" *ngIf="!flow.editable">{{flow.title}}</div>
+                                                <input
+                                                    id="editStageTitleInput"
+                                                    type="text"
+                                                    #editStageTitleInput
+                                                    (keydown.enter)="editStageTitle(editStageTitleInput.value, flow.title, i, workflow.stages)"
+                                                    *ngIf="flow.editable"
+                                                    [placeholder]="flow.title"
+                                                    (clickOutside)="flow.editable = false"
+                                                    [exclude]="'.job-stage-inner'"
+                                                    [delayClickOutsideInit]="true"
+                                                    [excludeBeforeClick]="true">
+                                            </div>
+                                        </div>
                                     <div class="job-stage add-new-stage">
-                                        <div class="job-stage-inner" (click)="addNewStageInCustomWorkFlow(workflow)">
+                                        <div class="job-stage-inner" (click)="addNewStageInCustomWorkFlow(workflow.stages)">
                                             <div class="property-title">
                                                 +Add new stage
                                             </div>
                                         </div>
                                 </div>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                 </div>
         </mat-expansion-panel>

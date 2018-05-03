@@ -75,12 +75,48 @@ export class CompanySettingsComponent implements OnInit {
 	erpPageGreetingDef = '';
 
 	step;
-	public stagesLength;
+	public stagesLength = 7;
 	public stages: StagesArray;
 	public clients: ClientsArray;
 	public projects: ProjectsArray;
 	public workflowArray: Array<{id: string, name: string, stages: StagesArray}> = [];
-
+	stagesTemp: StagesArray = [
+		{
+			index: 3,
+			type: 'shortlist',
+			value: 0,
+			title: 'Shortlist',
+			editable: false
+		},
+		{
+			index: 4,
+			type: 'phoneInterview',
+			value: 0,
+			title: 'Phone Interview',
+			editable: false
+		},
+		{
+			index: 5,
+			type: 'f2fInterview',
+			value: 0,
+			title: 'F2F Interview',
+			editable: false
+		},
+		{
+			index: 6,
+			type: 'jobOffered',
+			value: 0,
+			title: 'Job Offered',
+			editable: false
+		},
+		{
+			index: 7,
+			type: 'hired',
+			value: 0,
+			title: 'Hired',
+			editable: false
+		}
+	];
 	constructor(
 		private _parse: Parse,
 		private _CompanySettingsService: CompanySettingsService,
@@ -138,7 +174,6 @@ export class CompanySettingsComponent implements OnInit {
 
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
-		this.stagesLength = this._CompanySettingsService.getStages().length;
 		this.stages = this._CompanySettingsService.getStages();
 		this.clients = this._CompanySettingsService.getClients();
 		this.projects = this._CompanySettingsService.getProjects();
@@ -150,7 +185,7 @@ export class CompanySettingsComponent implements OnInit {
 	saveSettings() {
 	}
 
-	openStageEdit(stage: Stage, array: StagesArray) {
+	openStageEdit(stage: Stage) {
 		stage.editable = true;
 		setTimeout(() => {
 			const input = document.getElementById('editStageTitleInput') as HTMLInputElement;
@@ -174,14 +209,25 @@ export class CompanySettingsComponent implements OnInit {
 	}
 
 	addNewStage() {
-		const newStage: Stage = {
-			index: this.stages.length,
-			value: 0,
-			title: 'New Stage',
-			editable: false,
-			type: null
-		};
-		this.stages.push(newStage);
+		if (this.stages.length > 0) {
+			const newStage: Stage = {
+				index: this.stages[this.stages.length - 1].index + 1,
+				value: 0,
+				title: 'New Stage',
+				editable: false,
+				type: null
+			};
+			this.stages.push(newStage);
+		} else if (this.stages.length === 0) {
+			const newStage: Stage = {
+				index: 3,
+				value: 0,
+				title: 'New Stage',
+				editable: false,
+				type: null
+			};
+			this.stages.push(newStage);
+		}
 	}
 
 	openNewWorkFlowModal() {
@@ -194,7 +240,7 @@ export class CompanySettingsComponent implements OnInit {
 		if (client === null) {
 			return;
 		} else {
-			const stages: StagesArray = this._CompanySettingsService.getStages();
+			const stages: StagesArray = this.stagesTemp;
 			const id = Math.random().toFixed(36).substring(5, 10);
 			const data = {
 				name: client.name,
@@ -205,23 +251,31 @@ export class CompanySettingsComponent implements OnInit {
 		}
 	}
 
-	addNewStageInCustomWorkFlow(workflow) {
-		this.workflowArray.forEach(item => {
-			if (item.id === workflow.id) {
-				const newStage: Stage = {
-					index: this._CompanySettingsService.getStages().length,
-					value: 0,
-					title: 'New Stage',
-					editable: false,
-					type: null
-				};
-				item.stages.push(newStage);
-			}
-		});
+	addNewStageInCustomWorkFlow(stages) {
+		console.log(stages[stages.length - 1]);
+		if (stages.length > 0) {
+			const newStage: Stage = {
+				index: stages[stages.length - 1].index + 1,
+				value: 0,
+				title: 'New Stage',
+				editable: false,
+				type: null
+			};
+			stages.push(newStage);
+		} else if (stages.length === 0) {
+			const newStage: Stage = {
+				index: 3,
+				value: 0,
+				title: 'New Stage',
+				editable: false,
+				type: null
+			};
+			stages.push(newStage);
+		}
 	}
 
 
-	log (value: string) {
+	log (value) {
 		console.log(value);
 	}
 

@@ -45,6 +45,7 @@
             display: flex;
             justify-content: flex-start;
             align-items: center;
+            cursor: pointer;
             &:hover {
                 opacity: .7;
             }
@@ -61,4 +62,33 @@
     display: flex;
     align-content: center;
     justify-content: center;
+    text-transform: uppercase;
+    background: #68cc68;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .3s all ease-in-out;
+    margin-bottom: 10px;
+    &:hover {
+        background-color:rgb(11, 182, 11);
+    }
+}
+
+button.active {
+    opacity: .6;
+}
+
+li {
+    padding: 3px;
+    &:hover {
+        background: #000;
+        color: #fff;
+    }
+}
+
+li.active {
+    background: #000;
+    color: #fff;
 }

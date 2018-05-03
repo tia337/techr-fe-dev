@@ -134,9 +134,9 @@ import {
 } from './company-settings/change-password/change-password.component';
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
 import { ReportsComponent } from './reports/reports.component';
-import { DndListModule } from 'ngx-drag-and-drop-lists';
 import { NewWorkflowModule } from './company-settings/new-workflow/new-workflow.module';
 import { NewWorkflowComponent } from './company-settings/new-workflow/new-workflow.component';
+import { NgxDnDModule } from '@swimlane/ngx-dnd';
 
 
 @NgModule({
@@ -181,8 +181,8 @@ import { NewWorkflowComponent } from './company-settings/new-workflow/new-workfl
 		MatExpansionModule,
 		MatButtonModule,
 		ClickOutsideModule,
-		DndListModule,
-		NewWorkflowModule
+		NewWorkflowModule,
+		NgxDnDModule
 	],
 	providers: [
 
