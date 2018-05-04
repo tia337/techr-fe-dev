@@ -78,6 +78,7 @@ import { NotificationComponent } from './header/notifications/notification/notif
 import { CandidatesComponent } from './job-details/candidates/candidates.component';
 import { CandidateNotesComponent } from './job-details/candidates/candidates-info-tabs/candidate-notes/candidate-notes.component';
 import { JobDetailsGuard } from './guards/job-details.guard';
+import { TalentbaseComponent } from './talentbase/talentbase.component';
 
 const routes: Routes = [
 	// { path: 'logout', component: LogoutComponent },
@@ -127,6 +128,7 @@ const routes: Routes = [
 		component: CoreComponent,
 		children: [
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+			{ path: 'talentbase', component: TalentbaseComponent },
 			{ path: 'chat/:id', component: ChatComponent, canActivate: [LoginGuard] },
 			{ path: 'chat/:id', component: NotificationComponent },
 			{ path: 'timeline', component: TimelineComponent },

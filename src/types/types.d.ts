@@ -57,3 +57,11 @@ type BulkActionsArray = Array<{
     attributes: Object,
     createdAt: Date
   }>;
+
+  type FilterParams = {
+      applied: Array<any>,
+      pipeline: Array<any>,
+      location: Array<any>,
+      preferences: Array<any>,
+      source: Array<any>
+  }
