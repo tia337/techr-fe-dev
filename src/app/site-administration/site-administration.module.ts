@@ -130,6 +130,11 @@ import {
 import {
 	UserModule
 } from "./user-management/user/user.module";
+import { UserRolesEditModule } from './user-management/permissions/user-roles-edit/user-roles-edit.module';
+import { UserRolesDeleteModule } from './user-management/permissions/user-roles-delete/user-roles-delete.module';
+import { NewWorkflowModule } from './company-settings/new-workflow/new-workflow.module';
+import { NgxDnDModule } from '@swimlane/ngx-dnd';
+
 import {
 	ChangePasswordComponent
 } from './company-settings/change-password/change-password.component';
@@ -137,13 +142,11 @@ import {UserSettingsComponent} from "../user-settings/user-settings.component";
 import { ReportsComponent } from './reports/reports.component';
 import { UserRolesComponent } from './user-management/permissions/user-roles/user-roles.component';
 import { UserRolesEditComponent } from './user-management/permissions/user-roles-edit/user-roles-edit.component';
-import { UserRolesEditModule } from './user-management/permissions/user-roles-edit/user-roles-edit.module';
 import { UserRolesDeleteComponent } from './user-management/permissions/user-roles-delete/user-roles-delete.component';
-import { UserRolesDeleteModule } from './user-management/permissions/user-roles-delete/user-roles-delete.module';
-import { NewWorkflowModule } from './company-settings/new-workflow/new-workflow.module';
+import { NewRecruitmentTeamModule } from './user-management/recruitment-teams/new-recruitment-team/new-recruitment-team.module';
 import { NewWorkflowComponent } from './company-settings/new-workflow/new-workflow.component';
-import { NgxDnDModule } from '@swimlane/ngx-dnd';
-
+import { RecruitmentTeamsComponent } from './user-management/recruitment-teams/recruitment-teams.component';
+import { NewRecruitmentTeamComponent } from './user-management/recruitment-teams/new-recruitment-team/new-recruitment-team.component';
 
 @NgModule({
 	declarations: [
@@ -164,7 +167,9 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 		ReportsComponent,
 		UserRolesComponent,
 		UserRolesEditComponent,
-		UserRolesDeleteComponent
+		UserRolesDeleteComponent,
+		RecruitmentTeamsComponent,
+		NewRecruitmentTeamComponent
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 	],
@@ -194,7 +199,8 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 		UserRolesEditModule,
 		UserRolesDeleteModule,
 		NewWorkflowModule,
-		NgxDnDModule
+		NgxDnDModule,
+		NewRecruitmentTeamModule
 	],
 	providers: [
 
@@ -211,7 +217,7 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 		CompanySettingsService,
 		UpgradeDataService,
 		SiteAdministrationService,
-		RootVCRService,
+		RootVCRService
 	],
 	entryComponents: [
 		// AccessLevelModalComponent,
@@ -222,12 +228,12 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 		UserRolesComponent,
 		UserRolesEditComponent,
 		UserRolesDeleteComponent,
-		NewWorkflowComponent
+		NewWorkflowComponent,
+		NewRecruitmentTeamComponent
 	],
 	exports: [
-		SiteAdministrationComponent,
-	],
-
+		SiteAdministrationComponent
+	]
 })
 export class SiteAdministrationModule {}
 

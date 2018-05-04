@@ -1,0 +1,56 @@
+<div class="modal-overlay" (click)="closeModal()">
+  
+  <form 
+    class="recruitment-team-modal" 
+    [formGroup]="recruitmentTeamFormGroup"
+    (ngSubmit)="addNewTeam()"
+    (click)="$event.stopPropagation()">
+
+    <h2>Add new recruitment team</h2>
+
+    <mat-form-field>
+      <input 
+        type= "text" 
+        matInput 
+        placeholder= "Name" 
+        required
+        formControlName= "teamName">
+    </mat-form-field>
+
+    <mat-form-field>
+      <textarea  
+        matInput 
+        placeholder= "Description" 
+        matTextareaAutosize
+        matAutosizeMinRows="2"
+        matAutosizeMaxRows="4"
+        required 
+        formControlName= "teamDescription">
+      </textarea>
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-select 
+        placeholder= "Team lead" 
+        required
+        formControlName= "teamLead">
+        <mat-option (click)="$event.stopPropagation()" *ngFor ="let teamMember of teamMembers" [value]="teamMember">
+            {{teamMember.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select 
+        placeholder= "Team members" 
+        multiple
+        required
+        formControlName= "teamMembers">
+        <mat-option (click)="$event.stopPropagation()" *ngFor ="let teamMember of teamMembers" [value]="teamMember">
+            {{teamMember.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button type="submit" mat-raised-button [disabled]="!recruitmentTeamFormGroup.valid">Add</button>
+  </form>
+</div>

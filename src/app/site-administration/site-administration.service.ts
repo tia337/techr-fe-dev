@@ -5,7 +5,6 @@ import { Parse } from '../parse.service';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable()
-
   export class SiteAdministrationService {
 
   private userRolesRights = [
@@ -24,10 +23,12 @@ import { Subject } from 'rxjs/Subject';
       roleRights: ['some right 1', 'some right 2']
     }
   ];
+
+  private recruitmentTeams= [ ];
   
   newUserRoleSubject = new Subject();
 
-constructor(private _parse: Parse) { }
+  constructor(private _parse: Parse) { }
 
   getAccessLevel() {
     this._parse.Parse.User.current().fetch().then(res => {
@@ -56,21 +57,52 @@ constructor(private _parse: Parse) { }
           return admins[0].get('firstName') + ' ' + admins[0].get('lastName');
         }
       });
-  });
-}
+    });
+  }
 
   getUserRolesRights() {
-    this._parse.execCloud('getUserRights', { })
-      .then(userRights => console.log('UserRights are', userRights));
     return this.userRolesRights.slice();
   }
 
   getUserRoles() {
     return this.userRoles.slice();
   }
-
+  
   addUserRoles(user) {
     this.userRoles.push(user);
     this.newUserRoleSubject.next(user);
+  }
+
+  addNewRecruitmentTeam(recruitmentTeam) {
+    this.recruitmentTeams.push(recruitmentTeam);
+  }
+
+  getRecruitmentTeams() {
+    return this.recruitmentTeams.slice();
+  }
+  
+  getTeamMembers() {
+    const team = [];
+    let i = 0;
+    const client = this._parse.getCurrentUser().get('Client_Pointer');
+    let clientId;
+    if (client) {
+        clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+    }
+    const query = this._parse.Query('Clients');
+    query.include('TeamMembers');
+    return query.get(clientId).then(clientC => {
+        clientC.get('TeamMembers').forEach(teamMember => {
+        team[i] = {
+            name: `${teamMember.get('firstName')} ${teamMember.get('lastName')}`,
+            teamMemberPoint: teamMember.toPointer(),
+            id: teamMember.id,
+            checked: false,
+            type: 'user',
+        };
+        i++;
+        });
+        return (team);
+    });
   }
 }
