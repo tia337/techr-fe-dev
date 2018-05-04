@@ -62,6 +62,8 @@ import { TimelineModule } from './timeline/timeline.module';
 import { ClearStringPipe } from './clear-string.pipe';
 import { TimelineService } from './timeline/timeline.service';
 import { NgxDnDModule } from '@swimlane/ngx-dnd';
+import { TalentbaseComponent } from './talentbase/talentbase.component';
+import { TalentbaseService } from './talentbase/talentbase.service';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -76,7 +78,8 @@ const config: SocketIoConfig = {
 @NgModule({
 	declarations: [
 		AppComponent,
-		ClearStringPipe
+		ClearStringPipe,
+		TalentbaseComponent
 		],
 	imports: [
 		BrowserModule,
@@ -126,7 +129,8 @@ const config: SocketIoConfig = {
 		LoginGuard,
 		BillingGuard,
 		ActiveSubscriptionGuard,
-		TimelineService
+		TimelineService,
+		TalentbaseService
 	],
 	bootstrap: [AppComponent],
 	exports: [],
