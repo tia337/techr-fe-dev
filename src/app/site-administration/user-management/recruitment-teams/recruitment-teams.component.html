@@ -1,0 +1,30 @@
+<section class="recruitment-teams">
+
+  <div class="recruitment-teams-header">
+    <h3>Recruitment Teams</h3>
+    <button 
+      mat-raised-button 
+      color="primary"
+      (click)="addNewRecruitmentTeam()">Add new team</button>
+  </div>
+
+  <p *ngIf="recruitmentTeams.length === 0">
+    You have not set up any recruitment teams yet!
+  </p>
+  
+  <div class="recruitment-teams-body" *ngFor="let recruitmentTeam of recruitmentTeams">
+    <div class="recruitment-teams-body__options">
+        <p class="recruitment-teams-body__info">{{recruitmentTeam.name}}</p>
+        <p>
+          <span class="recruitment-teams-body__info edit">edit</span>
+          <span class="recruitment-teams-body__info delete">delete</span>
+        </p>
+    </div>
+    <p><span class="recruitment-teams-body__info">Team Lead: </span>{{recruitmentTeam.teamLead.name}}.</p>
+    <p>
+      <span class="recruitment-teams-body__info">Team members: </span>
+      <span *ngFor="let teamMember of recruitmentTeam.teamMembers">{{teamMember.name}}. </span>
+    </p>
+  </div>
+</section>
+

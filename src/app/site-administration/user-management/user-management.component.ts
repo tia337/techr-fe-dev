@@ -27,7 +27,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 		this.urlSubscription = this._router.events.subscribe(event => {
 			if (event instanceof NavigationStart) {
 				let urlArray = event.url.split(/[\(|\)|\/|\:]+/);
-				urlArray = urlArray.filter(item => item != '');
+				urlArray = urlArray.filter(item => item !== '');
 				this.activeUrl = urlArray[urlArray.indexOf('user-management-sections') + 1];
 			}
 		});

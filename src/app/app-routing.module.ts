@@ -1,3 +1,4 @@
+import { RecruitmentTeamsComponent } from './site-administration/user-management/recruitment-teams/recruitment-teams.component';
 
 import { TemplateDetailsCustomComponent } from './templates/template-details-custom/template-details-custom.component';
 import { TemplateDetailsComponent } from './templates/template-details/template-details.component';
@@ -194,6 +195,11 @@ const routes: Routes = [
 							{
 								path: 'permissions',
 								component: PermissionsComponent,
+								outlet: 'user-management-sections'
+							},
+							{
+								path: 'recruitment-teams',
+								component: RecruitmentTeamsComponent,
 								outlet: 'user-management-sections'
 							},
 							{

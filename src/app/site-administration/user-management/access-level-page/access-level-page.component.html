@@ -1,10 +1,7 @@
 <section class="access-level-inner">
-
-
     <div class="back-button-wrap">
         <a class="back-button" [routerLink]="['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['permissions'] } }]" skipLocationChange>Back to permissions home</a>
     </div>
-
     <div class="access-level-info">
         <div class="access-level-names">
             <div class="al-name">{{currentAccessLevel.name}}</div>
@@ -12,11 +9,8 @@
         </div>
         <div class="access-level-description">{{currentAccessLevel.rights}}</div>
     </div>
-
     <div class="members-section" *ngIf="users && users.length != 0">
         <h3>Memebers <span class="members-count">{{users.length}}</span></h3>
-
-
         <table>
             <tr>
                 <th>Full Name</th>
@@ -31,6 +25,5 @@
                 </td>
             </tr>
         </table>
-
     </div>
 </section>
