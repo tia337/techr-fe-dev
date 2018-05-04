@@ -21,32 +21,21 @@
 					</span>
         </label>
       </div>
-      <!-- <div class="logo-wrap">
-          <img *ngIf="clientLogo" src="{{clientLogo._url}}" />
-      </div> -->
-
       <nav class="side-nav">
         <ul>
           <span [routerLink]="['/timeline']">
               <li class=" func-buttons" >
-                <p>
-                  {{currentUser.get('firstName')}}'s Timeline
-                </p>
+                <p>{{currentUser.get('firstName')}}'s Timeline</p>
               </li>
           </span>
           <span (click)="postJob()">
             <li class="func-buttons" style="margin-bottom: 50px;">
-              <p>
-                Post Job
-              </p>
+              <p>Post Job</p>
             </li>
           </span>
-          
           <span [routerLink]="['/jobs']">
               <li class="func-buttons">
-                <p>
-                  Jobs
-                </p>
+                <p>Jobs</p>
               </li>
             </span>
           <span [routerLink]="['/', 'scorecards']">
@@ -56,16 +45,17 @@
           </span>
           <span [routerLink]="['/', 'empref']">
             <li class="func-buttons ">
-              <p>
-                Employee Referral Programs
-              </p>
+              <p>Employee Referral Programs</p>
             </li>
           </span>
           <span [routerLink]="['/', 'templates']">
             <li class="func-buttons ">
-              <p>
-                Templates
-              </p>
+              <p>Templates</p>
+            </li>
+          </span>
+          <span [routerLink]="['/', 'talentbase']">
+            <li class="func-buttons ">
+              <p>Talent Base</p>
             </li>
           </span>
         </ul>
