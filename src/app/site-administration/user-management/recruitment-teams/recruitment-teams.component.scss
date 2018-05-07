@@ -15,7 +15,7 @@
 
 .recruitment-teams-body {
     width:100%;
-    background-color: rgb(223, 223, 145);
+    background-color: #ffff85;
     padding: 10px;
     margin: 7px;
     .recruitment-teams-body__info {
@@ -35,8 +35,28 @@
         margin: 0px 5px;
         cursor: pointer;
     }
+
+    .team-description-tooltip {
+        cursor: pointer;
+    }
+
+    .edit {
+        padding: 5px;
+        transition: .3s all ease-in-out;
+    }
+
+    .edit:hover {
+        background-color: rgb(109, 109, 170);
+        color: white;
+    }
+
+    .delete {
+        transition: .4s all ease-in-out;
+        padding: 5px;
+    }
+
     .delete:hover {
-        background-color: rgb(199, 18, 18);
+        background-color: rgb(173, 74, 74);
         color: white;
     }
 }

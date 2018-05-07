@@ -77,6 +77,15 @@ import { Subject } from 'rxjs/Subject';
     this.recruitmentTeams.push(recruitmentTeam);
   }
 
+  editRecruitmentTeam(recruitmentTeam) {
+
+  }
+
+  deleteRecruitmentTeam(recruitmentTeam) {
+    const currentTeamIndex = this.recruitmentTeams.indexOf(recruitmentTeam);
+    this.recruitmentTeams.splice(currentTeamIndex, 1);
+  }
+
   getRecruitmentTeams() {
     return this.recruitmentTeams.slice();
   }
