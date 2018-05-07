@@ -27,7 +27,7 @@
     <tr *ngFor="let userRole of userRoles">
       <td *ngIf="userRoles.length > 0">{{userRole.roleName}}</td>
       <td *ngIf="userRoles.length > 0"><div class="permission-label">{{userRole.roleName}}</div></td>
-      <td *ngIf="userRoles.length > 0"><span *ngFor="let right of userRole.roleRights">{{right.get('rightDesc')}}<span *ngIf="userRole.roleRights.length > 1">.</span></span></td>
+      <td *ngIf="userRoles.length > 0"><span *ngFor="let right of userRole.roleRights">{{right.description}}<span *ngIf="userRole.roleRights.length > 1">.</span></span></td>
       <td *ngIf="userRoles.length > 0" class="user-role-options">
         <span (click)="editUserRoles(userRole, userRoles)">
           edit

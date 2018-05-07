@@ -3,7 +3,7 @@ import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../parse.service';
 import { Subject } from 'rxjs/Subject';
-
+//tslint:disable:indent
 @Injectable()
   export class SiteAdministrationService {
 
@@ -105,4 +105,20 @@ import { Subject } from 'rxjs/Subject';
         return (team);
     });
   }
+
+  getInitialUserRights() {
+    const rights = [];
+    this._parse.execCloud('getUserRights', {}).then(data => {
+      data.forEach(right => {
+        const item = {
+          id: right.get('rightId'),
+          description: right.get('rightDesc')
+        };
+        rights.push(item);
+      });
+      localStorage.setItem('roles', JSON.stringify(rights));
+    });
+    return rights;
+  }
+
 }
