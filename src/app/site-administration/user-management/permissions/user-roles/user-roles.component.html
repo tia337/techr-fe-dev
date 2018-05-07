@@ -38,9 +38,12 @@
         multiple 
         required
         formControlName="roleRights">
-        <mat-option (click)="$event.stopPropagation()" *ngFor="let userRolesRight of userRolesRights" [value]="userRolesRight">
-            {{userRolesRight}}
-        </mat-option>
+        <mat-option 
+          (click)="$event.stopPropagation()" 
+          *ngFor="let right of userRolesRights" 
+          [value]="right">
+            {{right.get('rightDesc')}}
+        </mat-option> 
       </mat-select>
     </mat-form-field>
     <button type="submit" mat-raised-button [disabled]="!userRolesFormGroup.valid">Add</button>
