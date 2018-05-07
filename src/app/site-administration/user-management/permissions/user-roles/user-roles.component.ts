@@ -38,9 +38,17 @@ export class UserRolesComponent implements OnInit {
       roleDescription: this.userRolesFormGroup.value.roleDescription,
       roleRights: [...this.userRolesFormGroup.value.roleRights]
     };
+    const rightsIdArray = [];
+    userRole.roleRights.forEach(right => {
+      rightsIdArray.push(right.get('rightId'));
+    });
     const data = {
       clientId: this._parse.getCurrentUser().get('Client_Pointer').id,
-      userRole: userRole
+      userRole: {
+        roleName: this.userRolesFormGroup.value.roleName,
+        roleDescription: this.userRolesFormGroup.value.roleDescription,
+        roleRights: rightsIdArray
+      }
     };
     this._parse.execCloud('addUserRole', data);
     this._siteAdministrationService.addUserRoles(userRole);
