@@ -6,6 +6,8 @@ import { UserRolesEditComponent } from './user-roles-edit/user-roles-edit.compon
 import { Subscription } from 'rxjs/Subscription';
 import { SiteAdministrationService } from './../../site-administration.service';
 import { RootVCRService } from 'app/root_vcr.service';
+import { Parse } from '../../../parse.service';
+//tslint:disable:indent
 
 @Component({
   selector: 'app-permissions',
@@ -20,9 +22,10 @@ export class PermissionsComponent implements OnInit, OnDestroy {
   constructor(
     private _router: Router,
     private _root_vcr: RootVCRService,
-    private _siteAdministrationService: SiteAdministrationService) { }
-    
-    
+    private _siteAdministrationService: SiteAdministrationService,
+    private _parse: Parse
+  ) { }
+
   ngOnInit() {
     this.userRoles = this._siteAdministrationService.getUserRoles();
     this.newUserRoleSubscription = this._siteAdministrationService.
@@ -30,6 +33,9 @@ export class PermissionsComponent implements OnInit, OnDestroy {
       .subscribe(newUserRole => {
         this.userRoles.push(newUserRole);
       });
+    this._parse.execCloud('getUserRights', {}).then(data => {
+      console.log(data);
+    });
   }
 
   goToAccessLevel(accessLevel: number) {

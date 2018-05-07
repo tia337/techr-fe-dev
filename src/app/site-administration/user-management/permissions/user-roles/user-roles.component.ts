@@ -35,6 +35,7 @@ export class UserRolesComponent implements OnInit {
     };
 
     this._siteAdministrationService.addUserRoles(userRole);
+    console.log(userRole, "USER ROLE");
     this.userRolesFormGroup.reset();
     this.closeModal();
   }
