@@ -300,11 +300,11 @@
                         <th>Likely to fill %</th>
                         <th>Description of stage</th>
                     </tr>
-                    <tr *ngFor="let tableRow of tableRows">
+                    <tr *ngFor="let tableRow of tableRows" [formGroup]="likelihoodFormGroup"> 
                         <td *ngIf="!editStageEnabled" class="stage-percentage">{{tableRow.stagePercentage}}%</td>
                         <td *ngIf="editStageEnabled">
                             <div class="pipeline-stage-table_edit-stage-percentage-box">
-                                <input type="text" [value]="tableRow.stagePercentage">
+                                <input type="text" [value]="tableRow.stagePercentage" formControlName="stagePercentage">
                                 <div class="pipeline-stage-table_set-value">
                                     <p class="set-value" (click)="tableRow.stagePercentage = tableRow.stagePercentage + 5">+</p>
                                     <p class="set-value" (click)="tableRow.stagePercentage = tableRow.stagePercentage - 5">-</p>

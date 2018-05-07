@@ -2,7 +2,7 @@ import { Component, OnInit, Renderer } from '@angular/core';
 import { CompanySettingsService } from './company-settings.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RootVCRService } from '../../root_vcr.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
@@ -30,6 +30,7 @@ export class CompanySettingsComponent implements OnInit {
 	editStageEnabled = false;
 	newLikelihood = false;
 
+	likelihoodFormGroup: FormGroup;
 	@ViewChild('newPercentageValue') newPercentageValue: ElementRef;
 	@ViewChild('newDescriptionValue') newDescriptionValue: ElementRef;
 
@@ -167,6 +168,10 @@ export class CompanySettingsComponent implements OnInit {
 			this.companyBenefits = '';
 
 		}
+		this.likelihoodFormGroup = new FormGroup({
+			'stagePercentage': new FormControl('', [Validators.min(0), Validators.max(100)])
+		});
+
 		this.tableRows = this._CompanySettingsService.getTableRows();
 		this.departments = this._CompanySettingsService.getDepartments();
 		this.offices = this._CompanySettingsService.getOffices();
