@@ -61,16 +61,31 @@ import { Subject } from 'rxjs/Subject';
   }
 
   getUserRolesRights() {
-    return this.userRolesRights.slice();
+    return this._parse.execCloud('getUserRights', { });
   }
 
   getUserRoles() {
-    return this.userRoles.slice();
+    const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+
+    return this._parse.execCloud('getUserRoles', {clientId});
   }
   
-  addUserRoles(user) {
-    this.userRoles.push(user);
-    this.newUserRoleSubject.next(user);
+  addUserRole(userRole) {
+    const clientId = this.getClientId();
+
+    this._parse.execCloud('addUserRole', {clientId : clientId, userRole: userRole});
+    this.userRoles.push(userRole);
+    this.newUserRoleSubject.next(userRole);
+  }
+
+  editUserRole(userRole, newUserRole) {
+    const clientId = this.getClientId();
+    this._parse.execCloud('editUserRole', {clientId: clientId, userRole: userRole, newUserRole: newUserRole});
+  }
+
+  deleteUserRole(userRole) {
+    const clientId = this.getClientId();
+    this._parse.execCloud('deleteUserRole', {clientId: clientId, userRole: userRole});
   }
 
   addNewRecruitmentTeam(recruitmentTeam) {
@@ -113,5 +128,9 @@ import { Subject } from 'rxjs/Subject';
         });
         return (team);
     });
+  }
+
+  getClientId() {
+    return this._parse.getCurrentUser().get('Client_Pointer').id;
   }
 }

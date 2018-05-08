@@ -21,11 +21,20 @@ export class UserRolesEditComponent implements OnInit {
     private _rootVCRService: RootVCRService ) { }
 
   ngOnInit() {
-    this.userRolesRights = this._siteAdministrationService.getUserRolesRights();
+     this._siteAdministrationService.getUserRolesRights()
+      .then(data => {
+        this.userRolesRights = data;
+      });
+
+    const currentUserRoleRights = [];
+    this.currentUserRole.roleRights.forEach(currentUserRoleRight => {
+      currentUserRoleRights.push(currentUserRoleRight.description);
+    });
+
     this.userRolesFormGroup = new FormGroup({
       'roleName' : new FormControl(this.currentUserRole.roleName, Validators.required),
       'roleDescription' : new FormControl(this.currentUserRole.roleDescription, Validators.required),
-      'roleRights': new FormControl(this.currentUserRole.roleRights, Validators.required)
+      'roleRights': new FormControl(currentUserRoleRights, Validators.required)
     });
   }
 
@@ -41,16 +50,29 @@ export class UserRolesEditComponent implements OnInit {
   }
   
   editUserRole() {
-    const userRole = {
+    const userRoleRights = [];
+    this.userRolesRights.forEach(roleRight => {
+      this.userRolesFormGroup.value.roleRights.forEach(formRoleRight => {
+        if (roleRight.get('rightDesc') === formRoleRight ) {
+          const newRoleRight = {
+            id: roleRight.get('rightId'),
+            description: formRoleRight
+          };
+          userRoleRights.push(newRoleRight);
+        }
+      });
+    });
+
+    const newUserRole = {
       roleName: this.userRolesFormGroup.value.roleName,
       roleDescription: this.userRolesFormGroup.value.roleDescription,
-      roleRights: [...this.userRolesFormGroup.value.roleRights]
+      roleRights: userRoleRights
     };
-    const index = this.currentUserRoles.indexOf(this.currentUserRole);
-
-    this.currentUserRoles[index] = userRole;
     
-    // this._siteAdministrationService.addUserRoles(userRole);
+    const index = this.currentUserRoles.indexOf(this.currentUserRole);
+    this.currentUserRoles[index] = newUserRole;
+    
+    this._siteAdministrationService.editUserRole(this.currentUserRole, newUserRole);
     this.userRolesFormGroup.reset();
     this.closeModal();
   }

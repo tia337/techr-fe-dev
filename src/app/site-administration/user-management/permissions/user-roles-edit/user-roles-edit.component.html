@@ -30,8 +30,8 @@
         multiple 
         required
         formControlName= "roleRights">
-        <mat-option (click)="$event.stopPropagation()" *ngFor ="let userRolesRight of userRolesRights" [value]="userRolesRight">
-            {{userRolesRight}}
+        <mat-option  *ngFor ="let userRolesRight of userRolesRights" [value]="userRolesRight.get('rightDesc')">
+            {{userRolesRight.get('rightDesc')}}
         </mat-option>
       </mat-select> 
     </mat-form-field>

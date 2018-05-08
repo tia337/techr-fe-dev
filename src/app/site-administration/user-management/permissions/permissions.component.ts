@@ -24,7 +24,10 @@ export class PermissionsComponent implements OnInit, OnDestroy {
     
     
   ngOnInit() {
-    this.userRoles = this._siteAdministrationService.getUserRoles();
+     this._siteAdministrationService.getUserRoles()
+      .then(data => {
+        this.userRoles = data;
+      });
     this.newUserRoleSubscription = this._siteAdministrationService.
       newUserRoleSubject
       .subscribe(newUserRole => {
