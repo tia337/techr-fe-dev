@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RootVCRService } from 'app/root_vcr.service';
+import { Parse } from '../../../../parse.service';
 
 @Component({ 
   selector: 'app-user-roles-delete',
@@ -11,7 +12,10 @@ export class UserRolesDeleteComponent implements OnInit {
   currentUserRole;
   currentUserRoles;
 
-  constructor(private _rootVCRService: RootVCRService) { }
+  constructor(
+    private _rootVCRService: RootVCRService,
+    private _parse: Parse
+  ) { }
 
   ngOnInit() {}
 
@@ -26,6 +30,10 @@ export class UserRolesDeleteComponent implements OnInit {
   deleteUserRole() {
     const index = this.currentUserRoles.indexOf(this.currentUserRole);
     this.currentUserRoles.splice(index, 1);
+    this._parse.execCloud('deleteUserRole', {
+      userRole: this.currentUserRole,
+      clientId: this._parse.getCurrentUser().get('Client_Pointer').id
+    });
     this.closeModal();
   }
 

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SiteAdministrationService } from '../../../site-administration.service';
 import { RootVCRService } from '../../../../root_vcr.service';
-
+//tslint:disable:indent
 @Component({
   selector: 'app-user-roles-edit',
   templateUrl: './user-roles-edit.component.html',
@@ -15,18 +15,22 @@ export class UserRolesEditComponent implements OnInit {
 
   currentUserRole;
   currentUserRoles = [];
-  
+
   constructor(
     private _siteAdministrationService: SiteAdministrationService,
     private _rootVCRService: RootVCRService ) { }
 
   ngOnInit() {
-    this.userRolesRights = this._siteAdministrationService.getUserRolesRights();
-    this.userRolesFormGroup = new FormGroup({
-      'roleName' : new FormControl(this.currentUserRole.roleName, Validators.required),
-      'roleDescription' : new FormControl(this.currentUserRole.roleDescription, Validators.required),
-      'roleRights': new FormControl(this.currentUserRole.roleRights, Validators.required)
-    });
+    this.userRolesRights = JSON.parse(localStorage.getItem('roles'));
+    console.log(this.userRolesRights);
+    console.log(this.currentUserRole.roleRights);
+    setTimeout(() => {
+      this.userRolesFormGroup = new FormGroup({
+        'roleName' : new FormControl(this.currentUserRole.roleName, Validators.required),
+        'roleDescription' : new FormControl(this.currentUserRole.roleDescription, Validators.required),
+        'roleRights': new FormControl(this.currentUserRole.roleRights, Validators.required)
+      });
+    }, 4);
   }
 
   set userRole(userRole) {

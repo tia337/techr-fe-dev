@@ -3,7 +3,7 @@ import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../parse.service';
 import { Subject } from 'rxjs/Subject';
-
+//tslint:disable:indent
 @Injectable()
   export class SiteAdministrationService {
 
@@ -32,21 +32,21 @@ import { Subject } from 'rxjs/Subject';
 
   getAccessLevel() {
     this._parse.Parse.User.current().fetch().then(res => {
-      console.log(res.get('HR_Access_Level'));
+      // console.log(res.get('HR_Access_Level'));
     });
-    console.log(this._parse.getCurrentUser());
-    return this._parse.Parse.User.current().fetch().then(res=>{
+    // console.log(this._parse.getCurrentUser());
+    return this._parse.Parse.User.current().fetch().then(res => {
         return res.get('HR_Access_Level');
     });
 }
   getAdmins() {
     return this._parse.Parse.User.current().get('Client_Pointer').fetch().then(client => {
-      console.log(client);
+      // console.log(client);
       let admins: any[] = [];
       return this._parse.Parse.Object.fetchAllIfNeeded(client.get('TeamMembers')).then(teamMembers => {
-        console.log(teamMembers);
+        // console.log(teamMembers);
       for (let teamMember of teamMembers){
-        console.log(teamMember.get('HR_Access_Level'));
+        // console.log(teamMember.get('HR_Access_Level'));
         if (teamMember.get('HR_Access_Level') === 1){
           admins.push(teamMember);
         }
@@ -105,4 +105,20 @@ import { Subject } from 'rxjs/Subject';
         return (team);
     });
   }
+
+  getInitialUserRights() {
+    const rights = [];
+    this._parse.execCloud('getUserRights', {}).then(data => {
+      data.forEach(right => {
+        const item = {
+          id: right.get('rightId'),
+          description: right.get('rightDesc')
+        };
+        rights.push(item);
+      });
+      localStorage.setItem('roles', JSON.stringify(rights));
+    });
+    return rights;
+  }
+
 }

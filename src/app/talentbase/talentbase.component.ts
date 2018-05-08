@@ -34,6 +34,7 @@ export class TalentbaseComponent implements OnInit {
   filtersArray = [];
   pipelineStagesArray = [];
   candidatesArray = [];
+  checkedCandidates: Array<any> = [];
   private paginationLimits = {
     from: 0,
     to: 30
@@ -94,6 +95,11 @@ export class TalentbaseComponent implements OnInit {
       this.paginationLimits.from += 30;
       this.paginationLimits.to += 30;
     }
+  }
+
+  selectAllCandidates () {
+   this.allSelected = !this.allSelected;
+   this.checkedCandidates = this._talentBaseService.selectAllCandidates(this.candidatesArray);
   }
 
 }

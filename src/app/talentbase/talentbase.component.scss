@@ -46,8 +46,8 @@
         align-items: center;
         font-size: 15px;
         img {
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             margin-bottom: 10px;
         }
         span {
@@ -156,6 +156,8 @@
         }
         &-types {
             background: #ffffff;
+            max-height: 202px;
+            overflow: auto;
             span:first-child {
                 display: flex;
                 align-items: center;
