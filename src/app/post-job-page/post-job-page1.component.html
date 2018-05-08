@@ -438,7 +438,7 @@
                                 (clickOutside)="departmentListShown = false"
                                 [delayClickOutsideInit]="true">
                                 <li *ngFor="let department of departmentsList" 
-                                    (click)="currentDepartment = department; departmentValue.value = department; departmentListShown = false;">
+                                    (click)="currentDepartment = department; departmentValue.value = department; departmentListShown = false; detectChange();">
                                     {{department}}
                                 </li>
                             </ul>
@@ -446,7 +446,7 @@
                     </div>
                     <div class="settings-item">
                         <span class="settings-item__title">Office</span>
-                        <input type="hidden" #officeValue [ngModel]="currentOffice" formControlName="jobOffice">                        
+                        <input type="hidden" #officeValue [ngModel]="currentOffice" formControlName="jobOffice">   
                         <div class="settings-item__select-holder">
                             <p class="settings-item__button" 
                                     *ngIf="currentOffice === ''"
@@ -459,7 +459,7 @@
                                 (clickOutside)="officeListShown = false"
                                 [delayClickOutsideInit]="true">
                                 <li *ngFor="let office of officeList" 
-                                    (click)="currentOffice = office; officeValue.value = office ;officeListShown = false;">
+                                    (click)="currentOffice = office; officeValue.value = office; officeListShown = false; detectChange();">
                                     {{office}}
                                 </li>
                             </ul>
@@ -467,22 +467,19 @@
                     </div>
                     <div class="settings-item">
                             <span class="settings-item__title">Client</span>
-                            <input type="hidden" #clientValue [ngModel]="clientBank" formControlName="jobClient">
+                            <input type="hidden" #clientValue [ngModel]="currentClient" formControlName="jobClientOfClient">
                             <div class="settings-item__select-holder">
                                     <p class="settings-item__button" 
-                                            *ngIf="clientBank === ''"
+                                            *ngIf="currentClient === ''"
                                             (click)="clientListShown = true">Select Client</p>
                                     <p class="settings-item__button" 
-                                            *ngIf="clientBank !== ''"
-                                            (click)="clientListShown = true">{{clientBank}}</p>                        
+                                            *ngIf="currentClient !== ''"
+                                            (click)="clientListShown = true">{{currentClient}}</p>                        
                                     <ul class="settings-item__office-list" 
                                         *ngIf="clientListShown" 
                                         (clickOutside)="clientListShown = false"
                                         [delayClickOutsideInit]="true">
-                                        <li (click)="clientBank = 'PrivatBank'; clientValue.value = 'PrivatBank'; clientListShown = false;">PrivatBank</li>
-                                        <li (click)="clientBank = 'Ukrsib'; clientValue.value = 'Ukrsib'; clientListShown = false;">Ukrsib</li>
-                                        <li (click)="clientBank = 'AlfaBank';  clientValue.value = 'AlfaBank';clientListShown = false;">AlfaBank</li>
-                                        <li (click)="clientBank = 'Monobank';  clientValue.value = 'Monobank';clientListShown = false;">Monobank</li>
+                                        <li (click)="currentClient = 'PrivatBank'; clientValue.value = 'PrivatBank'; clientListShown = false; detectChange();">PrivatBank</li>
                                     </ul>
                             </div>
                         </div>
@@ -502,7 +499,7 @@
                     </div>
                     <div class="settings-item">
                         <span class="settings-item__title">Purchase order</span>
-                        <input formControlName="jobPurchaseOrder" type="text" class="settings-item__input width_40" placeholder="Enter PO/Internal Ref">
+                        <input formControlName="purchaseOrderReference" type="text" class="settings-item__input width_40" placeholder="Enter PO/Internal Ref">
                         <span class="settings-item__notice">Internal visibility only</span>                        
                     </div>
                 </div>

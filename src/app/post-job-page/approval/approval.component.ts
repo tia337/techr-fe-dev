@@ -19,6 +19,7 @@ import { RootVCRService } from '../../root_vcr.service';
   export class ApprovalComponent implements OnInit {
 
     approversHidden = true;
+    currentContract;
     request = 'pending';
     public teamMembers: Array<any> = [];
     public checkedTeamMembers: Array<any> = [];
@@ -66,6 +67,8 @@ import { RootVCRService } from '../../root_vcr.service';
     addToCheckedMembers(member) {
         if (member.checked === false) {
             this.checkedTeamMembers.push(member);
+            this.currentContract.set('approvers', this.checkedTeamMembers);
+            console.log(this.currentContract);
             member.checked = true;
             return;
         } else if (member.checked === true) {
@@ -99,6 +102,7 @@ import { RootVCRService } from '../../root_vcr.service';
                 }
             });
         }
+        this.currentContract.value.approvers = this.checkedTeamMembers;        
     }
 
     sendRequest() {
@@ -106,7 +110,26 @@ import { RootVCRService } from '../../root_vcr.service';
     }
 
     closeRequestApproval() {
+        this.saveApprovers();
         this._root_vcr.clear();
+    }
+
+    set contract (value) {
+        this.currentContract = value;
+    }
+
+    get contract () {
+        return this.currentContract;
+    }
+
+    saveApprovers() {
+        const contract = this._parse.Object('Contract');
+        this.currentContract.set('status', 4);
+		return contract.save(this.currentContract).then(contractResult => {
+			console.log('success');
+		}, error => {
+			console.error(error);
+		});
     }
 
   }
