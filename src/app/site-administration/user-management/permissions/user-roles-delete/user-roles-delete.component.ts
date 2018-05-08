@@ -31,8 +31,8 @@ export class UserRolesDeleteComponent implements OnInit {
     const index = this.currentUserRoles.indexOf(this.currentUserRole);
     this.currentUserRoles.splice(index, 1);
     this._parse.execCloud('deleteUserRole', {
-       roleName: this.currentUserRole.roleName,
-       clientId: this._parse.getCurrentUser().get('Client_Pointer').id
+      userRole: this.currentUserRole,
+      clientId: this._parse.getCurrentUser().get('Client_Pointer').id
     });
     this.closeModal();
   }

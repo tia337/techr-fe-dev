@@ -5,7 +5,7 @@ import { ParsePromise } from 'parse';
 import { ParseObject } from 'parse';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-
+//tslint:disable:indent
 
 @Injectable()
 export class PostJobService {
@@ -78,14 +78,14 @@ export class PostJobService {
 
   // FOR SKILLS ROLES AND INDUSTRIES
 
-  getIndustries(){
+  getIndustries() {
     const industriesQuery = new this._parse.Parse.Query('Industry');
     return industriesQuery.find().then( industries => {
       return industries;
     });
   }
 
-  getRoles(){
+  getRoles() {
     const rolesQuery = new this._parse.Parse.Query('UserRole');
     return rolesQuery.find().then( roles => {
       return roles;
@@ -127,12 +127,12 @@ export class PostJobService {
     return skillComponent;
   }
 
-  getJobCountry(name:string){
+  getJobCountry(name: string) {
     const jobCountryQuery = new this._parse.Parse.Query('Country');
-    jobCountryQuery.equalTo("Country", name);
-    return jobCountryQuery.find().then(jobCountries=>{
-    return jobCountries;
-  });
+    jobCountryQuery.equalTo('Country', name);
+    return jobCountryQuery.find().then(jobCountries => {
+      return jobCountries;
+    });
   }
   saveIsPostJobShowAlert() {
     let partner = this._parse.Parse.User.current().get('partner');
@@ -144,5 +144,13 @@ export class PostJobService {
     return partner.fetch().then(res => {
       return res.get('isPostJobShowAlert');
     });
+  }
+  getClientDepartments(): Promise<string[]> {
+    const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+    return this._parse.execCloud('getClientDepartments', { clientId: clientId });
+  }
+  getClientOffices(): Promise<string[]> {
+    const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+    return this._parse.execCloud('getClientOffices', { clientId: clientId });
   }
 }

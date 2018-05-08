@@ -27,6 +27,7 @@ import { MatSnackBar } from '@angular/material';
 
 import { Modal1Component } from './modal1/modal1.component';
 import { ApprovalComponent } from './approval/approval.component';
+import { NULL_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
 	selector: 'app-post-job-page',
@@ -162,9 +163,11 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	toShowInfoPermit = false;
 	isJobPostShowAlert = true;
 
-	office = '';
+	currentOffice = '';
+	officeList: Array<string> = [];
 	officeListShown = false;
-	department = '';
+	currentDepartment = '';
+	departmentsList: Array<string> = [];
 	departmentListShown = false;
 	clientBank = '';
 	clientListShown = false;
@@ -194,9 +197,18 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit() {
+
+		this._postJobService.getClientDepartments().then(departments => {
+			this.departmentsList = departments;
+		});
+
+		this._postJobService.getClientOffices().then(offices => {
+			this.officeList = offices;
+		});
+
 		// FOR SKILLS ROLES AND INDUSTRIES
 		this.adminLevel = this._postJobService.checkAdmin();
-		console.log(this.adminLevel);
+		// console.log(this.adminLevel);
 
 		this._postJobService.getSkills().then(skills => {
 			this.skills = skills;
@@ -249,17 +261,19 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				owner: this.contractObj.get('owner'),
 				countriesSourcing: [],
 				isRatedHourly: this.contractObj.get('isRatedHourly'),
-
 				isTR: this.contractObj.get('isTR'),
 				SalaryCurrency: this.contractObj.get('SalaryCurrency'),
-
 				Client: this.contractObj.get('Client'),
-
 				postLocation: this.contractObj.get('postLocation'),
 				Min_hourly: this.contractObj.get('Min_hourly'),
 				Max_hourly: this.contractObj.get('Max_hourly'),
 				durationMin: this.contractObj.get('durationMin'),
 				durationMax: this.contractObj.get('durationMax'),
+				jobDepartment: this.contractObj.get('jobDepartment'),
+				jobOffice: this.contractObj.get('jobOffice'),
+				jobClient: this.contractObj.get('jobClient'),
+				jobHiringTarget: this.contractObj.get('hiringTarget'),
+				jobPurchaseOrder: this.contractObj.get('purchaseOrderReference')
 			});
 			this.selectedIndustries = this.contractObj.get('industryTags');
 			this.selected = this.contractObj.get('programingSkills');
@@ -315,7 +329,12 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				durationMin: undefined,
 				durationMax: undefined,
 				postedAt: undefined,
-				isRatedHourly: false
+				isRatedHourly: false,
+				jobDepartment: null,
+				jobOffice: null,
+				jobClient: null,
+				jobHiringTarget: null,
+				jobPurchaseOrder: null
 			});
 
 		}
@@ -329,10 +348,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		if (!this.editable && this.contractForm) {
 			this.contractForm.disable();
 		}
-		if(!this.editable){
+		if (!this.editable) {
 			this.formSkillsSubscription = this.contractForm.valueChanges.debounceTime(500).subscribe(
-				res=>{
-					console.log();
+				res => {
+					// console.log();
 				}
 			);
 		}
@@ -444,7 +463,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 
 	getLogo(event): any {
 		if (event.target.files) {
-			console.log('files exists');
+			// console.log('files exists');
 			const logo = event.target.files[0];
 			this.logo = this._parse.File(logo.name, logo);
 			this.initLogo(window.URL.createObjectURL(logo));
@@ -464,7 +483,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		this.contractForm.value.startContractDate = new Date(this.contractForm.value.startContractDate);
 		this.contractForm.value.isASAP = this.asap === 'true' ? true : false;
 		this.contractForm.value.logo = this.logo;
-		console.log(this.logo);
+		// console.log(this.logo);
 		this.contractForm.value.Client = this.currentUser.get('Client_Pointer');
 		this.contractForm.value.jobCountry = this.jobCountry;
 		this.contractForm.value.JobState = this.JobState;
@@ -568,6 +587,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	}
 	createContract(newContract: any): any {
 		this.initContract();
+		console.log(newContract);
 		const contract = this._parse.Object('Contract');
 		return contract.save(newContract).then(contractResult => {
 			this.currentContract = contractResult;
@@ -592,13 +612,13 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				res.save(options).then(saveResult => {
 					this.showAlert();
 					this.closeSnackBar();
-					console.log(saveResult, 'Save Result in UpdateContract for DRAFTS');
+					// console.log(saveResult, 'Save Result in UpdateContract for DRAFTS');
 					this._router.navigateByUrl('/jobs');
 				});
 			} else {
 				res.save(options).then(saveResult => {
 					this.closeSnackBar();
-					console.log(saveResult, 'Save Result in UpdateContract for Active');
+					// console.log(saveResult, 'Save Result in UpdateContract for Active');
 					callback();
 				});
 			}
@@ -620,6 +640,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	}
 
 	postJob() {
+		console.log(this.contractForm.value);
 		this.postingLoader = true;
 		if (!this.contractObj) {
 			this.formSubscription.unsubscribe();
@@ -631,7 +652,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 					this.updateContract(this.contractForm.value, () => {
 						this.setActiveStatus()
 							.then(() => {
-								console.log(this.currentContract, 'IF currentContract');
+								// console.log(this.currentContract, 'IF currentContract');
 								this._router.navigateByUrl('/jobs');
 							});
 					});
@@ -644,7 +665,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 					this.createContract(this.contractForm.value)
 						.then(() => this.setActiveStatus())
 						.then(() => {
-							console.log(this.currentContract, 'IF ELSE currentContract');
+							// console.log(this.currentContract, 'IF ELSE currentContract');
 							this._router.navigateByUrl('/jobs');
 						});
 				}
@@ -655,7 +676,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 					this.updateClient();
 					this.showEditAlert();
 					this.updateContract(this.contractForm.value, () => {
-						console.log(this.currentContract, 'ELSE in PostJob()');
+						// console.log(this.currentContract, 'ELSE in PostJob()');
 						this.editable = false;
 						this.contractForm.disable();
 					});
@@ -862,8 +883,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				this._renderer.addClass(skillElement, '_' + skill.id);
 				this._renderer.addClass(skillElement, 'skill-row');
 				skillElement.addEventListener('click', event => {
-					console.log(event.target);
-					console.log(event.target.children.length);
+					// console.log(event.target);
+					// console.log(event.target.children.length);
 					if (event.target.classList.contains("experience-button")) {
 
 					} else {
@@ -1005,7 +1026,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	}
 
 	filter() {
-		console.log(this.query);
+		// console.log(this.query);
 		if (this.query.length == 1) {
 			let char = '\\b' + this.query.toUpperCase();
 			let exp = new RegExp(char, 'g');
@@ -1129,7 +1150,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			}
 			this.dropdownVisible = false;
 			this.dropdownRolesVisible = false;
-			this.dropdownIndustriesVisible = false
+			this.dropdownIndustriesVisible = false;
 		}
 	}
 
@@ -1140,7 +1161,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			}else{
 				event.returnValue = false;
 			}
-			console.log("Arrow down");
+			// console.log("Arrow down");
 			if (this.selectionCounter < (this.filteredList.length - 1)) {
 				this.selectionCounter += 1;
 				this.expPosition = 1;
@@ -1160,7 +1181,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			}
 		}
 		if (value.code == 'Enter') {
-			console.log("Enter prevdef");
+			// console.log("Enter prevdef");
 			if(value.preventDefault){
 				value.preventDefault();
 			}else{
@@ -1459,17 +1480,15 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	}
 
 	closeSnackBar() {
-		this.snackBar.open('Draft Saved', '', { duration: 1000, horizontalPosition: 'right', verticalPosition: 'bottom'}
-		);
+		this.snackBar.open('Draft Saved', '', { duration: 1000, horizontalPosition: 'right', verticalPosition: 'bottom'});
 	};
 	errorSnackBar() {
-		this.snackBar.open('Error occured', '', { duration: 1000, horizontalPosition: 'right', verticalPosition: 'bottom'}
-		);
+		this.snackBar.open('Error occured', '', { duration: 1000, horizontalPosition: 'right', verticalPosition: 'bottom'});
 	};
 	addCountries(){
 		const addCount = this._root_vcr.createComponent(Modal1Component);
 		this.loadCountries();
-		console.log(this.countriesSourcing);
+		// console.log(this.countriesSourcing);
 		setTimeout(() => {
 			addCount.countries = this.countriesSourcing;
 		}, 0);

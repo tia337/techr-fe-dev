@@ -154,15 +154,15 @@ export class CoreComponent implements OnInit, OnDestroy {
 				this.invitedMembers = null;
 			}
 		});
-		console.log(this._parse.Session());
-		console.log('First time', this._socket);
+		// console.log(this._parse.Session());
+		// console.log('First time', this._socket);
 
 		this.sessionId =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		sessionStorage.setItem('sessionId', this.sessionId);
 		if (this._parse.getCurrentUser()) {
 			this._socket.connect();
 			this._socket.emit('subscribe', {userId: this._parse.getCurrentUser().id, sessionId: this.sessionId});
-			console.log('Second time', this._socket);
+			// console.log('Second time', this._socket);
 		}
 		this._cartAdding.cartLoad();
 	}
@@ -249,7 +249,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 				member.dialogActive = false;
 			});
 		});
-		console.log(members);
 		this.getSessionStatus(members);
 	};
 

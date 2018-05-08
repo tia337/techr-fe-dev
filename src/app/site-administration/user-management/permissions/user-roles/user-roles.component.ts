@@ -33,15 +33,19 @@ export class UserRolesComponent implements OnInit {
     });
   }
   addUserRole() {
+    const rightsIdArray = [];
+    this.userRolesFormGroup.value.roleRights.roleRights.forEach(right => {
+      const data = {
+        id: right.get('rightId'),
+        description: right.get('rightDesc')
+      };
+      rightsIdArray.push(right.get('rightId'));
+    });
     const userRole = {
       roleName: this.userRolesFormGroup.value.roleName,
       roleDescription: this.userRolesFormGroup.value.roleDescription,
-      roleRights: [...this.userRolesFormGroup.value.roleRights]
+      roleRights: rightsIdArray
     };
-    const rightsIdArray = [];
-    userRole.roleRights.forEach(right => {
-      rightsIdArray.push(right.get('rightId'));
-    });
     const data = {
       clientId: this._parse.getCurrentUser().get('Client_Pointer').id,
       userRole: {

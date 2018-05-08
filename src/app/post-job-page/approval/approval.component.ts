@@ -22,7 +22,8 @@ import { RootVCRService } from '../../root_vcr.service';
     request = 'pending';
     public teamMembers: Array<any> = [];
     public checkedTeamMembers: Array<any> = [];
-  
+    private approvers: Array<{ id: string, name: string, pendingStatus: 'Yes' | 'No', type: 'email' | 'user' }> = [];
+
     constructor (
         private _elementRef: ElementRef, 
         private _renderer: Renderer2,
@@ -51,10 +52,10 @@ import { RootVCRService } from '../../root_vcr.service';
             clientC.get('TeamMembers').forEach(teamMember => {
             team[i] = {
                 name: `${teamMember.get('firstName')} ${teamMember.get('lastName')}`,
-                teamMemberPoint: teamMember.toPointer(),
                 id: teamMember.id,
                 checked: false,
                 type: 'user',
+                pendingStatus: 'No'
             };
             i++;
             });
@@ -74,11 +75,12 @@ import { RootVCRService } from '../../root_vcr.service';
 
     addEmailToCheckedMembers(email) {
         if (email !== '') {
-            const id = Math.random().toString(5);
+            const id = Math.random().toFixed(15).substring(3,10);
             this.checkedTeamMembers.push({
                 name: email,
                 id: id,
                 type: 'email',
+                pendingStatus: 'No'
             });
         }
     } 
@@ -86,7 +88,7 @@ import { RootVCRService } from '../../root_vcr.service';
     removeFromCheckedTeamMembers(member) {
         this.checkedTeamMembers.forEach(teamMember => {
             if (teamMember.id === member.id) {
-                let id = this.checkedTeamMembers.indexOf(teamMember);
+                const id = this.checkedTeamMembers.indexOf(teamMember);
                 this.checkedTeamMembers.splice(id, 1);   
             }
         });
