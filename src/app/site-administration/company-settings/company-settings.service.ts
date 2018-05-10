@@ -12,6 +12,7 @@ export class CompanySettingsService {
 	currentClient = this.client.asObservable();
 	erpBaseLink;
 	logoUpdate: EventEmitter<any> = new EventEmitter();
+
 	private tableRows = [
 		{
 			stagePercentage: 10,
@@ -39,132 +40,132 @@ export class CompanySettingsService {
 		}
 	];
 
-	private departments = [
-		{
-			id: 'general_administration_1',
-			name: 'General & Administration',
-			edit: false,
-			newSubdepartment: false,
-			subDepartments: [
-				{
-					id: 'sub_1',
-					name: 'Sub1',
-					edit: false
-				}
-			]
-		},
-		{
-			id: 'marketing_2',
-			name: 'Marketing',
-			edit: false,
-			newSubdepartment: false,
-			subDepartments: [
-				{
-					id: 'sub_1',
-					name: 'Sub1',
-					edit: false
-				}
-			]
-		},
-		{
-			id: 'sales_3',
-			name: 'Sales',
-			edit: false,
-			newSubdepartment: false,
-			subDepartments: [
-				{
-					id: 'sub_1',
-					name: 'Sub1',
-					edit: false
-				}
-			]
-		},
-		{
-			id: 'r_d_engineering_4',
-			name: 'R&D and Engineering',
-			edit: false,
-			newSubdepartment: false,
-			subDepartments: [
-				{
-					id: 'sub_1',
-					name: 'Sub1',
-					edit: false
-				}
-			]
-		},
-		{
-			id: 'software_engineering_5',
-			name: 'Software Engineering',
-			edit: false,
-			newSubdepartment: false,
-			subDepartments: [
-				{
-					id: 'sub_1',
-					name: 'Sub1',
-					edit: false
-				}
-			]
-		},
-		{
-			id: 'operations_6',
-			name: 'Operations',
-			edit: false,
-			newSubdepartment: false,
-			subDepartments: [
-				{
-					id: 'sub_1',
-					name: 'Sub1',
-					edit: false
-				}
-			]
-		},
-		{
-			id: 'human_resource_7',
-			name: 'Human Resource',
-			edit: false,
-			newSubdepartment: false,
-			subDepartments: [
-				{
-					id: 'sub_1',
-					name: 'Sub1',
-					edit: false
-				}
-			]
-		},
-	];
+	// private departments = [
+	// 	{
+	// 		id: 'general_administration_1',
+	// 		name: 'General & Administration',
+	// 		edit: false,
+	// 		newSubdepartment: false,
+	// 		subDepartments: [
+	// 			{
+	// 				id: 'sub_1',
+	// 				name: 'Sub1',
+	// 				edit: false
+	// 			}
+	// 		]
+	// 	},
+	// 	{
+	// 		id: 'marketing_2',
+	// 		name: 'Marketing',
+	// 		edit: false,
+	// 		newSubdepartment: false,
+	// 		subDepartments: [
+	// 			{
+	// 				id: 'sub_1',
+	// 				name: 'Sub1',
+	// 				edit: false
+	// 			}
+	// 		]
+	// 	},
+	// 	{
+	// 		id: 'sales_3',
+	// 		name: 'Sales',
+	// 		edit: false,
+	// 		newSubdepartment: false,
+	// 		subDepartments: [
+	// 			{
+	// 				id: 'sub_1',
+	// 				name: 'Sub1',
+	// 				edit: false
+	// 			}
+	// 		]
+	// 	},
+	// 	{
+	// 		id: 'r_d_engineering_4',
+	// 		name: 'R&D and Engineering',
+	// 		edit: false,
+	// 		newSubdepartment: false,
+	// 		subDepartments: [
+	// 			{
+	// 				id: 'sub_1',
+	// 				name: 'Sub1',
+	// 				edit: false
+	// 			}
+	// 		]
+	// 	},
+	// 	{
+	// 		id: 'software_engineering_5',
+	// 		name: 'Software Engineering',
+	// 		edit: false,
+	// 		newSubdepartment: false,
+	// 		subDepartments: [
+	// 			{
+	// 				id: 'sub_1',
+	// 				name: 'Sub1',
+	// 				edit: false
+	// 			}
+	// 		]
+	// 	},
+	// 	{
+	// 		id: 'operations_6',
+	// 		name: 'Operations',
+	// 		edit: false,
+	// 		newSubdepartment: false,
+	// 		subDepartments: [
+	// 			{
+	// 				id: 'sub_1',
+	// 				name: 'Sub1',
+	// 				edit: false
+	// 			}
+	// 		]
+	// 	},
+	// 	{
+	// 		id: 'human_resource_7',
+	// 		name: 'Human Resource',
+	// 		edit: false,
+	// 		newSubdepartment: false,
+	// 		subDepartments: [
+	// 			{
+	// 				id: 'sub_1',
+	// 				name: 'Sub1',
+	// 				edit: false
+	// 			}
+	// 		]
+	// 	},
+	// ];
 
-	private offices = [
-		{
-			id: 'warsaw_1',
-			name: 'Warsaw',
-			edit: false
-		},
-		{
-			id: 'kiev_2',
-			name: 'Kiev',
-			edit: false
-		},
-		{
-			id: 'madrid_3',
-			name: 'Madrid',
-			edit: false
-		},
-		{
-			id: 'california_4',
-			name: 'California',
-			edit: false
-		},
-		{
-			id: 'sevilla_5',
-			name: 'Sevilla',
-			edit: false
-		},
-		{
-			id: 'toronto_6',
-			name: 'Toronto',
-			edit: false
-		}
-	];
+	// private offices = [
+	// 	{
+	// 		id: 'warsaw_1',
+	// 		name: 'Warsaw',
+	// 		edit: false
+	// 	},
+	// 	{
+	// 		id: 'kiev_2',
+	// 		name: 'Kiev',
+	// 		edit: false
+	// 	},
+	// 	{
+	// 		id: 'madrid_3',
+	// 		name: 'Madrid',
+	// 		edit: false
+	// 	},
+	// 	{
+	// 		id: 'california_4',
+	// 		name: 'California',
+	// 		edit: false
+	// 	},
+	// 	{
+	// 		id: 'sevilla_5',
+	// 		name: 'Sevilla',
+	// 		edit: false
+	// 	},
+	// 	{
+	// 		id: 'toronto_6',
+	// 		name: 'Toronto',
+	// 		edit: false
+	// 	}
+	// ];
 
 	private stages: StagesArray = [
 		{
@@ -351,19 +352,26 @@ export class CompanySettingsService {
 		client.save();
 	}
 
-	getTableRows() {
-		return [...this.tableRows];
+	getClientProbabilitiesToCloseJob() {
+		const clientId = this.getClientId();
+		return this._parse.execCloud('getClientProbabilitiesToCloseJob', {clientId});
 	}
 
 	getDepartments() {
-		return [...this.departments];
+		const clientId = this.getClientId();
+		return this._parse.execCloud('getClientDepartments', {clientId});
 	}
 
 	getOffices() {
-		return [...this.offices];
+		const clientId = this.getClientId();
+		return this._parse.execCloud('getClientOffices', {clientId});
 	}
 
 	throwClient (client) {
 		this.client.next(client);
+	}
+
+	getClientId() {
+		return this._parse.getCurrentUser().get('Client_Pointer').id;
 	}
 }

@@ -65,7 +65,7 @@ import { Subject } from 'rxjs/Subject';
   }
 
   getUserRoles() {
-    const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+    const clientId = this.getClientId();
 
     return this._parse.execCloud('getUserRoles', {clientId});
   }

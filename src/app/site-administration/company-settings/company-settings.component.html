@@ -300,23 +300,23 @@
                         <th>Likely to fill %</th>
                         <th>Description of stage</th>
                     </tr>
-                    <tr *ngFor="let tableRow of tableRows" [formGroup]="likelihoodFormGroup"> 
-                        <td *ngIf="!editStageEnabled" class="stage-percentage">{{tableRow.stagePercentage}}%</td>
+                    <tr *ngFor="let clientProbabilityToCloseJob of clientProbabilitiesToCloseJob" [formGroup]="likelihoodFormGroup"> 
+                        <td *ngIf="!editStageEnabled" class="stage-percentage">{{clientProbabilityToCloseJob.percentage}}%</td>
                         <td *ngIf="editStageEnabled">
                             <div class="pipeline-stage-table_edit-stage-percentage-box">
-                                <input type="text" [value]="tableRow.stagePercentage" formControlName="stagePercentage">
+                                <input type="text" [value]="clientProbabilityToCloseJob.percentage"  formControlName="stagePercentage">
                                 <div class="pipeline-stage-table_set-value">
-                                    <p class="set-value" (click)="tableRow.stagePercentage = tableRow.stagePercentage + 5">+</p>
-                                    <p class="set-value" (click)="tableRow.stagePercentage = tableRow.stagePercentage - 5">-</p>
+                                    <p class="set-value" (click)="increaseClientProbability(clientProbabilityToCloseJob)">+</p>
+                                    <p class="set-value" (click)="decreaseClientProbability(clientProbabilityToCloseJob)">-</p>
                                 </div>
                             </div>
                         </td>
                         <td *ngIf="!editStageEnabled" class="stage-description">
-                            {{tableRow.stageDescription}}
+                            {{clientProbabilityToCloseJob.description}}
                         </td>
                         <td
                             *ngIf="editStageEnabled" class="pipeline-stage-table_set-description">
-                            <input type="text" #inputDescription [value]="tableRow.stageDescription" (keydown)="tableRow.stageDescription = inputDescription.value">
+                            <input type="text" #inputDescription [value]="clientProbabilityToCloseJob.description" (keydown)="clientProbabilityToCloseJob.description = inputDescription.value">
                         </td>
                     </tr>
                     <tr class="pipeline-stage-table_add-likelihood-stage" *ngIf="newLikelihood">

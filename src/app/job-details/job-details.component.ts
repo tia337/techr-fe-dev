@@ -109,7 +109,10 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 			});
 
 		});
-	this.likelihoodPercentages = this._companySettingsService.getTableRows();
+	this._companySettingsService.getClientProbabilitiesToCloseJob()
+		.then(data => {
+			this.likelihoodPercentages = data;
+		});
 	}
 
 	ngOnChanges() {
