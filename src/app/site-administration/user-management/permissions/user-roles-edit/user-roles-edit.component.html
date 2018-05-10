@@ -2,31 +2,32 @@
   class="modal-overlay" 
   (click)="closeModal()">
   <form 
+    *ngIf="userRolesFormGroup !== undefined"
     class="user-role-modal" 
     [formGroup]="userRolesFormGroup"
     (ngSubmit)="editUserRole()"
-    (click)="$event.stopPropagation()"  >
+    (click)="$event.stopPropagation()">
     
     <h2>Edit user role</h2>
     <mat-form-field>
       <input 
-        type= "text" 
+        type="text" 
         matInput 
-        placeholder= "Name" 
+        placeholder="Name" 
         required
-        formControlName= "roleName"> 
+        formControlName="roleName"> 
     </mat-form-field>
     <mat-form-field>
       <textarea  
         matInput 
-        placeholder= "Description" 
+        placeholder="Description" 
         required 
-        formControlName= "roleDescription">
+        formControlName="roleDescription">
       </textarea>
     </mat-form-field>
     <mat-form-field>
       <mat-select 
-        placeholder= "Rights" 
+        placeholder="Rights" 
         multiple 
         required
         formControlName= "roleRights">

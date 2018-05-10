@@ -2,22 +2,25 @@ import { RootVCRService } from 'app/root_vcr.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { SiteAdministrationService } from './../../../site-administration.service';
-
+import { Parse } from '../../../../parse.service';
+//tslint:disable:indent
 @Component({
   selector: 'app-user-roles',
   templateUrl: './user-roles.component.html',
   styleUrls: ['./user-roles.component.scss']
 })
 export class UserRolesComponent implements OnInit {
-  
+
   hiddenModal = false;
 
   userRolesRights = [];
   userRolesFormGroup: FormGroup;
-  
+
   constructor(
     private _siteAdministrationService: SiteAdministrationService,
-    private _rootVCRService: RootVCRService ) { }
+    private _rootVCRService: RootVCRService,
+    private _parse: Parse
+  ) { }
 
   ngOnInit() {
     this._siteAdministrationService.getUserRolesRights()
@@ -28,6 +31,9 @@ export class UserRolesComponent implements OnInit {
       'roleName' : new FormControl('', Validators.required),
       'roleDescription' : new FormControl('', Validators.required),
       'roleRights': new FormControl('', Validators.required)
+    });
+    this._parse.execCloud('getUserRights', {}).then(data => {
+      this.userRolesRights = data;
     });
   }
 

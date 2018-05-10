@@ -52,6 +52,7 @@
                                 </span>
                            </p>
                        </div>
+                       <p *ngIf="requestError" class="request-error">Please, choose approvers.</p>
                     </div>
                     <span style="margin-top: 10px;">OR</span>
                     <div>
@@ -75,7 +76,7 @@
         <p>Congratulations!</p>
         <p>Your request approval was successfully sent!</p>
     </div>
-    <div class="request-approval-modal success" *ngIf="request === 'error'">
+    <div class="request-approval-modal error" *ngIf="request === 'error'">
         <p>Error!</p>
         <p>Something unpredictable happened!</p>
         <button (click)="request = 'pending'">Try again</button>

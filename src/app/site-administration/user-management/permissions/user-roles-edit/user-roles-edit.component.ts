@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SiteAdministrationService } from '../../../site-administration.service';
 import { RootVCRService } from '../../../../root_vcr.service';
-
+//tslint:disable:indent
 @Component({
   selector: 'app-user-roles-edit',
   templateUrl: './user-roles-edit.component.html',
@@ -15,7 +15,7 @@ export class UserRolesEditComponent implements OnInit {
 
   currentUserRole;
   currentUserRoles = [];
-  
+
   constructor(
     private _siteAdministrationService: SiteAdministrationService,
     private _rootVCRService: RootVCRService ) { }

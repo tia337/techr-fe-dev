@@ -73,4 +73,13 @@ export class TalentbaseService {
     return arrayNew;
   }
 
+  selectAllCandidates (array) {
+    const checkedArray = [];
+    array.forEach(candidate => {
+      candidate.checked = true;
+      checkedArray.push(candidate);
+    });
+    return checkedArray;
+  }
+
 }

@@ -153,9 +153,57 @@
     }
 }
 
+.request-approval-modal.success {
+    background: #5ad45a;
+    color: #fff;
+    padding: 30px;
+    text-align: center;
+    p:first-child {
+        font-size: 34px;
+        margin-bottom: 40px;
+    }
+    p:last-child {
+        font-size: 21px;
+    }
+}
+
 .approvers-wrap {
     display: flex;
     margin-top: 20px;
     justify-content: space-between;
     align-items: center;
+}
+
+.request-error {
+    display: flex;
+    align-items: center;
+    background: #ef4f4f;
+    color: #fff;
+    padding: 5px 5px;
+    border-radius: 3px;
+    font-size: 16px;
+    width: 250px;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 30px;
+    // animation-name: error-blink;
+    // animation-delay: .2s;
+    // animation-iteration-count: 3;
+    // animation-duration: .4s;
+    // animation-timing-function: ease-in-out;
+}
+
+@keyframes error-blink {
+    0% {
+        background: #ef4f4f;
+        color: #fff;
+    }
+    50% {
+        background: #fff;
+        color: #ef4f4f;
+    }
+    100% {
+        background: #ef4f4f;
+        color: #fff;
+    }
 }

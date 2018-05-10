@@ -12,7 +12,7 @@ export const DeveloperListType = {
 };
 
 export const JobType = { 'permanent': 1, 'contract': 2 };
-export const ContractStatus = { 'archived': 0, 'active': 1, 'deleted': 2, 'draft': 3 };
+export const ContractStatus = { 'archived': 0, 'active': 1, 'deleted': 2, 'draft': 3, 'pending': 4, 'approved': 5 };
 export const FinalVerdict = { 'notSure': 1, 'yes': 2, 'definitely': 3 };
 export const JobBoardPush = { 'inactive': 0, 'active': 1, 'expired': 2 };
 export const AccessLevel = { 'siteAdmin': 1, 'admin': 2, 'contributor': 3 };

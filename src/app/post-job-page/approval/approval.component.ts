@@ -9,6 +9,8 @@ import {
   } from '@angular/core';
   import { Parse } from '../../parse.service';
 import { RootVCRService } from '../../root_vcr.service';
+import { FormControl } from '@angular/forms';
+import { PostJobService } from '../post-job.service';
   
   @Component({
     selector: 'approval',
@@ -19,15 +21,18 @@ import { RootVCRService } from '../../root_vcr.service';
   export class ApprovalComponent implements OnInit {
 
     approversHidden = true;
+    requestError = false;
     request = 'pending';
     public teamMembers: Array<any> = [];
     public checkedTeamMembers: Array<any> = [];
-  
+    private approvers: Array<{ id: string, name: string, pendingStatus: 'Yes' | 'No', type: 'email' | 'user' }> = [];
+
     constructor (
         private _elementRef: ElementRef, 
         private _renderer: Renderer2,
         private _parse: Parse,
-        private _root_vcr: RootVCRService
+        private _root_vcr: RootVCRService,
+        private _postJobService: PostJobService
     ) {}
   
   
@@ -51,10 +56,10 @@ import { RootVCRService } from '../../root_vcr.service';
             clientC.get('TeamMembers').forEach(teamMember => {
             team[i] = {
                 name: `${teamMember.get('firstName')} ${teamMember.get('lastName')}`,
-                teamMemberPoint: teamMember.toPointer(),
                 id: teamMember.id,
                 checked: false,
                 type: 'user',
+                pendingStatus: 'No'
             };
             i++;
             });
@@ -66,6 +71,9 @@ import { RootVCRService } from '../../root_vcr.service';
         if (member.checked === false) {
             this.checkedTeamMembers.push(member);
             member.checked = true;
+            if (this.requestError === true) {
+                this.requestError = false;
+            };
             return;
         } else if (member.checked === true) {
             this.removeFromCheckedTeamMembers(member);
@@ -74,11 +82,12 @@ import { RootVCRService } from '../../root_vcr.service';
 
     addEmailToCheckedMembers(email) {
         if (email !== '') {
-            const id = Math.random().toString(5);
+            const id = Math.random().toFixed(15).substring(3,10);
             this.checkedTeamMembers.push({
                 name: email,
                 id: id,
                 type: 'email',
+                pendingStatus: 'No'
             });
         }
     } 
@@ -86,7 +95,7 @@ import { RootVCRService } from '../../root_vcr.service';
     removeFromCheckedTeamMembers(member) {
         this.checkedTeamMembers.forEach(teamMember => {
             if (teamMember.id === member.id) {
-                let id = this.checkedTeamMembers.indexOf(teamMember);
+                const id = this.checkedTeamMembers.indexOf(teamMember);
                 this.checkedTeamMembers.splice(id, 1);   
             }
         });
@@ -100,12 +109,23 @@ import { RootVCRService } from '../../root_vcr.service';
     }
 
     sendRequest() {
-        this.closeRequestApproval();
+        if (this.checkedTeamMembers.length > 0) {
+            this.request = 'success';
+            setTimeout(() => {
+                this.closeRequestApproval();
+            }, 1500);
+        };
+        if (this.checkedTeamMembers.length === 0) {
+            this.requestError = true;
+        };
     }
 
     closeRequestApproval() {
+        this._postJobService.throwApprovers(this.checkedTeamMembers);
+        localStorage.setItem('pending', 'true');
         this._root_vcr.clear();
     }
+
 
   }
   
