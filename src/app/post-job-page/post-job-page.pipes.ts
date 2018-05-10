@@ -55,3 +55,16 @@ export class SearchCountryPipe implements PipeTransform {
 		}
 	}
 }
+
+@Pipe({
+	name: 'FilterProjects',
+	pure: false
+})
+export class FilterProjects implements PipeTransform {
+	transform(data: any[], currentClient?: any): any[] {
+		if (!currentClient) {
+			return data;
+		}
+		return data.filter(client => client.get('projectEndClientName') === currentClient.get('clientOfClientName'));
+	}
+}

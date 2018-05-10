@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import { Parse } from '../parse.service';
 import { ParsePromise } from 'parse';
 import { ParseObject } from 'parse';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/map';
 //tslint:disable:indent
 
@@ -13,6 +13,8 @@ export class PostJobService {
   private apiKey: string = 'AIzaSyBFfAIR1tt4-AOfcsGxc87y-yZMLdrMNbk';
 
   logoUpdate: EventEmitter<any> = new EventEmitter();
+  approversArray: BehaviorSubject<any> = new BehaviorSubject(null);
+  currentApproversArray = this.approversArray as Observable<any>;
 
   constructor(private _http: Http, private _parse: Parse) { }
 
@@ -145,12 +147,23 @@ export class PostJobService {
       return res.get('isPostJobShowAlert');
     });
   }
-  getClientDepartments(): Promise<string[]> {
+  getClientDepartments(): Promise<Array<{name: string}>> {
     const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
     return this._parse.execCloud('getClientDepartments', { clientId: clientId });
   }
-  getClientOffices(): Promise<string[]> {
+  getClientOffices(): Promise<Array<{name: string}>> {
     const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
     return this._parse.execCloud('getClientOffices', { clientId: clientId });
+  }
+  getClientsOfClient() {
+    const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+    return this._parse.execCloud('getClientsOfClient', { clientId: clientId });
+  }
+  getClientRecruitmentProjects() {
+    const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+    return this._parse.execCloud('getClientRecruitmentProjects', { clientId: clientId });
+  }
+  throwApprovers(array) {
+    this.approversArray.next(array);
   }
 }

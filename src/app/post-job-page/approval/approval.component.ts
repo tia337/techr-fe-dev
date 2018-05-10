@@ -9,6 +9,8 @@ import {
   } from '@angular/core';
   import { Parse } from '../../parse.service';
 import { RootVCRService } from '../../root_vcr.service';
+import { FormControl } from '@angular/forms';
+import { PostJobService } from '../post-job.service';
   
   @Component({
     selector: 'approval',
@@ -19,7 +21,7 @@ import { RootVCRService } from '../../root_vcr.service';
   export class ApprovalComponent implements OnInit {
 
     approversHidden = true;
-    currentContract;
+    requestError = false;
     request = 'pending';
     public teamMembers: Array<any> = [];
     public checkedTeamMembers: Array<any> = [];
@@ -29,7 +31,8 @@ import { RootVCRService } from '../../root_vcr.service';
         private _elementRef: ElementRef, 
         private _renderer: Renderer2,
         private _parse: Parse,
-        private _root_vcr: RootVCRService
+        private _root_vcr: RootVCRService,
+        private _postJobService: PostJobService
     ) {}
   
   
@@ -67,9 +70,10 @@ import { RootVCRService } from '../../root_vcr.service';
     addToCheckedMembers(member) {
         if (member.checked === false) {
             this.checkedTeamMembers.push(member);
-            this.currentContract.set('approvers', this.checkedTeamMembers);
-            console.log(this.currentContract);
             member.checked = true;
+            if (this.requestError === true) {
+                this.requestError = false;
+            };
             return;
         } else if (member.checked === true) {
             this.removeFromCheckedTeamMembers(member);
@@ -102,35 +106,26 @@ import { RootVCRService } from '../../root_vcr.service';
                 }
             });
         }
-        this.currentContract.value.approvers = this.checkedTeamMembers;        
     }
 
     sendRequest() {
-        this.closeRequestApproval();
+        if (this.checkedTeamMembers.length > 0) {
+            this.request = 'success';
+            setTimeout(() => {
+                this.closeRequestApproval();
+            }, 1500);
+        };
+        if (this.checkedTeamMembers.length === 0) {
+            this.requestError = true;
+        };
     }
 
     closeRequestApproval() {
-        this.saveApprovers();
+        this._postJobService.throwApprovers(this.checkedTeamMembers);
+        localStorage.setItem('pending', 'true');
         this._root_vcr.clear();
     }
 
-    set contract (value) {
-        this.currentContract = value;
-    }
-
-    get contract () {
-        return this.currentContract;
-    }
-
-    saveApprovers() {
-        const contract = this._parse.Object('Contract');
-        this.currentContract.set('status', 4);
-		return contract.save(this.currentContract).then(contractResult => {
-			console.log('success');
-		}, error => {
-			console.error(error);
-		});
-    }
 
   }
   
