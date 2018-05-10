@@ -27,11 +27,10 @@ export class PermissionsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this._parse.execCloud('getUserRoles', {clientId: this._parse.getCurrentUser().get('Client_Pointer').id})
-      .then(roles => {
-        this.userRoles = roles;
+     this._siteAdministrationService.getUserRoles()
+      .then(data => {
+        this.userRoles = data;
       });
-    this.userRoles = this._siteAdministrationService.getInitialUserRights();
     this.newUserRoleSubscription = this._siteAdministrationService.
       newUserRoleSubject
       .subscribe(newUserRole => {

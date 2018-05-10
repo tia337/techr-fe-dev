@@ -2,7 +2,7 @@ import { Component, OnInit, Renderer } from '@angular/core';
 import { CompanySettingsService } from './company-settings.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RootVCRService } from '../../root_vcr.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
@@ -26,23 +26,23 @@ import { NewWorkflowComponent } from './new-workflow/new-workflow.component';
 export class CompanySettingsComponent implements OnInit {
 
 	tableRows;
+	clientProbabilitiesToCloseJob;
 	editTableMode = false;
 	editStageEnabled = false;
 	newLikelihood = false;
 
+	likelihoodFormGroup: FormGroup;
 	@ViewChild('newPercentageValue') newPercentageValue: ElementRef;
 	@ViewChild('newDescriptionValue') newDescriptionValue: ElementRef;
 
 	departments;
 	departmentFormGroup: FormGroup;
+	newDepartment = false;
+	newSubdepartment = false;
 
 	offices;
 	officesFormGroup: FormGroup;
 	newOffice = false;
-
-
-	newDepartment = false;
-	newSubdepartment = false;
 
 	isInCompany = true;
 	curLogo: any;
@@ -167,9 +167,24 @@ export class CompanySettingsComponent implements OnInit {
 			this.companyBenefits = '';
 
 		}
-		this.tableRows = this._CompanySettingsService.getTableRows();
-		this.departments = this._CompanySettingsService.getDepartments();
-		this.offices = this._CompanySettingsService.getOffices();
+		this.likelihoodFormGroup = new FormGroup({
+			'stagePercentage': new FormControl('')
+		});
+
+		this._CompanySettingsService.getClientProbabilitiesToCloseJob()
+			.then(data => {
+				this.clientProbabilitiesToCloseJob = data;
+				console.log(this.clientProbabilitiesToCloseJob);
+			});
+		this._CompanySettingsService.getDepartments()
+			.then(data => {
+				this.departments = data;
+				console.log(this.departments);
+			});
+		this._CompanySettingsService.getOffices()
+			.then(data => {
+				this.offices = data;
+			});
 
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
@@ -567,8 +582,37 @@ export class CompanySettingsComponent implements OnInit {
 			return this.editStageEnabled = !this.editStageEnabled;
 		}
 		this.editStageEnabled = false;
-
+		this.clientProbabilitiesToCloseJob =
+			_.sortBy(
+				this.clientProbabilitiesToCloseJob,
+				function (clientProbability) {
+					return clientProbability.percentage;
+				}
+			);
 	}
+
+	increaseClientProbability(clientProbabilityToCloseJob) {
+		let percentage = Number(clientProbabilityToCloseJob.percentage);
+
+		if (percentage < 100) {
+			percentage += 5;
+			clientProbabilityToCloseJob.percentage = percentage;
+		} else {
+			return;
+		}
+	}
+
+	decreaseClientProbability(clientProbabilityToCloseJob) {
+		let percentage = Number(clientProbabilityToCloseJob.percentage);
+
+		if (percentage > 0) {
+			percentage -= 5;
+			clientProbabilityToCloseJob.percentage = percentage;
+		} else {
+			return;
+		}
+	}
+
 
 	onAddLikelihoodStage() {
 		if (this.newLikelihood !== true) {

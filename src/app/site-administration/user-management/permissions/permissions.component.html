@@ -24,16 +24,16 @@
       <td><div class="permission-label">Contributor</div></td>
       <td>Swipe in application access. Can invite users.</td>
     </tr>
-    <tr *ngFor="let userRole of userRoles">
-      <td *ngIf="userRoles.length > 0">{{userRole.roleName}}</td>
-      <td *ngIf="userRoles.length > 0"><div class="permission-label">{{userRole.roleName}}</div></td>
-      <td *ngIf="userRoles.length > 0"><span *ngFor="let right of userRole.roleRights">{{right.description}}<span *ngIf="userRole.roleRights.length > 1">.</span></span></td>
-      <td *ngIf="userRoles.length > 0" class="user-role-options">
+    <tr *ngFor= "let userRole of userRoles">
+      <td>{{userRole.roleName}}</td>
+      <td><div class="permission-label" [matTooltip]="userRole.roleDescription">{{userRole.roleName}}</div></td>
+      <td><span *ngFor= "let right of userRole.roleRights">{{right.description || right}}. </span></td>
+      <td class="user-role-options">
         <span (click)="editUserRoles(userRole, userRoles)">
-          edit
+          Edit
         </span>
         <span (click)="deleteUserRoles(userRole, userRoles)">
-          delete
+          Delete
         </span>
       </td> 
     </tr>

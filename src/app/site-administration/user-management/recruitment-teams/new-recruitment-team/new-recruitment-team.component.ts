@@ -12,6 +12,7 @@ export class NewRecruitmentTeamComponent implements OnInit {
 
   teamMembers = [];
   recruitmentTeamsArr = [];
+  recruitmentTeamMembers = [];
   recruitmentTeamFormGroup: FormGroup;
 
   constructor(
@@ -28,7 +29,7 @@ export class NewRecruitmentTeamComponent implements OnInit {
       'teamDescription' : new FormControl('', Validators.required),
       'teamLead': new FormControl('', Validators.required),
       'teamMembers': new FormControl('', Validators.required)
-    })  
+    });  
   }
 
   set recruitmentTeams(recruitmentTeams) {
@@ -36,14 +37,20 @@ export class NewRecruitmentTeamComponent implements OnInit {
   }
 
   addNewTeam() {
+
+    this.recruitmentTeamFormGroup.value.teamMembers.forEach((teamMember => {
+      this.recruitmentTeamMembers.push(teamMember.name);
+    }));
+    
     const newTeam = {
       id: this.recruitmentTeamFormGroup.value.teamName + '_' + Math.floor(Math.random() * 100).toString(),
       name: this.recruitmentTeamFormGroup.value.teamName,
       description: this.recruitmentTeamFormGroup.value.teamDescription,
-      teamLead: this.recruitmentTeamFormGroup.value.teamLead,
-      teamMembers: this.recruitmentTeamFormGroup.value.teamMembers
+      teamLead: this.recruitmentTeamFormGroup.value.teamLead.name,
+      teamMembers: this.recruitmentTeamMembers,
+      editType: 'none'
     }
-    console.log(newTeam);
+
     this.recruitmentTeamsArr.push(newTeam);
     this._siteAdministrationService.addNewRecruitmentTeam(newTeam);
     this.closeModal();

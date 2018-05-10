@@ -21,7 +21,7 @@
     }
 }   
 
-.recruitment-team-modal {
+.edit-recruitment-team-modal {
     background: #fff;
     border-radius: 3px;
     padding: 15px 25px;
@@ -50,5 +50,35 @@
         width: 20%;
         background-color: rgb(43, 177, 43);
         color: white
+    }
+}
+
+.delete-recruitment-team-modal {
+    background: #fff;
+    border-radius: 3px;
+    padding: 15px 25px;
+    z-index: 999999;
+    position: relative;
+    max-width: 90%;    
+    display: flex;
+    flex-direction: column;
+    width:50%;
+    
+    h2{
+        text-align: center;
+    }
+
+    div {
+        margin: 5px;
+    }
+
+    div.delete-recruitment-team-modal__delete-options{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    button {
+        margin: 3px 7px;
+        width: 20%
     }
 }
