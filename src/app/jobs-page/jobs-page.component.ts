@@ -119,6 +119,7 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		this.filters = this._filters.getFilters();
 		if (localStorage.getItem('pending')) {
 			this.contractStatus = ContractStatus.pending;
+			this.statusContract = 'pending';
 		}
 		this.filteredJobsOptions = this.jobSearchControl.valueChanges
 			.startWith(null)

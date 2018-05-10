@@ -427,11 +427,11 @@
                         <span class="settings-item__title">Department</span>
                         <input type="hidden" #departmentValue [ngModel]="currentDepartment" formControlName="jobDepartment">
                         <div class="settings-item__select-holder">
-                            <p class="settings-item__button" 
-                                    *ngIf="currentDepartment === null"
+                            <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                    *ngIf="currentDepartment === undefined"
                                     (click)="departmentListShown = true">Select Department</p>
-                            <p class="settings-item__button" 
-                                    *ngIf="currentDepartment !== null"
+                            <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                    *ngIf="currentDepartment !== undefined"
                                     (click)="departmentListShown = true">{{currentDepartment.name}}</p>                        
                             <ul class="settings-item__office-list" 
                                 *ngIf="departmentListShown" 
@@ -448,11 +448,11 @@
                         <span class="settings-item__title">Office</span>
                         <input type="hidden" #officeValue [ngModel]="currentOffice" formControlName="jobOffice">   
                         <div class="settings-item__select-holder">
-                            <p class="settings-item__button" 
-                                    *ngIf="currentOffice === null"
+                            <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                    *ngIf="currentOffice === undefined"
                                     (click)="officeListShown = true">Select Office</p>
-                            <p class="settings-item__button" 
-                                    *ngIf="currentOffice !== null"
+                            <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                    *ngIf="currentOffice !== undefined"
                                     (click)="officeListShown = true">{{currentOffice.name}}</p>                        
                             <ul class="settings-item__office-list" 
                                 *ngIf="officeListShown"
@@ -469,19 +469,19 @@
                         <span class="settings-item__title">Client</span>
                         <input type="hidden" #clientValue [ngModel]="currentClient" formControlName="jobClientOfClient">
                         <div class="settings-item__select-holder">
-                                <p class="settings-item__button" 
-                                        *ngIf="currentClient === null"
+                                <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                        *ngIf="currentClient === undefined"
                                         (click)="clientListShown = true">Select Client</p>
-                                <p class="settings-item__button" 
-                                        *ngIf="currentClient !== null"
-                                        (click)="clientListShown = true">{{currentClient}}</p>                        
+                                <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                        *ngIf="currentClient !== undefined"
+                                        (click)="clientListShown = true">{{currentClient.get('clientOfClientName')}}</p>                        
                                 <ul class="settings-item__office-list" 
                                     *ngIf="clientListShown" 
                                     (clickOutside)="clientListShown = false"
                                     [delayClickOutsideInit]="true">
                                     <li *ngFor="let client of clientsList" 
-                                        (click)="currentClient = client; clientValue.value = client; clientListShown = false; detectChange();">
-                                        {{client | json}}
+                                        (click)="currentClient = client; clientValue.value = client; currentProject = undefined; clientListShown = false; detectChange();">
+                                        {{client.get('clientOfClientName')}}
                                     </li>
                                 </ul>
                         </div>
@@ -489,40 +489,54 @@
                     </div>
                     <div class="settings-item">
                         <div class="settings-item__title">Project</div>
-                        <input type="hidden" #clientValue [ngModel]="currentProject" formControlName="jobRecruitmentProject">                        
+                        <input type="hidden" #clientProject [ngModel]="currentProject" formControlName="jobRecruitmentProject">                        
                         <div class="settings-item__select-holder">
-                            <p class="settings-item__button" 
-                                    *ngIf="currentProject === null"
+                            <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                    *ngIf="currentProject === undefined"
                                     (click)="projectsListShown = true">Select Project</p>
-                            <p class="settings-item__button" 
-                                    *ngIf="currentProject !== null"
-                                    (click)="projectsListShown = true">{{currentProject}}</p>                        
+                            <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                    *ngIf="currentProject !== undefined"
+                                    (click)="projectsListShown = true">{{currentProject.get('projectName')}}</p>                        
                             <ul class="settings-item__office-list" 
-                                *ngIf="projectsListShown" 
+                                *ngIf="projectsListShown && projectsList.length > 0" 
                                 (clickOutside)="projectsListShown = false"
                                 [delayClickOutsideInit]="true">
-                                <li (click)="currentProject = 'PrivatBank'; clientValue.value = 'PrivatBank'; projectsListShown = false; detectChange();">PrivatBank</li>
+                                <li *ngFor="let project of projectsList | FilterProjects: currentClient"
+                                    (click)="currentProject = project; clientProject.value = project; projectsListShown = false; detectChange();">
+                                    {{project.get('projectName')}}
+                                </li>   
+                            </ul>
+                            <ul class="settings-item__office-list"
+                                *ngIf="projectsListShown && projectsList.length === 0" 
+                                (clickOutside)="projectsListShown = false"
+                                [delayClickOutsideInit]="true">
+                                <li *ngFor="let project of projectsList | FilterProjects: currentClient"
+                                    (click)="currentProject = project; clientProject.value = project; projectsListShown = false; detectChange();">
+                                    This client doesn't have any projects.
+                                </li>   
                             </ul>
                         </div>
                         <span class="settings-item__notice">Internal visibility only</span>                                                    
                     </div>
                     <div class="settings-item">
                         <span class="settings-item__title">Hiring target</span>
-                        <mat-form-field class="example-full-width" style="visibility: hidden; position: absolute; width: 0;">
-                            <input matInput formControlName="jobHiringTarget" #settingsDatePickerInput [matDatepicker]="settingsDatePicker" placeholder="Choose a date">
-                            <mat-datepicker #settingsDatePicker></mat-datepicker>
+                        <mat-form-field [ngClass]="{'no-events': editable === false }" class="example-full-width" style="visibility: hidden; position: absolute; width: 0;">
+                            <input [ngClass]="{'no-events': editable === false }" [disabled]="!editable" matInput formControlName="jobHiringTarget" #settingsDatePickerInput [matDatepicker]="settingsDatePicker" placeholder="Choose a date">
+                            <mat-datepicker [ngClass]="{'no-events': editable === false }" [disabled]="!editable" #settingsDatePicker></mat-datepicker>
                         </mat-form-field>
                         <button mat-raised-button class="settings-item__button width_40" 
                                 *ngIf="settingsDatePickerInput.value  === ''"
+                                [ngClass]="{'no-events': editable === false }" [disabled]="!editable" style="background: #fafafa; color: #000;"
                                 (click)="settingsDatePicker.open(); $event.preventDefault();">Select Date</button>
                         <button mat-raised-button class="settings-item__button width_40" 
                                 *ngIf="settingsDatePickerInput.value  !== ''"
+                                [ngClass]="{'no-events': editable === false }" [disabled]="!editable" style="background: #fafafa; color: #000;"
                                 (click)="settingsDatePicker.open(); $event.preventDefault();">{{settingsDatePickerInput.value}}</button>                        
                         <span class="settings-item__notice">Internal visibility only</span>
                     </div>
                     <div class="settings-item">
                         <span class="settings-item__title">Purchase order</span>
-                        <input formControlName="purchaseOrderReference" type="text" class="settings-item__input width_40" placeholder="Enter PO/Internal Ref">
+                        <input [ngClass]="{'no-events': editable === false }" [disabled]="!editable" formControlName="purchaseOrderReference" type="text" class="settings-item__input width_40" placeholder="Enter PO/Internal Ref">
                         <span class="settings-item__notice">Internal visibility only</span>                        
                     </div>
                 </div>

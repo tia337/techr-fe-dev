@@ -1344,11 +1344,11 @@ input[type=file] {
 .settings {
     &-wrap {
         position: absolute;
-        bottom: 0;
+        bottom: -12%;
         right: 4px;
         width: 100%;
         padding: 10px;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.9);
     }
     &-item {
         display: flex;
@@ -1424,4 +1424,9 @@ input[type=file] {
 .hide-on-job {
     position: relative;
     z-index: 9;
+}
+
+.no-events {
+    pointer-events: none!important;
+    opacity: .7;
 }

@@ -90,28 +90,20 @@
   </div>
 
   <div class="pending-job-box" *ngIf="status === 'pending'">
-    <span class="pending-job-box__header">3 Pending Approvals</span>
+    <span class="pending-job-box__header">Pending Approvals</span>
     <div class="pending-job-box__approval-info">
       <div class="approval-header">
         <span>Approver</span>
         <span>Approved</span>
       </div>
-      <div class="approver-status">
-          <span>Tarik Sarhan</span>
-          <span>NO</span>
-      </div>
-      <div class="approver-status">
-          <span>Julio Alvaro</span>
-          <span>Yes</span>
-      </div>
-      <div class="approver-status">
-          <span>alex-hr@pb24.ua</span>
-          <span>Yes</span>
+      <div *ngFor="let approver of contract.get('approvers')" class="approver-status">
+          <span>{{approver.name}}</span>
+          <span>{{approver.pendingStatus}}</span>
       </div>
     </div>
   </div>
   
-  <div class="published-job-box" *ngIf="status === 'none'">
+  <div class="published-job-box" *ngIf="status === 'approved'">
     <div class="published-job-box__hiring-target">
       <p >Hiring Target:</p>
       <p>Nov 2017</p>
