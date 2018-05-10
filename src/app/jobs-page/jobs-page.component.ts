@@ -117,7 +117,9 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.filters = this._filters.getFilters();
-
+		if (localStorage.getItem('pending')) {
+			this.contractStatus = ContractStatus.pending;
+		}
 		this.filteredJobsOptions = this.jobSearchControl.valueChanges
 			.startWith(null)
 			.map(job => {
@@ -241,50 +243,57 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 			this.recruiterSearchControl.reset();
 		}
 		console.log(this.contractStatus);
-		this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
-			console.log(contracts);
-			this.separatedOffers = new Array();
-			this._allOffers = contracts;
-			this.offers = contracts;
-			this.filterOffers();
-			this.applySearchFilters(isTitle, isSkill, isRole, isRecruiter);
-			let compareValue = '';
-			switch (this.contractStatus) {
-				case ContractStatus.active:
-				compareValue = 'postedAt';
-				break;
-				case ContractStatus.archived:
-				compareValue = 'updatedAt';
-				break;
-				case ContractStatus.draft:
-				compareValue = 'createdAt';
-				break;
-				default:
-				compareValue = 'createdAt';
-				break;
-			}
-			this.offers.sort((a, b) => {
-				return (a.get('createdAt').getTime() - b.get('createdAt').getTime());
-			});
-			const copy = this.offers.slice(0);
-			while (copy.length > 0) {
-				let count = 0;
-				const onePageArray = new Array();
-				while (count < 5 && copy.length > 0) {
-					onePageArray.push(copy.pop());
-					count++;
+		// if (this.contractStatus !== 4) {
+			this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
+				console.log(contracts);
+				this.separatedOffers = new Array();
+				this._allOffers = contracts;
+				this.offers = contracts;
+				this.filterOffers();
+				this.applySearchFilters(isTitle, isSkill, isRole, isRecruiter);
+				let compareValue = '';
+				switch (this.contractStatus) {
+					case ContractStatus.active:
+					compareValue = 'postedAt';
+					break;
+					case ContractStatus.archived:
+					compareValue = 'updatedAt';
+					break;
+					case ContractStatus.draft:
+					compareValue = 'createdAt';
+					break;
+					default:
+					compareValue = 'createdAt';
+					break;
 				}
-				this.separatedOffers.push(onePageArray);
-			}
-			if (this.offers && this.offers.length > 0) {
-				this.isDataLoaded = Loading.success;
-			} else {
+				this.offers.sort((a, b) => {
+					return (a.get('createdAt').getTime() - b.get('createdAt').getTime());
+				});
+				const copy = this.offers.slice(0);
+				while (copy.length > 0) {
+					let count = 0;
+					const onePageArray = new Array();
+					while (count < 5 && copy.length > 0) {
+						onePageArray.push(copy.pop());
+						count++;
+					}
+					this.separatedOffers.push(onePageArray);
+				}
+				if (this.offers && this.offers.length > 0) {
+					this.isDataLoaded = Loading.success;
+				} else {
+					this.isDataLoaded = Loading.error;
+				}
+			}, error => {
+				console.error(error);
 				this.isDataLoaded = Loading.error;
-			}
-		}, error => {
-			console.error(error);
-			this.isDataLoaded = Loading.error;
-		});
+			});
+		// };
+		if (this.contractStatus === 4) {
+			console.log(this.contractStatus, ' = 4');
+			console.log(localStorage.getItem('pending'));
+			localStorage.removeItem('pending');
+		}
 	}
 	applySearchFilters(isTitle ? , isSkill ? , isRole ? , isRecruiter ? ) {
 		if (isTitle && isTitle.length > 0) {

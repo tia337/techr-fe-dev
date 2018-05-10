@@ -165,16 +165,21 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 	isJobPostShowAlert = true;
 
 	currentOfficeSubject: Subject<string> = new Subject;
-	currentOffice = '';
-	officeList: Array<string> = [];
+	currentOffice = null;
+	officeList: Array<{name: string}> = [];
 	officeListShown = false;
 	currentDepartmentSubject: Subject<string> = new Subject;
-	currentDepartment = '';
-	departmentsList: Array<string> = [];
+	currentDepartment = null;
+	departmentsList: Array<{name: string}> = [];
 	departmentListShown = false;
 	currentClientSubject: Subject<string> = new Subject;
-	currentClient = '';
+	currentClient = null;
+	clientsList: Array<any> = [];
 	clientListShown = false;
+	currentProjectSubject: Subject<string> = new Subject;
+	currentProject = null;
+	projectsList: Array<any> = [];
+	projectsListShown = false;
 
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
 	@ViewChild('categoriesDropdown') categoriesDropdown: ElementRef;
@@ -202,6 +207,17 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	ngOnInit() {
 
+		this._postJobService.currentApproversArray.subscribe(data => {
+			if (data !== null) {
+				console.log(data);
+				this.contractForm.value.approvers = data;
+				this.contractForm.value.status = 4;
+				console.log(this.contractForm.value);
+				this.updateContract(this.contractForm.value);
+				this._router.navigateByUrl('/jobs');
+			}
+		});
+
 		this._postJobService.getClientDepartments().then(departments => {
 			this.departmentsList = departments;
 		});
@@ -210,9 +226,17 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.officeList = offices;
 		});
 
-		// FOR SKILLS ROLES AND INDUSTRIES
+		this._postJobService.getClientsOfClient().then(clients => {
+			this.clientsList = clients;
+			console.log('CLIENTS', clients);
+		});
+
+		this._postJobService.getClientRecruitmentProjects().then(projects => {
+			this.projectsList = projects;
+			console.log('PROJECTS', projects);
+		});
+
 		this.adminLevel = this._postJobService.checkAdmin();
-		// console.log(this.adminLevel);
 
 		this._postJobService.getSkills().then(skills => {
 			this.skills = skills;
@@ -278,7 +302,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				jobClientOfClient: this.contractObj.get('jobClientOfClient'),
 				jobHiringTarget: this.contractObj.get('jobHiringTarget'),
 				purchaseOrderReference: this.contractObj.get('purchaseOrderReference'),
-				approvers: this.contractObj.get('approvers')
+				approvers: this.contractObj.get('approvers'),
+				jobRecruitmentProject: this.contractObj.get('jobRecruitmentProject')
 			});
 			this.selectedIndustries = this.contractObj.get('industryTags');
 			this.selected = this.contractObj.get('programingSkills');
@@ -340,7 +365,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				jobClientOfClient: undefined,
 				jobHiringTarget: undefined,
 				purchaseOrderReference: undefined,
-				approvers: undefined
+				approvers: undefined,
+				jobRecruitmentProject: undefined
 			});
 
 		}
@@ -680,7 +706,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	postJob() {
-		console.log(this.contractForm.value);
 		this.postingLoader = true;
 		if (!this.contractObj) {
 			this.formSubscription.unsubscribe();
@@ -1547,8 +1572,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.initContract();
 		if (this.accessCheck() === true) {
 			const approval = this._root_vcr.createComponent(ApprovalComponent);
-			console.log(this.currentContract);
-			approval.Contract = this.currentContract;
 		}
 	}
 

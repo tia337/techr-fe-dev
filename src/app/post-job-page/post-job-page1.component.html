@@ -428,18 +428,18 @@
                         <input type="hidden" #departmentValue [ngModel]="currentDepartment" formControlName="jobDepartment">
                         <div class="settings-item__select-holder">
                             <p class="settings-item__button" 
-                                    *ngIf="currentDepartment === ''"
+                                    *ngIf="currentDepartment === null"
                                     (click)="departmentListShown = true">Select Department</p>
                             <p class="settings-item__button" 
-                                    *ngIf="currentDepartment !== ''"
-                                    (click)="departmentListShown = true">{{currentDepartment}}</p>                        
+                                    *ngIf="currentDepartment !== null"
+                                    (click)="departmentListShown = true">{{currentDepartment.name}}</p>                        
                             <ul class="settings-item__office-list" 
                                 *ngIf="departmentListShown" 
                                 (clickOutside)="departmentListShown = false"
                                 [delayClickOutsideInit]="true">
                                 <li *ngFor="let department of departmentsList" 
                                     (click)="currentDepartment = department; departmentValue.value = department; departmentListShown = false; detectChange();">
-                                    {{department}}
+                                    {{department.name}}
                                 </li>
                             </ul>
                         </div>
@@ -449,40 +449,63 @@
                         <input type="hidden" #officeValue [ngModel]="currentOffice" formControlName="jobOffice">   
                         <div class="settings-item__select-holder">
                             <p class="settings-item__button" 
-                                    *ngIf="currentOffice === ''"
+                                    *ngIf="currentOffice === null"
                                     (click)="officeListShown = true">Select Office</p>
                             <p class="settings-item__button" 
-                                    *ngIf="currentOffice !== ''"
-                                    (click)="officeListShown = true">{{currentOffice}}</p>                        
+                                    *ngIf="currentOffice !== null"
+                                    (click)="officeListShown = true">{{currentOffice.name}}</p>                        
                             <ul class="settings-item__office-list" 
                                 *ngIf="officeListShown"
                                 (clickOutside)="officeListShown = false"
                                 [delayClickOutsideInit]="true">
                                 <li *ngFor="let office of officeList" 
                                     (click)="currentOffice = office; officeValue.value = office; officeListShown = false; detectChange();">
-                                    {{office}}
+                                    {{office.name}}
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="settings-item">
-                            <span class="settings-item__title">Client</span>
-                            <input type="hidden" #clientValue [ngModel]="currentClient" formControlName="jobClientOfClient">
-                            <div class="settings-item__select-holder">
-                                    <p class="settings-item__button" 
-                                            *ngIf="currentClient === ''"
-                                            (click)="clientListShown = true">Select Client</p>
-                                    <p class="settings-item__button" 
-                                            *ngIf="currentClient !== ''"
-                                            (click)="clientListShown = true">{{currentClient}}</p>                        
-                                    <ul class="settings-item__office-list" 
-                                        *ngIf="clientListShown" 
-                                        (clickOutside)="clientListShown = false"
-                                        [delayClickOutsideInit]="true">
-                                        <li (click)="currentClient = 'PrivatBank'; clientValue.value = 'PrivatBank'; clientListShown = false; detectChange();">PrivatBank</li>
-                                    </ul>
-                            </div>
+                        <span class="settings-item__title">Client</span>
+                        <input type="hidden" #clientValue [ngModel]="currentClient" formControlName="jobClientOfClient">
+                        <div class="settings-item__select-holder">
+                                <p class="settings-item__button" 
+                                        *ngIf="currentClient === null"
+                                        (click)="clientListShown = true">Select Client</p>
+                                <p class="settings-item__button" 
+                                        *ngIf="currentClient !== null"
+                                        (click)="clientListShown = true">{{currentClient}}</p>                        
+                                <ul class="settings-item__office-list" 
+                                    *ngIf="clientListShown" 
+                                    (clickOutside)="clientListShown = false"
+                                    [delayClickOutsideInit]="true">
+                                    <li *ngFor="let client of clientsList" 
+                                        (click)="currentClient = client; clientValue.value = client; clientListShown = false; detectChange();">
+                                        {{client | json}}
+                                    </li>
+                                </ul>
                         </div>
+                        <span class="settings-item__notice">Internal visibility only</span>                            
+                    </div>
+                    <div class="settings-item">
+                        <div class="settings-item__title">Project</div>
+                        <input type="hidden" #clientValue [ngModel]="currentProject" formControlName="jobRecruitmentProject">                        
+                        <div class="settings-item__select-holder">
+                            <p class="settings-item__button" 
+                                    *ngIf="currentProject === null"
+                                    (click)="projectsListShown = true">Select Project</p>
+                            <p class="settings-item__button" 
+                                    *ngIf="currentProject !== null"
+                                    (click)="projectsListShown = true">{{currentProject}}</p>                        
+                            <ul class="settings-item__office-list" 
+                                *ngIf="projectsListShown" 
+                                (clickOutside)="projectsListShown = false"
+                                [delayClickOutsideInit]="true">
+                                <li (click)="currentProject = 'PrivatBank'; clientValue.value = 'PrivatBank'; projectsListShown = false; detectChange();">PrivatBank</li>
+                            </ul>
+                        </div>
+                        <span class="settings-item__notice">Internal visibility only</span>                                                    
+                    </div>
                     <div class="settings-item">
                         <span class="settings-item__title">Hiring target</span>
                         <mat-form-field class="example-full-width" style="visibility: hidden; position: absolute; width: 0;">
