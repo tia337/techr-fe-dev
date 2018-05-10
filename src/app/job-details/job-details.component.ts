@@ -26,7 +26,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 	pipelineLoader = Loading.loading;
 	private previousUrl;
 
-	likelihoodPercentages = [];
+	clientProbabilitiesToCloseJob = [];
 	likelihoodEnabled = false;
 
 	selectedPercentage = false;
@@ -111,7 +111,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 		});
 	this._companySettingsService.getClientProbabilitiesToCloseJob()
 		.then(data => {
-			this.likelihoodPercentages = data;
+			this.clientProbabilitiesToCloseJob = data;
 		});
 	}
 

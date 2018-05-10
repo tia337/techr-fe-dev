@@ -284,6 +284,21 @@
   border: 1px solid #ddd; 
 }
 
+.lower-probability {
+  background-color:rgb(250, 126, 55); 
+  color:white;
+}
+
+.middle-probability {
+  background-color:rgb(141, 132, 53); 
+  color:white;
+}
+
+.higher-probability {
+  background-color:rgb(61, 156, 24); 
+  color:white;
+}
+
 .likelihood-percentage {
   font-weight: bold;
   text-align: left; 
