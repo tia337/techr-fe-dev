@@ -466,6 +466,60 @@
                         </div>
                 </div>
         </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Client &amp; Project Based Recruitment
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <h3>Use client &amp; project based recruitment to configure the clients and projects that you are hiring for</h3>
+            
+            <div class="clients-projects-wrapper">
+                <form class="clients-form">
+                    <div class="clients-form-header">
+                        <span>Clients</span>
+                        <button mat-raised-button color='primary'>Add new client</button>
+                    </div>
+                    <div class="clients-form-body">
+                        <div 
+                            *ngFor="let clientOfClient of clientsOfClient"
+                            class="clients">
+                            <span *ngIf="!clientOfClient.editClient">{{clientOfClient.get('clientOfClientName')}}</span>
+                            <input
+                                *ngIf="clientOfClient.editClient" 
+                                type="text" 
+                                
+                                [value]="clientOfClient.get('clientOfClientName')"
+                                >
+                            <div class="clients-options">
+                                <span (click)="editClientOfClient(clientOfClient)">Edit</span>    
+                                <span>Remove</span> 
+                            </div> 
+                        </div>
+                    </div>
+                </form>
+                <form class="projects-form">
+                    <div class="projects-form-header">
+                            <span>Projects</span>
+                            <span>Client</span>    
+                            <button mat-raised-button color='primary'>Add new project</button>
+                    </div>
+                    <div class="projects-form-body">
+                        <div 
+                            *ngFor="let projectOfClient of projectsOfClient"
+                            class="projects">
+                            <span>{{projectOfClient.get('projectName')}}</span>
+                            <span>{{projectOfClient.get('projectEndClientName')}}</span>
+                            <div class="projects-options">
+                                <span>Edit</span>    
+                                <span>Remove</span> 
+                            </div> 
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </mat-expansion-panel>
+
     </mat-accordion>
 </div>
 <div class="triangle-wrap">

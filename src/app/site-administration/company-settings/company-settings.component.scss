@@ -261,6 +261,85 @@ $dashed-border: 1px dashed #ccc;
     text-align: left;
 }
 
+.clients-projects-wrapper {
+    display: flex;
+    margin-top: 10px;
+
+    .clients-form {
+        background-color: #ddd;
+        width: 50%;
+        margin-right:5px;
+
+        .clients-form-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            span {
+                align-self: center;
+                font-weight: bold;
+            }
+        }
+        .clients-form-body {
+            padding: 10px;
+        }
+
+        .clients {
+            display: flex;
+            justify-content: space-between;
+            line-height: 2;
+        }
+        .clients {
+            input {
+                width: 30%;
+                margin: 0;
+                padding: 3px 7px;
+            }
+        }
+        
+        .clients-options {
+            margin: 0px 5px;
+            span {
+                margin: 0px 5px;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .projects-form {
+        background-color: #ddd;
+        width: 50%;
+
+        .projects-form-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            span {
+                align-self: center;
+                font-weight: bold;
+            }
+        }
+        .projects-form-body {
+            padding: 10px;
+
+            .projects {
+                display: flex;
+                justify-content: space-between;
+                line-height: 2;
+            }
+            
+        }
+        .projects-options {
+            margin: 0px 5px;
+            span {
+                margin: 0px 5px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+
+
 input {
     width: 100%;
     border: 1px solid #eeeeee;
