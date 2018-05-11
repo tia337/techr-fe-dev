@@ -244,7 +244,7 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 			this.recruiterSearchControl.reset();
 		}
 		console.log(this.contractStatus);
-		// if (this.contractStatus !== 4) {
+		if (this.contractStatus !== 4) {
 			this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
 				console.log(contracts);
 				this.separatedOffers = new Array();
@@ -289,7 +289,7 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 				console.error(error);
 				this.isDataLoaded = Loading.error;
 			});
-		// };
+		};
 		if (this.contractStatus === 4) {
 			console.log(this.contractStatus, ' = 4');
 			console.log(localStorage.getItem('pending'));

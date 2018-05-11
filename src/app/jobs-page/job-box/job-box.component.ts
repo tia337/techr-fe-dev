@@ -106,7 +106,6 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 			'contract': 'm' + this.contract.id,
 		});
 		this._socket.on('pipelineMainCountUpdate', data => {
-			console.log('Received emit from server!', data);
 			const userListQuery = new this._parse.Parse.Query('UserList');
 			userListQuery.get(data.userListId).then(userList => {
 				const oldStage = this.stages.find(stage => {
