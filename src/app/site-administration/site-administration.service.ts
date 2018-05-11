@@ -100,6 +100,7 @@ import { Subject } from 'rxjs/Subject';
   deleteRecruitmentTeam(recruitmentTeam) {
     const currentTeamIndex = this.recruitmentTeams.indexOf(recruitmentTeam);
     this.recruitmentTeams.splice(currentTeamIndex, 1);
+    this._parse.execCloud('deleteRecruitmentTeam', {clientId: this.getClientId(), recruitmentTeam: recruitmentTeam});
   }
 
   getRecruitmentTeams() {
