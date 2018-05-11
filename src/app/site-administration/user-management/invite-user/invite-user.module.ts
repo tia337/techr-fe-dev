@@ -11,6 +11,7 @@ import { InviteFormComponent } from './invite-form/invite-form.component';
 import { MatIconModule, MatTooltipModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 import { InvitationConfirmAlertComponent } from './invitation-confirm-alert/invitation-confirm-alert.component';
+import { MatSelectModule, MatFormFieldModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,9 @@ import { InvitationConfirmAlertComponent } from './invitation-confirm-alert/invi
     RouterModule,
     MatIconModule,
     FormsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSelectModule,
+    MatFormFieldModule
   ],
   providers: [
     InviteUserService,

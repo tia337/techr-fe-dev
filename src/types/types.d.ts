@@ -65,3 +65,11 @@ type BulkActionsArray = Array<{
       preferences: Array<any>,
       source: Array<any>
   }
+
+  type UserRole = {
+      roleName: string, 
+      roleDescription: string, 
+      roleRights: [
+          { id: string, description: string }
+        ]
+    };
