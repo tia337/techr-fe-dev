@@ -374,6 +374,8 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 	}
 
 	onLikelihoodPercentageSelect(value) {
+
+		this._jobBoxService.setLikelihoodToFill(this.contract.id, Number(value));
 		this.selectedLikelihoodPercentage = value;
 		this.showLikelihood = false;
 	}

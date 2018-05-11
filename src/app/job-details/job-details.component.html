@@ -22,15 +22,15 @@
         <div *ngIf="likelihoodEnabled"  >
           <p>    
             <span 
-              (click)="setLikelihoodPercentage(likelihoodPercentage.stagePercentage)"
-              *ngFor= "let likelihoodPercentage of likelihoodPercentages"
+              (click)="setLikelihoodPercentage(clientProbabilityToCloseJob.percentage)"
+              *ngFor= "let clientProbabilityToCloseJob of clientProbabilitiesToCloseJob"
               [ngClass]="
                 {
-                  'low': likelihoodPercentage.stagePercentage < 50,
-                  'mid': likelihoodPercentage.stagePercentage === 50,
-                  'high' : likelihoodPercentage.stagePercentage > 50 
+                  'low': clientProbabilityToCloseJob.percentage < 50,
+                  'mid': clientProbabilityToCloseJob.percentage == 50,
+                  'high' : clientProbabilityToCloseJob.percentage > 50 
                 }">
-              {{likelihoodPercentage.stagePercentage}}%
+              {{clientProbabilityToCloseJob.percentage}}%
             </span>
           </p>
         </div> 
@@ -39,7 +39,7 @@
             [ngClass]="
               {
                 'low': selectedLikelihoodPercentage < 50,
-                'mid': selectedLikelihoodPercentage === 50,
+                'mid': selectedLikelihoodPercentage == 50,
                 'high' : selectedLikelihoodPercentage > 50 
               }">
               {{selectedLikelihoodPercentage}}%

@@ -34,7 +34,7 @@
         placeholder= "Team lead" 
         required
         formControlName= "teamLead">
-        <mat-option (click)="$event.stopPropagation()" *ngFor ="let teamMember of teamMembers" [value]="teamMember">
+        <mat-option *ngFor ="let teamMember of teamMembers" [value]="teamMember">
             {{teamMember.name}}
         </mat-option>
       </mat-select>
@@ -46,7 +46,7 @@
         multiple
         required
         formControlName= "teamMembers">
-        <mat-option (click)="$event.stopPropagation()" *ngFor ="let teamMember of teamMembers" [value]="teamMember">
+        <mat-option *ngFor ="let teamMember of teamMembers" [value]="teamMember">
             {{teamMember.name}}
         </mat-option>
       </mat-select>

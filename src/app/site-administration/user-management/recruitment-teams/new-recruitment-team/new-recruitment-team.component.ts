@@ -37,19 +37,24 @@ export class NewRecruitmentTeamComponent implements OnInit {
   }
 
   addNewTeam() {
-
     this.recruitmentTeamFormGroup.value.teamMembers.forEach((teamMember => {
-      this.recruitmentTeamMembers.push(teamMember.name);
+      this.recruitmentTeamMembers.push({
+        id: teamMember.id,
+        name: teamMember.name
+      });
     }));
     
     const newTeam = {
-      id: this.recruitmentTeamFormGroup.value.teamName + '_' + Math.floor(Math.random() * 100).toString(),
+      id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
       name: this.recruitmentTeamFormGroup.value.teamName,
       description: this.recruitmentTeamFormGroup.value.teamDescription,
-      teamLead: this.recruitmentTeamFormGroup.value.teamLead.name,
+      teamLead: {
+        id: this.recruitmentTeamFormGroup.value.teamLead.id,
+        name: this.recruitmentTeamFormGroup.value.teamLead.name
+      },
       teamMembers: this.recruitmentTeamMembers,
       editType: 'none'
-    }
+    };
 
     this.recruitmentTeamsArr.push(newTeam);
     this._siteAdministrationService.addNewRecruitmentTeam(newTeam);

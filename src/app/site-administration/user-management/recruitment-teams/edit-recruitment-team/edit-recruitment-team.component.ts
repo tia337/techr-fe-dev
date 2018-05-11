@@ -29,7 +29,7 @@ export class EditRecruitmentTeamComponent implements OnInit {
       });
 
     this.currentRecruitmentTeam.teamMembers.forEach((teamMember) => {
-      this.recruitmentTeamMembers.push(teamMember);
+      this.recruitmentTeamMembers.push(teamMember.name);
     });
 
     this.recruitmentEditType = this.currentRecruitmentTeam.editType;
@@ -37,7 +37,7 @@ export class EditRecruitmentTeamComponent implements OnInit {
     this.recruitmentTeamFormGroup = new FormGroup({
       'teamName': new FormControl(this.currentRecruitmentTeam.name, Validators.required),
       'teamDescription' : new FormControl(this.currentRecruitmentTeam.description, Validators.required),
-      'teamLead': new FormControl(this.currentRecruitmentTeam.teamLead, Validators.required),
+      'teamLead': new FormControl(this.currentRecruitmentTeam.teamLead.name, Validators.required),
       'teamMembers': new FormControl(this.recruitmentTeamMembers, Validators.required)
     });
   }
