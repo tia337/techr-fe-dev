@@ -20,10 +20,10 @@
           <span class="recruitment-teams-body__info delete" (click)="deleteRecruitmentTeam(recruitmentTeam, recruitmentTeams)" >Delete</span>
         </p>
     </div>
-    <p><span class="recruitment-teams-body__info">Team Lead: </span>{{recruitmentTeam.teamLead}}</p>
+    <p><span class="recruitment-teams-body__info">Team Lead: </span>{{recruitmentTeam.teamLead.name}}</p>
     <p>
       <span class="recruitment-teams-body__info">Team members: </span>
-      <span *ngFor="let teamMember of recruitmentTeam.teamMembers">{{teamMember}} </span>
+      <span *ngFor="let teamMember of recruitmentTeam.teamMembers">{{teamMember.name}} </span>
     </p>
   </div>
 </section>
