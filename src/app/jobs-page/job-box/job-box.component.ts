@@ -26,6 +26,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 	@ViewChild('menu') menu: ElementRef;
 	@ViewChild('jobBox') jobBox: ElementRef;
 
+	clientProbabilitiesToCloseJob;
 	showLikelihood= false;
 	showLikelihoodInfo = false;
 	selectedLikelihoodPercentage:number = 70;
@@ -127,6 +128,10 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 				this._jobDetailsService.candidatesCount = this.stages;
 			});
 		});
+		this._jobBoxService.getClientProbabilitiesToCloseJob()
+			.then(data => {
+				this.clientProbabilitiesToCloseJob =  data;
+			});
 	}
 
 	private initJobBox() {

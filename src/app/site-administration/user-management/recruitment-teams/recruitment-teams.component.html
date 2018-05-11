@@ -14,16 +14,16 @@
   
   <div class="recruitment-teams-body" *ngFor="let recruitmentTeam of recruitmentTeams">
     <div class="recruitment-teams-body__options">
-        <p class="recruitment-teams-body__info">{{recruitmentTeam.name}}</p>
+        <p class="recruitment-teams-body__info team-description-tooltip" [matTooltip]="recruitmentTeam.description" [matTooltipPosition]="'right'">{{recruitmentTeam.name}}</p>
         <p>
-          <span class="recruitment-teams-body__info edit">edit</span>
-          <span class="recruitment-teams-body__info delete">delete</span>
+          <span class="recruitment-teams-body__info edit" (click)="editRecruitmentTeam(recruitmentTeam, recruitmentTeams)">Edit</span>
+          <span class="recruitment-teams-body__info delete" (click)="deleteRecruitmentTeam(recruitmentTeam, recruitmentTeams)" >Delete</span>
         </p>
     </div>
-    <p><span class="recruitment-teams-body__info">Team Lead: </span>{{recruitmentTeam.teamLead.name}}.</p>
+    <p><span class="recruitment-teams-body__info">Team Lead: </span>{{recruitmentTeam.teamLead}}</p>
     <p>
       <span class="recruitment-teams-body__info">Team members: </span>
-      <span *ngFor="let teamMember of recruitmentTeam.teamMembers">{{teamMember.name}}. </span>
+      <span *ngFor="let teamMember of recruitmentTeam.teamMembers">{{teamMember}} </span>
     </p>
   </div>
 </section>

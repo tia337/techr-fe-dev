@@ -1,3 +1,4 @@
+import { EditRecruitmentTeamModule } from './user-management/recruitment-teams/edit-recruitment-team/edit-recruitment-team.module';
 import {
 	BrowserModule
 } from '@angular/platform-browser';
@@ -147,6 +148,7 @@ import { NewRecruitmentTeamModule } from './user-management/recruitment-teams/ne
 import { NewWorkflowComponent } from './company-settings/new-workflow/new-workflow.component';
 import { RecruitmentTeamsComponent } from './user-management/recruitment-teams/recruitment-teams.component';
 import { NewRecruitmentTeamComponent } from './user-management/recruitment-teams/new-recruitment-team/new-recruitment-team.component';
+import { EditRecruitmentTeamComponent } from './user-management/recruitment-teams/edit-recruitment-team/edit-recruitment-team.component';
 
 @NgModule({
 	declarations: [
@@ -169,7 +171,8 @@ import { NewRecruitmentTeamComponent } from './user-management/recruitment-teams
 		UserRolesEditComponent,
 		UserRolesDeleteComponent,
 		RecruitmentTeamsComponent,
-		NewRecruitmentTeamComponent
+		NewRecruitmentTeamComponent,
+		EditRecruitmentTeamComponent
 		// InviteFormComponent,
 		// InvitationConfirmAlertComponent,
 	],
@@ -200,7 +203,8 @@ import { NewRecruitmentTeamComponent } from './user-management/recruitment-teams
 		UserRolesDeleteModule,
 		NewWorkflowModule,
 		NgxDnDModule,
-		NewRecruitmentTeamModule
+		NewRecruitmentTeamModule,
+		EditRecruitmentTeamModule
 	],
 	providers: [
 
@@ -229,7 +233,8 @@ import { NewRecruitmentTeamComponent } from './user-management/recruitment-teams
 		UserRolesEditComponent,
 		UserRolesDeleteComponent,
 		NewWorkflowComponent,
-		NewRecruitmentTeamComponent
+		NewRecruitmentTeamComponent,
+		EditRecruitmentTeamComponent
 	],
 	exports: [
 		SiteAdministrationComponent

@@ -23,6 +23,10 @@ export class UserRolesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this._siteAdministrationService.getUserRolesRights()
+      .then(data => {
+        this.userRolesRights = data;
+      });
     this.userRolesFormGroup = new FormGroup({
       'roleName' : new FormControl('', Validators.required),
       'roleDescription' : new FormControl('', Validators.required),
@@ -32,31 +36,27 @@ export class UserRolesComponent implements OnInit {
       this.userRolesRights = data;
     });
   }
+
   addUserRole() {
-    const rightsIdArray = [];
-    this.userRolesFormGroup.value.roleRights.roleRights.forEach(right => {
-      const data = {
-        id: right.get('rightId'),
-        description: right.get('rightDesc')
-      };
-      rightsIdArray.push(right.get('rightId'));
+    const userRoleRights = [];
+    this.userRolesRights.forEach(roleRight => {
+      this.userRolesFormGroup.value.roleRights.forEach(formRoleRight => {
+        if (roleRight.get('rightDesc') === formRoleRight ) {
+          const newRoleRight = {
+            id: roleRight.get('rightId'),
+            description: formRoleRight
+          };
+          userRoleRights.push(newRoleRight);
+        }
+      });
     });
     const userRole = {
       roleName: this.userRolesFormGroup.value.roleName,
       roleDescription: this.userRolesFormGroup.value.roleDescription,
-      roleRights: rightsIdArray
+      roleRights: userRoleRights
     };
-    const data = {
-      clientId: this._parse.getCurrentUser().get('Client_Pointer').id,
-      userRole: {
-        roleName: this.userRolesFormGroup.value.roleName,
-        roleDescription: this.userRolesFormGroup.value.roleDescription,
-        roleRights: rightsIdArray
-      }
-    };
-    this._parse.execCloud('addUserRole', data);
-    this._siteAdministrationService.addUserRoles(userRole);
 
+    this._siteAdministrationService.addUserRole(userRole);
     this.userRolesFormGroup.reset();
     this.closeModal();
   }
