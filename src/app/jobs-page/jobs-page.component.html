@@ -114,7 +114,7 @@
         Published
         <span class="buttons-wrap__mat-btn__jobs-number">20</span>
       </mat-button-toggle>
-      <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.approved" (click)="statusContract = 'approved'">
+      <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.approved" (click)="statusContract = 'none'">
         Approved
         <span class="buttons-wrap__mat-btn__jobs-number">4</span>
       </mat-button-toggle>
@@ -122,11 +122,11 @@
         Pending Approval
         <span class="buttons-wrap__mat-btn__jobs-number">7</span>
       </mat-button-toggle>
-      <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.archived">
+      <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.archived" (click)="statusContract = 'none'">
         Archived
         <span class="buttons-wrap__mat-btn__jobs-number">3</span>
       </mat-button-toggle>
-      <mat-button-toggle class="buttons-wrap__mat-btn"  [value]="ContractStatus.draft">
+      <mat-button-toggle class="buttons-wrap__mat-btn"  [value]="ContractStatus.draft" (click)="statusContract = 'none'">
         Drafts
         <span class="buttons-wrap__mat-btn__jobs-number">10</span>
       </mat-button-toggle>
