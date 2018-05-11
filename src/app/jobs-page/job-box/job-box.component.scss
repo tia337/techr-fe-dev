@@ -285,18 +285,18 @@
 }
 
 .lower-probability {
-  background-color:rgb(250, 126, 55); 
-  color:white;
+  background-color: rgb(250, 126, 55); 
+  color: white;
 }
 
 .middle-probability {
-  background-color:rgb(141, 132, 53); 
-  color:white;
+  background-color: rgb(195, 181, 47); 
+  color: white;
 }
 
 .higher-probability {
   background-color:rgb(61, 156, 24); 
-  color:white;
+  color: white;
 }
 
 .likelihood-percentage {
@@ -312,14 +312,16 @@
   text-align: center;
   z-index: 0;
 }
+
 .selected-likelihood-percentage.percentage_orange {
-  color:orangered;
+  color: rgb(250, 126, 55); 
 }
+
 .selected-likelihood-percentage.percentage_light-green {
-  color:rgb(182, 202, 68);
+  color: rgb(195, 181, 47); 
 }
 
 .selected-likelihood-percentage.percentage_green {
-  color:rgb(46, 160, 42);
+  color: rgb(61, 156, 24); 
 }
 

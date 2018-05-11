@@ -27,7 +27,7 @@
               [ngClass]="
                 {
                   'low': clientProbabilityToCloseJob.percentage < 50,
-                  'mid': clientProbabilityToCloseJob.percentage === 50,
+                  'mid': clientProbabilityToCloseJob.percentage == 50,
                   'high' : clientProbabilityToCloseJob.percentage > 50 
                 }">
               {{clientProbabilityToCloseJob.percentage}}%
@@ -39,7 +39,7 @@
             [ngClass]="
               {
                 'low': selectedLikelihoodPercentage < 50,
-                'mid': selectedLikelihoodPercentage === 50,
+                'mid': selectedLikelihoodPercentage == 50,
                 'high' : selectedLikelihoodPercentage > 50 
               }">
               {{selectedLikelihoodPercentage}}%

@@ -118,12 +118,12 @@
              [delayClickOutsideInit]="true">  
           <p 
             *ngFor="let clientProbabilityToCloseJob of clientProbabilitiesToCloseJob" 
-            (click)="onLikelihoodPercentageSelect(clientProbabilityToCloseJob)" 
+            (click)="onLikelihoodPercentageSelect(clientProbabilityToCloseJob.percentage)" 
             class="percentage" 
             [ngClass]="{
-              'lower-probability':clientProbabilityToCloseJob.percentage < 50,
-              'middle-probability': clientProbabilityToCloseJob.percentage === 50,
-              'higher-probability' : clientProbabilityToCloseJob.percentage > 50
+              'lower-probability': clientProbabilityToCloseJob.percentage < 50,
+              'middle-probability': clientProbabilityToCloseJob.percentage == 50,
+              'higher-probability': clientProbabilityToCloseJob.percentage > 50
             }">
             {{clientProbabilityToCloseJob.percentage}}%
           </p>
@@ -142,7 +142,7 @@
           </div>
         <div class="likelihood-info-icon" title="Info" *ngIf="showLikelihood" (click)="showLikelihoodInfo = !showLikelihoodInfo">i</div>
         <span class="selected-likelihood-percentage percentage_orange" *ngIf="!showLikelihood && selectedLikelihoodPercentage < 50">{{selectedLikelihoodPercentage}}%</span>   
-        <span class="selected-likelihood-percentage percentage_light-green" *ngIf="!showLikelihood && selectedLikelihoodPercentage === 50">{{selectedLikelihoodPercentage}}%</span>   
+        <span class="selected-likelihood-percentage percentage_light-green" *ngIf="!showLikelihood && selectedLikelihoodPercentage == 50">{{selectedLikelihoodPercentage}}%</span>   
         <span class="selected-likelihood-percentage percentage_green" *ngIf="!showLikelihood && selectedLikelihoodPercentage > 50">{{selectedLikelihoodPercentage}}%</span>   
       </div> 
     </div>

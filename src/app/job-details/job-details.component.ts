@@ -215,6 +215,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	setLikelihoodPercentage(likelihoodPercentage) {
+		this._jobDetailsService.setLikelihoodToFill(this.contractId, Number(likelihoodPercentage));
 		this.selectedPercentage = true;
 		this.likelihoodEnabled = false;
 		this.selectedLikelihoodPercentage = likelihoodPercentage;
