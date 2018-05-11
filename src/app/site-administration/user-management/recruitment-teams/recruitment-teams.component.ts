@@ -18,7 +18,10 @@ export class RecruitmentTeamsComponent implements OnInit {
     private _rootVCRService: RootVCRService) { }
 
   ngOnInit() {
-    this.recruitmentTeams = this._siteAdministrationService.getRecruitmentTeams();
+    this._siteAdministrationService.getRecruitmentTeams().then(data => {
+      this.recruitmentTeams = data;
+      console.log(data);
+    });
   }
   addNewRecruitmentTeam() {
     const recruitmentTeam = this._rootVCRService.createComponent(NewRecruitmentTeamComponent);

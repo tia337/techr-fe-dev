@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SiteAdministrationService } from './../../../site-administration.service';
 import { RootVCRService } from './../../../../root_vcr.service';
+import { Parse } from '../../../../parse.service';
 
 @Component({
   selector: 'app-new-recruitment-team',
@@ -17,7 +18,9 @@ export class NewRecruitmentTeamComponent implements OnInit {
 
   constructor(
     private _siteAdministrationService: SiteAdministrationService,
-    private _rootVCRService: RootVCRService) { }
+    private _rootVCRService: RootVCRService,
+    private _parse: Parse
+  ) { }
 
   ngOnInit() {
     this._siteAdministrationService.getTeamMembers()
