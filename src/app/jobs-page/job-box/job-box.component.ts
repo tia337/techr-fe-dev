@@ -105,6 +105,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		this._socket.emit('enterPipeLineGroup', {
 			'contract': 'm' + this.contract.id,
 		});
+		console.log('Contract: ', this.contract);
 		this._socket.on('pipelineMainCountUpdate', data => {
 			const userListQuery = new this._parse.Parse.Query('UserList');
 			userListQuery.get(data.userListId).then(userList => {
@@ -373,8 +374,9 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		} );
 	}
 
-	onLikelihoodPercentageSelect(value) {
-		this.selectedLikelihoodPercentage = value;
+	changeLikeliHoodToFill(value, contract) {
+		contract.set('likelihoodToFill', value);
+		console.log(contract.get('likelihoodToFill'));
 		this.showLikelihood = false;
 	}
 

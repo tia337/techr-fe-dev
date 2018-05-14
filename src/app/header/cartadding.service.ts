@@ -28,7 +28,7 @@ export class CartAdding{
     CartTotal:BehaviorSubject<number> = new BehaviorSubject<number>(this.totalsum);
     animationActive:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.animation);
     cartLoad(){
-        console.log("cartLoad works");
+        // console.log("cartLoad works");
         this.totalsum = 0;
         let jBPriceObj : ParseObject;
         let notPushedPaidCart : any[];
@@ -36,7 +36,7 @@ export class CartAdding{
         return this._parse.Parse.Session.current().then(res=>{
             this.count = 0;
             if(res.get("Shopping_Cart") && res.get("Shopping_Cart").free){
-                console.log("empty");
+                // console.log("empty");
                 if(res.get("Shopping_Cart").free.length > 0){
                     console.log(res.get("Shopping_Cart").free.length);
                     this.cartCheckFreePushed(client, res.get("Shopping_Cart").free);
