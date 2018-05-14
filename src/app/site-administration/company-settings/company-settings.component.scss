@@ -303,6 +303,12 @@ $dashed-border: 1px dashed #ccc;
                 cursor: pointer;
             }
         }
+
+        .new-client-input {
+            width: 30%;
+            margin: 0;
+            padding: 3px 7px;
+        }
     }
 
     .projects-form {

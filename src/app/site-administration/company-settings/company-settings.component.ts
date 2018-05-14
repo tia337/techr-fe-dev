@@ -46,9 +46,14 @@ export class CompanySettingsComponent implements OnInit {
 	newOffice = false;
 
 	clientsOfClient;
+	clientsofClientArr= [];
 	projectsOfClient;
 
+	newClient = false;
 	editClient = false;
+
+	clientsFormGroup: FormGroup;
+
 
 	isInCompany = true;
 	curLogo: any;
@@ -191,14 +196,21 @@ export class CompanySettingsComponent implements OnInit {
 			});
 		this._CompanySettingsService.getClientsOfClient()
 			.then(data => {
-				this.clientsOfClient = data;
+				data.forEach(clientOfClient => {
+					this.clientsofClientArr.push({
+						id: clientOfClient.id,
+						clientOfClientName: clientOfClient.get('clientOfClientName')
+					});
+				});
 			});
+
+		this.clientsFormGroup = new FormGroup({
+			'clientOfClientName': new FormControl('', Validators.required)
+		});
 		this._CompanySettingsService.getClientRecruitmentProjects()
 			.then(data => {
 				this.projectsOfClient = data;
-				console.log(this.projectsOfClient);
-			})
-		
+			});
 
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
@@ -646,14 +658,51 @@ export class CompanySettingsComponent implements OnInit {
 		this.newLikelihood = false;
 	}
 
+	private getClientsOfClient() {
+		this._CompanySettingsService.getClientsOfClient()
+			.then(data => {
+				this.clientsOfClient = data;
+			});
+	}
+
+	addNewClient() {
+		this.newClient = true;
+		setTimeout(() => {
+			const newClientInput = document.getElementById('newClientInput');
+			this.renderer.invokeElementMethod(newClientInput, 'focus');
+		}, 4);
+	}
+
+	saveNewClient() {
+		const clientOfClientName = this.clientsFormGroup.value.clientOfClientName.trim();
+		console.log('namecline', clientOfClientName);
+		if (clientOfClientName !== '') {
+			this._CompanySettingsService.createClientOfClient(clientOfClientName)
+				.then(data => {
+					this.clientsofClientArr.push({
+						id: data.id,
+						clientOfClientName: data.get('clientOfClientName')
+					});
+				});
+			this.clientsFormGroup.reset();
+		} else {
+			return this.clientsFormGroup.reset();
+		}
+	}
+
 	editClientOfClient(clientOfClient) {
-		if (this.editClient) {
+		if (clientOfClient.editClient) {
 			clientOfClient.editClient = false;
-			this.editClient = false;
 		} else {
 			clientOfClient.editClient = true;
-			this.editClient = true;
 		}
+	}
+
+	deleteClientOfClient(clientOfClient) {
+		const clientOfClientId = clientOfClient.id;
+		this._CompanySettingsService.deleteClientOfClient(clientOfClientId);
+		const clientOfClientIndex = this.clientsofClientArr.indexOf(clientOfClient);
+		this.clientsofClientArr.splice(clientOfClientIndex, 1);
 	}
 }
 
