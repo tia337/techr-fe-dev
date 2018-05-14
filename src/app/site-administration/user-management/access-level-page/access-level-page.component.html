@@ -1,4 +1,4 @@
-<section class="access-level-inner">
+<section class="access-level-inner" *ngIf="permissionType !== 4">
     <div class="back-button-wrap">
         <a class="back-button" [routerLink]="['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['permissions'] } }]" skipLocationChange>Back to permissions home</a>
     </div>
