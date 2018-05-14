@@ -22,17 +22,9 @@ export class AccessLevelPageService {
     });
   }
 
-  setCurrentAccessLevel(roleName) {
-    const userRoles = this.getUserRoles();
-    const teamMembersUserRoles = this.getTeamMembersUserRoles();
-    Promise.all([userRoles]).then(data => {
-      console.log(data);
-    }).catch(error => {
-      console.log(error);
-    });
-  }
+  
 
-  getUserRoles() {
+  getUserRoles(): Promise<any> {
     const promise = new Promise ((resolve, reject) => {
       const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
       this._parse.execCloud('getUserRoles', {clientId: clientId}).then(data => {
@@ -43,10 +35,10 @@ export class AccessLevelPageService {
     return promise;
   }
 
-  getTeamMembersUserRoles() {
+  getTeamMembersUserRoles(roleName: string) {
     const promise = new Promise ((resolve, reject) => {
       const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
-      this._parse.execCloud('getTeamMembersUserRoles', {clientId: clientId}).then(data => {
+      this._parse.execCloud('getTeamMembersUserRoles', {clientId: clientId, roleName: roleName }).then(data => {
         resolve(data);
         reject(data);
       });

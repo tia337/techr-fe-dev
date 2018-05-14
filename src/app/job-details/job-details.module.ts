@@ -17,7 +17,7 @@ import {
 	MatMenuModule,
 	MatSlideToggleModule,
 	MatIconModule,
-	MatButtonModule
+	MatButtonModule,
 } from '@angular/material';
 import { MatSelectModule } from '@angular/material';
 import { JobBoardsModule } from './job-boards/job-boards.module';

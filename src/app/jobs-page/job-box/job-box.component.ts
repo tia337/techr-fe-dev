@@ -83,6 +83,12 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 			type: DeveloperListType.hired,
 			value: 0,
 			title: 'Hired'
+		},
+		{
+			index: 8,
+			type: DeveloperListType.rejected,
+			value: 0,
+			title: 'Rejected'
 		}
 	];
 
@@ -174,6 +180,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 			const groupedUsers = _.groupBy(userList, userListObj => {
 				return userListObj.get('listType');
 			});
+			console.log('groupedUsers: ', groupedUsers);
 			this._stages.push({
 				index: 3,
 				type: DeveloperListType.shortlist,
@@ -207,6 +214,13 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 				type: DeveloperListType.hired,
 				value: groupedUsers[DeveloperListType.hired] ? groupedUsers[DeveloperListType.hired].length : 0,
 				title: 'Hired'
+			});
+
+			this._stages.push({
+				index: 8,
+				type: DeveloperListType.rejected,
+				value: groupedUsers[DeveloperListType.rejected] ? groupedUsers[DeveloperListType.rejected].length : 0,
+				title: 'Rejected'
 			});
 		});
 

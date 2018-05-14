@@ -15,6 +15,11 @@ export class AccessLevelPageComponent implements OnInit {
 
 	public permissionType: number = parseInt(this._activatedRoute.snapshot.params['id'], 10);
 	currentAccessLevel: any;
+	currentCustomAccessLevel = {
+		roleName: null,
+		roleDescription: null,
+		roleRights: []
+	};
 	users;
 	private currentUser = this._parse.getCurrentUser();
 
@@ -43,7 +48,19 @@ export class AccessLevelPageComponent implements OnInit {
 		};
 		if (this.permissionType === 4) {
 			this._activatedRoute.queryParams.subscribe(params => {
-				this._alService.setCurrentAccessLevel(params);
+				this.currentCustomAccessLevel.roleName = params.role;
+				this._alService.getUserRoles().then(data => {
+					this.currentCustomAccessLevel = data.find(role => {
+						return role.roleName = this.currentCustomAccessLevel.roleName;
+					});
+				}).catch(error => {
+					console.log(error);
+				});
+				this._alService.getTeamMembersUserRoles(params.role).then(data => {
+					this.users = data;
+				}).catch(error => {
+					console.log(error);
+				});
 			});
 		}
 
