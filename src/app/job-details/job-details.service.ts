@@ -121,4 +121,7 @@ export class JobDetailsService {
 		this._candidatesCount.next(value);
 	}
 
+	setLikelihoodToFill(contractId: string, likelihoodToFill: number ) {
+		this._parse.execCloud('setLikelihoodToFill', {contractId: contractId , likelihoodToFill: likelihoodToFill});
+	}
 }
