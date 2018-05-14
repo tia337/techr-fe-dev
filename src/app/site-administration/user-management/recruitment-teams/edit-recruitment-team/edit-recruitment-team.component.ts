@@ -32,7 +32,6 @@ export class EditRecruitmentTeamComponent implements OnInit {
       this.recruitmentTeamMembers.push(teamMember.name);
     });
 
-    this.recruitmentEditType = this.currentRecruitmentTeam.editType;
 
     this.recruitmentTeamFormGroup = new FormGroup({
       'teamName': new FormControl(this.currentRecruitmentTeam.name, Validators.required),
@@ -50,12 +49,51 @@ export class EditRecruitmentTeamComponent implements OnInit {
     this.currentRecruitmentTeam = recruitmentTeam;
   }
 
+  set editType(editType) {
+    this.recruitmentEditType = editType;
+  }
+
   editRecruitmentTeam() {
-    this.currentRecruitmentTeam.name = this.recruitmentTeamFormGroup.value.teamName;
-    this.currentRecruitmentTeam.description = this.recruitmentTeamFormGroup.value.teamDescription;
-    this.currentRecruitmentTeam.teamLead = this.recruitmentTeamFormGroup.value.teamLead;
-    this.currentRecruitmentTeam.teamMembers = this.recruitmentTeamFormGroup.value.teamMembers;
-    this._siteAdministrationService.editRecruitmentTeam(this.currentRecruitmentTeam);
+    let newRecruitemtTeamLead;
+    const newRecruitmentTeamMembers = [];
+
+
+    this.teamMembersArray.forEach(teamMember => {
+      if (teamMember.name === this.recruitmentTeamFormGroup.value.teamLead) {
+        newRecruitemtTeamLead = {
+          id: teamMember.id,
+          name: teamMember.name
+        };
+      }
+    });
+
+
+
+    this.recruitmentTeamFormGroup.value.teamMembers.forEach(newTeamMember => {
+      this.teamMembersArray.forEach(teamMember => {
+        if (newTeamMember === teamMember.name) {
+          newRecruitmentTeamMembers.push({
+            id: teamMember.id,
+            name: teamMember.name
+          });
+        }
+      });
+    });
+    
+
+    const newRecruitmentTeam = {
+      name: this.recruitmentTeamFormGroup.value.teamName,
+      description: this.recruitmentTeamFormGroup.value.teamDescription,
+      teamLead: newRecruitemtTeamLead,
+      teamMembers : newRecruitmentTeamMembers
+    };
+    
+    this._siteAdministrationService.editRecruitmentTeam(this.currentRecruitmentTeam, newRecruitmentTeam);
+
+    this.currentRecruitmentTeam.name = newRecruitmentTeam.name;
+    this.currentRecruitmentTeam.description = newRecruitmentTeam.description;
+    this.currentRecruitmentTeam.teamLead = newRecruitmentTeam.teamLead;
+    this.currentRecruitmentTeam.teamMembers = newRecruitmentTeam.teamMembers;
     this.closeModal();
   }
  

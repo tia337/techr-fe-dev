@@ -17,6 +17,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.component';
 import { ContactUsComponent } from "app/contact-us/contact-us.component";
 import { NewWorkflowComponent } from './new-workflow/new-workflow.component';
+import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 @Component({
 	selector: 'app-company-settings',
@@ -43,6 +44,11 @@ export class CompanySettingsComponent implements OnInit {
 	offices;
 	officesFormGroup: FormGroup;
 	newOffice = false;
+
+	clientsOfClient;
+	projectsOfClient;
+
+	editClient = false;
 
 	isInCompany = true;
 	curLogo: any;
@@ -174,17 +180,25 @@ export class CompanySettingsComponent implements OnInit {
 		this._CompanySettingsService.getClientProbabilitiesToCloseJob()
 			.then(data => {
 				this.clientProbabilitiesToCloseJob = data;
-				console.log(this.clientProbabilitiesToCloseJob);
 			});
 		this._CompanySettingsService.getDepartments()
 			.then(data => {
 				this.departments = data;
-				console.log(this.departments);
 			});
 		this._CompanySettingsService.getOffices()
 			.then(data => {
 				this.offices = data;
 			});
+		this._CompanySettingsService.getClientsOfClient()
+			.then(data => {
+				this.clientsOfClient = data;
+			});
+		this._CompanySettingsService.getClientRecruitmentProjects()
+			.then(data => {
+				this.projectsOfClient = data;
+				console.log(this.projectsOfClient);
+			})
+		
 
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
@@ -630,6 +644,16 @@ export class CompanySettingsComponent implements OnInit {
 			this.tableRows = _.sortBy(this.tableRows, function (i) {return i.stagePercentage; });
 		}
 		this.newLikelihood = false;
+	}
+
+	editClientOfClient(clientOfClient) {
+		if (this.editClient) {
+			clientOfClient.editClient = false;
+			this.editClient = false;
+		} else {
+			clientOfClient.editClient = true;
+			this.editClient = true;
+		}
 	}
 }
 

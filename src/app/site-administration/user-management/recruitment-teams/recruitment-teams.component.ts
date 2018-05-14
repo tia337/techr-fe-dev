@@ -20,7 +20,6 @@ export class RecruitmentTeamsComponent implements OnInit {
   ngOnInit() {
     this._siteAdministrationService.getRecruitmentTeams().then(data => {
       this.recruitmentTeams = data;
-      console.log(data);
     });
   }
   addNewRecruitmentTeam() {
@@ -30,15 +29,16 @@ export class RecruitmentTeamsComponent implements OnInit {
 
   editRecruitmentTeam(recruitmentTeam, recruitmentTeams) {
     const editRecruitmentTeam = this._rootVCRService.createComponent(EditRecruitmentTeamComponent);
-    recruitmentTeam.editType = 'edit';
+    
     editRecruitmentTeam.recruitmentTeams = recruitmentTeams;
     editRecruitmentTeam.recruitmentTeam = recruitmentTeam;
+    editRecruitmentTeam.editType = 'edit';
   }
   deleteRecruitmentTeam(recruitmentTeam, recruitmentTeams) {
     const editRecruitmentTeam = this._rootVCRService.createComponent(EditRecruitmentTeamComponent);
-    recruitmentTeam.editType = 'delete';
     editRecruitmentTeam.recruitmentTeams = recruitmentTeams;
     editRecruitmentTeam.recruitmentTeam = recruitmentTeam;
+    editRecruitmentTeam.editType = 'delete';
   }
   
 }
