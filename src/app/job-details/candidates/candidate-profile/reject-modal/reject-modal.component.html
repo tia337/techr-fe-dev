@@ -1,12 +1,17 @@
 <div class="reject-modal-overlay" >
-  <div class="reject-modal" [ngClass]="{'opened': rejectionList === true }" (clickOutside)="close()" [exclude]="'.reject-candidate-button, .rejection-reason-item'" [delayClickOutsideInit]="true">
+  <div class="reject-modal" 
+        [ngClass]="{'opened': rejectionList === true }" 
+        (clickOutside)="close()" 
+        [exclude]="'.reject-candidate-button, .rejection-reason-item'" 
+        [delayClickOutsideInit]="true">
       <div class="reject-modal__title">
           <span class="bold">Select a rejection reason</span>
       </div>
       <div class="reject-modal-content">
           <div class="candidate-wrap" [ngClass]="{'opened': rejectionList === true}">
             <div class="reject-modal-content__avatar-wrap">
-                <img class="avatar" [src]="candidate.get('avatarURL')" alt="profile pic">
+                <img *ngIf="candidate.get('avatarURL') !== undefined" class="avatar" [src]="candidate.get('avatarURL')" alt="profile pic">
+                <img style="width: 50px;" *ngIf="candidate.get('avatarURL') === undefined" class="avatar" src="../../../../../assets/img/default-userpic.png" alt="profile pic">                
             </div>
             <div class="reject-modal-content__candidate-name-position">
                 <div class="reject-modal-content__candidate-name">
@@ -24,31 +29,35 @@
           </div>
           <div class="reject-modal-content__select-reason" (click)="rejectionList = !rejectionList; $event.stopImmediatePropagation();" [ngClass]="{'opened': rejectionList === true}">
               <div class="reject-modal-content__select-reason--box">
-                  <span *ngIf="rejectionReason === ''">
+                  <span *ngIf="rejectionReason === null">
                       Select rejection reason
-                      <!-- <mat-icon class="icon" [ngClass]="{'opened': rejectionList === true}">play</mat-icon> -->
                     </span>
-                  <span *ngIf="rejectionReason !== ''">
-                      Rejection reason: {{rejectionReason}}
-                      <!-- <mat-icon class="icon" [ngClass]="{'opened': rejectionList === true}">play</mat-icon> -->
+                  <span *ngIf="rejectionReason !== null">
+                      Rejection reason: {{rejectionReason.get('rejectionReason')}}
                     </span>
               </div>
               <div *ngIf="rejectionList" (clickOutside)="rejectionList = false" [delayClickOutsideInit]="true" class="rejection-reason-list">
                   <ul>
-                      <li class="rejection-reason-item" (click)="setRejectionReason($event); rejectionList = false; $event.stopImmediatePropagation();">Not a good fit/Wrong skills set</li>
-                      <li class="rejection-reason-item" (click)="setRejectionReason($event); rejectionList = false; $event.stopImmediatePropagation();">Unsutable personality</li>
-                      <li class="rejection-reason-item" (click)="setRejectionReason($event); rejectionList = false; $event.stopImmediatePropagation();">Co workers don't approve</li>
-                      <li class="rejection-reason-item" (click)="setRejectionReason($event); rejectionList = false; $event.stopImmediatePropagation();">No references</li>
-                      <li class="rejection-reason-item" (click)="setRejectionReason($event); rejectionList = false; $event.stopImmediatePropagation();">Unfordable Salary Expectations</li>
+                      <li *ngFor="let reason of rejectionReasons" class="rejection-reason-item" (click)="setRejectionReason(reason); $event.stopImmediatePropagation();">{{reason.get('rejectionReason')}}</li>
                   </ul>
               </div>
           </div>
       </div>
-      <textarea class="rejection-note" *ngIf="rejectionNote" #rejectionNote name="rejection-note" id="rejection-note" cols="30" rows="10" placeholder="Type here a note"></textarea>
+    <textarea class="rejection-note" *ngIf="rejectionNoteOpened" #rejectionNote name="rejection-note" id="rejection-note" cols="30" rows="10" placeholder="Type here a note"></textarea>
       <div class="reject-modal-buttons">
-          <button class="reject-modal-buttons__add-note" *ngIf="!rejectionNote" (click)="rejectionNote = !rejectionNote; $event.stopImmediatePropagation();">Add Note</button>
-          <button class="reject-modal-buttons__clear-note" *ngIf="rejectionNote" (click)="rejectionNote = !rejectionNote; rejectionNote.value = ''; $event.stopImmediatePropagation();">Clear Note</button>          
-          <button class="reject-modal-buttons__reject-candidate" (click)="close()">Reject Candidate</button>
+          <button class="reject-modal-buttons__add-note" 
+                *ngIf="!rejectionNoteOpened" 
+                (click)="rejectionNoteOpened = !rejectionNoteOpened; $event.stopImmediatePropagation();">
+                Add Note
+          </button>
+          <button class="reject-modal-buttons__clear-note" 
+                *ngIf="rejectionNoteOpened" 
+                (click)="rejectionNoteOpened = !rejectionNoteOpened; rejectionNote.value = ''; $event.stopImmediatePropagation();">
+                Clear Note
+            </button>          
+          <button class="reject-modal-buttons__reject-candidate" (click)="rejectCandidate()">Reject Candidate</button>
       </div>
+      {{rejectionNote}}
+      
   </div>
 </div>

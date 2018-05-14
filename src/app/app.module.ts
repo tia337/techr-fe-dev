@@ -64,6 +64,7 @@ import { TimelineService } from './timeline/timeline.service';
 import { NgxDnDModule } from '@swimlane/ngx-dnd';
 import { TalentbaseComponent } from './talentbase/talentbase.component';
 import { TalentbaseService } from './talentbase/talentbase.service';
+import { EditUserRoleComponent } from './site-administration/user-management/access-level-page/edit-user-role/edit-user-role.component';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -80,7 +81,7 @@ const config: SocketIoConfig = {
 		AppComponent,
 		ClearStringPipe,
 		TalentbaseComponent
-		],
+	],
 	imports: [
 		BrowserModule,
 		MatGridListModule,
@@ -119,7 +120,7 @@ const config: SocketIoConfig = {
 		ContactUsModule,
 		TimelineModule,
 		ReactiveFormsModule,
-		NgxDnDModule		
+		NgxDnDModule,
 	],
 	providers: [
 		SidenavService,

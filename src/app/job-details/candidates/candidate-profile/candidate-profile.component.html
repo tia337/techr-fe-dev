@@ -44,26 +44,30 @@
                         </span>
                     </div>
                 </div>
-                <div class="buttons">
-                    <div class="mail-button button" (click)="sendEmail()">
-                        <img class="mail" src="../../../assets/img/mail.png">
-                        <!-- <i class="fa fa-envelope-o" aria-hidden="true"></i> -->
+            </div>
+            <div class="buttons">
+                <div class="mail-button button" (click)="sendEmail()">
+                    <!-- <img class="mail" src="../../../assets/img/mail.png"> -->
+                    <!-- <i class="fa fa-envelope-o" aria-hidden="true"></i> -->
+                    <p (click)="sendEmail()">Send Email</p>
+                </div>
+                <div class="move-candidate-button button" (click)="showMoveMenu()">
+                    <!-- <img class="move-to" src="../../../assets/img/move-forvard.svg"> -->
+                    <p>Move to <span class="triangle-wrap"><span class="triangle"></span></span></p>
+                    <!-- <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> -->
+                    <div class="move-candidate-dropdown" #moveCandidateMenu (mouseleave)="closeMoveMenu()">
+                        <div class="header">Move candidate to</div>
+                        <div class="inteview-stage" (click)="moveCandidate(0)">Shortlist</div>
+                        <div class="inteview-stage" (click)="moveCandidate(1)">Phone Interview</div>
+                        <div class="inteview-stage" (click)="moveCandidate(2)">F2F Interview</div>
+                        <div class="inteview-stage" (click)="moveCandidate(3)">Job Offered</div>
+                        <div class="inteview-stage" (click)="moveCandidate(4)">Hired</div>
+                        <!-- <div class="inteview-stage" (click)="moveCandidate(6)">Rejected</div> -->
                     </div>
-                    <div class="move-candidate-button button" (click)="showMoveMenu()">
-                        <img class="move-to" src="../../../assets/img/move-forvard.svg">
-                        <!-- <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> -->
-                        <div class="move-candidate-dropdown" #moveCandidateMenu (mouseleave)="closeMoveMenu()">
-                            <div class="header">Move candidate to</div>
-                            <div class="inteview-stage" (click)=" moveCandidate(0)">Shortlist</div>
-                            <div class="inteview-stage" (click)=" moveCandidate(1)">Phone Interview</div>
-                            <div class="inteview-stage" (click)=" moveCandidate(2)">F2F Interview</div>
-                            <div class="inteview-stage" (click)=" moveCandidate(3)">Job Offered</div>
-                            <div class="inteview-stage" (click)=" moveCandidate(4)">Hired</div>
-                        </div>
-                    </div>
-                    <div class="reject-candidate-button button" (click)="openRejection(candidate)">
-                            <img style="width: 33px; height: 33px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH3SURBVGhD7dpNSwJBHMdxoWtBr6VrB0+lkkQXL3Xq2KuoDtJqUScvdejSIYSK6AUYUesq9EDHHvRkdCyoyFC3ndhfLLLZzOzOf0fxC38wXXfnQ4rFGBs2LOIyxeJIfLk06v5IWnyrNO7eDBZDpPLWQXrdqszmzsfcu0lKrpmZlFF+ncqak+5dcgExt1n9mi9cNmfyVpUKwxAJo9xe2r3tpHLWhzTGi7iovdnXT5/2QuGKBAPE9mmjU3vp2Nnjh7YUphtRd07GhgLjReC6Upi/EBiVGD8ERhiTMMz99Eal5YfAqMD0QmAYZuXwrp10MImcOeE+1T+eE7IJE8N7zZtGU+yalBhlCESBUY5AKjFkCKQCQ45AYWIiQ6AwMCp+u1IFWYg2CCSzoGmjvKgVAolinGNt7RBIBLNnPfs+hokMgXgxvSZyBAqC0QaBZDDaIZAIRlsEayAgA/HSGog3exAEJnIML4ItVNsPRBEEW6BzrL1z1vA9BkOOEUWwheGPRm0wMggsCM+NHBMEgSLHhIFAvBit/19H5BgVCESG4UUEuZByDAUCKcNQIpASDM+2QpgIxINh2wqrR/d82wr/bfSoQKBemJ+NnpPHlvyuVf3992QqEcgPI4VA3RgKBPJiAiGQF9O329MImL7+wgBimL7/CsewYaLFYt8QgbNOaL335QAAAABJRU5ErkJggg==">
-                    </div>
+                </div>
+                <div class="reject-candidate-button button" (click)="openRejection(candidate)">
+                        <!-- <img style="width: 33px; height: 33px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH3SURBVGhD7dpNSwJBHMdxoWtBr6VrB0+lkkQXL3Xq2KuoDtJqUScvdejSIYSK6AUYUesq9EDHHvRkdCyoyFC3ndhfLLLZzOzOf0fxC38wXXfnQ4rFGBs2LOIyxeJIfLk06v5IWnyrNO7eDBZDpPLWQXrdqszmzsfcu0lKrpmZlFF+ncqak+5dcgExt1n9mi9cNmfyVpUKwxAJo9xe2r3tpHLWhzTGi7iovdnXT5/2QuGKBAPE9mmjU3vp2Nnjh7YUphtRd07GhgLjReC6Upi/EBiVGD8ERhiTMMz99Eal5YfAqMD0QmAYZuXwrp10MImcOeE+1T+eE7IJE8N7zZtGU+yalBhlCESBUY5AKjFkCKQCQ45AYWIiQ6AwMCp+u1IFWYg2CCSzoGmjvKgVAolinGNt7RBIBLNnPfs+hokMgXgxvSZyBAqC0QaBZDDaIZAIRlsEayAgA/HSGog3exAEJnIML4ItVNsPRBEEW6BzrL1z1vA9BkOOEUWwheGPRm0wMggsCM+NHBMEgSLHhIFAvBit/19H5BgVCESG4UUEuZByDAUCKcNQIpASDM+2QpgIxINh2wqrR/d82wr/bfSoQKBemJ+NnpPHlvyuVf3992QqEcgPI4VA3RgKBPJiAiGQF9O329MImL7+wgBimL7/CsewYaLFYt8QgbNOaL335QAAAABJRU5ErkJggg=="> -->
+                        <p>Reject Candidate</p>
                 </div>
             </div>
             <!-- <div class="candidate-info-bottom-block"> -->

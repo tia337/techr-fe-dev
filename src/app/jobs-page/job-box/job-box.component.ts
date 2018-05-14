@@ -83,6 +83,12 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 			type: DeveloperListType.hired,
 			value: 0,
 			title: 'Hired'
+		},
+		{
+			index: 8,
+			type: DeveloperListType.rejected,
+			value: 0,
+			title: 'Rejected'
 		}
 	];
 
@@ -105,6 +111,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		this._socket.emit('enterPipeLineGroup', {
 			'contract': 'm' + this.contract.id,
 		});
+		console.log('Contract: ', this.contract);
 		this._socket.on('pipelineMainCountUpdate', data => {
 			const userListQuery = new this._parse.Parse.Query('UserList');
 			userListQuery.get(data.userListId).then(userList => {
@@ -173,6 +180,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 			const groupedUsers = _.groupBy(userList, userListObj => {
 				return userListObj.get('listType');
 			});
+			console.log('groupedUsers: ', groupedUsers);
 			this._stages.push({
 				index: 3,
 				type: DeveloperListType.shortlist,
@@ -206,6 +214,13 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 				type: DeveloperListType.hired,
 				value: groupedUsers[DeveloperListType.hired] ? groupedUsers[DeveloperListType.hired].length : 0,
 				title: 'Hired'
+			});
+
+			this._stages.push({
+				index: 8,
+				type: DeveloperListType.rejected,
+				value: groupedUsers[DeveloperListType.rejected] ? groupedUsers[DeveloperListType.rejected].length : 0,
+				title: 'Rejected'
 			});
 		});
 
@@ -369,14 +384,13 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 					onClick: () => {
 						this._root_vcr.clear();
 					}
-				})
+				});
 		} );
 	}
 
-	onLikelihoodPercentageSelect(value) {
-
-		this._jobBoxService.setLikelihoodToFill(this.contract.id, Number(value));
-		this.selectedLikelihoodPercentage = value;
+	changeLikeliHoodToFill(value, contract) {
+		contract.set('likelihoodToFill', value);
+		this._jobBoxService.setLikelihoodToFill(contract.id, value);
 		this.showLikelihood = false;
 	}
 

@@ -243,10 +243,10 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		if (this.filters.length === 1 && this.filters.indexOf(JobsToShow.myJobs) === 0) {
 			this.recruiterSearchControl.reset();
 		}
-		console.log(this.contractStatus);
+		console.log('Contract Status: ', this.contractStatus);
 		if (this.contractStatus !== 4) {
 			this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
-				console.log(contracts);
+				console.log('Contracts List: ', contracts);
 				this.separatedOffers = new Array();
 				this._allOffers = contracts;
 				this.offers = contracts;
@@ -291,8 +291,6 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 			});
 		};
 		if (this.contractStatus === 4) {
-			console.log(this.contractStatus, ' = 4');
-			console.log(localStorage.getItem('pending'));
 			localStorage.removeItem('pending');
 		}
 	}

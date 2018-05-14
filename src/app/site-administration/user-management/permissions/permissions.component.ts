@@ -38,8 +38,15 @@ export class PermissionsComponent implements OnInit, OnDestroy {
       });
   }
 
-  goToAccessLevel(accessLevel: number) {
+  goToAccessLevel(accessLevel: number, role?: string, description?: string) {
     this._router.navigate(['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['access-level', accessLevel] } }], {skipLocationChange: true});
+    if (role) {
+      this._router.
+        navigate(
+          ['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['access-level', accessLevel] } }],
+          { queryParams: { role: role, description: description }, skipLocationChange: true }
+        );
+    }
   }
 
   openUserRolesModal() {
@@ -54,7 +61,6 @@ export class PermissionsComponent implements OnInit, OnDestroy {
 
   deleteUserRoles(userRole, userRoles) {
     const userRoleDelete = this._root_vcr.createComponent(UserRolesDeleteComponent);
-
     userRoleDelete.userRole = userRole;
     userRoleDelete.userRoles = userRoles;
   }

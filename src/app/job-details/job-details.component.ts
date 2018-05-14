@@ -44,27 +44,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 	) { }
 
 	ngOnInit() {
-		// this._route.params.subscribe(params => {
-		// 	this._stages = [];
-		// 	this.stages = [];
-		// 	this.currentInterviewStage = null;
-		// 	this.contract = null;
-		// 	this.stagesDisabled = null;
-		// 	this._stageDisableSubscription = null;
-		// 	this._stageSubscription = null;
-		// 	this._stageDisableSubscription = this._jobDetailsService.isStagesDisabled.subscribe(value => {
-		// 		console.log(value, 'VALUE');
-		// 		this.stagesDisabled = value;
-		// 		this._changeDetector.detectChanges();
-		// 	});
-		// 	this._stageSubscription = this._jobDetailsService.activeStage.subscribe(stage => {
-		// 		this.currentInterviewStage = stage;
-		// 	});
-		// 	this.contractId = params.id;
-		// 	this._jobDetailsService.contractId = this.contractId;
-		// 	this.initData();
-		// });
-
+		
 		this._socket.emit('enterPipeLineGroup', {
 			'contract': this.contractId,
 		});
@@ -169,6 +149,12 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 				value: groupedUsers[DeveloperListType.hired] ? groupedUsers[DeveloperListType.hired].length : 0,
 				title: 'Hired'
 			});
+			this._stages.push({
+				index: 8,
+				type: DeveloperListType.rejected,
+				value: groupedUsers[DeveloperListType.rejected] ? groupedUsers[DeveloperListType.rejected].length : 0,
+				title: 'Rejected'
+			});
 		}).then(() => {
 			return this._jobDetailsService.getReferralsCount(this.contract);
 		}).then(referralsCount => {
@@ -214,11 +200,11 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 		return Loading;
 	}
 
-	setLikelihoodPercentage(likelihoodPercentage) {
+	setLikelihoodPercentage(likelihoodPercentage, contract) {
+		contract.set('likelihoodToFill', likelihoodPercentage);
 		this._jobDetailsService.setLikelihoodToFill(this.contractId, Number(likelihoodPercentage));
 		this.selectedPercentage = true;
 		this.likelihoodEnabled = false;
-		this.selectedLikelihoodPercentage = likelihoodPercentage;
 	}
 
 	ngOnDestroy() {

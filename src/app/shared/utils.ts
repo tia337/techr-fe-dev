@@ -8,7 +8,8 @@ export const DeveloperListType = {
 	'f2fInterview': 2,
 	'jobOffered': 3,
 	'hired': 4,
-	'employeeReferrals': 5
+	'employeeReferrals': 5,
+	'rejected': 6
 };
 
 export const JobType = { 'permanent': 1, 'contract': 2 };

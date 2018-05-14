@@ -24,7 +24,7 @@
       <td><div class="permission-label">Contributor</div></td>
       <td>Swipe in application access. Can invite users.</td>
     </tr>
-    <tr *ngFor= "let userRole of userRoles">
+    <tr *ngFor= "let userRole of userRoles" (click)="goToAccessLevel(4, userRole.roleName)">
       <td>{{userRole.roleName}}</td>
       <td><div class="permission-label" [matTooltip]="userRole.roleDescription">{{userRole.roleName}}</div></td>
       <td><span *ngFor= "let right of userRole.roleRights">{{right.description || right}}. </span></td>

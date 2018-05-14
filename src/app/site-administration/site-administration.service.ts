@@ -66,7 +66,6 @@ import { Subject } from 'rxjs/Subject';
 
   getUserRoles() {
     const clientId = this.getClientId();
-
     return this._parse.execCloud('getUserRoles', {clientId});
   }
   
