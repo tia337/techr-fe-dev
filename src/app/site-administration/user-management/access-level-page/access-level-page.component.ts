@@ -33,19 +33,16 @@ export class AccessLevelPageComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log('Permission type', this.permissionType);
 		if (this.permissionType !== 4) {
 			this.currentAccessLevel = this.accessLevels.find(accessLevel => {
 				return accessLevel.type == this.permissionType;
 			});
 			this._alService.findUsersByAL(this.permissionType).then(users => {
-				console.log('users:', users);
 				this.users = users;
 			});
 		};
 		if (this.permissionType === 4) {
 			this._activatedRoute.queryParams.subscribe(params => {
-				console.log('params: ', params);
 				this._alService.setCurrentAccessLevel(params);
 			});
 		}

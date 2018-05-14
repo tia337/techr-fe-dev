@@ -23,20 +23,35 @@ export class AccessLevelPageService {
   }
 
   setCurrentAccessLevel(roleName) {
-    console.log(roleName.role);
-    this.getTeamMembersUserRoles().then(data => {
-      console.log('Team Members User Roles', data);
+    const userRoles = this.getUserRoles();
+    const teamMembersUserRoles = this.getTeamMembersUserRoles();
+    Promise.all([userRoles]).then(data => {
+      console.log(data);
+    }).catch(error => {
+      console.log(error);
     });
   }
 
   getUserRoles() {
-    const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
-    return this._parse.execCloud('getUserRoles', {clientId});
+    const promise = new Promise ((resolve, reject) => {
+      const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+      this._parse.execCloud('getUserRoles', {clientId: clientId}).then(data => {
+        resolve(data);
+        reject(data);
+      });
+    });
+    return promise;
   }
 
   getTeamMembersUserRoles() {
-    const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
-    return this._parse.execCloud('getTeamMembersUserRoles', {clientId: clientId});
+    const promise = new Promise ((resolve, reject) => {
+      const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+      this._parse.execCloud('getTeamMembersUserRoles', {clientId: clientId}).then(data => {
+        resolve(data);
+        reject(data);
+      });
+    });
+    return promise;
   }
 
 }
