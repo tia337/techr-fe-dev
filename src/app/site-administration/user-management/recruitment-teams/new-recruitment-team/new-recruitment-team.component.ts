@@ -52,8 +52,7 @@ export class NewRecruitmentTeamComponent implements OnInit {
         id: this.recruitmentTeamFormGroup.value.teamLead.id,
         name: this.recruitmentTeamFormGroup.value.teamLead.name
       },
-      teamMembers: this.recruitmentTeamMembers,
-      editType: 'none'
+      teamMembers: this.recruitmentTeamMembers
     };
 
     this.recruitmentTeamsArr.push(newTeam);
