@@ -73,21 +73,12 @@ import {
 import {
 	PermissionsComponent
 } from './user-management/permissions/permissions.component';
-// import { UserComponent } from './user-management/user/user.component';
-// import { TeamMembersComponent } from './user-management/team-members/team-members.component';
-// import { TeamMembersService } from './user-management/team-members/team-members.service';
-
-// import { UserService } from './user-management/user/user.service';
-
-// import { AccessLevelModalComponent } from './user-management/user/access-level-modal/access-level-modal.component';
-// import { AccessLevelModalService } from './user-management/user/access-level-modal/access-level-modal.service';
 import {
 	AccessLevelPageComponent
 } from './user-management/access-level-page/access-level-page.component';
 import {
 	AccessLevelPageService
 } from './user-management/access-level-page/access-level-page.service';
-// import { InviteService } from './user-management/invite-user/invite-user.service';
 import {
 	InviteFormComponent
 } from './user-management/invite-user/invite-form/invite-form.component';
@@ -135,7 +126,6 @@ import { UserRolesEditModule } from './user-management/permissions/user-roles-ed
 import { UserRolesDeleteModule } from './user-management/permissions/user-roles-delete/user-roles-delete.module';
 import { NewWorkflowModule } from './company-settings/new-workflow/new-workflow.module';
 import { NgxDnDModule } from '@swimlane/ngx-dnd';
-
 import {
 	ChangePasswordComponent
 } from './company-settings/change-password/change-password.component';
@@ -149,21 +139,20 @@ import { NewWorkflowComponent } from './company-settings/new-workflow/new-workfl
 import { RecruitmentTeamsComponent } from './user-management/recruitment-teams/recruitment-teams.component';
 import { NewRecruitmentTeamComponent } from './user-management/recruitment-teams/new-recruitment-team/new-recruitment-team.component';
 import { EditRecruitmentTeamComponent } from './user-management/recruitment-teams/edit-recruitment-team/edit-recruitment-team.component';
+import { EditUserRoleComponent } from './user-management/access-level-page/edit-user-role/edit-user-role.component';
+
 
 @NgModule({
 	declarations: [
+		EditUserRoleComponent,
 		SiteAdministrationComponent,
 		CompanySettingsComponent,
 		UserManagementComponent,
-        UserSettingsComponent,
+		UserSettingsComponent,
 		JobsSettingsComponent,
 		SubscriptionsComponent,
 		AppIntegrationsComponent,
-		// InviteUserComponent,
 		PermissionsComponent,
-		// UserComponent,
-		// TeamMembersComponent,
-		// AccessLevelModalComponent,
 		AccessLevelPageComponent,
 		ChangePasswordComponent,
 		ReportsComponent,
@@ -173,8 +162,6 @@ import { EditRecruitmentTeamComponent } from './user-management/recruitment-team
 		RecruitmentTeamsComponent,
 		NewRecruitmentTeamComponent,
 		EditRecruitmentTeamComponent
-		// InviteFormComponent,
-		// InvitationConfirmAlertComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -182,7 +169,6 @@ import { EditRecruitmentTeamComponent } from './user-management/recruitment-team
 		RouterModule,
 		FormsModule,
 		ReactiveFormsModule,
-		// MaterialModule,
 		MatSelectModule,
 		MatTooltipModule,
 		SubscriptionsCheckoutModule,
@@ -204,17 +190,10 @@ import { EditRecruitmentTeamComponent } from './user-management/recruitment-team
 		NewWorkflowModule,
 		NgxDnDModule,
 		NewRecruitmentTeamModule,
-		EditRecruitmentTeamModule
+		EditRecruitmentTeamModule,
 	],
 	providers: [
-
-		// TeamMembersService,
-		// UserService,
 		AccessLevelPageService,
-		// AccessLevelModalService,
-		// InviteVCR,
-		// InviteService,
-		// InviteFormService,
 		IntegrationService,
 		SubscriptionService,
 		CheckoutServService,
@@ -224,9 +203,6 @@ import { EditRecruitmentTeamComponent } from './user-management/recruitment-team
 		RootVCRService
 	],
 	entryComponents: [
-		// AccessLevelModalComponent,
-		// InviteFormComponent,
-		// InvitationConfirmAlertComponent,
 		ChangePasswordComponent,
 		AlertComponent,
 		UserRolesComponent,
@@ -234,7 +210,8 @@ import { EditRecruitmentTeamComponent } from './user-management/recruitment-team
 		UserRolesDeleteComponent,
 		NewWorkflowComponent,
 		NewRecruitmentTeamComponent,
-		EditRecruitmentTeamComponent
+		EditRecruitmentTeamComponent,
+		EditUserRoleComponent
 	],
 	exports: [
 		SiteAdministrationComponent
