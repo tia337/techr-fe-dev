@@ -475,26 +475,56 @@
             <h3>Use client &amp; project based recruitment to configure the clients and projects that you are hiring for</h3>
             
             <div class="clients-projects-wrapper">
-                <form class="clients-form">
+                <form 
+                    class="clients-form" 
+                    [formGroup]="clientsFormGroup">
                     <div class="clients-form-header">
                         <span>Clients</span>
-                        <button mat-raised-button color='primary'>Add new client</button>
+                        <button 
+                            *ngIf="!newClient"
+                            mat-raised-button 
+                            color='primary' 
+                            (click)="addNewClient()">
+                            Add new client
+                        </button>
+                        <button 
+                            *ngIf="newClient"
+                            mat-raised-button 
+                            color='primary' 
+                            (click)="saveNewClient()">
+                            Save
+                        </button>
                     </div>
                     <div class="clients-form-body">
                         <div 
-                            *ngFor="let clientOfClient of clientsOfClient"
+                            *ngFor="let clientOfClient of clientsofClientArr" 
                             class="clients">
-                            <span *ngIf="!clientOfClient.editClient">{{clientOfClient.get('clientOfClientName')}}</span>
+                            <span *ngIf="!clientOfClient.editClient">{{clientOfClient.clientOfClientName}}</span>
                             <input
                                 *ngIf="clientOfClient.editClient" 
                                 type="text" 
-                                
-                                [value]="clientOfClient.get('clientOfClientName')"
+                                [value]="clientOfClient.clientOfClientName"
                                 >
                             <div class="clients-options">
                                 <span (click)="editClientOfClient(clientOfClient)">Edit</span>    
-                                <span>Remove</span> 
+                                <span (click)="deleteClientOfClient(clientOfClient)">Remove</span> 
                             </div> 
+                        </div>
+                        <div 
+                            class="new-client" 
+                            *ngIf="newClient"
+                            >
+                            <input 
+                                formControlName="clientOfClientName"
+                                type="text" 
+                                placeholder="New Client"
+                                id="newClientInput"
+                                class="new-client-input"
+                                (clickOutside)="newClient = false"
+                                [exclude]="'new-client-input'"
+                                [delayClickOutsideInit]="true"
+                                (keydown.enter)="saveNewClient()"
+                                >
                         </div>
                     </div>
                 </form>
