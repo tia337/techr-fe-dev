@@ -3,7 +3,9 @@
     <span routerLink= "/jobs"><mat-icon>keyboard_arrow_left</mat-icon>{{contract.get('title')}}</span>
     <div class= "likelihood-to-achieve">
       <p class= "likelihood-to-achieve__hiring-target">
-        Hiring Target: <span>2017</span>
+        Hiring Target: 
+        <span>{{contract.get('jobHiringTarget') | date: 'MMM d, y'}}</span> 
+        <span *ngIf="!contract.get('jobHiringTarget')">No hiring target choosen.</span>
       </p>
       <div class="likelihood-to-achieve__likelihood-percentage">
         <p 
@@ -16,33 +18,33 @@
         <p 
           title="Hide" 
           *ngIf="likelihoodEnabled" 
-          (click)="likelihoodEnabled = false;" >
+          (click)="likelihoodEnabled = false;">
           Likelihood to achieve 
           <mat-icon >keyboard_arrow_left</mat-icon></p>
-        <div *ngIf="likelihoodEnabled"  >
+        <div *ngIf="likelihoodEnabled">
           <p>    
             <span 
-              (click)="setLikelihoodPercentage(clientProbabilityToCloseJob.percentage)"
+              (click)="setLikelihoodPercentage(clientProbabilityToCloseJob.percentage, contract)"
               *ngFor= "let clientProbabilityToCloseJob of clientProbabilitiesToCloseJob"
               [ngClass]="
                 {
-                  'low': clientProbabilityToCloseJob.percentage < 50,
-                  'mid': clientProbabilityToCloseJob.percentage == 50,
-                  'high' : clientProbabilityToCloseJob.percentage > 50 
+                  'low': clientProbabilityToCloseJob.percentage < '50',
+                  'mid': clientProbabilityToCloseJob.percentage == '50',
+                  'high' : clientProbabilityToCloseJob.percentage > '50' 
                 }">
               {{clientProbabilityToCloseJob.percentage}}%
             </span>
           </p>
         </div> 
-        <p *ngIf= "selectedPercentage || !likelihoodEnabled">
+        <p *ngIf="selectedPercentage || !likelihoodEnabled">
             <span 
             [ngClass]="
               {
-                'low': selectedLikelihoodPercentage < 50,
-                'mid': selectedLikelihoodPercentage == 50,
-                'high' : selectedLikelihoodPercentage > 50 
+                'low': contract.get('likelihoodToFill') < '50',
+                'mid': contract.get('likelihoodToFill') == '50',
+                'high' : contract.get('likelihoodToFill') > '50' 
               }">
-              {{selectedLikelihoodPercentage}}%
+              {{contract.get('likelihoodToFill')}}%
             </span>
           </p>
       </div>

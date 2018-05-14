@@ -370,20 +370,13 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 					onClick: () => {
 						this._root_vcr.clear();
 					}
-				})
+				});
 		} );
 	}
 
-<<<<<<< HEAD
 	changeLikeliHoodToFill(value, contract) {
 		contract.set('likelihoodToFill', value);
-		console.log(contract.get('likelihoodToFill'));
-=======
-	onLikelihoodPercentageSelect(value) {
-
-		this._jobBoxService.setLikelihoodToFill(this.contract.id, Number(value));
-		this.selectedLikelihoodPercentage = value;
->>>>>>> d7a7e4c5850b7873b01a86111fb6c2dbbc1e2bef
+		this._jobBoxService.setLikelihoodToFill(contract.id, value);
 		this.showLikelihood = false;
 	}
 

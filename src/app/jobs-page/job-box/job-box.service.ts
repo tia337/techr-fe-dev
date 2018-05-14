@@ -84,8 +84,8 @@ export class JobBoxService {
 		return this._parse.execCloud('getClientProbabilitiesToCloseJob', {clientId});
 	}
 
-	setLikelihoodToFill(contractId: string, likelihoodToFill: number ) {
-		this._parse.execCloud('setLikelihoodToFill', {contractId: contractId , likelihoodToFill: likelihoodToFill});
+	setLikelihoodToFill(contractId: string, likelihoodToFill: string ) {
+		this._parse.execCloud('setLikelihoodToFill', {contractId: contractId , likelihoodToFill: parseFloat(likelihoodToFill)});
 	}
 
 	private getClientId() {
