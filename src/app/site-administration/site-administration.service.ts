@@ -94,12 +94,13 @@ import { Subject } from 'rxjs/Subject';
     this._parse.execCloud('addRecruitmentTeam', {recruitmentTeam: recruitmentTeam, clientId: clientId});
   }
 
-  editRecruitmentTeam(recruitmentTeam) {
+  editRecruitmentTeam(recruitmentTeam, newRecruitmentTeam) {
+    const clientId = this.getClientId();
+    this._parse.execCloud('editRecruitmentTeam', {clientId, recruitmentTeam: recruitmentTeam, newRecruitmentTeam: newRecruitmentTeam});
   }
 
   deleteRecruitmentTeam(recruitmentTeam) {
-    const currentTeamIndex = this.recruitmentTeams.indexOf(recruitmentTeam);
-    this.recruitmentTeams.splice(currentTeamIndex, 1);
+    
     this._parse.execCloud('deleteRecruitmentTeam', {clientId: this.getClientId(), recruitmentTeam: recruitmentTeam});
   }
 

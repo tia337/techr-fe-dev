@@ -58,6 +58,7 @@ export class NewRecruitmentTeamComponent implements OnInit {
       teamMembers: this.recruitmentTeamMembers
     };
 
+
     this.recruitmentTeamsArr.push(newTeam);
     this._siteAdministrationService.addNewRecruitmentTeam(newTeam);
     this.closeModal();
