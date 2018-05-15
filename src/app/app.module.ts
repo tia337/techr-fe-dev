@@ -121,6 +121,7 @@ const config: SocketIoConfig = {
 		TimelineModule,
 		ReactiveFormsModule,
 		NgxDnDModule,
+		MatIconModule
 	],
 	providers: [
 		SidenavService,

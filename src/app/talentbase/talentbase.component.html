@@ -1,10 +1,10 @@
 <div class="talentbase-wrap">
-  <div class="talentbase__import-export-buttons">
-    <span>Import candidate data</span>
+  <div class="talentbase__import-export-buttons" *ngIf="!importPanelOpened">
+    <span (click)="importPanelOpened = !importPanelOpened">Import candidate data</span>
     <span> / </span>
     <span>Export candidate data</span>
   </div>
-  <div class="talentbase__filter-wrap">
+  <div class="talentbase__filter-wrap" *ngIf="!importPanelOpened">
       <div class="talentbase__filter-icon">
         <img src="../../assets/icons/talent_base.png" alt="">
         <span>Talent pool</span>
@@ -104,5 +104,71 @@
           </div>
         </div>
       </div>
+  </div>
+  <div class="talentbase__import-panel" *ngIf="importPanelOpened">
+    <img class="GDPR" src="../../assets/img/GDPR-logo.png" alt="">
+    <div class="back-to-talent-pool" (click)="importPanelOpened = !importPanelOpened">
+      <mat-icon class="arrow-back">arrow_back</mat-icon>
+      Back to talent pool
+    </div>
+    <div class="talentbase__import-panel container">
+      <div class="talentbase__import-panel-header">
+        <mat-icon class="copy-icon">
+            file_copy
+        </mat-icon>
+        <span class="bold">
+          Easily import your talent pool &nbsp;
+        </span>
+        <span>
+            from Legacy systems into SwipeIn
+        </span> 
+      </div>
+      <div class="talentbase__import-panel-item">
+          <div class="talentbase__import-panel-item-info-wrap">
+            <span class="talentbase__import-panel-item-title">
+              JSON, CVS or XML file
+            </span>
+            <span class="talentbase__import-panel-item-info">
+              Import candidates from json, .cvs or xml files
+            </span>
+            <div class="talentbase__import-panel-item-inputs">
+             <span>Excel sample/</span>
+             <span>cvs sample/</span>
+             <span>json sample</span>
+            </div>
+          </div>
+          <label class="talentbase__import-panel-item-input">
+            <label for="json">Select file</label>
+            <input style="display: none;" type="file" id="json" accept=".json, application/json, .csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx, .xls">
+          </label>
+      </div>
+      <div class="talentbase__import-panel-item">
+          <div class="talentbase__import-panel-item-info-wrap">
+            <span class="talentbase__import-panel-item-title">
+              CV files
+            </span>
+            <span class="talentbase__import-panel-item-info">
+              Import candidates via ZIP or folder files
+            </span>
+          </div>
+          <label class="talentbase__import-panel-item-input">
+            <label for="zip">Select file</label>
+            <input style="display: none;" type="file" id="zip" accept=".zip, .rar">
+          </label>
+      </div>
+      <div class="talentbase__import-panel-item">
+          <div class="talentbase__import-panel-item-info-wrap">
+            <span class="talentbase__import-panel-item-title">
+              Need help? Custom Import Service
+            </span>
+            <span class="talentbase__import-panel-item-info">
+              We can help you import your data into SwipeIn at no cost 
+            </span>
+          </div>
+          <div class="talentbase__import-panel-item-input contact-us">
+            <label>Contact Us</label>
+          </div>
+      </div>
+    </div>
   </div>
 </div>

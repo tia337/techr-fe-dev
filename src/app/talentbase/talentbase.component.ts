@@ -35,6 +35,7 @@ export class TalentbaseComponent implements OnInit {
   pipelineStagesArray = [];
   candidatesArray = [];
   checkedCandidates: Array<any> = [];
+  importPanelOpened = false;
   private paginationLimits = {
     from: 0,
     to: 30
