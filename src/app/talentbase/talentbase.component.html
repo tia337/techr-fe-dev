@@ -137,9 +137,13 @@
              <span>json sample</span>
             </div>
           </div>
+          <div class="filename">
+            <span *ngIf="jsonFileName !== ''">{{jsonFileName}}</span> 
+            <mat-icon class="icon-clear" *ngIf="jsonFileName !== ''" (click)="jsonInput.value = null; jsonFileName = ''">clear</mat-icon>           
+          </div>
           <label class="talentbase__import-panel-item-input">
             <label for="json">Select file</label>
-            <input style="display: none;" type="file" id="json" accept=".json, application/json, .csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx, .xls">
+            <input #jsonInput (change)="setFileName(jsonFileName, jsonInput, $event)"  style="display: none;" type="file" id="json" accept=".json, application/json, .csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx, .xls">
           </label>
       </div>
       <div class="talentbase__import-panel-item">
@@ -151,10 +155,15 @@
               Import candidates via ZIP or folder files
             </span>
           </div>
+          <div class="filename">
+              <span *ngIf="zipFileName !== ''">{{zipFileName}}</span> 
+              <mat-icon class="icon-clear" *ngIf="zipFileName !== ''" (click)="zipInput.value = null; zipFileName = ''">clear</mat-icon>           
+            </div>
           <label class="talentbase__import-panel-item-input">
             <label for="zip">Select file</label>
-            <input style="display: none;" type="file" id="zip" accept=".zip, .rar">
+            <input #zipInput (change)="setZipFileName(zipFileName, zipInput, $event)"  style="display: none;" type="file" id="zip" accept=".zip, .rar">
           </label>
+
       </div>
       <div class="talentbase__import-panel-item">
           <div class="talentbase__import-panel-item-info-wrap">

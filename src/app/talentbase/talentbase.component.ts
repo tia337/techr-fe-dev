@@ -8,6 +8,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
+import { read } from 'fs';
 //tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -36,6 +37,12 @@ export class TalentbaseComponent implements OnInit {
   candidatesArray = [];
   checkedCandidates: Array<any> = [];
   importPanelOpened = false;
+  jsonFileName = '';
+  jsonLoader = false;
+  jsonLoaderProgress = 0;
+  zipFileName = '';
+  zipLoader = false;
+  loading = 'not loading';
   private paginationLimits = {
     from: 0,
     to: 30
@@ -47,6 +54,8 @@ export class TalentbaseComponent implements OnInit {
      preferences: [],
      source: []
   };
+
+
   jobTitlesArray  = ['Angular 2 dev', 'PHP dev', 'Markup dev', 'Back-end dev', 'Node.js dev', 'ReactJS dev'];
   pipelineArray = ['Applied', 'Referral', 'Shortlist', 'Phone Interview', 'F2F Interview', 'Job Offered', 'Hired', 'Rejected'];
   candidateNames = ['John Smith', 'Petra Smirnova', 'George Prokopenko', 'Michael Tsukalo', 'Geronimo Caddilac', 'Nikita Khruschev'];
@@ -101,6 +110,50 @@ export class TalentbaseComponent implements OnInit {
   selectAllCandidates () {
    this.allSelected = !this.allSelected;
    this.checkedCandidates = this._talentBaseService.selectAllCandidates(this.candidatesArray);
+  }
+
+  setFileName(fileName, input, event) {
+    const ev = event;
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadstart = (ev) => {
+      console.log('loading started');
+      this.jsonLoader = true;
+    };
+    reader.onprogress = (data) => {
+      console.log('progress data:', data);
+      this.jsonLoaderProgress = data.loaded / data.total * 100;
+    };
+    reader.onload = (ev) => {
+      console.log('finished loading...');
+      this.jsonFileName = file.name;
+      console.log(file.name);
+      console.log(ev);
+      this.jsonLoader = false;
+    };
+    console.log(reader.readAsText(file));
+  }
+
+  setZipFileName (fileName, input, event) {
+    const ev = event;
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onloadstart = (ev) => {
+      console.log('loading started');
+      this.jsonLoader = true;
+    };
+    reader.onprogress = (data) => {
+      console.log('progress data:', data);
+      this.jsonLoaderProgress = data.loaded / data.total * 100;
+    };
+    reader.onload = (ev) => {
+      console.log('finished loading...');
+      this.zipFileName = file.name;
+      console.log(file.name);
+      console.log(ev);
+      this.jsonLoader = false;
+    };
+    console.log(reader.readAsText(file));
   }
 
 }

@@ -385,3 +385,11 @@
     top: 5em;
     width: 100px;
 }
+
+.filename {
+    display: flex;
+    align-items: center;
+    .icon-clear {
+        margin-left: 10px;
+    }
+}
