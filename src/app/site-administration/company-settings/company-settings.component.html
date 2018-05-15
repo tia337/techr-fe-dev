@@ -482,12 +482,14 @@
                         <span>Clients</span>
                         <button 
                             *ngIf="!newClient"
-                            mat-raised-button 
+                            mat-raised-button
+                            type="button" 
                             color='primary' 
                             (click)="addNewClient()">
                             Add new client
                         </button>
                         <button 
+                            id="saveNewClientBtn"
                             *ngIf="newClient"
                             mat-raised-button 
                             color='primary' 
@@ -501,50 +503,97 @@
                             class="clients">
                             <span *ngIf="!clientOfClient.editClient">{{clientOfClient.clientOfClientName}}</span>
                             <input
+                                class="edit-client-input"
+                                id="editClientInput"
+                                formControlName="editClientOfClientName"
                                 *ngIf="clientOfClient.editClient" 
                                 type="text" 
-                                [value]="clientOfClient.clientOfClientName"
+                                (clickOutside)="clientOfClient.editClient = false"
+                                [delayClickOutsideInit]="true"
+                                [exclude]="'.edit-client-input'"
                                 >
                             <div class="clients-options">
-                                <span (click)="editClientOfClient(clientOfClient)">Edit</span>    
+                                <span 
+                                    *ngIf="!clientOfClient.editClient"
+                                    (click)="editClientOfClient(clientOfClient)">
+                                    Edit
+                                </span>    
+                                <span 
+                                    *ngIf="clientOfClient.editClient"
+                                    (click)="saveEditedClient(clientOfClient)">
+                                    Save
+                                </span>    
                                 <span (click)="deleteClientOfClient(clientOfClient)">Remove</span> 
                             </div> 
                         </div>
-                        <div 
-                            class="new-client" 
+                        <input 
                             *ngIf="newClient"
-                            >
-                            <input 
-                                formControlName="clientOfClientName"
-                                type="text" 
-                                placeholder="New Client"
-                                id="newClientInput"
-                                class="new-client-input"
-                                (clickOutside)="newClient = false"
-                                [exclude]="'new-client-input'"
-                                [delayClickOutsideInit]="true"
-                                (keydown.enter)="saveNewClient()"
-                                >
-                        </div>
+                            formControlName="clientOfClientName"
+                            type="text" 
+                            placeholder="New Client"
+                            id="newClientInput"
+                            class="new-client-input"
+                            (keydown.enter)="saveNewClient()"
+                            (clickOutside)="newClient = false"
+                            [exclude]="'.new-client-input'"
+                            [delayClickOutsideInit]="true"
+                        >
                     </div>
                 </form>
-                <form class="projects-form">
+                <form class="projects-form" [formGroup]="projectsFormGroup">
                     <div class="projects-form-header">
-                            <span>Projects</span>
-                            <span>Client</span>    
-                            <button mat-raised-button color='primary'>Add new project</button>
+                        <span>Projects</span>
+                        <span>Client</span>    
+                        <button 
+                            *ngIf="!newProject"
+                            mat-raised-button 
+                            color='primary'
+                            (click)="addNewProject()"
+                            >Add new project
+                        </button>
+                        <button 
+                            id="saveNewProjectBtn"
+                            *ngIf="newProject"
+                            mat-raised-button 
+                            color='primary' 
+                            (click)="saveNewProject()">
+                            Save
+                        </button>
                     </div>
                     <div class="projects-form-body">
                         <div 
                             *ngFor="let projectOfClient of projectsOfClient"
                             class="projects">
-                            <span>{{projectOfClient.get('projectName')}}</span>
-                            <span>{{projectOfClient.get('projectEndClientName')}}</span>
+                            <span>{{projectOfClient.projectName}}</span>
+                            <span>{{projectOfClient.projectEndClientName}}</span>
                             <div class="projects-options">
                                 <span>Edit</span>    
                                 <span>Remove</span> 
                             </div> 
                         </div>
+                        <input 
+                            *ngIf="newProject"
+                            formControlName="projectName"
+                            type="text" 
+                            placeholder="New Project"
+                            id="newProjectInput"
+                            class="new-project-input"
+                            (keydown.enter)="saveNewProject()"
+                            (clickOutside)="addNewProject()"
+                            [exclude]="'.new-project-input, .new-project-select-client'"
+                            [delayClickOutsideInit]="true"
+                        >
+                        <select 
+                            class="new-project-select-client"
+                            *ngIf="newProject" 
+                            formControlName="projectEndClientName"
+                            (clickOutside)="addNewProject()"
+                            [exclude]="'.new-project-input, .new-project-select-client'"
+                            [delayClickOutsideInit]="true">
+                                <option *ngFor="let clientOfClient of clientsofClientArr" [value]="clientOfClient.id">
+                                    {{clientOfClient.clientOfClientName}}
+                                </option>
+                        </select>
                     </div>
                 </form>
             </div>

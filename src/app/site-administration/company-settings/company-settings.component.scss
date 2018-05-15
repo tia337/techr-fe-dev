@@ -278,7 +278,12 @@ $dashed-border: 1px dashed #ccc;
                 align-self: center;
                 font-weight: bold;
             }
+            #saveNewClientBtn {
+                background-color: #21b721;
+                color: white;
+            }
         }
+
         .clients-form-body {
             padding: 10px;
         }
@@ -323,6 +328,7 @@ $dashed-border: 1px dashed #ccc;
                 align-self: center;
                 font-weight: bold;
             }
+            
         }
         .projects-form-body {
             padding: 10px;
@@ -340,6 +346,12 @@ $dashed-border: 1px dashed #ccc;
                 margin: 0px 5px;
                 cursor: pointer;
             }
+        }
+
+        .new-project-input{
+            width: 30%;
+            margin: 0;
+            padding: 3px 7px;
         }
     }
 }
