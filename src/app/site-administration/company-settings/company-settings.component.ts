@@ -47,12 +47,14 @@ export class CompanySettingsComponent implements OnInit {
 
 	clientsOfClient;
 	clientsofClientArr= [];
-	projectsOfClient;
+	projectsOfClient = [];
 
 	newClient = false;
 	editClient = false;
+	newProject = false;
 
 	clientsFormGroup: FormGroup;
+	projectsFormGroup: FormGroup;
 
 
 	isInCompany = true;
@@ -205,11 +207,24 @@ export class CompanySettingsComponent implements OnInit {
 			});
 
 		this.clientsFormGroup = new FormGroup({
-			'clientOfClientName': new FormControl('', Validators.required)
+			'clientOfClientName': new FormControl('', Validators.required),
+			'editClientOfClientName' : new FormControl('', Validators.required)
 		});
+		this.projectsFormGroup = new FormGroup({
+			'projectName': new FormControl('', Validators.required),
+			'editProjectName' : new FormControl('', Validators.required),
+			'projectEndClientName' : new FormControl('', Validators.required)
+		});
+
 		this._CompanySettingsService.getClientRecruitmentProjects()
 			.then(data => {
-				this.projectsOfClient = data;
+				data.forEach(project => {
+					this.projectsOfClient.push({
+						id: project.id,
+						projectName: project.get('projectName'),
+						projectEndClientName: project.get('projectEndClientName')
+					});
+				});
 			});
 
 		this.departmentFormGroupInit();
@@ -658,24 +673,17 @@ export class CompanySettingsComponent implements OnInit {
 		this.newLikelihood = false;
 	}
 
-	private getClientsOfClient() {
-		this._CompanySettingsService.getClientsOfClient()
-			.then(data => {
-				this.clientsOfClient = data;
-			});
-	}
-
 	addNewClient() {
 		this.newClient = true;
 		setTimeout(() => {
-			const newClientInput = document.getElementById('newClientInput');
-			this.renderer.invokeElementMethod(newClientInput, 'focus');
+		const newClientInput = document.getElementById('newClientInput');
+		this.renderer.invokeElementMethod(newClientInput, 'focus');
 		}, 4);
 	}
 
 	saveNewClient() {
-		const clientOfClientName = this.clientsFormGroup.value.clientOfClientName.trim();
-		console.log('namecline', clientOfClientName);
+		this.newClient = false;
+		const clientOfClientName = this.clientsFormGroup.value.clientOfClientName.toString().trim();
 		if (clientOfClientName !== '') {
 			this._CompanySettingsService.createClientOfClient(clientOfClientName)
 				.then(data => {
@@ -691,10 +699,26 @@ export class CompanySettingsComponent implements OnInit {
 	}
 
 	editClientOfClient(clientOfClient) {
-		if (clientOfClient.editClient) {
-			clientOfClient.editClient = false;
+		clientOfClient.editClient = true;
+		setTimeout(() => {
+			const editClientInput = document.getElementById('editClientInput');
+			this.renderer.invokeElementMethod(editClientInput, 'focus');
+			this.clientsFormGroup.setValue({
+				'clientOfClientName': clientOfClient.clientOfClientName,
+				'editClientOfClientName': clientOfClient.clientOfClientName
+			});
+		}, 4);
+	}
+
+	saveEditedClient(clientOfClient) {
+		this.newClient = false;
+		const editedClientName = this.clientsFormGroup.value.editClientOfClientName.toString().trim();
+		if (editedClientName !== '') {
+			this._CompanySettingsService.editClientOfClient(clientOfClient.id, editedClientName);
+			clientOfClient.clientOfClientName = editedClientName;
+			this.clientsFormGroup.reset();
 		} else {
-			clientOfClient.editClient = true;
+			return this.clientsFormGroup.reset();
 		}
 	}
 
@@ -703,6 +727,38 @@ export class CompanySettingsComponent implements OnInit {
 		this._CompanySettingsService.deleteClientOfClient(clientOfClientId);
 		const clientOfClientIndex = this.clientsofClientArr.indexOf(clientOfClient);
 		this.clientsofClientArr.splice(clientOfClientIndex, 1);
+	}
+
+	addNewProject() {
+		if (this.newProject) {
+			this.newProject = false;
+			this.projectsFormGroup.reset();
+		} else {
+			this.newProject = true;
+			setTimeout(() => {
+				const newProjectInput = document.getElementById('newProjectInput');
+				this.renderer.invokeElementMethod(newProjectInput, 'focus');
+		});
+		}
+	}
+
+	saveNewProject() {
+		const projectName = this.projectsFormGroup.value.projectName !== null ? this.projectsFormGroup.value.projectName.toString().trim() : '';
+		const clientOfClientId =  this.projectsFormGroup.value.projectEndClientName;
+		console.log(clientOfClientId);
+		if (projectName !== '') {
+			this._CompanySettingsService.createClientRecruitmentProject(clientOfClientId, projectName)
+				.then(newProject => {
+					this.projectsOfClient.push({
+						id: newProject.id,
+						projectName: newProject.get('projectName'),
+						projectEndClientName: newProject.get('projectEndClientName')
+					});
+				});
+			this.projectsFormGroup.reset();
+		} else {
+			return this.projectsFormGroup.reset();
+		}
 	}
 }
 

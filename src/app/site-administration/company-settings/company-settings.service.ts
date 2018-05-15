@@ -377,6 +377,10 @@ export class CompanySettingsService {
 		return this._parse.execCloud('createClientOfClient', {clientId, clientOfClientName});
 	}
 
+	editClientOfClient(clientOfClientId, clientOfClientName) {
+		this._parse.execCloud('editClientOfClient', { clientOfClientId, clientOfClientName});
+	}
+
 	deleteClientOfClient(clientOfClientId) {
 		this._parse.execCloud('deleteClientOfClient', {clientOfClientId});
 	}
@@ -384,6 +388,11 @@ export class CompanySettingsService {
 	getClientRecruitmentProjects() {
 		const clientId = this.getClientId();
 		return this._parse.execCloud('getClientRecruitmentProjects', {clientId});
+	}
+
+	createClientRecruitmentProject(clientOfClientId, projectName) {
+		const clientId = this.getClientId();
+		return this._parse.execCloud('createClientRecruitmentProject', {clientId, clientOfClientId, projectName});
 	}
 	throwClient (client) {
 		this.client.next(client);
