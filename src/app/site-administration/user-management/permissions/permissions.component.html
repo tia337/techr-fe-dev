@@ -29,10 +29,10 @@
       <td><div class="permission-label" [matTooltip]="userRole.roleDescription">{{userRole.roleName}}</div></td>
       <td><span *ngFor= "let right of userRole.roleRights">{{right.description || right}}. </span></td>
       <td class="user-role-options">
-        <span (click)="editUserRoles(userRole, userRoles)">
+        <span (click)="editUserRoles(userRole, userRoles); $event.stopPropagation()">
           Edit
         </span>
-        <span (click)="deleteUserRoles(userRole, userRoles)">
+        <span (click)="deleteUserRoles(userRole, userRoles); $event.stopPropagation()">
           Delete
         </span>
       </td> 

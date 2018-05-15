@@ -243,10 +243,8 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		if (this.filters.length === 1 && this.filters.indexOf(JobsToShow.myJobs) === 0) {
 			this.recruiterSearchControl.reset();
 		}
-		console.log('Contract Status: ', this.contractStatus);
 		if (this.contractStatus !== 4) {
 			this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
-				console.log('Contracts List: ', contracts);
 				this.separatedOffers = new Array();
 				this._allOffers = contracts;
 				this.offers = contracts;

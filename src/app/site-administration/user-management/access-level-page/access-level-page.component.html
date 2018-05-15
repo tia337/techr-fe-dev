@@ -18,7 +18,6 @@
             <ol style="display: inline-flex;">
                 <li style="margin-left: 18px;" *ngFor="let right of currentCustomAccessLevel.roleRights">{{right.description}};</li>
             </ol>
-            <!-- <span *ngFor="let right of currentCustomAccessLevel.roleRights">{{right.description}}; </span>    -->
         </div>        
     </div>
     <div class="members-section" *ngIf="users && users.length != 0 && permissionType !== 4">
@@ -33,7 +32,7 @@
                 <td class="name">{{user.get('firstName')}} {{user.get('lastName')}}</td>
                 <td>{{user.get('Work_email')}}</td>
                 <td>
-                    <div class="edit-access" (click)="openModal(user.id)" *ngIf="user.id != currentUser.id">Edit access</div>
+                    <div class="edit-access" (click)="openModal(user.id)" *ngIf="user.id != currentUser.id">Edit access level</div>
                 </td>
             </tr>
         </table>
@@ -50,9 +49,14 @@
                     <td class="name">{{user.name}}</td>
                     <td *ngIf="user.email">{{user.email}}</td>
                     <td>
-                        <div class="edit-access" (click)="openModal(user.id)" *ngIf="user.id != currentUser.id">Edit access</div>
+                        <div class="edit-access" (click)="openEditModal(user)" *ngIf="user.userId != currentUser.id">Edit system user role</div>
                     </td>
                 </tr>
             </table>
-        </div>
+    </div>
+    <div class="members-section" *ngIf="users === undefined || users.length === 0">
+        <span class="no-members">
+            There are no team members connected to this role.
+        </span> 
+    </div>
 </section>

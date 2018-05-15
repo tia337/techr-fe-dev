@@ -5,6 +5,7 @@ import { Parse } from '../../../parse.service';
 
 import { RootVCRService } from '../../../root_vcr.service';
 import { AccessLevelModalComponent } from '../user/access-level-modal/access-level-modal.component';
+import { EditUserRoleComponent } from './edit-user-role/edit-user-role.component';
 
 @Component({
 	selector: 'app-access-level-page',
@@ -71,6 +72,11 @@ export class AccessLevelPageComponent implements OnInit {
 		modal.users = this.users;
 		modal.permissionType = this.permissionType;
 		modal.setUserId(userId);
+	}
+
+	openEditModal (user) {
+		const modal = this.root_vcr.createComponent(EditUserRoleComponent);
+		modal.setUser = user;
 	}
 
 }

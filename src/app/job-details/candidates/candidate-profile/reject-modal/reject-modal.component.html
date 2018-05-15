@@ -3,7 +3,8 @@
         [ngClass]="{'opened': rejectionList === true }" 
         (clickOutside)="close()" 
         [exclude]="'.reject-candidate-button, .rejection-reason-item'" 
-        [delayClickOutsideInit]="true">
+        [delayClickOutsideInit]="true"
+        *ngIf="response === 'pending'">
       <div class="reject-modal__title">
           <span class="bold">Select a rejection reason</span>
       </div>
@@ -43,7 +44,8 @@
               </div>
           </div>
       </div>
-    <textarea class="rejection-note" *ngIf="rejectionNoteOpened" #rejectionNote name="rejection-note" id="rejection-note" cols="30" rows="10" placeholder="Type here a note"></textarea>
+        <textarea class="rejection-note" 
+            *ngIf="rejectionNoteOpened"  #rejectionNote name="rejection-note" id="rejection-note" cols="30" rows="10" placeholder="Type here a note"></textarea>
       <div class="reject-modal-buttons">
           <button class="reject-modal-buttons__add-note" 
                 *ngIf="!rejectionNoteOpened" 
@@ -52,12 +54,13 @@
           </button>
           <button class="reject-modal-buttons__clear-note" 
                 *ngIf="rejectionNoteOpened" 
-                (click)="rejectionNoteOpened = !rejectionNoteOpened; rejectionNote.value = ''; $event.stopImmediatePropagation();">
+                (click)="rejectionNoteOpened = !rejectionNoteOpened; clearNote(); $event.stopImmediatePropagation();">
                 Clear Note
             </button>          
           <button class="reject-modal-buttons__reject-candidate" (click)="rejectCandidate()">Reject Candidate</button>
-      </div>
-      {{rejectionNote}}
-      
+      </div>      
+  </div>
+  <div class="reject-modal success" *ngIf="response === 'success'">
+    Congratulations! <br> Candidate was successfully rejected! 
   </div>
 </div>

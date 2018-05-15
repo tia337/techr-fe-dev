@@ -23,7 +23,7 @@ import {
 	MatSelectModule,
 	MatSlideToggleModule,
 	MatExpansionModule,
-	MatButtonModule
+	MatButtonModule,
 } from '@angular/material';
 import {
 	MatRadioModule
@@ -181,6 +181,7 @@ import { EditUserRoleComponent } from './user-management/access-level-page/edit-
 		UserModule,
 		MatInputModule,
 		MatRadioModule,
+		MatIconModule,
 		MatExpansionModule,
 		MatButtonModule,
 		ClickOutsideModule,

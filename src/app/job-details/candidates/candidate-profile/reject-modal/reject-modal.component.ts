@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { RootVCRService } from '../../../../root_vcr.service';
 import { Parse } from '../../../../parse.service';
 import { JobDetailsService } from '../../../job-details.service';
@@ -17,13 +17,14 @@ export class RejectModalComponent implements OnInit {
   public rejectionReasons = [];
   private contract;
   public rejectionNoteOpened = false;
-  public rejectionNote;
+  public response = 'pending';
 
   constructor(
     private _root_vcr: RootVCRService,
     private _parse: Parse,
     private _jobDetailsService: JobDetailsService,
-    private _socket: Socket
+    private _socket: Socket,
+    private _renderer: Renderer2
   ) { }
 
   ngOnInit() {
@@ -48,16 +49,44 @@ export class RejectModalComponent implements OnInit {
 
   rejectCandidate() {
     this._jobDetailsService.movedUser = this.candidate.id;
-		this._socket.emit('updateHiringPipeline', {
-			candidateId: this.candidate.id,
-			contractId: this.contract,
-			listId: 6,
-      user: this._parse.Parse.User.current().toPointer(),
-      rejectionReason: this.rejectionReason,
-      reason: this.rejectionReason.get('rejectionReason')
-		});
-    this._root_vcr.clear();
+    if (this.rejectionNoteOpened === true) {
+      const note = document.getElementById('rejection-note') as HTMLTextAreaElement;
+      this.response = 'success';
+      this._socket.emit('updateHiringPipeline', {
+        candidateId: this.candidate.id,
+        contractId: this.contract,
+        listId: 6,
+        user: this._parse.Parse.User.current().toPointer(),
+        rejectedReason: this.rejectionReason.id,
+        reason: this.rejectionReason.get('rejectionReason'),
+        rejectionNote: note.value
+      });
+      setTimeout(() => {
+        this._root_vcr.clear();
+      }, 1500);
+    } else if (this.rejectionNoteOpened === false) {
+      this.response = 'success';
+      this._socket.emit('updateHiringPipeline', {
+        candidateId: this.candidate.id,
+        contractId: this.contract,
+        listId: 6,
+        user: this._parse.Parse.User.current().toPointer(),
+        rejectedReason: this.rejectionReason.id,
+        reason: this.rejectionReason.get('rejectionReason'),
+        rejectionNote: undefined
+      });
+      setTimeout(() => {
+        this._root_vcr.clear();
+      }, 1500);
+    }
   }
+
+  clearNote() {
+    const note = document.getElementById('rejection-note') as HTMLTextAreaElement;
+    note.value = '';
+  }
+
+
   close() {
     this._root_vcr.clear();
   }

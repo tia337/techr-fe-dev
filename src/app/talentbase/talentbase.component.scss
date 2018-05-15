@@ -297,3 +297,99 @@
         opacity: .7;
     }
 }
+
+
+.talentbase__import-panel {
+    &.container {
+        width: 70%;
+        margin: 0 auto;
+    }
+    &-header {
+        display: flex;
+        margin: 40px 0;
+        font-size: 23px;
+        align-items: center;
+        .bold {
+            font-weight: bold;
+        }
+        span {
+            font-weight: lighter;
+        }
+    }
+    .copy-icon {
+        font-size: 80px;
+        margin-right: 10px;
+        height: 80px;
+        width: 80px;
+    }
+    &-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        &-info-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+        &-title {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+        &-info {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        &-inputs {
+            font-weight: bold;
+        }
+        &-input {
+            background: #8faadc;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            justify-content: center;
+            color: #fff;
+            font-size: 16px;
+            width: 20%;
+            transition: .3s all ease-in-out;
+            cursor: pointer;
+            label {
+                cursor: pointer;                
+            }
+            &.contact-us {
+                background: grey;
+                &:hover {
+                    background: #000;
+                }
+            }
+            &:hover {
+                background: #5682d2;
+            }
+        }
+    }
+}
+
+.back-to-talent-pool {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    .arrow-back {
+        margin-right: 10px;
+    }
+}
+
+.GDPR {
+    position: absolute;
+    right: 2em;
+    top: 5em;
+    width: 100px;
+}
+
+.filename {
+    display: flex;
+    align-items: center;
+    .icon-clear {
+        margin-left: 10px;
+    }
+}

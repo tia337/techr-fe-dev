@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconModule, MatMenuModule, MatSidenavModule } from '@angular/material';
+import { MatIconModule, MatMenuModule, MatSidenavModule, MatProgressBarModule } from '@angular/material';
 import {MatGridListModule} from '@angular/material/grid-list';
 
 import 'hammerjs';
@@ -121,6 +121,7 @@ const config: SocketIoConfig = {
 		TimelineModule,
 		ReactiveFormsModule,
 		NgxDnDModule,
+		MatProgressBarModule
 	],
 	providers: [
 		SidenavService,

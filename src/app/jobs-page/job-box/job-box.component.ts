@@ -111,7 +111,6 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		this._socket.emit('enterPipeLineGroup', {
 			'contract': 'm' + this.contract.id,
 		});
-		console.log('Contract: ', this.contract);
 		this._socket.on('pipelineMainCountUpdate', data => {
 			const userListQuery = new this._parse.Parse.Query('UserList');
 			userListQuery.get(data.userListId).then(userList => {
@@ -180,7 +179,6 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 			const groupedUsers = _.groupBy(userList, userListObj => {
 				return userListObj.get('listType');
 			});
-			console.log('groupedUsers: ', groupedUsers);
 			this._stages.push({
 				index: 3,
 				type: DeveloperListType.shortlist,

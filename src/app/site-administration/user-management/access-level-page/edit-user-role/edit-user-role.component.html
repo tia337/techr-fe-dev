@@ -1,3 +1,29 @@
-<p>
-  edit-user-role works!
-</p>
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()" *ngIf="response === 'pending'">
+    <p class="user-name">{{user.name}}:</p>
+    <div class="user-roles-list">
+      <ul>
+        <li (click)="addNewRoleToUser(role)" class="user-roles-item" *ngFor="let role of roles">
+          <span class="user-roles-item__checked">
+            <mat-icon *ngIf="role.checked" class="icon-check">check</mat-icon>
+          </span>
+          {{role.roleName}}
+        </li>
+      </ul>
+      <div class="buttons-wrap">
+        <button (click)="saveUserRoles()" class="save">Save Changes</button>
+        <button (click)="closeModal()" class="cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal success" *ngIf="response === 'success'">
+      Congratulations! 
+      <br>
+      User role was successfully edited!
+  </div>
+  <div class="modal success" *ngIf="response === 'error'">
+      Sorry!
+      <br>
+      An error occured!
+  </div>
+</div>
