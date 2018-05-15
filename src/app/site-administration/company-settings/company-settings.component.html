@@ -564,11 +564,41 @@
                         <div 
                             *ngFor="let projectOfClient of projectsOfClient"
                             class="projects">
-                            <span>{{projectOfClient.projectName}}</span>
-                            <span>{{projectOfClient.projectEndClientName}}</span>
+                            <span *ngIf="!projectOfClient.editClient">{{projectOfClient.projectName}}</span>
+                            <input
+                                *ngIf="projectOfClient.editClient" 
+                                class="edit-project-input"
+                                id="editProjectInput"
+                                formControlName="editProjectName"
+                                type="text" 
+                                (clickOutside)="editProjectOfClient(projectOfClient)"
+                                [delayClickOutsideInit]="true"
+                                [exclude]="'.edit-project-input, .edit-project-select'"
+                                >
+                            <span *ngIf="!projectOfClient.editClient">{{projectOfClient.projectEndClientName}}</span>
+                            <select 
+                                *ngIf="projectOfClient.editClient"
+                                class="edit-project-select"
+                                formControlName="projectEndClientName"
+                                (clickOutside)="editProjectOfClient(projectOfClient)"
+                                [exclude]="'.edit-project-input, .edit-project-select'"
+                                [delayClickOutsideInit]="true">
+                                <option *ngFor="let clientOfClient of clientsofClientArr" [value]="clientOfClient.id">
+                                    {{clientOfClient.clientOfClientName}}
+                                </option>
+                            </select>
                             <div class="projects-options">
-                                <span>Edit</span>    
-                                <span>Remove</span> 
+                                <span 
+                                    *ngIf="!projectOfClient.editClient"
+                                    (click)="editProjectOfClient(projectOfClient)">
+                                    Edit
+                                </span>    
+                                <span 
+                                    *ngIf="projectOfClient.editClient"
+                                    (click)="saveEditedProject(projectOfClient)">
+                                    Save
+                                </span>     
+                                <span (click)="deleteProject(projectOfClient)">Remove</span> 
                             </div> 
                         </div>
                         <input 

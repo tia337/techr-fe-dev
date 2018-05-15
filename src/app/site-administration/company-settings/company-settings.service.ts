@@ -394,6 +394,15 @@ export class CompanySettingsService {
 		const clientId = this.getClientId();
 		return this._parse.execCloud('createClientRecruitmentProject', {clientId, clientOfClientId, projectName});
 	}
+
+	editClientRecruitmentProject(projectId, newProject) {
+		this._parse.execCloud('editClientRecruitmentProject', {projectId, newProject});
+	}
+
+	deleteClientRecruitmentProject(projectId) {
+		this._parse.execCloud('deleteClientRecruitmentProject', {projectId});
+	}
+
 	throwClient (client) {
 		this.client.next(client);
 	}
