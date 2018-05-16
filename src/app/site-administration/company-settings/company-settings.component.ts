@@ -745,8 +745,7 @@ export class CompanySettingsComponent implements OnInit {
 	saveNewProject() {
 		const projectName = this.projectsFormGroup.value.projectName !== null ? this.projectsFormGroup.value.projectName.toString().trim() : '';
 		const clientOfClientId =  this.projectsFormGroup.value.projectEndClientName;
-		console.log(clientOfClientId);
-		if (projectName !== '') {
+		if (projectName !== '' && clientOfClientId !== null) {
 			this._CompanySettingsService.createClientRecruitmentProject(clientOfClientId, projectName)
 				.then(newProject => {
 					this.projectsOfClient.push({
@@ -759,6 +758,56 @@ export class CompanySettingsComponent implements OnInit {
 		} else {
 			return this.projectsFormGroup.reset();
 		}
+	}
+
+	editProjectOfClient(projectOfClient) {
+		if (projectOfClient.editClient) {
+			projectOfClient.editClient =  false;
+			this.projectsFormGroup.reset();
+		} else {
+			projectOfClient.editClient = true;
+			setTimeout(() => {
+				const editProjectInput = document.getElementById('editProjectInput');
+				this.renderer.invokeElementMethod(editProjectInput, 'focus');
+				this.projectsFormGroup.setValue({
+					'projectName': projectOfClient.projectName,
+					'editProjectName': projectOfClient.projectName,
+					'projectEndClientName': projectOfClient.projectEndClientName
+				});
+			}, 4);
+		}
+	}
+
+	saveEditedProject(projectOfClient) {
+		const projectId = projectOfClient.id;
+		const projectName = this.projectsFormGroup.value.editProjectName !== null ? this.projectsFormGroup.value.editProjectName.toString().trim() : '';
+		const clientOfClientId = this.projectsFormGroup.value.projectEndClientName;
+		if (projectName !== '' && clientOfClientId !== null ) {
+			const newProject = {
+				clientOfClientId,
+				projectName
+			};
+			this._CompanySettingsService.editClientRecruitmentProject(projectId, newProject);
+			this.clientsofClientArr.forEach(clientOfClient => {
+				if (clientOfClient.id === clientOfClientId) {
+					projectOfClient.projectEndClientName = clientOfClient.clientOfClientName;
+				}
+			});
+			projectOfClient.projectName = projectName;
+			this.projectsFormGroup.reset();
+		} else {
+			return this.projectsFormGroup.reset();
+		}
+	}
+
+	deleteProject(projectOfClient) {
+		const projectId = projectOfClient.id;
+
+		this._CompanySettingsService.deleteClientRecruitmentProject(projectId);
+
+		const projectIndex = this.projectsOfClient.indexOf(projectOfClient);
+		this.projectsOfClient.splice(projectIndex, 1);
+
 	}
 }
 

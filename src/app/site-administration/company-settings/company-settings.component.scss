@@ -328,7 +328,10 @@ $dashed-border: 1px dashed #ccc;
                 align-self: center;
                 font-weight: bold;
             }
-            
+            #saveNewProjectBtn {
+                background-color: #21b721;
+                color: white;
+            }
         }
         .projects-form-body {
             padding: 10px;
@@ -337,6 +340,11 @@ $dashed-border: 1px dashed #ccc;
                 display: flex;
                 justify-content: space-between;
                 line-height: 2;
+            }
+            .edit-project-input {
+                width: 30%;
+                margin: 0;
+                padding: 3px 7px;
             }
             
         }
