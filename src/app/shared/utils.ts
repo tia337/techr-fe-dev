@@ -12,6 +12,12 @@ export const DeveloperListType = {
 	'rejected': 6
 };
 
+export const TalentDbFilters = [
+	{ type: '0', functionName: 'getTalentDBAppliedToFilter' },
+	{ type: '1', functionName: 'getPipelineStatusFilters'},
+	{ type: '2', functionName: 'getLocationFilters' }
+];
+
 export const JobType = { 'permanent': 1, 'contract': 2 };
 export const ContractStatus = { 'archived': 0, 'active': 1, 'deleted': 2, 'draft': 3, 'pending': 4, 'approved': 5 };
 export const FinalVerdict = { 'notSure': 1, 'yes': 2, 'definitely': 3 };

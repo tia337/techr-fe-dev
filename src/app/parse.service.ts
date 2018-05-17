@@ -137,4 +137,8 @@ export class Parse {
 		return pointerToFoo;
 	}
 
+	getClientId () {
+		return this.getCurrentUser().get('Client_Pointer').id;
+	}
+
 }

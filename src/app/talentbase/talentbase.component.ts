@@ -9,6 +9,8 @@ import {
   transition
 } from '@angular/animations';
 import { read } from 'fs';
+import { Parse } from '../parse.service';
+import { TalentDbFilters } from '../shared/utils';
 //tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -32,56 +34,59 @@ export class TalentbaseComponent implements OnInit {
 
   filtersOpened = false;
   allSelected = false;
-  filtersArray = [];
-  pipelineStagesArray = [];
-  candidatesArray = [];
+  filters: Array<FilterItem> = [];
+  clientTalentDBFilters: Array<ClientTalentDBFilter> = [];
+  candidatesArray: Array<TalentDBCandidate> = [];
+  candidatesStorage: Array<TalentDBCandidate> = [];
   checkedCandidates: Array<any> = [];
   importPanelOpened = false;
   jsonFileName = '';
-  jsonLoader = false;
-  jsonLoaderProgress = 0;
   zipFileName = '';
-  zipLoader = false;
-  loading = 'not loading';
   private paginationLimits = {
     from: 0,
-    to: 30
+    to: 15
   };
-  filterParams: FilterParams = {
-     applied: [],
-     pipeline: [],
-     location: [],
-     preferences: [],
-     source: []
-  };
-
-
-  jobTitlesArray  = ['Angular 2 dev', 'PHP dev', 'Markup dev', 'Back-end dev', 'Node.js dev', 'ReactJS dev'];
-  pipelineArray = ['Applied', 'Referral', 'Shortlist', 'Phone Interview', 'F2F Interview', 'Job Offered', 'Hired', 'Rejected'];
-  candidateNames = ['John Smith', 'Petra Smirnova', 'George Prokopenko', 'Michael Tsukalo', 'Geronimo Caddilac', 'Nikita Khruschev'];
-  candidateLocations = [
-    { city: 'Madrid', country: 'Spain' },
-    { city: 'Pavlograd', country: 'Ukraine' },
-    { city: 'London', country: 'England'},
-    { city: 'Barcelona', country: 'Spain'},
-    { city: 'Manchester', country: 'England'},
-    { city: 'Bogoduhov', country: 'Ukraine'}
-  ];
-  candidatePositions = ['Head of Recruitement', 'Simply cool guy', 'Not so good guy', 'Cool developer', 'Nice designer', 'Not nice designer'];
-  candidateAppliedJob = ['SwipeIn', 'RabotaUA', 'WorkUA'];
+  filterParams: FilterParams;
+  private currentUser;
+  private clientId: string;
 
   constructor(
-    private _talentBaseService: TalentbaseService
+    private _talentBaseService: TalentbaseService,
+    private _parse: Parse
   ) { }
 
   ngOnInit() {
-    this.filtersArray = this._talentBaseService.createArray(this.jobTitlesArray, 'applied');
-    this.pipelineStagesArray = this._talentBaseService.createArray(this.pipelineArray, 'pipeline');
-    this.candidatesArray = this._talentBaseService.
-      createCandidatesArray(this.filtersArray, this.pipelineStagesArray, this.jobTitlesArray, this.candidateNames, this.candidateLocations, this.candidatePositions, this.candidateAppliedJob).slice(0,30);
-    this.paginationLimits.from += 30;
-    this.paginationLimits.to += 30;
+    this.currentUser = this._parse.getCurrentUser();
+    this.clientId = this._parse.getClientId();
+
+    this._talentBaseService.getTalentDBCandidates(this.clientId).then(data => {
+      this.candidatesArray = data.slice(this.paginationLimits.from, this.paginationLimits.to);
+      this.candidatesStorage = data;
+      this.updatePaginationLimits();
+    }).catch(error => console.log('error while getting talentDB candidates: ', error));
+
+    this._talentBaseService.getClientTalentDBFilters(this.clientId).then(result => {
+      this.clientTalentDBFilters = result;
+      this.getFilters(this.clientTalentDBFilters);
+    }).catch(error => console.log('error while getting getClientTalentDBFilters: ', error));
+
+
   }
+
+  getFilters(clientTalentDBFilters: Array<ClientTalentDBFilter>) {
+
+    TalentDbFilters.forEach(filter => {
+      clientTalentDBFilters.forEach(item => {
+        if (filter.type === item.type) {
+          this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
+            this.filters.push(result);
+          }).catch(error => console.log(error));
+        }
+      });
+    });
+
+  }
+
 
   addToFilterParams(item, type: string) {
     if (this.filterParams[type].length === 0) {
@@ -101,9 +106,8 @@ export class TalentbaseComponent implements OnInit {
   uploadMoreCandidates(event) {
     if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
       this.candidatesArray = this.candidatesArray
-        .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.candidatesArray));
-      this.paginationLimits.from += 30;
-      this.paginationLimits.to += 30;
+        .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.candidatesStorage));
+        this.updatePaginationLimits();
     }
   }
 
@@ -116,44 +120,23 @@ export class TalentbaseComponent implements OnInit {
     const ev = event;
     const file = event.target.files[0];
     const reader = new FileReader();
-    reader.onloadstart = (ev) => {
-      console.log('loading started');
-      this.jsonLoader = true;
-    };
-    reader.onprogress = (data) => {
-      console.log('progress data:', data);
-      this.jsonLoaderProgress = data.loaded / data.total * 100;
-    };
     reader.onload = (ev) => {
-      console.log('finished loading...');
       this.jsonFileName = file.name;
-      console.log(file.name);
-      console.log(ev);
-      this.jsonLoader = false;
     };
-    console.log(reader.readAsText(file));
   }
 
   setZipFileName (fileName, input, event) {
     const ev = event;
     const file = event.target.files[0];
     const reader = new FileReader();
-    reader.onloadstart = (ev) => {
-      console.log('loading started');
-      this.jsonLoader = true;
-    };
-    reader.onprogress = (data) => {
-      console.log('progress data:', data);
-      this.jsonLoaderProgress = data.loaded / data.total * 100;
-    };
     reader.onload = (ev) => {
-      console.log('finished loading...');
       this.zipFileName = file.name;
-      console.log(file.name);
-      console.log(ev);
-      this.jsonLoader = false;
     };
-    console.log(reader.readAsText(file));
+  }
+
+  updatePaginationLimits () {
+    this.paginationLimits.from += 15;
+    this.paginationLimits.to += 15;
   }
 
 }

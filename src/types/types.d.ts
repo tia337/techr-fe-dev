@@ -73,3 +73,30 @@ type BulkActionsArray = Array<{
           { id: string, description: string }
         ]
     };
+
+
+
+    // TALENT DATA BASE TYPES START
+
+    type TalentDBCandidate = {
+        firstName: string,
+        lastName: string,
+        headline: string,
+        location: string,
+        avatarURL: string,
+        checked?: boolean
+    }
+
+    type FilterItem = {
+        type: string,
+        items: Array<{ title: string, count: number | string }>
+        checked?: boolean
+    }
+
+    type ClientTalentDBFilter = {
+        type: string,
+        index: string,
+        title: string
+    }
+
+    // TALENT DATA BASE TYPES END    

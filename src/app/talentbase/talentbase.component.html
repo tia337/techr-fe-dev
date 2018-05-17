@@ -1,15 +1,22 @@
 <div class="talentbase-wrap">
+
+  <!-- IMPORT/EXPORT BUTTONS START -->
   <div class="talentbase__import-export-buttons" *ngIf="!importPanelOpened">
     <span (click)="importPanelOpened = !importPanelOpened">Import candidate data</span>
     <span> / </span>
     <span>Export candidate data</span>
   </div>
+  <!-- IMPORT/EXPORT BUTTONS END -->  
+
+  <!-- MAIN CONTENT START -->
   <div class="talentbase__filter-wrap" *ngIf="!importPanelOpened">
       <div class="talentbase__filter-icon">
         <img src="../../assets/icons/talent_base.png" alt="">
         <span>Talent pool</span>
       </div>
       <div class="talentbase__filter-content">
+
+        <!-- HEADER START -->
         <div class="talentbase__filter-header">
           <div class="talentbase__filter-header--filter-input">
             <input type="text" placeholder="Search" #filterSearchInput id="filterSearchInput">
@@ -23,35 +30,20 @@
             <span>Add Candidate</span>
           </div>
         </div>
+        <!-- HEADER END -->
+        
         <div class="talentbase__filter-main">
+          
+          <!-- FILTER MAIN FILTERS START -->
           <div *ngIf="filtersOpened"  class="talentbase__filter-main-filters">
-            <div class="talentbase__filter-main-filter--item">
+            <div class="talentbase__filter-main-filter--item" *ngFor="let filter of filters">
               <div class="talentbase__filter-main-filter--item-title">
-                <span>Applied to</span>
+                <span>{{filter.type}}</span>
                 <mat-icon class="search-icon">search</mat-icon>
               </div>
               <div class="talentbase__filter-main-filter--item-types">
                 <ul>
-                  <li *ngFor="let item of filtersArray" (click)="addToFilterParams(item, 'applied')">
-                    <span>
-                      <span class="filter-checkbox">
-                        <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
-                      </span>
-                      <span>{{item.title}}</span>
-                    </span>
-                    <span>({{item.count}})</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="talentbase__filter-main-filter--item">
-              <div class="talentbase__filter-main-filter--item-title">
-                <span>Pipeline status</span>
-                <mat-icon class="search-icon">search</mat-icon>
-              </div>
-              <div class="talentbase__filter-main-filter--item-types">
-                <ul>
-                  <li *ngFor="let item of pipelineStagesArray" (click)="addToFilterParams(item, 'pipeline')">
+                  <li *ngFor="let item of filter.items" (click)="addToFilterParams(item)">
                     <span>
                       <span class="filter-checkbox">
                         <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
@@ -65,6 +57,9 @@
             </div>
             <div class="talentbase__filter-main-filters--bottom"></div>
           </div>
+        <!-- FILTER MAIN FILTERS END -->
+          
+          <!-- CANDIDATES CONTENT START -->
           <div class="talentbase__filter-candidates-wrap">
               <div class="talentbase__filter-candidates--buttons">
                  <div class="select-all" (click)="selectAllCandidates()">
@@ -73,38 +68,54 @@
                    </span>
                    <span>Select All</span>
                  </div>
-                 <hr style="width: 2px;">
-                 <span class="showing-count">Showing 50 of 45,000</span>
+                 <div class="stripe"></div>
+                 <span class="showing-count">Showing {{candidatesArray.length}} of {{candidatesStorage.length}}</span>
                  <div class="sorting">
-                  
+                  <span class="sorting-title">Sort</span>
+                  <div class="sorting-type">Creation date</div>
                  </div>
               </div>
-              <div class="talentbase__filter-candidates--list" (scroll)="uploadMoreCandidates($event)">
-                  <div class="talentbase__filter-candidates-candidate" (click)="candidate.checked = !candidate.checked" *ngFor="let candidate of candidatesArray">
-                      <span class="filter-checkbox" >
+
+              <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0">
+                <mat-progress-spinner class="progress-spinner" color="#305497" mode="indeterminate"></mat-progress-spinner>
+              </div>
+              <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length > 0" (scroll)="uploadMoreCandidates($event)">
+                  <div class="talentbase__filter-candidates-candidate" 
+                      *ngFor="let candidate of candidatesArray">
+                      <span class="filter-checkbox" (click)="candidate.checked = !candidate.checked">
                           <mat-icon *ngIf="candidate.checked" class="icon-check">done</mat-icon>
                       </span>
                       <div class="candidate-info">
-                        <img src="https://media.licdn.com/dms/image/C5103AQFbTcj4UY1qkQ/profile-displayphoto-shrink_100_100/0?e=1530266400&v=beta&t=_sO-tBvB4x7dLKhl2ovXAaDRtVH9Rd9Rhi8t0IvubA4" alt="">
+                        <img *ngIf="candidate.avatarURL !== undefined" [src]="candidate.avatarURL" alt="">
+                        <img *ngIf="candidate.avatarURL === undefined" src="../../assets/img/default-userpic.png" alt="">
                         <p>
-                          <span>{{candidate.name}}</span>
-                          <span>{{candidate.position}}</span>
+                          <span>{{candidate.firstName}}&nbsp;{{candidate.lastName}}</span>
+                          <span>{{candidate.headline}}</span>
                         </p>
                       </div>
                       <div class="candidate-info-applied">
-                        <span>{{candidate.appliedJob.job}}</span>
-                        <span>From {{candidate.appliedJob.source}} - {{candidate.appliedJob.date | date: 'MMMM d, y'}}</span>
+                        <!-- <span>{{candidate.appliedJob.job}}</span> -->
+                        <!-- <span>From {{candidate.appliedJob.source}} - {{candidate.appliedJob.date | date: 'MMMM d, y'}}</span> -->
                       </div>
                       <div class="candidate-info-location">
-                        <span>{{candidate.location.city}}</span>
-                        <span>{{candidate.location.country}}</span>
+                        <span *ngIf="candidate.location !== undefined">{{candidate.location}}</span>
+                        <span *ngIf="candidate.location === undefined">Location is not defined</span>
+                        <!-- <span>{{candidate.location.country}}</span> -->
                       </div>
                   </div>
               </div>
+
+              
           </div>
+          <!-- CANDIDATES CONTENT START -->          
+
         </div>
+        
       </div>
   </div>
+  <!-- MAIN CONTENT END -->  
+
+  <!-- IMPORT PANEL START -->
   <div class="talentbase__import-panel" *ngIf="importPanelOpened">
     <img class="GDPR" src="../../assets/img/GDPR-logo.png" alt="">
     <div class="back-to-talent-pool" (click)="importPanelOpened = !importPanelOpened">
@@ -180,4 +191,6 @@
       </div>
     </div>
   </div>
+  <!-- IMPORT PANEL END -->
+
 </div>
