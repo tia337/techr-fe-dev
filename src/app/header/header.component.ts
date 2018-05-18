@@ -106,7 +106,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}
 
 		this._headerService.currentNotificationsCount.subscribe(data => {
-			console.log(data);
 			this.notificationsCount = parseFloat(data);
 		});
 

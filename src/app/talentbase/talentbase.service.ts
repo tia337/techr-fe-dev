@@ -86,11 +86,12 @@ export class TalentbaseService {
   }
 
   sortFilterItems(item: FilterItem): FilterItem {
-    let newItem: FilterItem = item;
+    const newItem: FilterItem = item;
     newItem.items = _.sortBy(newItem.items, function (i) {
       return i.count;
     }).reverse();
     return newItem;
   }
+
 
 }
