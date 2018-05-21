@@ -80,6 +80,7 @@ export class TalentbaseComponent implements OnInit {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
+            console.log(this.filters);
           }).catch(error => console.log(error));
         }
       });
