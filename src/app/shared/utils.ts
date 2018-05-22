@@ -18,6 +18,10 @@ export const TalentDbFilters = [
 	{ type: '2', functionName: 'getLocationFilters' },
 	{ type: '7', functionName: 'getAvailabilityFilters' },
 	{ type: '8', functionName: 'getLanguagesFilters' },
+	{ type: '3', functionName: 'getAvailabilityFilters' },
+	{ type: '4', functionName: 'getJobTypePreferencesFilters' },
+	{ type: '8', functionName: 'getLanguagesFilters' },
+	{ type: '10', functionName: 'getRolesFilters' }
 ];
 
 export const JobType = { 'permanent': 1, 'contract': 2 };
