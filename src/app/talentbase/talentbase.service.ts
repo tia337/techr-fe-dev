@@ -55,36 +55,6 @@ export class TalentbaseService {
     });
   }
 
-  getTalentDBAppliedToFilter(clientId: string): Promise<FilterItem> {
-    return new Promise ((resolve, reject) => {
-      this._parse.execCloud('getTalentDBAppliedToFilter', { clientId: clientId }).then(result => {
-        result = this.sortFilterItems(result);
-        resolve(result);
-        reject(result);
-      });
-    });
-  }
-
-  getPipelineStatusFilters(clientId: string): Promise<FilterItem> {
-    return new Promise ((resolve, reject) => {
-      this._parse.execCloud('getPipelineStatusFilters', { clientId: clientId }).then(result => {
-        result = this.sortFilterItems(result);
-        resolve(result);
-        reject(result);
-      });
-    });
-  }
-
-  getLocationFilters(clientId: string): Promise<FilterItem> {
-    return new Promise ((resolve, reject) => {
-      this._parse.execCloud('getLocationFilters', { clientId: clientId }).then(result => {
-        result = this.sortFilterItems(result);
-        resolve(result);
-        reject(result);
-      });
-    });
-  }
-
   sortFilterItems(item: FilterItem): FilterItem {
     const newItem: FilterItem = item;
     newItem.items = _.sortBy(newItem.items, function (i) {

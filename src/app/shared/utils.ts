@@ -14,8 +14,10 @@ export const DeveloperListType = {
 
 export const TalentDbFilters = [
 	{ type: '0', functionName: 'getTalentDBAppliedToFilter' },
-	{ type: '1', functionName: 'getPipelineStatusFilters'},
-	{ type: '2', functionName: 'getLocationFilters' }
+	{ type: '1', functionName: 'getPipelineStatusFilters' },
+	{ type: '2', functionName: 'getLocationFilters' },
+	{ type: '7', functionName: 'getAvailabilityFilters' },
+	{ type: '8', functionName: 'getLanguagesFilters' },
 ];
 
 export const JobType = { 'permanent': 1, 'contract': 2 };

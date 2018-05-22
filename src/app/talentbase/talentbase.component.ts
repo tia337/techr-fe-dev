@@ -43,7 +43,7 @@ export class TalentbaseComponent implements OnInit {
   checkedCandidates: Array<any> = [];
   importPanelOpened = false;
   jsonFileName = '';
-  zipFileName = '';
+  zipFileName = null;
   zipFileSizeExceed = false;
   private paginationLimits = {
     from: 0,
@@ -87,6 +87,7 @@ export class TalentbaseComponent implements OnInit {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
+            console.log(this.filters);
           }).catch(error => console.log(error));
         }
       });
@@ -161,19 +162,18 @@ export class TalentbaseComponent implements OnInit {
   }
 
   sendZip(event, value?) {
-    if (value === '') {
+    if (value === '' || this.zipFileName.size > 104857600) {
       return;
     } else {
       const file = this.zipFileName;
       const formData = new FormData();
       formData.append('file', file);
       const headers = new Headers({
-        'content-type': 'application/zip'
+        'Content-Type': 'application/zip'
       });
       const options = new RequestOptions({ headers });
       const url = 'https://cv-bulk-upload.herokuapp.com/upload';
       this._http.post(url, formData, options).subscribe(res => {
-        const body = res.json();
         console.log(res);
       });
     }
