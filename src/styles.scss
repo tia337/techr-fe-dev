@@ -603,6 +603,19 @@ app-chat .dropdown-menu {
     .mat-expansion-panel-body {
         color: #424242!important;        
     }
+    .candidates-inner-section .candidates-list-section .candidate-block {
+        display: flex;
+        flex-direction: column;
+        padding: 0 0 10px 10px;
+        &:not(:last-child) {
+            border: 3px solid transparent!important;
+            border-bottom: 3px solid $dark-grey!important;
+        }
+        &:hover {
+            background: transparent!important;
+            border: 3px solid #fff!important;                
+        }
+    }
 }
 
 

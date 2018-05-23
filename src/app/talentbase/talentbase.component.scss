@@ -365,8 +365,16 @@
             width: 20%;
             transition: .3s all ease-in-out;
             cursor: pointer;
+            position: relative;
             label {
                 cursor: pointer;                
+            }
+            button {
+                color: #fff;
+                font-size: 16px;
+                border: none;
+                outline: none;
+                background: transparent;
             }
             &.contact-us {
                 background: grey;
@@ -376,6 +384,16 @@
             }
             &:hover {
                 background: #5682d2;
+            }
+            small {
+                position: absolute;
+                bottom: -25px;
+                color: #000;
+                &.error {
+                    color: red;
+                    bottom: -36px;
+                    text-align: center;
+                }
             }
         }
     }
@@ -429,4 +447,8 @@
 }
 .mat-progress-spinner circle, .mat-spinner circle {
     stroke: #305497;
+}
+
+.icon-clear {
+    cursor: pointer!important;
 }

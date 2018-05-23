@@ -11,7 +11,9 @@ import {
 import { read } from 'fs';
 import { Parse } from '../parse.service';
 import { TalentDbFilters } from '../shared/utils';
-//tslint:disable:indent
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Http, Headers, RequestOptions } from '@angular/http';
+// tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
   templateUrl: './talentbase.component.html',
@@ -41,7 +43,8 @@ export class TalentbaseComponent implements OnInit {
   checkedCandidates: Array<any> = [];
   importPanelOpened = false;
   jsonFileName = '';
-  zipFileName = '';
+  zipFileName = null;
+  zipFileSizeExceed = false;
   private paginationLimits = {
     from: 0,
     to: 15
@@ -49,13 +52,18 @@ export class TalentbaseComponent implements OnInit {
   filterParams: FilterParams;
   private currentUser;
   private clientId: string;
+  jsonForm: FormGroup;
+  zipForm: FormGroup;
 
   constructor(
     private _talentBaseService: TalentbaseService,
-    private _parse: Parse
+    private _parse: Parse,
+    private _fb: FormBuilder,
+    private _http: Http
   ) { }
 
   ngOnInit() {
+
     this.currentUser = this._parse.getCurrentUser();
     this.clientId = this._parse.getClientId();
 
@@ -70,11 +78,10 @@ export class TalentbaseComponent implements OnInit {
       this.getFilters(this.clientTalentDBFilters);
     }).catch(error => console.log('error while getting getClientTalentDBFilters: ', error));
 
-
+    this.createForms();
   }
 
   getFilters(clientTalentDBFilters: Array<ClientTalentDBFilter>) {
-
     TalentDbFilters.forEach(filter => {
       clientTalentDBFilters.forEach(item => {
         if (filter.type === item.type) {
@@ -85,7 +92,6 @@ export class TalentbaseComponent implements OnInit {
         }
       });
     });
-
   }
 
 
@@ -130,14 +136,47 @@ export class TalentbaseComponent implements OnInit {
     const ev = event;
     const file = event.target.files[0];
     const reader = new FileReader();
-    reader.onload = (ev) => {
-      this.zipFileName = file.name;
+    reader.onloadend = (ev) => {
+      if (file.size > 104857600) {
+        this.zipFileSizeExceed = true;
+      }
     };
+    reader.onload = (ev) => {
+      this.zipFileName = file;
+    };
+    reader.readAsText(file);
   }
 
   updatePaginationLimits () {
     this.paginationLimits.from += 15;
     this.paginationLimits.to += 15;
+  }
+
+  createForms() {
+    this.jsonForm = this._fb.group({
+      jsonFile: ['', Validators.required]
+    });
+    this.zipForm = this._fb.group({
+      zipFile: ['', Validators.required]
+    });
+  }
+
+  sendZip(event, value?) {
+    if (value === '' || this.zipFileName.size > 104857600) {
+      return;
+    } else {
+      const file = this.zipFileName;
+      const formData = new FormData();
+      formData.append('file', file);
+      const headers = new Headers({
+        'Content-Type': 'application/zip'
+      });
+      const options = new RequestOptions({ headers });
+      const url = 'https://cv-bulk-upload.herokuapp.com/upload';
+      this._http.post(url, formData, options).subscribe(res => {
+        console.log(res);
+      });
+    }
   }
 
 }
