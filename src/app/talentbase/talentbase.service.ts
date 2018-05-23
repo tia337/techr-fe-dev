@@ -12,7 +12,7 @@ export class TalentbaseService {
   ) { }
 
 
-  uploadMoreCandidates(limits, array): TalentDBCandidate[] {
+  uploadMoreCandidates(limits: PaginationLimits, array: TalentDBCandidate[]): TalentDBCandidate[] {
     const arrayNew = array.slice(limits.from, limits.to);
     return arrayNew;
   }
@@ -45,12 +45,12 @@ export class TalentbaseService {
     });
   }
 
-  getClientTalentDBFilters(clientId: string): Promise<ClientTalentDBFilter[]> {
-    const query = this._parse.Query('Clients');
-    query.equalTo('objectId', clientId);
+  getUserTalentDBFilters(userId: string): Promise<UserTalentDBFilter[]> {
+    const query = this._parse.Query('User');
+    query.equalTo('objectId', userId);
     return new Promise (resolve => {
       query.find().then(result => {
-        resolve(result[0].get('talentDbFilters'));
+        resolve(result[0].get('enabledTalentDbFilters'));
       });
     });
   }
@@ -64,4 +64,21 @@ export class TalentbaseService {
   }
 
 
+  getAllFilterTypes(): Promise<UserTalentDBFilter[]> {
+    const filterTypes: Array<UserTalentDBFilter> = [];
+    const FilterTypesQuery = this._parse.Query('TalentDbFilters');
+    return new Promise ((resolve, reject) => {
+      FilterTypesQuery.find().then(result => {
+        result.forEach(item => {
+          const data = {
+            title: item.get('title'),
+            type: item.get('type'),
+            checked: false
+          }
+          filterTypes.push(data);
+          resolve(filterTypes)
+        });
+      });
+    });
+  }
 }

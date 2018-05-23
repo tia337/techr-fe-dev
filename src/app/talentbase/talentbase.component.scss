@@ -45,14 +45,13 @@
         width: 150px;
         padding: 15px;
         align-items: center;
-        font-size: 15px;
         img {
-            width: 50px;
-            height: 50px;
-            margin-bottom: 10px;
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px;
         }
         span {
-            font-size: 15px;
+            font-size: 14px;
         }
     }
     &-content {
@@ -96,6 +95,12 @@
                 background: #ffffff;
                 border: 1px solid #305597;
             }
+            .icon-arrow {
+                font-size: 19px;
+                height: 19px;
+                width: 19px;
+                margin-left: 5px;
+            }
         }
     }
     &-header--action-buttons {
@@ -127,6 +132,51 @@
             }
         }
     }
+    &-header--filter-types {
+        position: absolute;
+        left: 43em;
+        top: 6em;
+        background: #f2f2f2;
+        list-style: none;
+        padding: 5px;
+        color: #000;
+        border: 1px solid;
+        z-index: 9;
+        cursor: default;
+        li {
+            padding: 3px 5px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: .3s all ease-in-out;
+            &:last-child {
+                margin-bottom: 0;
+            }
+            &:hover {
+                background: #d9d9d9;
+            }
+            span:first-child {
+                margin-right: 5px;
+                text-transform: capitalize;
+            }
+            .filter-checkbox {
+                width: 18px;
+                height: 18px;
+                border: 1px solid;
+                display: inline-block;
+                margin-right: 5px;
+            }
+            .icon-check {
+                font-size: 17px;
+                height: 17px;
+                width: 17px;
+                margin-top: -1px;
+            }
+        }
+    }
     &-main-filters {
         display: flex;
         align-items: stretch;
@@ -134,6 +184,15 @@
         margin-bottom: 80px;
         position: relative;
         overflow-x: auto;
+        overflow-y: visible;
+        &.no-filters-enabled {
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            font-size: 21px;
+        }
     }
     &-main-filters--bottom {
         height: 50px;
@@ -451,4 +510,29 @@
 
 .icon-clear {
     cursor: pointer!important;
+}
+
+.icon-arrow {
+    &.closed {
+        transform: rotate(90deg);
+    }
+    &.opened {
+        transform: rotate(-90deg);
+    }
+}
+
+.flex {
+    display: flex!important;
+}
+
+.align-items-center {
+    align-items: center!important;
+}
+
+.pos-a {
+    position: absolute!important;
+}
+
+.pos-r {
+    position: relative!important;
 }

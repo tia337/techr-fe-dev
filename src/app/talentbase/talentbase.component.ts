@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TalentbaseService } from './talentbase.service';
 import {AnimationBuilder} from '@angular/animations';
 import {
@@ -32,28 +32,27 @@ import { Http, Headers, RequestOptions } from '@angular/http';
     ]),
   ]
 })
-export class TalentbaseComponent implements OnInit {
+export class TalentbaseComponent implements OnInit, OnDestroy {
 
   filtersOpened = false;
   allSelected = false;
-  filters: Array<FilterItem> = [];
-  clientTalentDBFilters: Array<ClientTalentDBFilter> = [];
-  candidatesArray: Array<TalentDBCandidate> = [];
-  candidatesStorage: Array<TalentDBCandidate> = [];
   checkedCandidates: Array<any> = [];
   importPanelOpened = false;
+  enableDisableFiltersOpened = false;
   jsonFileName = '';
   zipFileName = null;
   zipFileSizeExceed = false;
-  private paginationLimits = {
-    from: 0,
-    to: 15
-  };
-  filterParams: FilterParams;
-  private currentUser;
-  private clientId: string;
   jsonForm: FormGroup;
   zipForm: FormGroup;
+  public filters: Array<FilterItem> = [];
+  public filterTypes: Array<UserTalentDBFilter> = [];
+  public candidatesArray: Array<TalentDBCandidate> = [];
+  private paginationLimits: PaginationLimits = { from: 0, to: 15 };
+  private userTalentDBFilters: Array<UserTalentDBFilter> = [];
+  private candidatesStorage: Array<TalentDBCandidate> = [];
+  private filterParams: FilterParams;
+  private currentUser;
+  private clientId: string;
 
   constructor(
     private _talentBaseService: TalentbaseService,
@@ -73,42 +72,44 @@ export class TalentbaseComponent implements OnInit {
       this.updatePaginationLimits();
     }).catch(error => console.log('error while getting talentDB candidates: ', error));
 
-    this._talentBaseService.getClientTalentDBFilters(this.clientId).then(result => {
-      this.clientTalentDBFilters = result;
-      this.getFilters(this.clientTalentDBFilters);
-    }).catch(error => console.log('error while getting getClientTalentDBFilters: ', error));
+    this._talentBaseService.getUserTalentDBFilters(this.currentUser.id).then(result => {
+      this.userTalentDBFilters = result;
+      this.getFilters(this.userTalentDBFilters);
+    }).catch(error => console.log('error while getting getUserTalentDBFilters: ', error));
 
     this.createForms();
+
   }
 
-  getFilters(clientTalentDBFilters: Array<ClientTalentDBFilter>) {
+  getFilters(userTalentDBFilters: Array<UserTalentDBFilter>) {
     TalentDbFilters.forEach(filter => {
-      clientTalentDBFilters.forEach(item => {
+      userTalentDBFilters.forEach(item => {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
-            console.log(this.filters);
           }).catch(error => console.log(error));
         }
       });
     });
+    this.getAllFilterTypes();
   }
 
+  getAllFilterTypes() {
+    this._talentBaseService.getAllFilterTypes().then(result => {
+      this.filterTypes = result;
+      this.checkFiltersOnInit(this.filterTypes, this.userTalentDBFilters);
+    }).catch(error => console.log('error while getting getAllFilterTypes: ', error));
+  }
 
-  addToFilterParams(item, type: string) {
-    if (this.filterParams[type].length === 0) {
-      this.filterParams[type].push(item.id);
-      item.checked = true;
-      return;
-    } else if (this.filterParams[type].includes(item.id)) {
-      const index = this.filterParams[type].indexOf(item.id);
-      this.filterParams[type].splice(index, 1);
-      item.checked = false;
-    } else if (!this.filterParams[type].includes(item.id)) {
-      this.filterParams[type].push(item.id);
-      item.checked = true;
-    };
-  };
+  checkFiltersOnInit (allFilterTypes: Array<UserTalentDBFilter>, userFilterTypes: Array<UserTalentDBFilter>) {
+    allFilterTypes.forEach(filter => {
+      userFilterTypes.forEach(item => {
+        if (filter.type === item.type) {
+          filter.checked = true;
+        }
+      })
+    });
+  }
 
   uploadMoreCandidates(event) {
     if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
@@ -177,6 +178,40 @@ export class TalentbaseComponent implements OnInit {
         console.log(res);
       });
     }
+  }
+
+  enableDisableFilterTypes (type: UserTalentDBFilter) {   
+    if (type.checked) {
+      this.userTalentDBFilters.forEach(item => {
+        if (item.type === type.type) {
+          const index = this.userTalentDBFilters.indexOf(item);
+          this.userTalentDBFilters.splice(index, 1);
+          this.filters = [];          
+          this.getFilters(this.userTalentDBFilters);
+          type.checked = false;
+        }
+      });
+      return;
+    } else if (!type.checked) {
+      const index = this.userTalentDBFilters.length + 1;
+      const item: UserTalentDBFilter = {
+        type: type.type,
+        title: type.title,
+        index: index.toString()
+      }
+      this.userTalentDBFilters.push(item);
+      this.filters = [];
+      this.getFilters(this.userTalentDBFilters);
+      type.checked = true;
+    }
+  }
+
+  log(values) {
+    console.log(values);
+  }
+
+  ngOnDestroy() {
+    this._parse.execCloud('setNewTalentDbFilters', { userId: this.currentUser.id, filtersArray: this.userTalentDBFilters });
   }
 
 }

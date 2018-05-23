@@ -65,6 +65,7 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 import { TalentbaseComponent } from './talentbase/talentbase.component';
 import { TalentbaseService } from './talentbase/talentbase.service';
 import { EditUserRoleComponent } from './site-administration/user-management/access-level-page/edit-user-role/edit-user-role.component';
+import { ClickOutsideModule } from 'ng-click-outside';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -123,6 +124,7 @@ const config: SocketIoConfig = {
 		TimelineModule,
 		ReactiveFormsModule,
 		NgxDnDModule,
+		ClickOutsideModule
 	],
 	providers: [
 		SidenavService,

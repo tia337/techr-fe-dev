@@ -24,6 +24,26 @@
             <span (click)="filtersOpened = !filtersOpened" class="blue-btn">
               <span *ngIf="filtersOpened">Close</span> <span *ngIf="!filtersOpened">Open</span> Filters
             </span>
+            <span class="blue-btn flex pos-r enable-disable"
+              (click)="enableDisableFiltersOpened = !enableDisableFiltersOpened" 
+              *ngIf="filtersOpened">
+              Enable/Disable 
+              <mat-icon [ngClass]="{'opened': enableDisableFiltersOpened, 'closed': !enableDisableFiltersOpened}" class="icon-arrow">play_arrow</mat-icon>
+            </span>
+            <ul class="talentbase__filter-header--filter-types"
+              (clickOutside)="enableDisableFiltersOpened = false"
+              [delayClickOutsideInit]="true"
+              [exclude]="'.enable-disable'" 
+              *ngIf="enableDisableFiltersOpened">
+                <li (click)="enableDisableFilterTypes(type)" *ngFor="let type of filterTypes">
+                  <span>
+                    {{type.title}}
+                  </span>
+                  <span class="filter-checkbox">
+                    <mat-icon *ngIf="type.checked" class="icon-check">check</mat-icon>
+                  </span>
+                </li>
+              </ul>
           </div>
           <div class="talentbase__filter-header--action-buttons">
             <span>Actions</span>
@@ -33,9 +53,14 @@
         <!-- HEADER END -->
         
         <div class="talentbase__filter-main">
-          
+          <div class="talentbase__filter-main-filters" 
+            [ngClass]="{'no-filters-enabled': userTalentDBFilters.length === 0 }" 
+            *ngIf="filtersOpened && filters.length === 0">
+              <mat-progress-spinner *ngIf="userTalentDBFilters.length !== 0" class="progress-spinner" color="#305497" mode="indeterminate"></mat-progress-spinner>
+              <p *ngIf="userTalentDBFilters.length === 0">Please, enable at least one filter.</p>
+          </div>
           <!-- FILTER MAIN FILTERS START -->
-          <div *ngIf="filtersOpened"  class="talentbase__filter-main-filters">
+          <div *ngIf="filtersOpened && filters.length > 0"  class="talentbase__filter-main-filters">
             <div class="talentbase__filter-main-filter--item" *ngFor="let filter of filters">
               <div class="talentbase__filter-main-filter--item-title">
                 <span>{{filter.type}}</span>
@@ -43,7 +68,7 @@
               </div>
               <div class="talentbase__filter-main-filter--item-types">
                 <ul>
-                  <li *ngFor="let item of filter.items" (click)="addToFilterParams(item)">
+                  <li *ngFor="let item of filter.items">
                     <span>
                       <span class="filter-checkbox">
                         <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
@@ -105,7 +130,6 @@
                   </div>
               </div>
 
-              
           </div>
           <!-- CANDIDATES CONTENT START -->          
 

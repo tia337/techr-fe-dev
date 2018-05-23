@@ -24,7 +24,13 @@ type NotificationMessageSender = {
     sessionStatus: boolean
 }
 
-type StagesArray  = Array<{ index: number, type: string, title: string, value: number, editable: boolean}>;
+type StagesArray  = Array<{ 
+    index: number, 
+    type: string, 
+    title: string, 
+    value: number, 
+    editable: boolean
+}>;
 
 type Stage = {
     index: number, 
@@ -34,21 +40,27 @@ type Stage = {
     editable: boolean
 };
 
-type ClientsArray = Array< {
+type ClientsArray = Array<{
     id: number,
     name: string
 }>;
 
-type ProjectsArray = Array< {
+type ProjectsArray = Array<{
     id: number,
     name: string,
     clients: ClientsArray
-} >
+}>;
 
 type BulkActionsArray = Array<{
     className: string,
     id: string,
-    rejectionList: {opened: boolean, reasons: Array<{ type: string, reason: string }>},
+    rejectionList: {
+        opened: boolean, 
+        reasons: Array<{ 
+            type: string, 
+            reason: string 
+        }>
+    },
     rejectionReason: string,
     hasRejectionReason: boolean,
     personalRejectionReason: boolean,
@@ -74,10 +86,15 @@ type BulkActionsArray = Array<{
         ]
     };
 
+    type PaginationLimits = {
+        from: number,
+        to: number
+    };
 
-
+    
+    
     // TALENT DATA BASE TYPES START
-
+    
     type TalentDBCandidate = {
         firstName: string,
         lastName: string,
@@ -86,17 +103,18 @@ type BulkActionsArray = Array<{
         avatarURL: string,
         checked?: boolean
     }
-
+    
     type FilterItem = {
         type: string,
         items: Array<{ title: string, count: number | string }>
         checked?: boolean
     }
-
-    type ClientTalentDBFilter = {
-        type: string,
-        index: string,
+    
+    type UserTalentDBFilter = {
         title: string
+        type: string,
+        index?: string,
+        checked?: boolean
     }
 
-    // TALENT DATA BASE TYPES END    
+    // TALENT DATA BASE TYPES END  
