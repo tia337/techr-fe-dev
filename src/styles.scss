@@ -647,6 +647,7 @@ app-chat .dropdown-menu {
     }
     .buttons .mail-button {
         background: #01579B!important;
+        border-radius: 0!important;        
     }
     .buttons .move-candidate-button {
         background: #50a047!important;
@@ -659,7 +660,6 @@ app-chat .dropdown-menu {
     }
     .triangle-wrap {
         border: none!important;
-        border-radius: 0!important;
         padding: 0!important;
     }
     .candidate-profile-inner-section .profile-header .header-candidate-general-info .candidate-info-top-block .candidate-name-position .candidate-name {
@@ -738,6 +738,7 @@ app-chat .dropdown-menu {
     }
     .wrap {
         border-bottom: 1px solid #fafafa!important;
+        background-color: #cfd8dd!important;
     }
     .notes .buttons-right-send {
         border-radius: 0!important;
@@ -746,9 +747,9 @@ app-chat .dropdown-menu {
     .select-scorecard-btn,
     .create-scorecard-btn {
         border-radius: 0!important;
-        color: #fafafa;
+        color: #fafafa!important;
         border: 1px solid transparent!important;
-        transition: .3s all ease-in-out;
+        transition: .3s all ease-in-out!important;
     }
     .select-scorecard-btn {
         background: #13579a!important;
@@ -772,8 +773,8 @@ app-chat .dropdown-menu {
         font-size: 16px!important;
     }
     .scorecards-assessments-inner .scorecards-wrap .scorecard-wrap .remove-wrap {
-        background: #bf3728;
-        color: #fafafa;
+        background: #bf3728!important;
+        color: #fafafa!important;
         border: none!important;
         border-radius: 0!important;
     }
@@ -782,10 +783,10 @@ app-chat .dropdown-menu {
         padding: 5px 0!important;
     }
     .size-box .flex-container .description-container .matButtons {
-        background: #424242;
-        color: #fafafa;
+        background: #424242!important;
+        color: #fafafa!important;
         border-radius: 0!important;
-        margin: 3px 0px;
+        margin: 3px 0px!important;
         &:nth-child(2) {
             margin-right: 3px!important;
             margin-left: 3px!important;
