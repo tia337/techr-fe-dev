@@ -19,6 +19,7 @@ export const TalentDbFilters = [
 	{ type: '3', functionName: 'getAvailabilityFilters' },
 	{ type: '4', functionName: 'getJobTypePreferencesFilters' },
 	{ type: '8', functionName: 'getLanguagesFilters' },
+	{ type: '9', functionName: 'getSkillsFilters' },
 	{ type: '10', functionName: 'getRolesFilters' }
 ];
 
