@@ -48,7 +48,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   public filterTypes: Array<UserTalentDBFilter> = [];
   public candidatesArray: Array<TalentDBCandidate> = [];
   private paginationLimits: PaginationLimits = { from: 0, to: 15 };
-  private userTalentDBFilters: Array<UserTalentDBFilter> = [];
+  private enabledUserTalentDBFilters: Array<UserTalentDBFilter> = [];
   private candidatesStorage: Array<TalentDBCandidate> = [];
   private filterParams: FilterParams;
   private currentUser;
@@ -72,10 +72,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       this.updatePaginationLimits();
     }).catch(error => console.log('error while getting talentDB candidates: ', error));
 
-    this._talentBaseService.getUserTalentDBFilters(this.currentUser.id).then(result => {
-      this.userTalentDBFilters = result;
-      this.getFilters(this.userTalentDBFilters);
-    }).catch(error => console.log('error while getting getUserTalentDBFilters: ', error));
+    this._talentBaseService.getEnabledUserTalentDBFilters(this.currentUser.id).then(result => {
+      this.enabledUserTalentDBFilters = result;
+      this.getFilters(this.enabledUserTalentDBFilters);
+    }).catch(error => console.log('error while getting getEnabledUserTalentDBFilters : ', error));
 
     this.createForms();
 
@@ -97,7 +97,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   getAllFilterTypes() {
     this._talentBaseService.getAllFilterTypes().then(result => {
       this.filterTypes = result;
-      this.checkFiltersOnInit(this.filterTypes, this.userTalentDBFilters);
+      this.checkFiltersOnInit(this.filterTypes, this.enabledUserTalentDBFilters);
     }).catch(error => console.log('error while getting getAllFilterTypes: ', error));
   }
 
@@ -169,8 +169,9 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       const file = this.zipFileName;
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('clientId', this.clientId);
       const headers = new Headers({
-        'Content-Type': 'application/zip'
+        'Content-Type': 'multipart/form-data'
       });
       const options = new RequestOptions({ headers });
       const url = 'https://cv-bulk-upload.herokuapp.com/upload';
@@ -182,26 +183,26 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
 
   enableDisableFilterTypes (type: UserTalentDBFilter) {   
     if (type.checked) {
-      this.userTalentDBFilters.forEach(item => {
+      this.enabledUserTalentDBFilters.forEach(item => {
         if (item.type === type.type) {
-          const index = this.userTalentDBFilters.indexOf(item);
-          this.userTalentDBFilters.splice(index, 1);
+          const index = this.enabledUserTalentDBFilters.indexOf(item);
+          this.enabledUserTalentDBFilters.splice(index, 1);
           this.filters = [];          
-          this.getFilters(this.userTalentDBFilters);
+          this.getFilters(this.enabledUserTalentDBFilters);
           type.checked = false;
         }
       });
       return;
     } else if (!type.checked) {
-      const index = this.userTalentDBFilters.length + 1;
+      const index = this.enabledUserTalentDBFilters.length + 1;
       const item: UserTalentDBFilter = {
         type: type.type,
         title: type.title,
         index: index.toString()
       }
-      this.userTalentDBFilters.push(item);
+      this.enabledUserTalentDBFilters.push(item);
       this.filters = [];
-      this.getFilters(this.userTalentDBFilters);
+      this.getFilters(this.enabledUserTalentDBFilters);
       type.checked = true;
     }
   }
@@ -211,7 +212,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._parse.execCloud('setNewTalentDbFilters', { userId: this.currentUser.id, filtersArray: this.userTalentDBFilters });
+    this._parse.execCloud('setNewTalentDbFilters', { userId: this.currentUser.id, filtersArray: this.enabledUserTalentDBFilters });
   }
 
 }

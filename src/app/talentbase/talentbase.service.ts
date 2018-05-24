@@ -45,7 +45,7 @@ export class TalentbaseService {
     });
   }
 
-  getUserTalentDBFilters(userId: string): Promise<UserTalentDBFilter[]> {
+  getEnabledUserTalentDBFilters(userId: string): Promise<UserTalentDBFilter[]> {
     const query = this._parse.Query('User');
     query.equalTo('objectId', userId);
     return new Promise (resolve => {

@@ -54,10 +54,10 @@
         
         <div class="talentbase__filter-main">
           <div class="talentbase__filter-main-filters" 
-            [ngClass]="{'no-filters-enabled': userTalentDBFilters.length === 0 }" 
+            [ngClass]="{'no-filters-enabled': enabledUserTalentDBFilters.length === 0 }" 
             *ngIf="filtersOpened && filters.length === 0">
-              <mat-progress-spinner *ngIf="userTalentDBFilters.length !== 0" class="progress-spinner" color="#305497" mode="indeterminate"></mat-progress-spinner>
-              <p *ngIf="userTalentDBFilters.length === 0">Please, enable at least one filter.</p>
+              <mat-progress-spinner *ngIf="enabledUserTalentDBFilters.length !== 0" class="progress-spinner" color="#305497" mode="indeterminate"></mat-progress-spinner>
+              <p *ngIf="enabledUserTalentDBFilters.length === 0">Please, enable at least one filter.</p>
           </div>
           <!-- FILTER MAIN FILTERS START -->
           <div *ngIf="filtersOpened && filters.length > 0"  class="talentbase__filter-main-filters">
