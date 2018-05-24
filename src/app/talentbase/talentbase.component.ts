@@ -58,7 +58,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     private _talentBaseService: TalentbaseService,
     private _parse: Parse,
     private _fb: FormBuilder,
-    private _http: Http
+    private _http: Http,
   ) { }
 
   ngOnInit() {
@@ -144,6 +144,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     };
     reader.onload = (ev) => {
       this.zipFileName = file;
+      console.log(this.zipFileName);
     };
     reader.readAsText(file);
   }
@@ -171,11 +172,11 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       formData.append('file', file);
       formData.append('clientId', this.clientId);
       const headers = new Headers({
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data;boundary=--------------------------669278087152574002712453'
       });
       const options = new RequestOptions({ headers });
       const url = 'https://cv-bulk-upload.herokuapp.com/upload';
-      this._http.post(url, formData, options).subscribe(res => {
+      this._http.post(url, formData).subscribe(res => {
         console.log(res);
       });
     }

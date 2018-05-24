@@ -193,11 +193,12 @@
             </span>
           </div>
           <div class="filename" *ngIf="zipFileName !== null">
-              <span>{{zipFileName.name}}</span> 
+              <span>{{zipFileName.name}}</span>
+              <span>{{zipFileName.size | json}}</span>
               <mat-icon class="icon-clear" (click)="zipInput.value = null; zipFileName = null;  zipFileSizeExceed = false;">clear</mat-icon>           
             </div>
           <label (click)="sendZip($event, zipInput.value);  $event.stopImmediatePropagation();" class="talentbase__import-panel-item-input">
-            <form action="" enctype="application/zip" (ngSubmit)="sendZip($event)" [formGroup]="zipForm">
+            <form action="" enctype="multipart/form-data" (ngSubmit)="sendZip($event)" [formGroup]="zipForm">
               <label *ngIf="zipInput.value === ''" for="zip">Select file</label>
               <button (click)="$event.stopImmediatePropagation()" *ngIf="zipInput.value !== ''" type="submit">Send file</button>
               <input #zipInput formControlName="zipFile" 
