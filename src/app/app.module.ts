@@ -66,6 +66,7 @@ import { TalentbaseComponent } from './talentbase/talentbase.component';
 import { TalentbaseService } from './talentbase/talentbase.service';
 import { EditUserRoleComponent } from './site-administration/user-management/access-level-page/edit-user-role/edit-user-role.component';
 import { ClickOutsideModule } from 'ng-click-outside';
+import { FileSizePipe } from './talentbase/file-size.pipe';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -81,7 +82,8 @@ const config: SocketIoConfig = {
 	declarations: [
 		AppComponent,
 		ClearStringPipe,
-		TalentbaseComponent
+		TalentbaseComponent,
+		FileSizePipe
 	],
 	imports: [
 		BrowserModule,

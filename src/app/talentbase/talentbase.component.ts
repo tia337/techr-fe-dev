@@ -13,6 +13,7 @@ import { Parse } from '../parse.service';
 import { TalentDbFilters } from '../shared/utils';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { FileSizePipe } from './file-size.pipe';
 // tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -40,7 +41,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   importPanelOpened = false;
   enableDisableFiltersOpened = false;
   jsonFileName = '';
-  zipFileName = null;
+  zipFileName: File = null;
   zipFileSizeExceed = false;
   jsonForm: FormGroup;
   zipForm: FormGroup;
@@ -144,7 +145,6 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     };
     reader.onload = (ev) => {
       this.zipFileName = file;
-      console.log(this.zipFileName);
     };
     reader.readAsText(file);
   }
