@@ -36,6 +36,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 	showInactiveMembers = true;
 	dialog = [];
 	private sessionId: string;
+	private clientSettings;
 	constructor(
 		private _sidenav: SidenavService,
 		private _coreService: CoreService,
@@ -63,6 +64,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+
+		this.getCurrentPartner().then(result => {
+			const partner = result;
+			this.clientSettings = partner.toJSON();
+			this.changeTheme();
+		});
 		this._sidenav.setSidenav(this.sidenav);
 		this.listenToDialogIdUpdated().subscribe(data => {
 			this.updateDialogId(data);
@@ -166,6 +173,28 @@ export class CoreComponent implements OnInit, OnDestroy {
 		}
 		this._cartAdding.cartLoad();
 	}
+
+	getCurrentPartner(): Promise<any> {
+		return new Promise ((resolve, reject) => {
+			const partner = this._parse.getPartner(this._parse.Parse.User.current());
+			console.log(partner);
+			resolve(partner);
+		});
+	}
+
+	changeTheme() {
+		if (this.clientSettings.themeStyle === true) {
+			  const body = document.getElementById('body');
+			  body.classList.add('new');
+			  localStorage.setItem('theme', 'new');
+		};
+		if (this.clientSettings.themeStyle === false) {
+			  const body = document.getElementById('body');
+			  body.classList.remove('new');
+			  localStorage.setItem('theme', 'old');
+		}
+	}
+
 	test(event) {
 		// console.log('open ', event);
 	}

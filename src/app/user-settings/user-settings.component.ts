@@ -26,7 +26,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class UserSettingsComponent implements OnInit {
     settings; //current settings from user input
     settingsInit; // initial state from DB on ngOnInit()
-    //settingsChanged; // uncomment if checkSettingsChanged() for button disable/enable is fixed
     distanceUnits:boolean;
     distanceUnitsInit:boolean;
     themeStyle: boolean;
@@ -34,22 +33,22 @@ export class UserSettingsComponent implements OnInit {
     matcher = new MyErrorStateMatcher();
     public currentEmailSetting; 
     public clicked;
-    constructor(private _parse: Parse,
-                private _root_vcr: RootVCRService) {
-  }
+    constructor(
+        private _parse: Parse,
+        private _root_vcr: RootVCRService
+    ) { }
 //for button disable/enable to work 'Partner' properties should be defined in DB
 async ngOnInit() {
     this.settings = {};
     this.settingsInit = {};
-    //this.settingsChanged = {};  // uncomment if checkSettingsChanged() for button disable/enable is fixed
     let partner = await this.getCurrentPartner();
     this.settings = partner.toJSON();
     this.settingsInit = partner.toJSON();
-    console.log(this.settings);
     this.distanceUnits = (this.settings.candidateDistanceUnitPreferrences == 2);
     this.distanceUnitsInit = (this.settingsInit.candidateDistanceUnitPreferrences == 2);
     this.clicked = this.settingsInit.emailNotificatoinsFrequency;
-    console.log(this.settingsInit.emailNotificatoinsFrequency);
+    this.changeTheme();
+    console.log(this.settings);
   }
   getCurrentPartner() {
       return this._parse.getPartner(this._parse.Parse.User.current());
@@ -87,17 +86,16 @@ async ngOnInit() {
   }
   click(a) {
       this.settings.emailNotificatoinsFrequency = a;
-      console.log(this.settings.emailNotificatoinsFrequency);
       this.currentEmailSetting = a;
   }
 
   changeTheme() {
-      if (this.themeStyle === true) {
+      if (this.settings.themeStyle === true) {
             const body = document.getElementById('body');
 			body.classList.add('new');
 			localStorage.setItem('theme', 'new');
       };
-      if (this.themeStyle === false) {
+      if (this.settings.themeStyle === false) {
             const body = document.getElementById('body');
 			body.classList.remove('new');
 			localStorage.setItem('theme', 'old');
