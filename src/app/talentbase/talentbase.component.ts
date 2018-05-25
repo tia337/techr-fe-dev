@@ -47,6 +47,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   zipForm: FormGroup;
   public filters: Array<FilterItem> = [];
   public filterTypes: Array<UserTalentDBFilter> = [];
+  public filterMode = 'or';
   public candidatesArray: Array<TalentDBCandidate> = [];
   private paginationLimits: PaginationLimits = { from: 0, to: 15 };
   private enabledUserTalentDBFilters: Array<UserTalentDBFilter> = [];
@@ -89,7 +90,6 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
-            console.log(this.filters);
           }).catch(error => console.log(error));
         }
       });
@@ -110,7 +110,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           filter.checked = true;
         }
-      })
+      });
     });
   }
 
@@ -184,13 +184,14 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  enableDisableFilterTypes (type: UserTalentDBFilter) {   
+  enableDisableFilterTypes (type: UserTalentDBFilter) {
+    this.candidatesArray = this.candidatesStorage;
     if (type.checked) {
       this.enabledUserTalentDBFilters.forEach(item => {
         if (item.type === type.type) {
           const index = this.enabledUserTalentDBFilters.indexOf(item);
           this.enabledUserTalentDBFilters.splice(index, 1);
-          this.filters = [];          
+          this.filters = [];
           this.getFilters(this.enabledUserTalentDBFilters);
           type.checked = false;
         }
@@ -202,7 +203,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         type: type.type,
         title: type.title,
         index: index.toString()
-      }
+      };
       this.enabledUserTalentDBFilters.push(item);
       this.filters = [];
       this.getFilters(this.enabledUserTalentDBFilters);
@@ -215,42 +216,81 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   }
 
   enableFilterType (item, filter) {
-    if (!item.disabled) {
-      if (!item.checked) {
-        let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
-        this.filterParamsStorage = tempData.filterParamsStorage;
-        this.filterParams = tempData.filterParams;
-        this.recountFilterTypeItemsCount(this.filterParams);
-        this.filterCandidates(this.candidatesStorage, this.filterParams);
-        item.checked = true;
-        this.disableEnableFilterItems(filter, item);   
-        return;      
-      } else if (item.checked) {
-        let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
-        this.filterParamsStorage = tempData.filterParamsStorage;
-        this.filterParams = tempData.filterParams;
-        this.recountFilterTypeItemsCount(this.filterParams);        
-        this.filterCandidates(this.candidatesStorage, this.filterParams);
-        item.checked = false;
-        this.disableEnableFilterItems(filter, item);
+    if (this.filterMode === 'or') {
+      if (!item.disabled) {
+        if (!item.checked) {
+          const tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+          this.filterParamsStorage = tempData.filterParamsStorage;
+          this.filterParams = tempData.filterParams;
+          this.recountFilterTypeItemsCount(this.filterParamsStorage[this.filterParamsStorage.length - 1].usersId);
+          this.filterCandidates(this.candidatesStorage, this.filterParams);
+          item.checked = true;
+          this.disableEnableFilterItems(filter, item);
+          return;
+        } else if (item.checked) {
+          const tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+          this.filterParamsStorage = tempData.filterParamsStorage;
+          this.filterParams = tempData.filterParams;
+          this.recountFilterTypeItemsCount(this.filterParamsStorage[this.filterParamsStorage.length - 1]);
+          this.filterCandidates(this.candidatesStorage, this.filterParamsStorage[this.filterParamsStorage.length - 1].usersId);
+          item.checked = false;
+          this.disableEnableFilterItems(filter, item);
+        }
       }
+    }
+    if (this.filterMode === 'and') {
+        if (!item.checked) {
+          const tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+          this.filterParamsStorage = tempData.filterParamsStorage;
+          this.filterParams = tempData.filterParams;
+          this.filterCandidates(this.candidatesStorage, this.filterParams);
+          item.checked = true;
+          return;
+        } else if (item.checked) {
+          const tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+          this.filterParamsStorage = tempData.filterParamsStorage;
+          this.filterParams = tempData.filterParams;
+          this.filterCandidates(this.candidatesStorage, this.filterParams);
+          item.checked = false;
+        }
+    }
+  }
+
+  changeFilterMode() {
+    if (this.filterMode === 'or') {
+      this.filterMode = 'and';
+      this.candidatesArray = this.candidatesStorage;
+      this.filters = [];
+      this.getFilters(this.enabledUserTalentDBFilters);
+      return;
+    } else if (this.filterMode === 'and') {
+      this.filterMode = 'or';
+      this.candidatesArray = this.candidatesStorage;
+      this.filters = [];
+      this.getFilters(this.enabledUserTalentDBFilters);
     }
   }
 
   recountFilterTypeItemsCount(filterParams) {
-    this.filters.forEach(filter => {
-      filter.items.forEach(item => {
-        item.usersId.forEach(id => {
-          filterParams.forEach(param => {
-            if (id !== param) {
-              const index = item.usersId.indexOf(id);
-              item.usersId.splice(index, 1);
-              // item.count = parseInt(item.count) - 1;
-            }
-          })
+    if (this.filterMode === 'or') {
+      this.filters.forEach(filter => {
+        filter.items.forEach(item => {
+          const filteredUsersId = [];
+          item.usersId.forEach(id => {
+            filterParams.forEach(param => {
+              if (id === param) {
+                filteredUsersId.push(param);
+              };
+            });
+          });
+          item.usersId = filteredUsersId;
+          item.count = filteredUsersId.length;
+          if (item.usersId.length === 0) {
+            item.count = 0;
+          }
         });
-      })
-    });
+      });
+    };
   }
 
   disableEnableFilterItems(filter: FilterItem, item) {
@@ -272,6 +312,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     if (filterParams.length > 0) {
       this.candidatesArray = this._talentBaseService.filterCandidates(candidatesArray, filterParams);
     } else if (filterParams.length === 0) {
+      this.filters = [];
       this.getFilters(this.enabledUserTalentDBFilters);
       this.candidatesArray = this.candidatesStorage;
     }

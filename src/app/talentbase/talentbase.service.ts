@@ -58,8 +58,8 @@ export class TalentbaseService {
   sortFilterItems(item: FilterItem): FilterItem {
     const newItem: FilterItem = item;
     newItem.items.forEach(item => {
-      item["checked"] = false;
-      item["disabled"] = false;
+      item['checked'] = false;
+      item['disabled'] = false;
     });
     newItem.items = _.sortBy(newItem.items, function (i) {
       return i.count;
@@ -77,9 +77,9 @@ export class TalentbaseService {
             title: item.get('title'),
             type: item.get('type'),
             checked: false
-          }
+          };
           filterTypes.push(data);
-          resolve(filterTypes)
+          resolve(filterTypes);
         });
       });
     });
@@ -94,17 +94,17 @@ export class TalentbaseService {
           item.usersId.forEach(item => {
             paramsArray.push(item);
           });
-          paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);     
-          return { filterParamsStorage: storage, filterParams: paramsArray }; 
+          paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);
+          return { filterParamsStorage: storage, filterParams: paramsArray };
         } else if (storage.length > 0) {
           storage.push(item);
           storage.forEach(param => {
             param.usersId.forEach(id => {
               paramsArray.push(id);
-            })
+            });
           });
           paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);
-          return { filterParamsStorage: storage, filterParams: paramsArray }; 
+          return { filterParamsStorage: storage, filterParams: paramsArray };
         }
     };
     if (item.checked) {
@@ -112,7 +112,7 @@ export class TalentbaseService {
         if (item.title === param.title) {
           const index = storage.indexOf(param);
           storage.splice(index, 1);
-          console.log("storage = ", storage);          
+          console.log("storage = ", storage);
         }
         storage.forEach(param => {
           param.usersId.forEach(id => {

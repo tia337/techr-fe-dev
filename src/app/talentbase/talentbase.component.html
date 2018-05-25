@@ -24,6 +24,12 @@
             <span (click)="filtersOpened = !filtersOpened" class="blue-btn">
               <span *ngIf="filtersOpened">Close</span> <span *ngIf="!filtersOpened">Open</span> Filters
             </span>
+            <span *ngIf="filtersOpened" (click)="changeFilterMode()" [ngClass]="{'disabled': filterMode === 'or'}" class="blue-btn">
+              Filter mode: AND
+            </span>
+            <span *ngIf="filtersOpened" (click)="changeFilterMode()" [ngClass]="{'disabled': filterMode === 'and'}" class="blue-btn">
+              Filter mode: OR
+            </span>
             <span class="blue-btn flex pos-r enable-disable"
               (click)="enableDisableFiltersOpened = !enableDisableFiltersOpened" 
               *ngIf="filtersOpened">
