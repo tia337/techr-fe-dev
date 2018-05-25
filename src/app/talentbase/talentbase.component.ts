@@ -213,20 +213,55 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     console.log(values);
   }
 
-  enableFilterType (item) {
+  enableFilterType (item, filter) {
+    if (!item.disabled) {
+      if (!item.checked) {
+        let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+        this.filterParamsStorage = tempData.filterParamsStorage;
+        this.filterParams = tempData.filterParams;
+        this.filterCandidates(this.candidatesStorage, this.filterParams);
+        item.checked = true;
+        this.disableEnableFilterItems(filter, item);      
+        return;      
+      } else if (item.checked) {
+        let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+        this.filterParamsStorage = tempData.filterParamsStorage;
+        this.filterParams = tempData.filterParams;
+        this.filterCandidates(this.candidatesStorage, this.filterParams);
+        item.checked = false;
+        this.disableEnableFilterItems(filter, item);
+      }
+    }
+  }
+
+  recountFilterTypeItemsCount(filterParams) {
+    this.filters.forEach(filter => {
+      filter.items.forEach(item => {
+        item.usersId.forEach(id => {
+          filterParams.forEach(param => {
+            if (id !== param) {
+              const index = item.usersId.indexOf(id);
+              item.usersId.splice(index, 1);
+              item.count = item.count - 1;
+            }
+          })
+        });
+      })
+    });
+  }
+
+  disableEnableFilterItems(filter: FilterItem, item) {
+    if (item.checked) {
+      filter.items.forEach(type => {
+        if (type.title !== item.title) {
+          type.disabled = true;
+        }
+      });
+    };
     if (!item.checked) {
-      let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
-      this.filterParamsStorage = tempData.filterParamsStorage;
-      this.filterParams = tempData.filterParams;
-      this.filterCandidates(this.candidatesStorage, this.filterParams);
-      item.checked = true;
-      return;      
-    } else if (item.checked) {
-      let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
-      this.filterParamsStorage = tempData.filterParamsStorage;
-      this.filterParams = tempData.filterParams;
-      this.filterCandidates(this.candidatesStorage, this.filterParams);
-      item.checked = false;
+      filter.items.forEach(type => {
+          type.disabled = false;
+      });
     }
   }
 
@@ -234,6 +269,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     if (filterParams.length > 0) {
       this.candidatesArray = this._talentBaseService.filterCandidates(candidatesArray, filterParams);
     } else if (filterParams.length === 0) {
+      this.getFilters(this.enabledUserTalentDBFilters);
       this.candidatesArray = this.candidatesStorage;
     }
   }

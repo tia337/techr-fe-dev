@@ -110,10 +110,10 @@ type BulkActionsArray = Array<{
         items: Array<{ 
             title: string, 
             usersId: Array<string>,
-            count: number | string,
+            count: number,
+            disabled?: boolean            
           }>,
         checked?: boolean,
-        disabled?: boolean
     }
     
     type UserTalentDBFilter = {

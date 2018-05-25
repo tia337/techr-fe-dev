@@ -68,7 +68,10 @@
               </div>
               <div class="talentbase__filter-main-filter--item-types">
                 <ul>
-                  <li *ngFor="let item of filter.items" (click)="enableFilterType(item)">
+                  <li 
+                    *ngFor="let item of filter.items" 
+                    [ngClass]="{'disabled': item.disabled}" 
+                    (click)="enableFilterType(item, filter)">
                     <span>
                       <span class="filter-checkbox">
                         <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
