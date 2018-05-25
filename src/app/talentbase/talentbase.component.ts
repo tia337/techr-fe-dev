@@ -89,6 +89,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
+            console.log(this.filters);
           }).catch(error => console.log(error));
         }
       });
@@ -219,14 +220,16 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
         this.filterParamsStorage = tempData.filterParamsStorage;
         this.filterParams = tempData.filterParams;
+        this.recountFilterTypeItemsCount(this.filterParams);
         this.filterCandidates(this.candidatesStorage, this.filterParams);
         item.checked = true;
-        this.disableEnableFilterItems(filter, item);      
+        this.disableEnableFilterItems(filter, item);   
         return;      
       } else if (item.checked) {
         let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
         this.filterParamsStorage = tempData.filterParamsStorage;
         this.filterParams = tempData.filterParams;
+        this.recountFilterTypeItemsCount(this.filterParams);        
         this.filterCandidates(this.candidatesStorage, this.filterParams);
         item.checked = false;
         this.disableEnableFilterItems(filter, item);
@@ -242,7 +245,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
             if (id !== param) {
               const index = item.usersId.indexOf(id);
               item.usersId.splice(index, 1);
-              item.count = item.count - 1;
+              // item.count = parseInt(item.count) - 1;
             }
           })
         });
