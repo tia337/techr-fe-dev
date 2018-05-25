@@ -51,9 +51,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   private paginationLimits: PaginationLimits = { from: 0, to: 15 };
   private enabledUserTalentDBFilters: Array<UserTalentDBFilter> = [];
   private candidatesStorage: Array<TalentDBCandidate> = [];
-  private filterParams: FilterParams;
   private currentUser;
   private clientId: string;
+  private filterParams: Array<string> = [];
+  private filterParamsStorage = [];
 
   constructor(
     private _talentBaseService: TalentbaseService,
@@ -88,7 +89,6 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
-            console.log(this.filters);
           }).catch(error => console.log(error));
         }
       });
@@ -212,6 +212,32 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   log(values) {
     console.log(values);
   }
+
+  enableFilterType (item) {
+    if (!item.checked) {
+      let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+      this.filterParamsStorage = tempData.filterParamsStorage;
+      this.filterParams = tempData.filterParams;
+      this.filterCandidates(this.candidatesStorage, this.filterParams);
+      item.checked = true;
+      return;      
+    } else if (item.checked) {
+      let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+      this.filterParamsStorage = tempData.filterParamsStorage;
+      this.filterParams = tempData.filterParams;
+      this.filterCandidates(this.candidatesStorage, this.filterParams);
+      item.checked = false;
+    }
+  }
+
+  filterCandidates(candidatesArray: Array<TalentDBCandidate>, filterParams: Array<string>) {
+    if (filterParams.length > 0) {
+      this.candidatesArray = this._talentBaseService.filterCandidates(candidatesArray, filterParams);
+    } else if (filterParams.length === 0) {
+      this.candidatesArray = this.candidatesStorage;
+    }
+  }
+
 
   ngOnDestroy() {
     this._parse.execCloud('setNewTalentDbFilters', { userId: this.currentUser.id, filtersArray: this.enabledUserTalentDBFilters });

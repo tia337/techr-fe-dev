@@ -806,6 +806,16 @@ app-chat .dropdown-menu {
     .chat-container {
         padding: 5px!important;
     }
+    .talentbase__filter-icon,
+    .talentbase__filter-content {
+        background: #fafafa!important;
+        color: #424242!important;
+    }
+
+    .talentbase__filter-header--filter-input[_ngcontent-c7] input[_ngcontent-c7] {
+        border: 1px solid #424242!important;
+        padding: 8px!important;
+    }
 }
 
 

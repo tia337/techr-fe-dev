@@ -96,6 +96,7 @@ type BulkActionsArray = Array<{
     // TALENT DATA BASE TYPES START
     
     type TalentDBCandidate = {
+        _id: string,
         firstName: string,
         lastName: string,
         headline: string,
@@ -106,8 +107,13 @@ type BulkActionsArray = Array<{
     
     type FilterItem = {
         type: string,
-        items: Array<{ title: string, count: number | string }>
-        checked?: boolean
+        items: Array<{ 
+            title: string, 
+            usersId: Array<string>,
+            count: number | string,
+          }>,
+        checked?: boolean,
+        disabled?: boolean
     }
     
     type UserTalentDBFilter = {

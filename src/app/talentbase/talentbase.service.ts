@@ -57,12 +57,15 @@ export class TalentbaseService {
 
   sortFilterItems(item: FilterItem): FilterItem {
     const newItem: FilterItem = item;
+    newItem.items.forEach(item => {
+      item["checked"] = false;
+      item["disabled"] = false;
+    });
     newItem.items = _.sortBy(newItem.items, function (i) {
       return i.count;
     }).reverse();
     return newItem;
   }
-
 
   getAllFilterTypes(): Promise<UserTalentDBFilter[]> {
     const filterTypes: Array<UserTalentDBFilter> = [];
@@ -80,5 +83,67 @@ export class TalentbaseService {
         });
       });
     });
+  }
+
+  createFilterParams(item, filterParamsStorage: Array<any>): any {
+    const storage = filterParamsStorage;
+    let paramsArray: Array<string> = [];
+    if (!item.checked) {
+        if (storage.length === 0) {
+          storage.push(item);
+          item.usersId.forEach(item => {
+            paramsArray.push(item);
+          });
+          paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);     
+          return { filterParamsStorage: storage, filterParams: paramsArray }; 
+        } else if (storage.length > 0) {
+          storage.push(item);
+          storage.forEach(param => {
+            param.usersId.forEach(id => {
+              paramsArray.push(id);
+            })
+          });
+          paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);
+          return { filterParamsStorage: storage, filterParams: paramsArray }; 
+        }
+    };
+    if (item.checked) {
+      storage.forEach(param => {
+        if (item.title === param.title) {
+          const index = storage.indexOf(param);
+          storage.splice(index, 1);
+          console.log("storage = ", storage);          
+        }
+        storage.forEach(param => {
+          param.usersId.forEach(id => {
+            paramsArray.push(id);
+          });
+        });
+      });
+      paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);
+      return { filterParamsStorage: storage, filterParams: paramsArray };
+    }
+  }
+
+  removeDuplicatesFromFilterParams(filterParams: Array<string>): Array<string> {
+    let params: Array<string> = [];
+    filterParams.forEach(param => {
+        if (!params.includes(param)) {
+          params.push(param);
+        }
+    });
+    return params;
+  }
+
+  filterCandidates(candidatesArray: Array<TalentDBCandidate>, filterParams: Array<string>): Array<TalentDBCandidate> {
+    const filteredArray: Array<TalentDBCandidate> = [];
+    candidatesArray.forEach(candidate => {
+      filterParams.forEach(param => {
+        if (candidate._id === param) {
+          filteredArray.push(candidate);
+        }
+      });
+    });
+    return filteredArray;
   }
 }
