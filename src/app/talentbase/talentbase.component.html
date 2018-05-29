@@ -69,8 +69,8 @@
           <div *ngIf="filtersOpened && filters.length > 0"  class="talentbase__filter-main-filters">
             <div class="talentbase__filter-main-filter--item" *ngFor="let filter of filters">
               <div class="talentbase__filter-main-filter--item-title">
-                <span>{{filter.type}}</span>
-                <input type="text" 
+                <span [ngClass]="{'visible': filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">{{filter.type}}</span>
+                <input type="text" placeholder="{{filter.type}}"
                     (input)="filterType($event, filter)"
                     [ngClass]="{none: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">
                 <mat-icon [ngClass]="{hidden: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}" 
