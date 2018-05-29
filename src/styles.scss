@@ -812,10 +812,34 @@ app-chat .dropdown-menu {
         color: #424242!important;
     }
 
-    .talentbase__filter-header--filter-input[_ngcontent-c7] input[_ngcontent-c7] {
+    .talentbase__filter-header--filter-input input {
         border: 1px solid #424242!important;
         padding: 8px!important;
     }
+
+    .talentbase__filter-header--action-buttons span:first-child {
+        border: 1px solid #000!important;
+    }
+
+    .talentbase__filter-header--filter-input .blue-btn {
+        background: #13579a!important;
+        padding: 8.5px 16px!important;
+        &:hover {
+            color: #13579a!important;
+            background: #fff!important;
+            border: 1px solid #13579a!important;
+        }
+    }
+
+    .talentbase__filter-header--action-buttons span:last-child {
+        background: #50a047!important;
+        &:hover {
+            color: #50a047!important;
+            background: #fff!important;
+            border: 1px solid #50a047!important;
+        }
+    }
+
 }
 
 

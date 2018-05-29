@@ -110,8 +110,10 @@ type BulkActionsArray = Array<{
         items: Array<{ 
             title: string, 
             usersId: Array<string>,
+            filteredUsersId?: Array<string>,
             count: number,
-            disabled?: boolean            
+            disabled?: boolean,
+            hidden?: boolean    
           }>,
         checked?: boolean,
     }

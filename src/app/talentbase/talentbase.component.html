@@ -24,6 +24,12 @@
             <span (click)="filtersOpened = !filtersOpened" class="blue-btn">
               <span *ngIf="filtersOpened">Close</span> <span *ngIf="!filtersOpened">Open</span> Filters
             </span>
+            <span *ngIf="filtersOpened" (click)="changeFilterMode()" [ngClass]="{'disabled': filterMode === 'or'}" class="blue-btn">
+              Filter mode: AND
+            </span>
+            <span *ngIf="filtersOpened" (click)="changeFilterMode()" [ngClass]="{'disabled': filterMode === 'and'}" class="blue-btn">
+              Filter mode: OR
+            </span>
             <span class="blue-btn flex pos-r enable-disable"
               (click)="enableDisableFiltersOpened = !enableDisableFiltersOpened" 
               *ngIf="filtersOpened">
@@ -64,21 +70,27 @@
             <div class="talentbase__filter-main-filter--item" *ngFor="let filter of filters">
               <div class="talentbase__filter-main-filter--item-title">
                 <span>{{filter.type}}</span>
-                <mat-icon class="search-icon">search</mat-icon>
+                <input type="text" 
+                    (keydown)="filterType($event, filter)"
+                    [ngClass]="{none: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">
+                <mat-icon [ngClass]="{hidden: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}" 
+                        class="search-icon">search</mat-icon>
               </div>
               <div class="talentbase__filter-main-filter--item-types">
                 <ul>
                   <li 
-                    *ngFor="let item of filter.items" 
+                    *ngFor="let item of filter.items"
                     [ngClass]="{'disabled': item.disabled}" 
                     (click)="enableFilterType(item, filter)">
-                    <span>
-                      <span class="filter-checkbox">
-                        <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
+                    <span [ngClass]="{'none': item.hidden === true}">
+                      <span>
+                        <span class="filter-checkbox">
+                          <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
+                        </span>
+                        <span>{{item.title}}</span>
                       </span>
-                      <span>{{item.title}}</span>
+                      <span>({{item.count}})</span>
                     </span>
-                    <span>({{item.count}})</span>
                   </li>
                 </ul>
               </div>
@@ -98,13 +110,13 @@
                  </div>
                  <div class="stripe"></div>
                  <span class="showing-count">Showing {{candidatesArray.length}} of 
-                   <span *ngIf="filterParams.length === 0">{{candidatesStorage.length}}</span>
-                   <span *ngIf="filterParams.length > 0">{{candidatesArray.length}}</span>
+                   <span *ngIf="filterParamsStorage.length === 0">{{candidatesStorage.length}}</span>
+                   <span *ngIf="filterParamsStorage.length > 0">{{candidatesArray.length}}</span>
                   </span>
-                 <div class="sorting">
+                 <!-- <div class="sorting">
                   <span class="sorting-title">Sort</span>
                   <div class="sorting-type">Creation date</div>
-                 </div>
+                 </div> -->
               </div>
 
               <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0">

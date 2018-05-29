@@ -62,12 +62,11 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin: 20px 0;
     }
     &-header--filter-input {
         display: flex;
         align-items: center;
-        padding-top: 20px;
         input {
             background: #ffffff;
             border: none;
@@ -84,7 +83,7 @@
         .blue-btn {
             letter-spacing: 0.7px;
             background: #305597;
-            padding: 8px 16px;
+            padding: 8.5px 16px;
             color: #fff;
             cursor: pointer;
             transition: .3s all ease-in-out;
@@ -540,4 +539,12 @@
 .disabled {
     opacity: .5;
     cursor: not-allowed;
+}
+
+.none {
+    display: none!important;
+}
+
+.hidden {
+    visibility: hidden!important;
 }

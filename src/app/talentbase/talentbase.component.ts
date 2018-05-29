@@ -46,11 +46,14 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   jsonForm: FormGroup;
   zipForm: FormGroup;
   public filters: Array<FilterItem> = [];
+  private filtersStorage: Array<FilterItem> = [];
+  private latestFilterParam;
   public filterTypes: Array<UserTalentDBFilter> = [];
+  public filterMode = 'or';
   public candidatesArray: Array<TalentDBCandidate> = [];
+  private candidatesStorage: Array<TalentDBCandidate> = [];
   private paginationLimits: PaginationLimits = { from: 0, to: 15 };
   private enabledUserTalentDBFilters: Array<UserTalentDBFilter> = [];
-  private candidatesStorage: Array<TalentDBCandidate> = [];
   private currentUser;
   private clientId: string;
   private filterParams: Array<string> = [];
@@ -89,7 +92,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
-            console.log(this.filters);
+            console.log('getFilters: ', this.filters);
           }).catch(error => console.log(error));
         }
       });
@@ -110,7 +113,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           filter.checked = true;
         }
-      })
+      });
     });
   }
 
@@ -184,13 +187,14 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  enableDisableFilterTypes (type: UserTalentDBFilter) {   
+  enableDisableFilterTypes (type: UserTalentDBFilter) {
+    this.candidatesArray = this.candidatesStorage;
     if (type.checked) {
       this.enabledUserTalentDBFilters.forEach(item => {
         if (item.type === type.type) {
           const index = this.enabledUserTalentDBFilters.indexOf(item);
           this.enabledUserTalentDBFilters.splice(index, 1);
-          this.filters = [];          
+          this.filters = [];
           this.getFilters(this.enabledUserTalentDBFilters);
           type.checked = false;
         }
@@ -202,7 +206,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         type: type.type,
         title: type.title,
         index: index.toString()
-      }
+      };
       this.enabledUserTalentDBFilters.push(item);
       this.filters = [];
       this.getFilters(this.enabledUserTalentDBFilters);
@@ -215,41 +219,126 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   }
 
   enableFilterType (item, filter) {
-    if (!item.disabled) {
-      if (!item.checked) {
-        let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
-        this.filterParamsStorage = tempData.filterParamsStorage;
-        this.filterParams = tempData.filterParams;
-        this.recountFilterTypeItemsCount(this.filterParams);
-        this.filterCandidates(this.candidatesStorage, this.filterParams);
-        item.checked = true;
-        this.disableEnableFilterItems(filter, item);   
-        return;      
-      } else if (item.checked) {
-        let tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
-        this.filterParamsStorage = tempData.filterParamsStorage;
-        this.filterParams = tempData.filterParams;
-        this.recountFilterTypeItemsCount(this.filterParams);        
-        this.filterCandidates(this.candidatesStorage, this.filterParams);
-        item.checked = false;
-        this.disableEnableFilterItems(filter, item);
+    if (this.filterMode === 'or') {
+      if (!item.disabled) {
+        if (!item.checked) {
+          this.latestFilterParam = item;
+          if (this.filterParamsStorage.length === 0) {
+            item.filteredUsersId = item.usersId;
+            this.filterParamsStorage.push(item);
+            const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);
+            this.recountFilterTypeItemsCount(params);
+            this.filterCandidates(this.candidatesStorage, params);
+            item.checked = true;
+            this.disableEnableFilterItems(filter, item);
+            return;
+          } else if (this.filterParamsStorage.length > 0) {
+            this.filterParamsStorage.push(item);
+            const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);
+            this.recountFilterTypeItemsCount(params);
+            this.filterCandidates(this.candidatesStorage, params);
+            item.checked = true;
+            this.disableEnableFilterItems(filter, item);
+          }
+          return;
+        } else if (item.checked) {
+          this.filterParamsStorage = this._talentBaseService.createFilterParams(item, this.filterParamsStorage).filterParamsStorage;
+          const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);          
+          if (this.filterParamsStorage.length > 0) {
+            this.recountFilterTypeItemsCount(params);
+            this.filterCandidates(this.candidatesStorage, params);
+          };
+          if (this.filterParamsStorage.length === 0) {
+            this.resetFilters();
+          };
+          item.checked = false;
+          this.disableEnableFilterItems(filter, item);
+        }
       }
     }
+    if (this.filterMode === 'and') {
+        if (!item.checked) {
+          const tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+          this.filterParamsStorage = tempData.filterParamsStorage;
+          this.filterParams = tempData.filterParams;
+          this.filterCandidates(this.candidatesStorage, this.filterParams);
+          item.checked = true;
+          return;
+        } else if (item.checked) {
+          const tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
+          this.filterParamsStorage = tempData.filterParamsStorage;
+          this.filterParams = tempData.filterParams;
+          this.filterCandidates(this.candidatesStorage, this.filterParams);
+          item.checked = false;
+        }
+    }
+  }
+
+  changeFilterMode() {
+    if (this.filterMode === 'or') {
+      this.filterMode = 'and';
+      this.candidatesArray = this.candidatesStorage;
+      this.filters = [];
+      this.getFilters(this.enabledUserTalentDBFilters);
+      return;
+    } else if (this.filterMode === 'and') {
+      this.filterMode = 'or';
+      this.candidatesArray = this.candidatesStorage;
+      this.filters = [];
+      this.getFilters(this.enabledUserTalentDBFilters);
+    }
+  }
+
+  resetFilters() {
+    this.filters.forEach(filter => {
+      filter.items.forEach(item => {
+        item.filteredUsersId = [];
+        item.count = item.usersId.length;
+      });
+    });
+  }
+
+  definePreviousFilterParam(filterParam, filterParamsStorage) {
+    let index;
+    filterParamsStorage.forEach(filter => {
+      if (filter.title === filterParam.title) {
+        index = filterParamsStorage.indexOf(filter);
+      }
+    });
+    if (index === 0) {
+      return index;
+    } else if (index > 0 && index !== filterParamsStorage.length - 1) {
+      index = index - 1;
+      return index;
+    } else if (index === filterParamsStorage.length - 1) {
+      return 0;
+    }
+  }
+
+  setCountToLatestFilterParam(filterParam) {
+    this.filters.forEach(filter => {
+      filter.items.forEach(item => {
+        if (item.title === filterParam.title) {
+          item.count = item.usersId.length;
+          item.filteredUsersId = item.usersId;
+        }
+      });
+    });
   }
 
   recountFilterTypeItemsCount(filterParams) {
     this.filters.forEach(filter => {
       filter.items.forEach(item => {
+        item.filteredUsersId = [];
         item.usersId.forEach(id => {
           filterParams.forEach(param => {
-            if (id !== param) {
-              const index = item.usersId.indexOf(id);
-              item.usersId.splice(index, 1);
-              item.count = item.usersId.length;
-            }
-          })
+            if (id === param && !item.filteredUsersId.includes(param)) {
+              item.filteredUsersId.push(param);
+            };
+          });
         });
-      })
+        item.count = item.filteredUsersId.length;
+      });
     });
   }
 
@@ -272,11 +361,26 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     if (filterParams.length > 0) {
       this.candidatesArray = this._talentBaseService.filterCandidates(candidatesArray, filterParams);
     } else if (filterParams.length === 0) {
-      this.getFilters(this.enabledUserTalentDBFilters);
+      this.resetFilters();
       this.candidatesArray = this.candidatesStorage;
     }
   }
 
+  filterType(value, filter: FilterItem) {
+
+    console.log(value);
+    // console.log(value.toLowerCase());
+    // filter.items.forEach(item => {
+    //   if (item.title.toLowerCase().indexOf(value.toLowerCase()) === -1){
+    //     item.hidden = true;
+    //   }
+    // });
+    // if (value === '') {
+    //   filter.items.forEach(item => {
+    //     item.hidden = false;
+    //   });
+    // }
+  }
 
   ngOnDestroy() {
     this._parse.execCloud('setNewTalentDbFilters', { userId: this.currentUser.id, filtersArray: this.enabledUserTalentDBFilters });

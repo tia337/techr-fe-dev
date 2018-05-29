@@ -58,8 +58,10 @@ export class TalentbaseService {
   sortFilterItems(item: FilterItem): FilterItem {
     const newItem: FilterItem = item;
     newItem.items.forEach(item => {
-      item["checked"] = false;
-      item["disabled"] = false;
+      item['checked'] = false;
+      item['disabled'] = false;
+      item['hidden'] = false;
+      item['filteredUsersId'] = [];
     });
     newItem.items = _.sortBy(newItem.items, function (i) {
       return i.count;
@@ -77,9 +79,9 @@ export class TalentbaseService {
             title: item.get('title'),
             type: item.get('type'),
             checked: false
-          }
+          };
           filterTypes.push(data);
-          resolve(filterTypes)
+          resolve(filterTypes);
         });
       });
     });
@@ -89,30 +91,20 @@ export class TalentbaseService {
     const storage = filterParamsStorage;
     let paramsArray: Array<string> = [];
     if (!item.checked) {
-        if (storage.length === 0) {
-          storage.push(item);
-          item.usersId.forEach(item => {
-            paramsArray.push(item);
+        storage.push(item);
+        storage.forEach(param => {
+          param.usersId.forEach(id => {
+            paramsArray.push(id);
           });
-          paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);     
-          return { filterParamsStorage: storage, filterParams: paramsArray }; 
-        } else if (storage.length > 0) {
-          storage.push(item);
-          storage.forEach(param => {
-            param.usersId.forEach(id => {
-              paramsArray.push(id);
-            })
-          });
-          paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);
-          return { filterParamsStorage: storage, filterParams: paramsArray }; 
-        }
+        });
+        paramsArray = this.removeDuplicatesFromFilterParams(paramsArray);
+        return { filterParamsStorage: storage, filterParams: paramsArray };
     };
     if (item.checked) {
       storage.forEach(param => {
         if (item.title === param.title) {
           const index = storage.indexOf(param);
           storage.splice(index, 1);
-          console.log("storage = ", storage);          
         }
         storage.forEach(param => {
           param.usersId.forEach(id => {
@@ -133,6 +125,29 @@ export class TalentbaseService {
         }
     });
     return params;
+  }
+
+  createFilterParamsForCompoundFilter(array) {
+    if (array.length > 0) {
+      let newArray = [];
+      array[0].usersId.forEach(id => {
+        newArray.push(id);
+      }); 
+      console.log('newArray', newArray);
+      for (let i = 1; i < array.length; i++) {
+        let tempArray = [];
+        for (let b = 0; b < array[i].usersId.length; b++) {
+          for (let a = 0; a < newArray.length; a++) {
+            if (array[i].usersId[b] === newArray[a] && !tempArray.includes(array[i].usersId[b])) {
+              tempArray.push(array[i].usersId[b]);
+            }
+          }
+        }
+        newArray = tempArray;
+      }
+      newArray = this.removeDuplicatesFromFilterParams(newArray);
+      return newArray;
+    }
   }
 
   filterCandidates(candidatesArray: Array<TalentDBCandidate>, filterParams: Array<string>): Array<TalentDBCandidate> {
