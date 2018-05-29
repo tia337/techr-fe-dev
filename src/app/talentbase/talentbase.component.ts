@@ -369,8 +369,11 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   filterType(event, filter: FilterItem) {
     const value = event.target.value.toLowerCase();
     filter.items.forEach(item => {
-      if (item.title.toLowerCase().indexOf(value) === -1){
-        item.hidden = true;
+      if (typeof item.title === 'string') {
+        const title = item.title.toLowerCase();
+        if (title.indexOf(value) === -1) {
+          item.hidden = true;
+        }
       }
     });
     if (value === '') {
