@@ -71,7 +71,7 @@
               <div class="talentbase__filter-main-filter--item-title">
                 <span>{{filter.type}}</span>
                 <input type="text" 
-                    (keydown)="filterType($event, filter)"
+                    (input)="filterType($event, filter)"
                     [ngClass]="{none: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">
                 <mat-icon [ngClass]="{hidden: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}" 
                         class="search-icon">search</mat-icon>
@@ -80,17 +80,15 @@
                 <ul>
                   <li 
                     *ngFor="let item of filter.items"
-                    [ngClass]="{'disabled': item.disabled}" 
+                    [ngClass]="{'disabled': item.disabled, 'none': item.hidden === true}" 
                     (click)="enableFilterType(item, filter)">
-                    <span [ngClass]="{'none': item.hidden === true}">
-                      <span>
-                        <span class="filter-checkbox">
-                          <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
-                        </span>
-                        <span>{{item.title}}</span>
+                    <span>
+                      <span class="filter-checkbox">
+                        <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
                       </span>
-                      <span>({{item.count}})</span>
+                      <span>{{item.title}}</span>
                     </span>
+                    <span>({{item.count}})</span>
                   </li>
                 </ul>
               </div>

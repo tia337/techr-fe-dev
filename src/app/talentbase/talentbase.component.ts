@@ -49,7 +49,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   private filtersStorage: Array<FilterItem> = [];
   private latestFilterParam;
   public filterTypes: Array<UserTalentDBFilter> = [];
-  public filterMode = 'or';
+  public filterMode = 'and';
   public candidatesArray: Array<TalentDBCandidate> = [];
   private candidatesStorage: Array<TalentDBCandidate> = [];
   private paginationLimits: PaginationLimits = { from: 0, to: 15 };
@@ -219,7 +219,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   }
 
   enableFilterType (item, filter) {
-    if (this.filterMode === 'or') {
+    if (this.filterMode === 'and') {
       if (!item.disabled) {
         if (!item.checked) {
           this.latestFilterParam = item;
@@ -256,7 +256,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         }
       }
     }
-    if (this.filterMode === 'and') {
+    if (this.filterMode === 'or') {
         if (!item.checked) {
           const tempData = this._talentBaseService.createFilterParams(item, this.filterParamsStorage);
           this.filterParamsStorage = tempData.filterParamsStorage;
@@ -366,20 +366,18 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterType(value, filter: FilterItem) {
-
-    console.log(value);
-    // console.log(value.toLowerCase());
-    // filter.items.forEach(item => {
-    //   if (item.title.toLowerCase().indexOf(value.toLowerCase()) === -1){
-    //     item.hidden = true;
-    //   }
-    // });
-    // if (value === '') {
-    //   filter.items.forEach(item => {
-    //     item.hidden = false;
-    //   });
-    // }
+  filterType(event, filter: FilterItem) {
+    const value = event.target.value.toLowerCase();
+    filter.items.forEach(item => {
+      if (item.title.toLowerCase().indexOf(value) === -1){
+        item.hidden = true;
+      }
+    });
+    if (value === '') {
+      filter.items.forEach(item => {
+        item.hidden = false;
+      });
+    }
   }
 
   ngOnDestroy() {
