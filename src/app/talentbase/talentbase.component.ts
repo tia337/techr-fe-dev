@@ -245,7 +245,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
             if (id !== param) {
               const index = item.usersId.indexOf(id);
               item.usersId.splice(index, 1);
-              // item.count = parseInt(item.count) - 1;
+              item.count = item.usersId.length;
             }
           })
         });

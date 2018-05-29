@@ -13,7 +13,7 @@ export const DeveloperListType = {
 };
 
 export const TalentDbFilters = [
-	{ type: '0', functionName: 'getTalentDBAppliedToFilter' },
+	{ type: '0', functionName: 'getAppliedToFilters' },
 	{ type: '1', functionName: 'getPipelineStatusFilters' },
 	{ type: '2', functionName: 'getLocationFilters' },
 	{ type: '3', functionName: 'getAvailabilityFilters' },
