@@ -132,7 +132,7 @@ export class TalentbaseService {
       let newArray = [];
       array[0].usersId.forEach(id => {
         newArray.push(id);
-      }); 
+      });
       console.log('newArray', newArray);
       for (let i = 1; i < array.length; i++) {
         let tempArray = [];
