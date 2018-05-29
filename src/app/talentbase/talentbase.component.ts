@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TalentbaseService } from './talentbase.service';
-import {AnimationBuilder} from '@angular/animations';
+import { AnimationBuilder } from '@angular/animations';
 import {
   trigger,
   state,
@@ -14,6 +14,7 @@ import { TalentDbFilters } from '../shared/utils';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { FileSizePipe } from './file-size.pipe';
+import { HighlightSearchPipe } from './highlight-search.pipe';
 // tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -45,6 +46,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   zipFileSizeExceed = false;
   jsonForm: FormGroup;
   zipForm: FormGroup;
+  noCandidatesFound = false;
   public filters: Array<FilterItem> = [];
   private filtersStorage: Array<FilterItem> = [];
   private latestFilterParam;
@@ -52,6 +54,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   public filterMode = 'and';
   public candidatesArray: Array<TalentDBCandidate> = [];
   private candidatesStorage: Array<TalentDBCandidate> = [];
+  private filteredCandidatesStorage: Array<TalentDBCandidate> = [];
   private paginationLimits: PaginationLimits = { from: 0, to: 15 };
   private enabledUserTalentDBFilters: Array<UserTalentDBFilter> = [];
   private currentUser;
@@ -86,7 +89,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
 
   }
 
-  getFilters(userTalentDBFilters: Array<UserTalentDBFilter>) {
+  getFilters(userTalentDBFilters: Array<UserTalentDBFilter>): void {
     TalentDbFilters.forEach(filter => {
       userTalentDBFilters.forEach(item => {
         if (filter.type === item.type) {
@@ -100,14 +103,14 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     this.getAllFilterTypes();
   }
 
-  getAllFilterTypes() {
+  getAllFilterTypes(): void {
     this._talentBaseService.getAllFilterTypes().then(result => {
       this.filterTypes = result;
       this.checkFiltersOnInit(this.filterTypes, this.enabledUserTalentDBFilters);
     }).catch(error => console.log('error while getting getAllFilterTypes: ', error));
   }
 
-  checkFiltersOnInit (allFilterTypes: Array<UserTalentDBFilter>, userFilterTypes: Array<UserTalentDBFilter>) {
+  checkFiltersOnInit (allFilterTypes: Array<UserTalentDBFilter>, userFilterTypes: Array<UserTalentDBFilter>): void {
     allFilterTypes.forEach(filter => {
       userFilterTypes.forEach(item => {
         if (filter.type === item.type) {
@@ -117,20 +120,25 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  uploadMoreCandidates(event) {
+  uploadMoreCandidates(event): void {
     if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
-      this.candidatesArray = this.candidatesArray
-        .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.candidatesStorage));
-        this.updatePaginationLimits();
+      if (this.filteredCandidatesStorage.length > 0) {
+        this.candidatesArray = this.candidatesArray
+          .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.filteredCandidatesStorage));
+      } else if (this.filteredCandidatesStorage.length > 0) {
+        this.candidatesArray = this.candidatesArray
+          .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.candidatesStorage));
+      }
+      this.updatePaginationLimits();
     }
   }
 
-  selectAllCandidates () {
+  selectAllCandidates (): void {
    this.allSelected = !this.allSelected;
    this.checkedCandidates = this._talentBaseService.selectAllCandidates(this.candidatesArray);
   }
 
-  setFileName(fileName, input, event) {
+  setFileName(fileName, input, event): void {
     const ev = event;
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -139,7 +147,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     };
   }
 
-  setZipFileName (fileName, input, event) {
+  setZipFileName (fileName, input, event): void {
     const ev = event;
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -154,12 +162,17 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     reader.readAsText(file);
   }
 
-  updatePaginationLimits () {
+  updatePaginationLimits (): void {
     this.paginationLimits.from += 15;
     this.paginationLimits.to += 15;
   }
 
-  createForms() {
+  resetPaginationLimits(): void {
+    this.paginationLimits.from = 0;
+    this.paginationLimits.to = 15;
+  }
+
+  createForms(): void {
     this.jsonForm = this._fb.group({
       jsonFile: ['', Validators.required]
     });
@@ -168,7 +181,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  sendZip(event, value?) {
+  sendZip(event, value?): void {
     if (value === '' || this.zipFileName.size > 104857600) {
       return;
     } else {
@@ -218,9 +231,9 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     console.log(values);
   }
 
-  enableFilterType (item, filter) {
+  enableFilterType (item, filter): void {
     if (this.filterMode === 'and') {
-      if (!item.disabled) {
+      if (!item.disabled && item.count !== 0) {
         if (!item.checked) {
           this.latestFilterParam = item;
           if (this.filterParamsStorage.length === 0) {
@@ -243,13 +256,13 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
           return;
         } else if (item.checked) {
           this.filterParamsStorage = this._talentBaseService.createFilterParams(item, this.filterParamsStorage).filterParamsStorage;
-          const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);          
+          const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);
           if (this.filterParamsStorage.length > 0) {
             this.recountFilterTypeItemsCount(params);
             this.filterCandidates(this.candidatesStorage, params);
           };
           if (this.filterParamsStorage.length === 0) {
-            this.resetFilters();
+            this.resetAll();
           };
           item.checked = false;
           this.disableEnableFilterItems(filter, item);
@@ -274,7 +287,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  changeFilterMode() {
+  changeFilterMode(): void {
     if (this.filterMode === 'or') {
       this.filterMode = 'and';
       this.candidatesArray = this.candidatesStorage;
@@ -289,7 +302,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  resetFilters() {
+  resetFilters(): void {
     this.filters.forEach(filter => {
       filter.items.forEach(item => {
         item.filteredUsersId = [];
@@ -298,7 +311,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  definePreviousFilterParam(filterParam, filterParamsStorage) {
+  definePreviousFilterParam(filterParam, filterParamsStorage): number {
     let index;
     filterParamsStorage.forEach(filter => {
       if (filter.title === filterParam.title) {
@@ -315,7 +328,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  setCountToLatestFilterParam(filterParam) {
+  setCountToLatestFilterParam(filterParam): void {
     this.filters.forEach(filter => {
       filter.items.forEach(item => {
         if (item.title === filterParam.title) {
@@ -326,7 +339,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  recountFilterTypeItemsCount(filterParams) {
+  recountFilterTypeItemsCount(filterParams): void {
     this.filters.forEach(filter => {
       filter.items.forEach(item => {
         item.filteredUsersId = [];
@@ -342,7 +355,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     });
   }
 
-  disableEnableFilterItems(filter: FilterItem, item) {
+  disableEnableFilterItems(filter: FilterItem, item): void {
     if (item.checked) {
       filter.items.forEach(type => {
         if (type.title !== item.title) {
@@ -357,22 +370,31 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  filterCandidates(candidatesArray: Array<TalentDBCandidate>, filterParams: Array<string>) {
-    if (filterParams.length > 0) {
-      this.candidatesArray = this._talentBaseService.filterCandidates(candidatesArray, filterParams);
-    } else if (filterParams.length === 0) {
-      this.resetFilters();
-      this.candidatesArray = this.candidatesStorage;
-    }
+  filterCandidates(candidatesArray: Array<TalentDBCandidate>, filterParams: Array<string>): void {
+    this.resetPaginationLimits();
+    this.filteredCandidatesStorage = this._talentBaseService.filterCandidates(candidatesArray, filterParams);
+    this.candidatesArray = this.filteredCandidatesStorage.slice(0, 15);
+    this.updatePaginationLimits();
   }
 
-  filterType(event, filter: FilterItem) {
+  resetAll(): void {
+    this.resetPaginationLimits();
+    this.resetFilters();
+    this.filteredCandidatesStorage = [];
+    this.candidatesArray = this.candidatesStorage.slice(0, 15);
+    this.updatePaginationLimits();
+  }
+
+  filterTypeSearch(event, filter: FilterItem): void {
     const value = event.target.value.toLowerCase();
     filter.items.forEach(item => {
       if (typeof item.title === 'string') {
         const title = item.title.toLowerCase();
         if (title.indexOf(value) === -1) {
           item.hidden = true;
+        }
+        if (title.indexOf(value) > -1) {
+          item.hidden = false;
         }
       }
     });
@@ -383,7 +405,35 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  searchCandidates(event): void {
+    const value = event.target.value.toLowerCase();
+    if (this.filterParamsStorage.length === 0) {
+      this.noCandidatesFound = false;
+      this.resetPaginationLimits();
+      this.filteredCandidatesStorage = this._talentBaseService.searchCandidates(value, this.candidatesStorage);
+      this.candidatesArray = this.filteredCandidatesStorage.slice(0, 15);
+      this.updatePaginationLimits();
+      if (this.filteredCandidatesStorage.length === 0) {
+        this.noCandidatesFound = true;
+      }
+    };
+    if (this.filterParamsStorage.length > 0) {
+      this.noCandidatesFound = false;
+      this.resetPaginationLimits();
+      this.filteredCandidatesStorage = this._talentBaseService.searchCandidates(value, this.filteredCandidatesStorage);
+      this.candidatesArray = this.filteredCandidatesStorage.slice(0, 15);
+      this.updatePaginationLimits();
+      if (this.filteredCandidatesStorage.length === 0) {
+        this.noCandidatesFound = true;
+      }
+    }
+  }
+
+  setSelectionRange() {
+
+  }
+
+  ngOnDestroy(): void {
     this._parse.execCloud('setNewTalentDbFilters', { userId: this.currentUser.id, filtersArray: this.enabledUserTalentDBFilters });
   }
 

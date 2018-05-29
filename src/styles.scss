@@ -616,7 +616,7 @@ app-chat .dropdown-menu {
     .job-details-inner-page .job-details-tabs .job-details-tab:hover {
         border-bottom: 2px solid #00ACC1!important;
     }
-    .mat-expansion-panel[_ngcontent-c7] {
+    .mat-expansion-panel {
         background: #fafafa!important;
         color: #424242!important;
     }
@@ -839,9 +839,16 @@ app-chat .dropdown-menu {
             border: 1px solid #50a047!important;
         }
     }
+    .talentbase__filter-header--filter-input .blue-btn .icon-arrow {
+        height: 16px;
+        width: 20px;
+    }
 
 }
 
+.highlighted {
+    background: yellow!important;
+}
 
 
 // NEW THEME STYLES END

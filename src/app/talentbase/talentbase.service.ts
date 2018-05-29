@@ -161,4 +161,14 @@ export class TalentbaseService {
     });
     return filteredArray;
   }
+
+  searchCandidates(value: string, candidatesArray: Array<TalentDBCandidate> ): Array<TalentDBCandidate> {
+    const newArray: Array<TalentDBCandidate> = [];
+    candidatesArray.forEach(candidate => {
+      if (`${candidate.firstName}' '${candidate.lastName}`.toLowerCase().indexOf(value) > -1) {
+        newArray.push(candidate);
+      }
+    });
+    return newArray;
+  }
 }

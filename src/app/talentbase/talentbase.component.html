@@ -19,7 +19,7 @@
         <!-- HEADER START -->
         <div class="talentbase__filter-header">
           <div class="talentbase__filter-header--filter-input">
-            <input type="text" placeholder="Search" #filterSearchInput id="filterSearchInput">
+            <input type="text" (input)="searchCandidates($event)" placeholder="Search" #filterSearchInput id="filterSearchInput">
             <mat-icon class="search-icon">search</mat-icon>
             <span (click)="filtersOpened = !filtersOpened" class="blue-btn">
               <span *ngIf="filtersOpened">Close</span> <span *ngIf="!filtersOpened">Open</span> Filters
@@ -71,7 +71,7 @@
               <div class="talentbase__filter-main-filter--item-title">
                 <span [ngClass]="{'visible': filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">{{filter.type}}</span>
                 <input type="text" placeholder="{{filter.type}}"
-                    (input)="filterType($event, filter)"
+                    (input)="filterTypeSearch($event, filter)"
                     [ngClass]="{none: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">
                 <mat-icon [ngClass]="{hidden: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}" 
                         class="search-icon">search</mat-icon>
@@ -93,7 +93,7 @@
                 </ul>
               </div>
             </div>
-            <div class="talentbase__filter-main-filters--bottom"></div>
+            <!-- <div class="talentbase__filter-main-filters--bottom"></div> -->
           </div>
         <!-- FILTER MAIN FILTERS END -->
           
@@ -108,15 +108,17 @@
                  </div>
                  <div class="stripe"></div>
                  <span class="showing-count">Showing {{candidatesArray.length}} of 
-                   <span *ngIf="filterParamsStorage.length === 0">{{candidatesStorage.length}}</span>
-                   <span *ngIf="filterParamsStorage.length > 0">{{candidatesArray.length}}</span>
+                   <span *ngIf="filteredCandidatesStorage.length === 0">{{candidatesStorage.length}}</span>
+                   <span *ngIf="filteredCandidatesStorage.length > 0">{{filteredCandidatesStorage.length}}</span>
                   </span>
                  <!-- <div class="sorting">
                   <span class="sorting-title">Sort</span>
                   <div class="sorting-type">Creation date</div>
                  </div> -->
               </div>
-
+              <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0 && noCandidatesFound">
+                <p>No candidates found.</p>
+              </div>
               <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0">
                 <mat-progress-spinner class="progress-spinner" color="#305497" mode="indeterminate"></mat-progress-spinner>
               </div>
@@ -130,7 +132,11 @@
                         <img *ngIf="candidate.avatarURL !== undefined" [src]="candidate.avatarURL" alt="">
                         <img *ngIf="candidate.avatarURL === undefined" src="../../assets/img/default-userpic.png" alt="">
                         <p>
-                          <span>{{candidate.firstName}}&nbsp;{{candidate.lastName}}</span>
+                          <span>
+                            <span style="color: #000;" [innerHTML]="candidate.firstName + ' ' + candidate.lastName | highlightSearch: filterSearchInput.value"></span>
+                            <!-- <span [innerHTML]="candidate.lastName | highlightSearch: filterSearchInput.value"></span> -->
+                          </span>
+                          <!-- <span [innerHTML]="candidate.firstName | highlightSearch: filterSearchInput.valuecandidate.lastName | highlightSearch: filterSearchInput.value"></span> -->
                           <span>{{candidate.headline}}</span>
                         </p>
                       </div>

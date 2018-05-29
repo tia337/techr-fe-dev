@@ -67,6 +67,7 @@ import { TalentbaseService } from './talentbase/talentbase.service';
 import { EditUserRoleComponent } from './site-administration/user-management/access-level-page/edit-user-role/edit-user-role.component';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { FileSizePipe } from './talentbase/file-size.pipe';
+import { HighlightSearchPipe } from './talentbase/highlight-search.pipe';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -83,7 +84,8 @@ const config: SocketIoConfig = {
 		AppComponent,
 		ClearStringPipe,
 		TalentbaseComponent,
-		FileSizePipe
+		FileSizePipe,
+		HighlightSearchPipe
 	],
 	imports: [
 		BrowserModule,
