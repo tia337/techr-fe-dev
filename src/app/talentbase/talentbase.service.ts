@@ -13,7 +13,7 @@ export class TalentbaseService {
 
 
   uploadMoreCandidates(limits: PaginationLimits, array: TalentDBCandidate[]): TalentDBCandidate[] {
-    const arrayNew = array.slice(limits.from, limits.to);
+    const arrayNew: TalentDBCandidate[] = array.slice(limits.from, limits.to);
     return arrayNew;
   }
 
@@ -28,7 +28,7 @@ export class TalentbaseService {
 
   getTalentDBCandidates(clientId: string): Promise<TalentDBCandidate[]> {
     return new Promise ((resolve, reject) => {
-      this._parse.execCloud('getTalentDBCandidates', { clientId: clientId }).then(result => {
+      this._parse.execCloud('getTalentDBCandidates', { clientId: clientId }).then((result: TalentDBCandidate[]) => {
         resolve(result);
         reject(result);
       });
@@ -37,7 +37,7 @@ export class TalentbaseService {
 
   getFilter(functionName: string, clientId: string): Promise<FilterItem> {
     return new Promise ((resolve, reject) => {
-      this._parse.execCloud(functionName, { clientId: clientId }).then(result => {
+      this._parse.execCloud(functionName, { clientId: clientId }).then((result: FilterItem) => {
         result = this.sortFilterItems(result);
         resolve(result);
         reject(result);
@@ -127,7 +127,7 @@ export class TalentbaseService {
     return params;
   }
 
-  createFilterParamsForCompoundFilter(array) {
+  createFilterParamsForCompoundFilter(array): Array<string> {
     if (array.length > 0) {
       let newArray = [];
       array[0].usersId.forEach(id => {
@@ -163,12 +163,8 @@ export class TalentbaseService {
   }
 
   searchCandidates(value: string, candidatesArray: Array<TalentDBCandidate> ): Array<TalentDBCandidate> {
-    const newArray: Array<TalentDBCandidate> = [];
-    candidatesArray.forEach(candidate => {
-      if (`${candidate.firstName}' '${candidate.lastName}`.toLowerCase().indexOf(value) > -1) {
-        newArray.push(candidate);
-      }
+    return candidatesArray.filter((candidate: TalentDBCandidate ) => {
+      return `${candidate.firstName}' '${candidate.lastName}`.toLowerCase().indexOf(value) > -1
     });
-    return newArray;
   }
 }

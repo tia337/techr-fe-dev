@@ -1,38 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TalentbaseService } from './talentbase.service';
 import { AnimationBuilder } from '@angular/animations';
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition
-} from '@angular/animations';
 import { read } from 'fs';
 import { Parse } from '../parse.service';
 import { TalentDbFilters } from '../shared/utils';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { FileSizePipe } from './file-size.pipe';
 import { HighlightSearchPipe } from './highlight-search.pipe';
+import { AddCandidateComponent } from './add-candidate/add-candidate.component';
+import { RootVCRService } from '../root_vcr.service';
 // tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
   templateUrl: './talentbase.component.html',
-  styleUrls: ['./talentbase.component.scss'],
-  animations: [
-    trigger('shrinkOut', [
-      state('in', style({})),
-      transition('* => void', [
-        style({ height: '*', opacity: 1 }),
-        animate(600, style({ height: 0, opacity: 0 }))
-      ]),
-      transition('void => *', [
-        style({ height: 0, opacity: 0 }),
-        animate(400, style({ height: '*', opacity: 1 }))
-      ])
-    ]),
-  ]
+  styleUrls: ['./talentbase.component.scss']
 })
 export class TalentbaseComponent implements OnInit, OnDestroy {
 
@@ -67,6 +49,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     private _parse: Parse,
     private _fb: FormBuilder,
     private _http: Http,
+    private _root_vcr: RootVCRService
   ) { }
 
   ngOnInit() {
@@ -95,7 +78,6 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
-            console.log('getFilters: ', this.filters);
           }).catch(error => console.log(error));
         }
       });
@@ -200,7 +182,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  enableDisableFilterTypes (type: UserTalentDBFilter) {
+  enableDisableFilterTypes (type: UserTalentDBFilter): void {
     this.candidatesArray = this.candidatesStorage;
     if (type.checked) {
       this.enabledUserTalentDBFilters.forEach(item => {
@@ -429,8 +411,8 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  setSelectionRange() {
-
+  openAddCandidateModal() {
+    const addCandidateModal = this._root_vcr.createComponent(AddCandidateComponent);
   }
 
   ngOnDestroy(): void {

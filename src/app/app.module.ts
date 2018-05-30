@@ -62,12 +62,14 @@ import { TimelineModule } from './timeline/timeline.module';
 import { ClearStringPipe } from './clear-string.pipe';
 import { TimelineService } from './timeline/timeline.service';
 import { NgxDnDModule } from '@swimlane/ngx-dnd';
-import { TalentbaseComponent } from './talentbase/talentbase.component';
-import { TalentbaseService } from './talentbase/talentbase.service';
 import { EditUserRoleComponent } from './site-administration/user-management/access-level-page/edit-user-role/edit-user-role.component';
 import { ClickOutsideModule } from 'ng-click-outside';
-import { FileSizePipe } from './talentbase/file-size.pipe';
-import { HighlightSearchPipe } from './talentbase/highlight-search.pipe';
+// import { TalentbaseService } from './talentbase/talentbase.service';
+// import { TalentbaseComponent } from './talentbase/talentbase.component';
+// import { FileSizePipe } from './talentbase/file-size.pipe';
+// import { HighlightSearchPipe } from './talentbase/highlight-search.pipe';
+// import { AddCandidateComponent } from './talentbase/add-candidate/add-candidate.component';
+import { TalentbaseModule } from './talentbase/talentbase.module';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -83,9 +85,10 @@ const config: SocketIoConfig = {
 	declarations: [
 		AppComponent,
 		ClearStringPipe,
-		TalentbaseComponent,
-		FileSizePipe,
-		HighlightSearchPipe
+		// TalentbaseComponent,
+		// FileSizePipe,
+		// HighlightSearchPipe,
+		// AddCandidateComponent
 	],
 	imports: [
 		BrowserModule,
@@ -128,7 +131,8 @@ const config: SocketIoConfig = {
 		TimelineModule,
 		ReactiveFormsModule,
 		NgxDnDModule,
-		ClickOutsideModule
+		ClickOutsideModule,
+		TalentbaseModule
 	],
 	providers: [
 		SidenavService,
@@ -139,7 +143,7 @@ const config: SocketIoConfig = {
 		BillingGuard,
 		ActiveSubscriptionGuard,
 		TimelineService,
-		TalentbaseService
+		// TalentbaseService
 	],
 	bootstrap: [AppComponent],
 	exports: [],

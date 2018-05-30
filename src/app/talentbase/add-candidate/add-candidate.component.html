@@ -1,0 +1,38 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <p class="modal__title">
+      Add candidate
+    </p>
+    <div [hidden]="maxWarningHidden" class="max-warning-wrap">
+      <span>Maximum 5 CVs!</span>
+      <span>For bulk upload <span class="bold">go to bulk import</span></span>
+      <mat-icon (click)="maxWarningHidden = true" class="icon-close">clear</mat-icon>
+    </div>
+    <ng4-files-drop (filesSelect)="filesSelect($event)">
+      <div class="drop-box" [ngClass]="{'files-choosen': files.length > 0 }">
+        <span *ngIf="files.length === 0">Drop file here</span>
+        <mat-icon class="icon-cloud-upload" *ngIf="files.length === 0">move_to_inbox</mat-icon>
+        <div class="drop-box__files-list" *ngIf="files.length > 0">
+          <ol>
+            <li *ngFor="let file of files; let i = index;">
+              {{file.name}}
+              <mat-icon (click)="deleteCV(i, files)" class="icon-clear">cancel</mat-icon>
+            </li>
+          </ol>
+        </div>
+        <p class="upload-cvs-btn" *ngIf="files.length > 0">
+          Upload CVs
+          <mat-icon class="upload-cvs-btn-icon">cloud_upload</mat-icon>
+        </p>
+      </div>
+      <div class="assets-block">
+        <p class="assets-block__formats">
+          (PDF, WORD or Rich Text file)
+        </p>
+        <ng4-files-click (filesSelect)="filesSelect($event)">
+            <p class="assets-block__upload-file-btn">Upload File</p>
+        </ng4-files-click>
+      </div>
+    </ng4-files-drop>
+  </div>
+</div>
