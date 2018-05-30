@@ -1,14 +1,22 @@
 <div class="modal-overlay" (click)="closeModal()">
   <div class="modal" (click)="$event.stopPropagation()">
-    <p class="modal__title">
+    <p class="modal__title" *ngIf="!cvUploaded">
       Add candidate
     </p>
-    <div [hidden]="maxWarningHidden" class="max-warning-wrap">
+    <p class="modal__title" *ngIf="cvUploaded">
+      Enhance candidate information
+    </p>
+
+    <!-- WARNING BOX START -->
+    <div [hidden]="maxWarningHidden" class="max-warning-wrap" *ngIf="!loading && !cvUploaded">
       <span>Maximum 5 CVs!</span>
       <span>For bulk upload <span class="bold">go to bulk import</span></span>
       <mat-icon (click)="maxWarningHidden = true" class="icon-close">clear</mat-icon>
     </div>
-    <ng4-files-drop (filesSelect)="filesSelect($event)">
+    <!-- WARNING BOX END -->
+    
+    <!-- DROP BOX START -->
+    <ng4-files-drop (filesSelect)="filesSelect($event)" *ngIf="!cvUploaded && !loading">
       <div class="drop-box" [ngClass]="{'files-choosen': files.length > 0 }">
         <span *ngIf="files.length === 0">Drop file here</span>
         <mat-icon class="icon-cloud-upload" *ngIf="files.length === 0">move_to_inbox</mat-icon>
@@ -20,7 +28,9 @@
             </li>
           </ol>
         </div>
-        <p class="upload-cvs-btn" *ngIf="files.length > 0">
+        <p class="upload-cvs-btn" 
+            *ngIf="files.length > 0"
+            (click)="uploadCVs()">
           Upload CVs
           <mat-icon class="upload-cvs-btn-icon">cloud_upload</mat-icon>
         </p>
@@ -34,5 +44,37 @@
         </ng4-files-click>
       </div>
     </ng4-files-drop>
+    <!-- DROP BOX END -->
+    <div class="spinner-wrap">
+      <mat-progress-spinner class="progress-spinner" *ngIf="loading && !cvUploaded"  mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <!-- CANDIDATE FORM START -->
+
+    <form action="" [formGroup]="candidateForm" *ngIf="cvUploaded">
+      <div class="row">
+        <p class="input-holder">
+          <span class="input-name">* First Name</span>
+          <input type="text" formControlName="FirstName" name="FirstName">
+        </p>
+        <p class="input-holder">
+          <span class="input-name">* Last Name</span>          
+          <input type="text" formControlName="LastName" name="LastName">
+        </p>
+      </div>
+      <div class="row">
+        <p class="input-holder">
+          <span class="input-name">Location</span>
+          <input type="text" formControlName="City" name="City">
+        </p>
+        <p class="input-holder">
+          <span class="input-name">Phone Number</span>
+          <input type="text" formControlName="FormattedMobile" name="FormattedMobile">
+        </p>
+      </div>
+    </form>
+
+    <!-- CANDIDATE FORM END -->
+    
   </div>
 </div>
