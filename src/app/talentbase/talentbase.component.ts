@@ -10,6 +10,10 @@ import { FileSizePipe } from './file-size.pipe';
 import { HighlightSearchPipe } from './highlight-search.pipe';
 import { AddCandidateComponent } from './add-candidate/add-candidate.component';
 import { RootVCRService } from '../root_vcr.service';
+import { Socket } from 'ng-socket-io';
+import { Observable } from 'rxjs/Observable';
+import { AddCandidateService } from './add-candidate/add-candidate.service';
+
 // tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -21,7 +25,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   public filtersOpened = false;
   allSelected = false;
   checkedCandidates: Array<any> = [];
-  public activePanel: string = 'bulkUpload';
+  public activePanel: string = 'main';
   public enableDisableFiltersOpened = false;
   public jsonFileName: string = '';
   public zipFileName: File = null;
@@ -43,13 +47,22 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   private clientId: string;
   private filterParams: Array<string> = [];
   private filterParamsStorage = [];
+  public bulkUploads: Array<BulkUploadItem> = [];
+  public pendingBulkUpload: BulkUploadItem | undefined;
+  public fillPercentage = {
+    width: '0%'
+  };
+  filesTotal = 1680;
+  filesProcessed = 0;
 
   constructor(
     private _talentBaseService: TalentbaseService,
+    private _addCandidatesService: AddCandidateService,
     private _parse: Parse,
     private _fb: FormBuilder,
     private _http: Http,
-    private _root_vcr: RootVCRService
+    private _root_vcr: RootVCRService,
+    private _socket: Socket
   ) { }
 
   ngOnInit() {
@@ -70,9 +83,17 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
 
     this.createForms();
 
-    this._talentBaseService.getBulkUploads(this.clientId).then(result => {
-      console.log(result);
-    }).catch(error => console.log('error while getting getBulkUploads: ', error));
+    this.getBulkUploads();
+
+    this._addCandidatesService.goToImport.filter(value => value === true).subscribe(value => {
+      this.activePanel = 'import';
+      this._root_vcr.clear();
+    });
+
+    this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
+      this.setFillPercentage(this.pendingBulkUpload.filesTotal, data.filesSuccess);
+      this.pendingBulkUpload.filesError = data.filesError;
+    });
 
   }
 
@@ -175,6 +196,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('clientId', this.clientId);
+      formData.append('authorId', this.currentUser.id);      
       const headers = new Headers({
         'Content-Type': 'multipart/form-data;boundary=--------------------------669278087152574002712453'
       });
@@ -182,6 +204,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       const url = 'https://cv-bulk-upload.herokuapp.com/upload';
       this._http.post(url, formData).subscribe(res => {
         console.log(res);
+        // if (res.status === 200) {
+          this.activePanel = 'bulkUpload';
+          this.getBulkUploads();
+        // }
       });
     }
   }
@@ -415,9 +441,55 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  openAddCandidateModal() {
+  openAddCandidateModal(): void {
     const addCandidateModal = this._root_vcr.createComponent(AddCandidateComponent);
   }
+
+  definePendingBulkUploads(pendingBulkUpload: BulkUploadItem | undefined): void {
+    if (pendingBulkUpload === undefined) return;
+
+    this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
+      this.setFillPercentage(pendingBulkUpload.filesTotal, data.filesSuccess);
+      this.pendingBulkUpload.filesError = data.filesError;
+    });
+  }
+
+  subscribeToPendingBulkUploading(): Observable<any> {
+    const observable = new Observable (observer => {
+			this._socket.on('bulkUploadProgress', data => {
+				observer.next(data);
+			});
+		});
+		return observable;
+  }
+
+  initiate() {
+    this.filesProcessed = this.filesProcessed + 5.25;
+    setInterval(() => {
+      if (this.filesTotal === this.filesProcessed) {
+        this.initiate();
+      }
+    }, 1000);
+    this.setFillPercentage(this.filesTotal, this.filesProcessed);
+  }
+
+  setFillPercentage(filesTotal: number, filesProcessed: number): void {
+    const percentage = this._talentBaseService.calculatePercentageOfBulkUploading(filesTotal, filesProcessed);
+    this.fillPercentage.width = `${percentage}%`;
+  }
+
+  getBulkUploads(): void {
+    this._talentBaseService.getBulkUploads(this.clientId).then((result: BulkUploadItem[]) => {
+      this.bulkUploads = result;
+      this.pendingBulkUpload = this._talentBaseService.checkPendingBulkUploads(result);
+      this.definePendingBulkUploads(this.pendingBulkUpload);
+    }).catch(error => console.log('error while getting getBulkUploads: ', error));
+  }
+
+  sortBulkUploadsHistory(parameter: string): void {
+    this.bulkUploads = this._talentBaseService.sortBulkUploadHistory(parameter, this.bulkUploads);
+  }
+
 
   ngOnDestroy(): void {
     this._parse.execCloud('setNewTalentDbFilters', { userId: this.currentUser.id, filtersArray: this.enabledUserTalentDBFilters });

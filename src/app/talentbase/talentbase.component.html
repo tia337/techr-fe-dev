@@ -7,9 +7,9 @@
         <span *ngIf="activePanel !== 'main'">Back to talent pool</span> 
     </div>
     <div>
-      <span (click)="activePanel = 'bulkUpload'">Bulk upload history</span>
+      <span [ngClass]="{'active': activePanel === 'bulkUpload'}" (click)="activePanel = 'bulkUpload'">Bulk upload history</span>
       <span> / </span>
-      <span (click)="activePanel = 'import'">Import candidate data</span>
+      <span [ngClass]="{'active': activePanel === 'import'}" (click)="activePanel = 'import'">Import candidate data</span>
       <span> / </span>
       <span>Export candidate data</span>
     </div>
@@ -254,22 +254,22 @@
   <div class="talentbase__bulk-upload-history-panel" *ngIf="activePanel === 'bulkUpload'">
 
     <!-- BULK UPLOAD PENDING START -->
-    <div class="bulk-upload-pending-wrap">
+    <div class="bulk-upload-pending-wrap" *ngIf="pendingBulkUpload !== undefined">
         <div class="bulk-upload-pending__info">
             <div class="bulk-upload-pending__info--details">
               <p class="bulk-upload-pending__info--details__title">Current upload details</p>
               <table>
                 <tr>
                   <td>Total file size</td>
-                  <td class="bold">98MB</td>
+                  <td class="bold">{{pendingBulkUpload.uploadSize | fileSize}} MB</td>
                 </tr>
                 <tr>
                   <td>Total CV files</td>
-                  <td>1500</td>
+                  <td>{{pendingBulkUpload.filesTotal}}</td>
                 </tr>
                 <tr>
                   <td>Total CV processed</td>
-                  <td>1000</td>
+                  <td>{{pendingBulkUpload.filesSuccess}}</td>
                 </tr>
                 <tr>
                   <td>Estimated time left</td>
@@ -284,43 +284,45 @@
         </div>
         <div class="bulk-upload-pending__bar-wrap">
           <div class="bulk-upload-pending__bar">
-            <div class="bulk-upload-pending__bar-fill">
-              <div class="bulk-upload-pending__bar-fill--percentage"><span>50%</span></div>
+            <div class="bulk-upload-pending__bar-fill" [ngStyle]="fillPercentage">
+              <div class="bulk-upload-pending__bar-fill--percentage"><span>{{fillPercentage.width}}</span></div>
               <div class="bulk-upload-pending__bar-fill--processed">
                 <p>Total processed</p>
-                <p>1000</p>
+                <p>{{pendingBulkUpload.filesSuccess}}</p>
               </div>
             </div>
-            <div class="bulk-upload-pending__bar-total">
+            <div class="bulk-upload-pending__bar-total" (click)="initiate()">
                 <p>Total CV files</p>
-                <p>1550</p>
+                <p>{{pendingBulkUpload.filesTotal}}</p>
             </div>
           </div>
         </div>
-        <div class="bulk-upload-pending__history">
-          <p class="bulk-upload-pending__history--title">Upload History</p>
-          <table>
-            <tr>
-              <th>Upload Date</th>
-              <th>File Name</th>
-              <th>Upload User</th>
-              <th>File Size</th>
-              <th>Total CVs</th>
-              <th>Success</th>
-              <th>Errors</th>
-            </tr>
-            <tr>
-              <td>Upload Date</td>
-              <td>File Name</td>
-              <td>Upload User</td>
-              <td>File Size</td>
-              <td>Total CVs</td>
-              <td>Success</td>
-              <td>Errors</td>
-            </tr>
-          </table>
-        </div>
-    </div>
+      </div>
+      <div class="bulk-upload-pending__history">
+        <p class="bulk-upload-pending__history--title">Upload History</p>
+        <table>
+          <tr>
+            <th (click)="sortBulkUploadsHistory('date')">Upload Date</th>
+            <th (click)="sortBulkUploadsHistory('uploadUserFilename')">File Name</th>
+            <th (click)="sortBulkUploadsHistory('author')">Upload User</th>
+            <th (click)="sortBulkUploadsHistory('uploadSize')">File Size</th>
+            <th (click)="sortBulkUploadsHistory('filesTotal')">Total CVs</th>
+            <th (click)="sortBulkUploadsHistory('filesSuccess')">Success</th>
+            <th (click)="sortBulkUploadsHistory('filesError')">Errors</th>
+          </tr>
+          <tr *ngFor="let bulk of bulkUploads">
+            <td>{{bulk.date | date: 'dd/MM/yyyy hh:mm a'}}</td>
+            <td>{{bulk.uploadUserFilename}}</td>
+            <td>{{bulk.author}}</td>
+            <td *ngIf="bulk.uploadSize !== 0">{{bulk.uploadSize | fileSize}} mb</td>
+            <td *ngIf="bulk.uploadSize === 0">-</td>              
+            <td>{{bulk.filesTotal}}</td>
+            <td>{{bulk.filesSuccess}}</td>
+            <td *ngIf="bulk.filesError !== 0">{{bulk.filesError}}</td>
+            <td *ngIf="bulk.filesError === 0">-</td>
+          </tr>
+        </table>
+      </div>
     <!-- BULK UPLOAD PENDING END -->    
 
   </div>

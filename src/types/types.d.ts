@@ -125,4 +125,17 @@ type BulkActionsArray = Array<{
         checked?: boolean
     }
 
+    type BulkUploadItem = {
+        id: string,
+        date: Date,
+        author: string,
+        authorEmail: string,
+        filesError?: number,
+        filesSuccess: number,
+        filesTotal: number,
+        uploadFilename: string,
+        uploadFinished: boolean,
+        uploadSize: number,
+        uploadUserFilename: string
+    }
     // TALENT DATA BASE TYPES END  

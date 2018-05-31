@@ -105,8 +105,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       clearTimeout(this.timer);
       this.typing = false;
       this.addMessageToChat(data);
-      // if (this.dialogId != undefined) {
-      // }
     });
 
     this.listenToRecruiterColleagueTypes().subscribe(data => {

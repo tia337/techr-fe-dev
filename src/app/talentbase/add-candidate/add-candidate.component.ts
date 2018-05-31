@@ -35,7 +35,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 
     this._ng4FilesService.addConfig(this.filesConfig, 'files-config');
     
-    this._addCandidateService.candidatesUploaded.skipWhile(val => val === null).take(1).subscribe(candidates => {
+    this._addCandidateService.candidatesUploaded.skipWhile(val => val === null).take(this.files.length).subscribe(candidates => {
       this.loading = false;
       this.cvUploaded = true;
       this.buildForm(candidates);
@@ -49,11 +49,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 
   filesSelect(selectedFiles: Ng4FilesSelected): void {
     if (selectedFiles.status !== Ng4FilesStatus.STATUS_SUCCESS) {
-      console.log(selectedFiles.status);
       return;
     }
-    this.files = selectedFiles.files;
- 
     this.files = Array.from(selectedFiles.files).map(file => file);
   }
 
@@ -61,14 +58,14 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
     array.splice(index, 1);
   }
 
-  uploadCVs() {
+  uploadCVs(): void {
     this.loading = true;
     this.files.forEach(file => {
       this._addCandidateService.uploadCVs(file);
     });
   }
 
-  buildForm(candidate) {
+  buildForm(candidate): void {
     this.candidateForm = this._formBuilder.group({
       FirstName: undefined,
       LastName: undefined,
@@ -83,7 +80,12 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
     });
   }
 
+  redirectToImport(value: boolean): void {
+    this._addCandidateService.redirectToImport(value);
+  }
+
   ngOnDestroy() {
+
   }
 
 }

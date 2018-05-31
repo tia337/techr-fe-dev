@@ -133,7 +133,6 @@ export class TalentbaseService {
       array[0].usersId.forEach(id => {
         newArray.push(id);
       });
-      console.log('newArray', newArray);
       for (let i = 1; i < array.length; i++) {
         let tempArray = [];
         for (let b = 0; b < array[i].usersId.length; b++) {
@@ -164,17 +163,61 @@ export class TalentbaseService {
 
   searchCandidates(value: string, candidatesArray: Array<TalentDBCandidate> ): Array<TalentDBCandidate> {
     return candidatesArray.filter((candidate: TalentDBCandidate ) => {
-      return `${candidate.firstName}' '${candidate.lastName}`.toLowerCase().indexOf(value) > -1
+      return `${candidate.firstName}' '${candidate.lastName}`.toLowerCase().indexOf(value) > -1;
     });
   }
 
-  getBulkUploads(clientId: string) {
+  getBulkUploads(clientId: string): Promise<BulkUploadItem[]> {
     return new Promise ((resolve, reject) => {
       this._parse.execCloud('getBulkUploads', { clientId: clientId }).then(result => {
-        resolve(result);
+        console.log(result);
+        const data: BulkUploadItem[] = [];
+        result.forEach(item => {
+          const bulk = this.createBulkUploadItem(item);
+          data.push(bulk);
+        });
+        resolve(data);
         reject(result);
       });
     });
   }
+
+  createBulkUploadItem (item): BulkUploadItem {
+    const bulk: BulkUploadItem = {
+      id: item.id,
+      author: item.get('authorFullname'),
+      authorEmail: item.get('authorEmail'),
+      date: item.get('createdAt'),
+      filesError: item.get('filesError') ? item.get('filesError') : 0,
+      filesSuccess: item.get('filesSuccess'),
+      filesTotal: item.get('filesTotal'),
+      uploadFilename: item.get('uploadFilename'),
+      uploadFinished: item.get('uploadFinished'),
+      uploadSize: item.get('uploadSize') ? item.get('uploadSize') : 0,
+      uploadUserFilename: item.get('uploadUserFilename') ? item.get('uploadUserFilename') : '',
+    };
+    return bulk;
+  }
+
+  checkPendingBulkUploads(bulkArray: Array<BulkUploadItem>): BulkUploadItem {
+    for (let i = 0; i < bulkArray.length; i++) {
+      if (bulkArray[i].uploadFinished === false) {
+        return bulkArray[i];
+      };
+    }
+  }
+
+  calculatePercentageOfBulkUploading(filesTotal: number, filesProcessed: number): number {
+    const percentage: number = 100 * filesProcessed / filesTotal
+    return parseFloat(percentage.toFixed(1));
+  }
+
+  sortBulkUploadHistory(param, array: Array<BulkUploadItem>): Array<BulkUploadItem> {
+    array = _.sortBy(array, function (i) {
+      return i.param;
+    }).reverse();
+    return array;
+  }
+
 
 }

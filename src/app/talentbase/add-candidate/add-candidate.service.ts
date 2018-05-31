@@ -8,6 +8,7 @@ export class AddCandidateService {
 
 
   public candidatesUploaded: BehaviorSubject<any[]> = new BehaviorSubject(null);
+  public goToImport: BehaviorSubject<boolean> = new BehaviorSubject(null);
 
   private rchilliURL = 'https://rest.rchilli.com/RChilliParser/Rchilli/parseResumeBinary';
 
@@ -33,8 +34,8 @@ export class AddCandidateService {
 			request.map(res => {
 				return res.json();
 			}).subscribe(response => {
-        console.log(response);
-        this.candidatesUploaded.next(response.ResumeParserData);
+			console.log(response);
+			this.candidatesUploaded.next(response.ResumeParserData);
 			});
 		});
 		reader.readAsDataURL(cvFile);
@@ -76,6 +77,11 @@ export class AddCandidateService {
 			case 1021:
 			return ('File conversion error.');
 		}
+  }
+
+  redirectToImport(value: boolean) {
+	console.log()
+	this.goToImport.next(value);
   }
   
 }

@@ -10,7 +10,7 @@
     <!-- WARNING BOX START -->
     <div [hidden]="maxWarningHidden" class="max-warning-wrap" *ngIf="!loading && !cvUploaded">
       <span>Maximum 5 CVs!</span>
-      <span>For bulk upload <span class="bold">go to bulk import</span></span>
+      <span>For bulk upload <span class="bold" style="text-decoration: underline; cursor: pointer;" (click)="redirectToImport(true)">go to bulk import</span></span>
       <mat-icon (click)="maxWarningHidden = true" class="icon-close">clear</mat-icon>
     </div>
     <!-- WARNING BOX END -->

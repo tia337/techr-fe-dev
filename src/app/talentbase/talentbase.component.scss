@@ -20,6 +20,10 @@
                     background: #000;
                     color: #fff;
                 }
+                &.active {
+                    background: #000;
+                    color: #fff;
+                }
                 &:nth-child(2) {
                     cursor: default;
     
@@ -632,7 +636,7 @@
     height: 4em;
     width: 80%;
     border: 2px solid #616161;
-    margin: 85px auto;
+    margin: 85px auto 100px;
     position: relative;
     &-fill {
         height: 100%;
@@ -642,11 +646,13 @@
         &--percentage {
             position: absolute;
             top: -60px;
-            right: -28px;
+            right: -37px;
             background: #fafafa;
             color: #424242;
             padding: 10px;
             font-size: 24px;
+            text-align: center;
+            width: 74px;
             &::before {
                 content: "\A";
                 position: absolute;
@@ -667,6 +673,7 @@
             color: #424242;
             text-align: center;
             padding: 15px;
+            width: 119px;
             &::before {
                 content: "\A";
                 position: absolute;
@@ -706,12 +713,14 @@
     table {
         width: 100%;
         margin-bottom: 20px;
+        background: #fafafa;
+        padding: 15px;
         th {
             text-align: left;
-            font-size: 16px;
+            font-size: 18px;
         }
         td {
-            font-size: 14px;
+            font-size: 16px;
         }
     }
 }
