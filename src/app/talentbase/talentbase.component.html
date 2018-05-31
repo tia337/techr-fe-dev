@@ -2,14 +2,22 @@
 
   <!-- IMPORT/EXPORT BUTTONS START -->
   <div class="talentbase__import-export-buttons" *ngIf="!importPanelOpened">
-    <span (click)="importPanelOpened = !importPanelOpened">Import candidate data</span>
-    <span> / </span>
-    <span>Export candidate data</span>
+    <div class="back-to-talent-pool" (click)="activePanel = 'main'">
+        <mat-icon  class="arrow-back">arrow_back</mat-icon>
+        <span *ngIf="activePanel !== 'main'">Back to talent pool</span> 
+    </div>
+    <div>
+      <span (click)="activePanel = 'bulkUpload'">Bulk upload history</span>
+      <span> / </span>
+      <span (click)="activePanel = 'import'">Import candidate data</span>
+      <span> / </span>
+      <span>Export candidate data</span>
+    </div>
   </div>
   <!-- IMPORT/EXPORT BUTTONS END -->  
 
   <!-- MAIN CONTENT START -->
-  <div class="talentbase__filter-wrap" *ngIf="!importPanelOpened">
+  <div class="talentbase__filter-wrap" *ngIf="activePanel === 'main'">
       <div class="talentbase__filter-icon">
         <img src="../../assets/icons/talent_base.png" alt="">
         <span>Talent pool</span>
@@ -160,12 +168,8 @@
   <!-- MAIN CONTENT END -->  
 
   <!-- IMPORT PANEL START -->
-  <div class="talentbase__import-panel" *ngIf="importPanelOpened">
+  <div class="talentbase__import-panel" *ngIf="activePanel === 'import'">
     <img class="GDPR" src="../../assets/img/GDPR-logo.png" alt="">
-    <div class="back-to-talent-pool" (click)="importPanelOpened = !importPanelOpened">
-      <mat-icon class="arrow-back">arrow_back</mat-icon>
-      Back to talent pool
-    </div>
     <div class="talentbase__import-panel container">
       <div class="talentbase__import-panel-header">
         <mat-icon class="copy-icon">
@@ -245,5 +249,82 @@
     </div>
   </div>
   <!-- IMPORT PANEL END -->
+
+  <!-- BULK UPLOADS HISTORY START -->
+  <div class="talentbase__bulk-upload-history-panel" *ngIf="activePanel === 'bulkUpload'">
+
+    <!-- BULK UPLOAD PENDING START -->
+    <div class="bulk-upload-pending-wrap">
+        <div class="bulk-upload-pending__info">
+            <div class="bulk-upload-pending__info--details">
+              <p class="bulk-upload-pending__info--details__title">Current upload details</p>
+              <table>
+                <tr>
+                  <td>Total file size</td>
+                  <td class="bold">98MB</td>
+                </tr>
+                <tr>
+                  <td>Total CV files</td>
+                  <td>1500</td>
+                </tr>
+                <tr>
+                  <td>Total CV processed</td>
+                  <td>1000</td>
+                </tr>
+                <tr>
+                  <td>Estimated time left</td>
+                  <td>15 minutes</td>
+                </tr>
+              </table>
+            </div>
+            <div class="bulk-upload-pending__info--magic">
+              <span>Some little magic is happening right now to upload all your data</span>
+              <img src="../../assets/images/bulk_magic.png" alt="">
+            </div>
+        </div>
+        <div class="bulk-upload-pending__bar-wrap">
+          <div class="bulk-upload-pending__bar">
+            <div class="bulk-upload-pending__bar-fill">
+              <div class="bulk-upload-pending__bar-fill--percentage"><span>50%</span></div>
+              <div class="bulk-upload-pending__bar-fill--processed">
+                <p>Total processed</p>
+                <p>1000</p>
+              </div>
+            </div>
+            <div class="bulk-upload-pending__bar-total">
+                <p>Total CV files</p>
+                <p>1550</p>
+            </div>
+          </div>
+        </div>
+        <div class="bulk-upload-pending__history">
+          <p class="bulk-upload-pending__history--title">Upload History</p>
+          <table>
+            <tr>
+              <th>Upload Date</th>
+              <th>File Name</th>
+              <th>Upload User</th>
+              <th>File Size</th>
+              <th>Total CVs</th>
+              <th>Success</th>
+              <th>Errors</th>
+            </tr>
+            <tr>
+              <td>Upload Date</td>
+              <td>File Name</td>
+              <td>Upload User</td>
+              <td>File Size</td>
+              <td>Total CVs</td>
+              <td>Success</td>
+              <td>Errors</td>
+            </tr>
+          </table>
+        </div>
+    </div>
+    <!-- BULK UPLOAD PENDING END -->    
+
+  </div>
+  <!-- BULK UPLOADS HISTORY END -->
+  
 
 </div>

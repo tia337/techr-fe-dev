@@ -18,22 +18,22 @@ import { RootVCRService } from '../root_vcr.service';
 })
 export class TalentbaseComponent implements OnInit, OnDestroy {
 
-  filtersOpened = false;
+  public filtersOpened = false;
   allSelected = false;
   checkedCandidates: Array<any> = [];
-  importPanelOpened = false;
-  enableDisableFiltersOpened = false;
-  jsonFileName = '';
-  zipFileName: File = null;
-  zipFileSizeExceed = false;
-  jsonForm: FormGroup;
-  zipForm: FormGroup;
-  noCandidatesFound = false;
+  public activePanel: string = 'bulkUpload';
+  public enableDisableFiltersOpened = false;
+  public jsonFileName: string = '';
+  public zipFileName: File = null;
+  public zipFileSizeExceed = false;
+  public jsonForm: FormGroup;
+  public zipForm: FormGroup;
+  public noCandidatesFound = false;
   public filters: Array<FilterItem> = [];
   private filtersStorage: Array<FilterItem> = [];
   private latestFilterParam;
   public filterTypes: Array<UserTalentDBFilter> = [];
-  public filterMode = 'and';
+  public filterMode: string = 'and';
   public candidatesArray: Array<TalentDBCandidate> = [];
   private candidatesStorage: Array<TalentDBCandidate> = [];
   private filteredCandidatesStorage: Array<TalentDBCandidate> = [];
@@ -69,6 +69,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     }).catch(error => console.log('error while getting getEnabledUserTalentDBFilters : ', error));
 
     this.createForms();
+
+    this._talentBaseService.getBulkUploads(this.clientId).then(result => {
+      console.log(result);
+    }).catch(error => console.log('error while getting getBulkUploads: ', error));
 
   }
 

@@ -19,29 +19,42 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   public cvUploaded = false;
   public uploadedCandidates = [];
   public candidateForm: FormGroup;
+  private filesConfig: Ng4FilesConfig = {
+    acceptExtensions: ['pdf', 'word', 'rtf'],
+    maxFilesCount: 5
+  }
 
   constructor(
     private _root_vcr: RootVCRService,
     private _addCandidateService: AddCandidateService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _ng4FilesService: Ng4FilesService
   ) { }
 
   ngOnInit() {
+
+    this._ng4FilesService.addConfig(this.filesConfig, 'files-config');
     
     this._addCandidateService.candidatesUploaded.skipWhile(val => val === null).take(1).subscribe(candidates => {
-      console.log(candidates);
       this.loading = false;
       this.cvUploaded = true;
       this.buildForm(candidates);
     });
+
   }
 
   closeModal(): void {
     this._root_vcr.clear();
   }
 
-  filesSelect(event: Ng4FilesSelected): void {
-    this.files = event.files;
+  filesSelect(selectedFiles: Ng4FilesSelected): void {
+    if (selectedFiles.status !== Ng4FilesStatus.STATUS_SUCCESS) {
+      console.log(selectedFiles.status);
+      return;
+    }
+    this.files = selectedFiles.files;
+ 
+    this.files = Array.from(selectedFiles.files).map(file => file);
   }
 
   deleteCV(index, array): void {

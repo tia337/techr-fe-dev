@@ -16,7 +16,7 @@
     <!-- WARNING BOX END -->
     
     <!-- DROP BOX START -->
-    <ng4-files-drop (filesSelect)="filesSelect($event)" *ngIf="!cvUploaded && !loading">
+    <ng4-files-drop [configId]="'files-config'" (filesSelect)="filesSelect($event)" *ngIf="!cvUploaded && !loading">
       <div class="drop-box" [ngClass]="{'files-choosen': files.length > 0 }">
         <span *ngIf="files.length === 0">Drop file here</span>
         <mat-icon class="icon-cloud-upload" *ngIf="files.length === 0">move_to_inbox</mat-icon>
@@ -39,7 +39,7 @@
         <p class="assets-block__formats">
           (PDF, WORD or Rich Text file)
         </p>
-        <ng4-files-click (filesSelect)="filesSelect($event)">
+        <ng4-files-click [configId]="'files-config'" (filesSelect)="filesSelect($event)">
             <p class="assets-block__upload-file-btn">Upload File</p>
         </ng4-files-click>
       </div>

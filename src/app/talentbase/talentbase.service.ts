@@ -167,4 +167,14 @@ export class TalentbaseService {
       return `${candidate.firstName}' '${candidate.lastName}`.toLowerCase().indexOf(value) > -1
     });
   }
+
+  getBulkUploads(clientId: string) {
+    return new Promise ((resolve, reject) => {
+      this._parse.execCloud('getBulkUploads', { clientId: clientId }).then(result => {
+        resolve(result);
+        reject(result);
+      });
+    });
+  }
+
 }
