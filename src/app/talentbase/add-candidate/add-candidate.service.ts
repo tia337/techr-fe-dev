@@ -48,10 +48,11 @@ export class AddCandidateService {
 	this.createBase64(cvFile).then(result => {
 		const filename: string = cvFile.name;
 		const base64 = result;
-		this._parse.execCloud('parsingCV', { base64: cvFile, filename: filename }).then(response => {
-			console.log(response);
-			return response.json();
-		}).map(res => console.log(res));
+		this._parse.execCloud('parsingCV', { base64: base64, filename: filename });
+		// .then(response => {
+		// 	console.log(response);
+		// 	return response.json();
+		// }).map(res => console.log(res));
 	});
   }
 
