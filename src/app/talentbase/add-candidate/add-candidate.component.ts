@@ -20,7 +20,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   public uploadedCandidates = [];
   public candidateForm: FormGroup;
   private filesConfig: Ng4FilesConfig = {
-    acceptExtensions: ['pdf', 'word', 'rtf'],
+    acceptExtensions: ['pdf', 'doc', 'docx', 'rtf'],
     maxFilesCount: 5
   };
   private _candidatesRchilliSubscription;
@@ -92,9 +92,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._candidatesRchilliSubscription.unsubscribe();
-    this.candidateForm.reset();
-    console.log('Destroyed');
+    if (this._candidatesRchilliSubscription !== undefined) this._candidatesRchilliSubscription.unsubscribe();
+    if (this.candidateForm !== undefined) this.candidateForm.reset();
   }
 
 }
