@@ -22,7 +22,9 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   private filesConfig: Ng4FilesConfig = {
     acceptExtensions: ['pdf', 'word', 'rtf'],
     maxFilesCount: 5
-  }
+  };
+  private _candidatesRchilliSubscription;
+  public avatar: string;
 
   constructor(
     private _root_vcr: RootVCRService,
@@ -32,15 +34,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
     this._ng4FilesService.addConfig(this.filesConfig, 'files-config');
-    
-    this._addCandidateService.candidatesUploaded.skipWhile(val => val === null).take(this.files.length).subscribe(candidates => {
-      this.loading = false;
-      this.cvUploaded = true;
-      this.buildForm(candidates);
-    });
-
   }
 
   closeModal(): void {
@@ -60,9 +54,22 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 
   uploadCVs(): void {
     this.loading = true;
+    // this.files.forEach(file => {
+    //   this._addCandidateService.uploadCVs(file);
+    // });
     this.files.forEach(file => {
-      this._addCandidateService.uploadCVs(file);
+      this._addCandidateService.parsingCv(file);
     });
+    this._candidatesRchilliSubscription = this._addCandidateService.candidatesUploaded
+      .skipWhile(val => val === null)
+      .take(this.files.length)
+      .distinctUntilChanged()
+      .subscribe(candidates => {
+        console.log('response', candidates);
+        this.loading = false;
+        this.cvUploaded = true;
+        this.buildForm(candidates);  
+      });
   }
 
   buildForm(candidate): void {
@@ -85,7 +92,9 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-
+    this._candidatesRchilliSubscription.unsubscribe();
+    this.candidateForm.reset();
+    console.log('Destroyed');
   }
 
 }

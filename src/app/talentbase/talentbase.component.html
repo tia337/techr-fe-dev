@@ -7,7 +7,10 @@
         <span *ngIf="activePanel !== 'main'">Back to talent pool</span> 
     </div>
     <div>
-      <span [ngClass]="{'active': activePanel === 'bulkUpload'}" (click)="activePanel = 'bulkUpload'">Bulk upload history</span>
+      <span style="position: relative;" [ngClass]="{'active': activePanel === 'bulkUpload'}" (click)="activePanel = 'bulkUpload'">
+        <mat-icon class="pulsing icon-pending" *ngIf="pendingBulkUpload !== undefined && activePanel !== 'bulkUpload'">cloud_circle</mat-icon>
+        Bulk upload history
+      </span>
       <span> / </span>
       <span [ngClass]="{'active': activePanel === 'import'}" (click)="activePanel = 'import'">Import candidate data</span>
       <span> / </span>
@@ -297,32 +300,32 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="bulk-upload-pending__history">
-        <p class="bulk-upload-pending__history--title">Upload History</p>
-        <table>
-          <tr>
-            <th (click)="sortBulkUploadsHistory('date')">Upload Date</th>
-            <th (click)="sortBulkUploadsHistory('uploadUserFilename')">File Name</th>
-            <th (click)="sortBulkUploadsHistory('author')">Upload User</th>
-            <th (click)="sortBulkUploadsHistory('uploadSize')">File Size</th>
-            <th (click)="sortBulkUploadsHistory('filesTotal')">Total CVs</th>
-            <th (click)="sortBulkUploadsHistory('filesSuccess')">Success</th>
-            <th (click)="sortBulkUploadsHistory('filesError')">Errors</th>
-          </tr>
-          <tr *ngFor="let bulk of bulkUploads">
-            <td>{{bulk.date | date: 'dd/MM/yyyy hh:mm a'}}</td>
-            <td>{{bulk.uploadUserFilename}}</td>
-            <td>{{bulk.author}}</td>
-            <td *ngIf="bulk.uploadSize !== 0">{{bulk.uploadSize | fileSize}} mb</td>
-            <td *ngIf="bulk.uploadSize === 0">-</td>              
-            <td>{{bulk.filesTotal}}</td>
-            <td>{{bulk.filesSuccess}}</td>
-            <td *ngIf="bulk.filesError !== 0">{{bulk.filesError}}</td>
-            <td *ngIf="bulk.filesError === 0">-</td>
-          </tr>
-        </table>
-      </div>
+    </div>
+    <div class="bulk-upload-pending__history">
+      <p class="bulk-upload-pending__history--title">Upload History</p>
+      <table>
+        <tr>
+          <th (click)="sortBulkUploadsHistory('date')">Upload Date</th>
+          <th (click)="sortBulkUploadsHistory('uploadUserFilename')">File Name</th>
+          <th (click)="sortBulkUploadsHistory('author')">Upload User</th>
+          <th (click)="sortBulkUploadsHistory('uploadSize')">File Size</th>
+          <th (click)="sortBulkUploadsHistory('filesTotal')">Total CVs</th>
+          <th (click)="sortBulkUploadsHistory('filesSuccess')">Success</th>
+          <th (click)="sortBulkUploadsHistory('filesError')">Errors</th>
+        </tr>
+        <tr *ngFor="let bulk of bulkUploads">
+          <td>{{bulk.date | date: 'dd/MM/yyyy hh:mm a'}}</td>
+          <td>{{bulk.uploadUserFilename}}</td>
+          <td>{{bulk.author}}</td>
+          <td *ngIf="bulk.uploadSize !== 0">{{bulk.uploadSize | fileSize}} mb</td>
+          <td *ngIf="bulk.uploadSize === 0">-</td>              
+          <td>{{bulk.filesTotal}}</td>
+          <td>{{bulk.filesSuccess}}</td>
+          <td *ngIf="bulk.filesError !== 0">{{bulk.filesError}}</td>
+          <td *ngIf="bulk.filesError === 0">-</td>
+        </tr>
+      </table>
+    </div>
     <!-- BULK UPLOAD PENDING END -->    
 
   </div>

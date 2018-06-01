@@ -95,6 +95,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       this.pendingBulkUpload.filesError = data.filesError;
     });
 
+
   }
 
   getFilters(userTalentDBFilters: Array<UserTalentDBFilter>): void {
@@ -448,6 +449,8 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   definePendingBulkUploads(pendingBulkUpload: BulkUploadItem | undefined): void {
     if (pendingBulkUpload === undefined) return;
 
+    // this.initiate();
+
     this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
       this.setFillPercentage(pendingBulkUpload.filesTotal, data.filesSuccess);
       this.pendingBulkUpload.filesError = data.filesError;
@@ -466,10 +469,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   initiate() {
     this.filesProcessed = this.filesProcessed + 5.25;
     setInterval(() => {
-      if (this.filesTotal === this.filesProcessed) {
+      if (this.filesTotal !== this.filesProcessed && this.filesTotal > this.filesProcessed) {
         this.initiate();
       }
-    }, 1000);
+    }, 1500);
     this.setFillPercentage(this.filesTotal, this.filesProcessed);
   }
 

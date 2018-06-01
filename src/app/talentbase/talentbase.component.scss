@@ -718,9 +718,61 @@
         th {
             text-align: left;
             font-size: 18px;
+            cursor: pointer;
         }
         td {
             font-size: 16px;
         }
+    }
+}
+
+.icon-pending {
+    margin-bottom: -14px;
+    position: absolute;
+    left: -25px;
+    top: 0px;
+}
+
+.blink {
+    animation: blink-animation 3s ease-in-out infinite;
+    -webkit-animation: blink-animation 3s ease-in-out infinite;
+}
+.pulsing {
+    animation: all pulsing 2s ease infinite;
+}
+@keyframes blink-animation {
+   0% {
+       opacity: 1;
+   }
+   100% {
+       opacity: 0;
+   }
+}
+@-webkit-keyframes blink-animation {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes pulsing {
+    from,
+    to {
+        background: #000;;
+    }
+    50% {
+        background-color: #686c6e;
+    }
+}
+
+@-webkit-keyframes pulsing {
+    from,
+    to {
+        background: #000;
+    }
+    50% {
+        background-color: #686c6e;
     }
 }

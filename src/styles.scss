@@ -844,6 +844,11 @@ app-chat .dropdown-menu {
         width: 20px!important;
     }
 
+    header .buttons-wrap .sign-out-btn {
+        border-radius: 0!important;
+        transition: .3s all ease-in-out;
+    }
+
 }
 
 .highlighted {

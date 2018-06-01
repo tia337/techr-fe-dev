@@ -170,7 +170,6 @@ export class TalentbaseService {
   getBulkUploads(clientId: string): Promise<BulkUploadItem[]> {
     return new Promise ((resolve, reject) => {
       this._parse.execCloud('getBulkUploads', { clientId: clientId }).then(result => {
-        console.log(result);
         const data: BulkUploadItem[] = [];
         result.forEach(item => {
           const bulk = this.createBulkUploadItem(item);
@@ -214,10 +213,12 @@ export class TalentbaseService {
 
   sortBulkUploadHistory(param, array: Array<BulkUploadItem>): Array<BulkUploadItem> {
     array = _.sortBy(array, function (i) {
-      return i.param;
+      return i[param];
     }).reverse();
     return array;
   }
+
+  
 
 
 }

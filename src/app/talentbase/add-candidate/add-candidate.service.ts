@@ -3,6 +3,8 @@ import { Http, RequestOptions, Headers } from '@angular/http';
 import { BehaviorSubject, Subject  } from 'rxjs';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
+import { Parse } from '../../parse.service';
+
 @Injectable()
 export class AddCandidateService {
 
@@ -10,14 +12,15 @@ export class AddCandidateService {
   public candidatesUploaded: BehaviorSubject<any[]> = new BehaviorSubject(null);
   public goToImport: BehaviorSubject<boolean> = new BehaviorSubject(null);
 
-  private rchilliURL = 'https://rest.rchilli.com/RChilliParser/Rchilli/parseResumeBinary';
+  private rchilliURL: string = 'https://rest.rchilli.com/RChilliParser/Rchilli/parseResumeBinary';
 
   constructor(
-    private _http: Http
+	private _http: Http,
+	private _parse: Parse
   ) { }
 
   uploadCVs (cvFile): any {
-		const reader = new FileReader();
+		const reader: FileReader = new FileReader();
 		reader.addEventListener('loadend', (event) => {
 			const data = reader.result.split(',')[1];
 			const jsonObject = JSON.stringify({
@@ -27,21 +30,45 @@ export class AddCandidateService {
 				'version': '7.0.0',
 				'subuserid': 'SWIPEIN'
 			});
-			const headers = new Headers();
+			const headers: Headers = new Headers();
 			headers.append('Access-Control-Allow-Origin', '*');
 			headers.append('Content-Type', 'application/json');
-      const request = this._http.post(this.rchilliURL, jsonObject, { headers: headers });
+			const request = this._http.post(this.rchilliURL, jsonObject, { headers: headers });
 			request.map(res => {
 				return res.json();
 			}).subscribe(response => {
-			console.log(response);
-			this.candidatesUploaded.next(response.ResumeParserData);
+				console.log(response);
+				this.candidatesUploaded.next(response.ResumeParserData);
 			});
 		});
 		reader.readAsDataURL(cvFile);
   }
+
+  parsingCv (cvFile) {
+	const filename: string = cvFile.name;
+	const base64: string = this.createBase64(cvFile);
+	console.log('filename: ', filename);
+	console.log('base64: ', base64);
+	// this._parse.execCloud('parsingCV', { base64: cvFile, filename: filename }).then(response => {
+	// 	console.log(response);
+	// 	return response.json();
+	// }).map(res => console.log(res));
+  }
+
+	createBase64 (file): string {
+		const reader: FileReader = new FileReader();
+		let base64: string;
+		reader.readAsDataURL(file);
+		reader.onload = () => {
+			base64 = reader.result;
+		};
+		reader.onerror = (error) => {
+			console.log('Error: ', error);
+		};
+		return base64;
+	}
   
-  getError(error: number) {
+  getError(error: number): string {
 		switch (error) {
 			case 1001:
 			case 1002:
@@ -79,9 +106,10 @@ export class AddCandidateService {
 		}
   }
 
-  redirectToImport(value: boolean) {
-	console.log()
+  redirectToImport(value: boolean): void {
 	this.goToImport.next(value);
   }
+
+
   
 }

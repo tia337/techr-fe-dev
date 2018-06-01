@@ -8,7 +8,7 @@
     </p>
 
     <!-- WARNING BOX START -->
-    <div [hidden]="maxWarningHidden" class="max-warning-wrap" *ngIf="!loading && !cvUploaded">
+    <div [hidden]="maxWarningHidden" class="max-warning-wrap" *ngIf="!loading && !cvUploaded"> 
       <span>Maximum 5 CVs!</span>
       <span>For bulk upload <span class="bold" style="text-decoration: underline; cursor: pointer;" (click)="redirectToImport(true)">go to bulk import</span></span>
       <mat-icon (click)="maxWarningHidden = true" class="icon-close">clear</mat-icon>
@@ -45,6 +45,7 @@
       </div>
     </ng4-files-drop>
     <!-- DROP BOX END -->
+
     <div class="spinner-wrap">
       <mat-progress-spinner class="progress-spinner" *ngIf="loading && !cvUploaded"  mode="indeterminate"></mat-progress-spinner>
     </div>
@@ -61,6 +62,12 @@
           <span class="input-name">* Last Name</span>          
           <input type="text" formControlName="LastName" name="LastName">
         </p>
+        <label for="avatar">
+          <img *ngIf="!avatar" src="../../../assets/img/default-userpic.png" alt="">
+          <img *ngIf="avatar" [src]="avatar" alt="">          
+        </label>
+        AVATAR: {{avatar}}
+        <input style="display:none;" id="avatar" type="file" [(ngModel)]="avatar" formControlName="avatar" name="avatar">
       </div>
       <div class="row">
         <p class="input-holder">
@@ -70,6 +77,36 @@
         <p class="input-holder">
           <span class="input-name">Phone Number</span>
           <input type="text" formControlName="FormattedMobile" name="FormattedMobile">
+        </p>
+      </div>
+      <div class="row">
+        <p class="input-holder">
+          <span class="input-name">Email</span>
+          <input type="email" formControlName="Email" name="Email">
+        </p>
+        <p class="input-holder">
+          <span class="input-name">Social/Web precense</span>
+          <input type="text" formControlName="WebPrecense">
+        </p>
+      </div>
+      <div class="row"> 
+        <p class="input-holder">
+          <span class="input-name">* Source</span>
+          <mat-form-field>
+            <mat-select placeholder="Select source">
+              <mat-option value="''">
+                Source
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </p>
+        <p class="input-holder">
+          <span class="input-name">Add To Job</span>
+          <input type="text">
+        </p>
+        <p class="input-holder">
+          <span class="input-name">Stage</span>
+          <input type="text">
         </p>
       </div>
     </form>
