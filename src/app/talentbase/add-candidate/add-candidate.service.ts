@@ -45,27 +45,29 @@ export class AddCandidateService {
   }
 
   parsingCv (cvFile) {
-	const filename: string = cvFile.name;
-	const base64: string = this.createBase64(cvFile);
-	console.log('filename: ', filename);
-	console.log('base64: ', base64);
-	// this._parse.execCloud('parsingCV', { base64: cvFile, filename: filename }).then(response => {
-	// 	console.log(response);
-	// 	return response.json();
-	// }).map(res => console.log(res));
+	this.createBase64(cvFile).then(result => {
+		const filename: string = cvFile.name;
+		const base64 = result;
+		this._parse.execCloud('parsingCV', { base64: cvFile, filename: filename }).then(response => {
+			console.log(response);
+			return response.json();
+		}).map(res => console.log(res));
+	});
   }
 
-	createBase64 (file): string {
+	createBase64 (file) {
 		const reader: FileReader = new FileReader();
-		let base64: string;
-		reader.readAsDataURL(file);
-		reader.onload = () => {
-			base64 = reader.result;
-		};
-		reader.onerror = (error) => {
-			console.log('Error: ', error);
-		};
-		return base64;
+		const promise = new Promise((resolve, reject) => {
+			reader.readAsDataURL(file);
+			reader.onload = function () {
+				resolve(reader.result);
+			};
+			reader.onerror = (error) => {
+				console.log('Error: ', error);
+				reject(error);
+			};
+		});
+		return promise;
 	}
   
   getError(error: number): string {
