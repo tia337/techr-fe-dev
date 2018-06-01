@@ -197,10 +197,68 @@
         margin-bottom: 10px;
     }
     input {
-        width: 55%;
+        max-width: 300px;
+        width: 200px;
         min-width: 120px;
         padding: 5px 9px;
         border: 1px solid #616161;
         font-size: 13px;
     }
 }
+
+.candidate-form {
+    position: relative;
+    .avatar {
+        position: absolute;
+        right: 45px;
+        top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        label,
+        span {
+            cursor: pointer;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.source-add-candidate-talentdb {
+    ::ng-deep .mat-form-field-infix {
+        border: 1px solid #424242!important;
+        padding: 5.5px!important;
+        width: -webkit-fill-available!important;
+    }
+     ::ng-deep  .mat-form-field-wrapper {
+        padding-bottom: 0!important;
+    }
+    ::ng-deep  .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder {
+        display: none;
+    }
+    ::ng-deep .mat-form-field-underline {
+        display: none;
+    }
+    ::ng-deep .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+        color: #424242;
+    }
+    ::ng-deep .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+        color: #424242;
+    }
+    ::ng-deep .mat-select-panel {
+        box-shadow: initial!important;
+        border: 1px solid #424242;
+    }
+    ::ng-deep .mat-form-field-type-mat-select .mat-form-field-placeholder {
+        color: #424242!important;
+        opacity: .8;
+        padding-left: 8px;
+    }
+ }

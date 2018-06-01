@@ -1,24 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatIconModule, MatProgressSpinnerModule, MatFormFieldModule, MatSelectModule, MatOptionModule } from '@angular/material';
 import { Ng4FilesModule } from 'angular4-files-upload';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { AddCandidateComponent } from './add-candidate.component';
 import { AddCandidateService } from './add-candidate.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SanitizerPipe } from '../../shared/sanitizer.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
     FormsModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     Ng4FilesModule,
-    ClickOutsideModule
+    ClickOutsideModule,
   ],
   declarations: [
-    AddCandidateComponent
+    AddCandidateComponent,
+    SanitizerPipe
   ],
   providers: [
     AddCandidateService

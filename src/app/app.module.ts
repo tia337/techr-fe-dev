@@ -53,8 +53,6 @@ import { PrivacyPolicyModule } from './info-pages/privacy-policy/privacy-policy.
 import { InvitationPageModule } from './invitation-page/invitation-page.module';
 import { ContactUsModule } from "app/contact-us/contact-us.module";
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
-// import { UserSettingsComponent } from './user-settings/user-settings.component';
-// import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { environment } from './../environments/environment';
 import { ChatModule } from './chat/chat.module';
 import { TimelineComponent } from './timeline/timeline.component';
@@ -64,11 +62,6 @@ import { TimelineService } from './timeline/timeline.service';
 import { NgxDnDModule } from '@swimlane/ngx-dnd';
 import { EditUserRoleComponent } from './site-administration/user-management/access-level-page/edit-user-role/edit-user-role.component';
 import { ClickOutsideModule } from 'ng-click-outside';
-// import { TalentbaseService } from './talentbase/talentbase.service';
-// import { TalentbaseComponent } from './talentbase/talentbase.component';
-// import { FileSizePipe } from './talentbase/file-size.pipe';
-// import { HighlightSearchPipe } from './talentbase/highlight-search.pipe';
-// import { AddCandidateComponent } from './talentbase/add-candidate/add-candidate.component';
 import { TalentbaseModule } from './talentbase/talentbase.module';
 
 const config: SocketIoConfig = {
@@ -85,10 +78,6 @@ const config: SocketIoConfig = {
 	declarations: [
 		AppComponent,
 		ClearStringPipe,
-		// TalentbaseComponent,
-		// FileSizePipe,
-		// HighlightSearchPipe,
-		// AddCandidateComponent
 	],
 	imports: [
 		BrowserModule,
@@ -142,8 +131,7 @@ const config: SocketIoConfig = {
 		LoginGuard,
 		BillingGuard,
 		ActiveSubscriptionGuard,
-		TimelineService,
-		// TalentbaseService
+		TimelineService
 	],
 	bootstrap: [AppComponent],
 	exports: [],

@@ -4,12 +4,13 @@ import { BehaviorSubject, Subject  } from 'rxjs';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import { Parse } from '../../parse.service';
+import { resolve } from 'path';
 
 @Injectable()
 export class AddCandidateService {
 
 
-  public candidatesUploaded: BehaviorSubject<any[]> = new BehaviorSubject(null);
+  public candidatesUploaded: BehaviorSubject<any> = new BehaviorSubject(null);
   public goToImport: BehaviorSubject<boolean> = new BehaviorSubject(null);
 
   private rchilliURL: string = 'https://rest.rchilli.com/RChilliParser/Rchilli/parseResumeBinary';
@@ -46,30 +47,38 @@ export class AddCandidateService {
 
   parsingCv (cvFile) {
 	this.createBase64(cvFile).then(result => {
-		const filename: string = cvFile.name;
+		const filename = cvFile.name;
 		const base64 = result;
-		this._parse.execCloud('parsingCV', { base64: base64, filename: filename });
-		// .then(response => {
-		// 	console.log(response);
-		// 	return response.json();
-		// }).map(res => console.log(res));
+		this.sendCV(base64, filename).then(result => {
+			this.candidatesUploaded.next(result);
+		}).catch(error => console.log(error));
 	});
   }
 
-	createBase64 (file) {
-		const reader: FileReader = new FileReader();
-		const promise = new Promise((resolve, reject) => {
-			reader.readAsDataURL(file);
-			reader.onload = function () {
-				resolve(reader.result);
-			};
-			reader.onerror = (error) => {
-				console.log('Error: ', error);
-				reject(error);
-			};
-		});
-		return promise;
-	}
+  sendCV(base64: any, filename: string) {
+	  return new Promise ((resolve, reject) => {
+		this._parse.execCloud('parsingCV', { base64: base64, filename: filename })
+			.then(response => {
+				resolve(response);
+				reject(response);
+			});
+	  });
+  }
+
+  createBase64 (file) {
+	const reader: FileReader = new FileReader();
+	const promise = new Promise((resolve, reject) => {
+		reader.readAsDataURL(file);
+		reader.onload = function () {
+			resolve(reader.result);
+		};
+		reader.onerror = (error) => {
+			console.log('Error: ', error);
+			reject(error);
+		};
+	});
+	return promise;
+  }
   
   getError(error: number): string {
 		switch (error) {

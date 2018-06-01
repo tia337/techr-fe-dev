@@ -95,6 +95,10 @@ export class Parse {
 		return this._Parse.User.current();
 	}
 
+	toJSON() {
+		return this._Parse.Object.toJSON();
+	}
+
 	getPartner(user: any) {
 		if (user) {
 			return user.get('partner').fetch();
