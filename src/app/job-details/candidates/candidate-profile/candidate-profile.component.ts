@@ -80,7 +80,8 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			});
 		});
 		this._socket.on('pipelineUpdateBulk', data => {
-			console.log(data);
+			this.allert(1, 'Rejected');
+			this._jobDetailsService.activeStage = 6;
 		});
 	}
 
@@ -163,8 +164,7 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			console.log('onSend works');
 			onSendSubscription.unsubscribe();
 		});
-	}
-	
+	}	
 
 	showMoveMenu() {
 		this._renderer.addClass(this.moveCandidateMenu.nativeElement, 'opened');
@@ -191,6 +191,7 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			listId: listId,
 			user: this._parse.Parse.User.current().toPointer()
 		});
+
 
 	}
 

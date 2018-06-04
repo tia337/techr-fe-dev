@@ -54,7 +54,7 @@ export class BulkActionsComponent implements OnInit {
       candidate.listId = 6;
       candidate.candidateId = candidate.id;
       candidate.contractId = this.contractId;
-      candidate.user = this._parse.Parse.User.current().toPointer();      
+      candidate.user = this._parse.Parse.User.current().toPointer();
       candidate.rejectionList = {
           opened: false,
           reasons: []
@@ -102,7 +102,7 @@ export class BulkActionsComponent implements OnInit {
     candidate.rejectionList.opened = false;
     candidate.rejectionReason = reason;
     candidate.rejectedReasonId = reason.id;
-    candidate.reason = reason.get('rejectionReason'); 
+    candidate.reason = reason.get('rejectionReason');
     candidate.personalRejectionReason = true;
     const data = {
       candidateId: candidate.id,
@@ -146,7 +146,7 @@ export class BulkActionsComponent implements OnInit {
         if (candidate.personalRejectionReason === false) {
           candidate.rejectionReason = reason;
           candidate.rejectedReasonId = reason.id;
-          candidate.reason = reason.get('rejectionReason'); 
+          candidate.reason = reason.get('rejectionReason');
         }
       });
     } else {
@@ -154,7 +154,7 @@ export class BulkActionsComponent implements OnInit {
         if (candidate.personalRejectionReason === false) {
             candidate.rejectionReason = reason;
             candidate.rejectedReasonId = reason.id;
-            candidate.reason = reason.get('rejectionReason'); 
+            candidate.reason = reason.get('rejectionReason');
             candidate.hasRejectionReason = true;
             const data = {
               candidateId: candidate.id,
@@ -179,15 +179,34 @@ export class BulkActionsComponent implements OnInit {
   rejectCandidates() {
     console.log(this.candidatesArray);
     this._socket.emit('updateHiringPipelineBulk', {
-      candidates: this.candidatesArray,
+      candidates: this.cutParseProperties(this.candidatesArray),
       contractId: this._contractId,
     });
+  }
+
+  cutParseProperties(candidates) {
+    const newArray = [];
+    candidates = candidates.forEach(candidate => {
+      const data = {
+        rejectionReason: candidate.rejectionReason,
+        rejectedReasonId: candidate.rejectedReasonId,
+        reason: candidate.reason,
+        hasRejectionReason: candidate.hasRejectionReason,
+        personalRejectionReason: candidate.personalRejectionReason,
+        listId: candidate.listId,
+        candidateId: candidate.candidateId,
+        contractId: candidate.contractId,
+        user: candidate.user
+      };
+      newArray.push(data);
+    });
+    return newArray;
   }
 
   addConctractId (candidates) {
     candidates.forEach(candidate => {
       candidate.contractId = this.contractId;
-    })
+    });
   }
 
   showPage(params) {

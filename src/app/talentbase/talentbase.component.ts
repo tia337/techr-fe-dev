@@ -133,7 +133,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       if (this.filteredCandidatesStorage.length > 0) {
         this.candidatesArray = this.candidatesArray
           .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.filteredCandidatesStorage));
-      } else if (this.filteredCandidatesStorage.length > 0) {
+      } else if (this.filteredCandidatesStorage.length === 0) {
         this.candidatesArray = this.candidatesArray
           .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.candidatesStorage));
       }
