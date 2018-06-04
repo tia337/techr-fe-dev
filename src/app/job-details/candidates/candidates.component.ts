@@ -825,8 +825,8 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 				})
 			});
 			const bulkActions = this._root_vcr.createComponent(BulkActionsComponent);
-			bulkActions.candidates = checkedCandidates;
 			bulkActions.contractId = this.contractId;
+			bulkActions.candidates = checkedCandidates;
 		}
 		
 	}
