@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RootVCRService } from '../../../../root_vcr.service';
+import { Socket } from 'ng-socket-io';
+import { Parse } from '../../../../parse.service';
+
 //tslint:disable:indent
 @Component({
   selector: 'app-bulk-actions',
@@ -8,39 +11,21 @@ import { RootVCRService } from '../../../../root_vcr.service';
 })
 export class BulkActionsComponent implements OnInit {
 
-  candidatesArray: BulkActionsArray = [];
-  candidatesTempArray:  BulkActionsArray = [];
+  candidatesArray = [];
+  candidatesTempArray = [];
   paginationArray: Array<{page: number, sliceNumber: {from: number, to: number}}> = [];
   rejectionReasons = [];
   bulkRejectionReasonsList = false;
   currentBulkReason = null;
-  bulkRejectionReasons = [
-    {
-      type: '0',
-      reason: 'Not a good fit/Wrong skills set'
-    },
-    {
-      type: '1',
-      reason: 'Unsutable personality'
-    },
-    {
-      type: '2',
-      reason: 'Co workers don\'t approve'
-    },
-    {
-      type: '3',
-      reason: 'No references'
-    },
-    {
-      type: '4',
-      reason: 'Unfordable Salary Expectations'
-    }
-  ];
+  _contractId = '';
+  bulkRejectionReasons = [];
 
 
   currentPage = 1;
   constructor(
-    private _root_vcr: RootVCRService
+    private _root_vcr: RootVCRService,
+    private _socket: Socket,
+    private _parse: Parse
   ) { }
 
   ngOnInit() {
@@ -51,35 +36,28 @@ export class BulkActionsComponent implements OnInit {
   }
 
   set candidates (candidates) {
+    // let user = data.user;
+  // let contractId = data.contractId;
+  // let candidateId = data.candidateId;
+  // let listId = data.listId;
+  // let rejectedReasonId = (data.rejectedReason) ? data.rejectedReason : undefined;
+  // let reason = (data.reason) ? data.reason : undefined;
+  // let rejectionNote = (data.rejectionNote) ? data.rejectionNote : undefined;
+  // let userList;
     this.candidatesTempArray = candidates;
     this.candidatesTempArray.forEach(candidate => {
       candidate.rejectionReason = null;
+      candidate.rejectedReasonId = null;
+      candidate.reason = null;
       candidate.hasRejectionReason = false;
       candidate.personalRejectionReason = false;
+      candidate.listId = 6;
+      candidate.candidateId = candidate.id;
+      candidate.contractId = this.contractId;
+      candidate.user = this._parse.Parse.User.current().toPointer();      
       candidate.rejectionList = {
           opened: false,
-          reasons: [
-            {
-              type: '0',
-              reason: 'Not a good fit/Wrong skills set'
-            },
-            {
-              type: '1',
-              reason: 'Unsutable personality'
-            },
-            {
-              type: '2',
-              reason: 'Co workers don\'t approve'
-            },
-            {
-              type: '3',
-              reason: 'No references'
-            },
-            {
-              type: '4',
-              reason: 'Unfordable Salary Expectations'
-            }
-          ]
+          reasons: []
         }
       ;
     });
@@ -88,10 +66,20 @@ export class BulkActionsComponent implements OnInit {
     });
     this.candidatesArray = this.candidatesTempArray.slice(0, 10);
     this.createPagination(this.candidatesTempArray);
+    this.getRejectionReasons(this.candidatesTempArray);
+    this.addConctractId(this.candidatesArray);
   }
 
   get candidates () {
     return this.candidatesArray;
+  }
+
+  set contractId (value) {
+    this._contractId = value;
+  }
+
+  get contractId () {
+    return this._contractId;
   }
 
   createPagination (array) {
@@ -113,6 +101,8 @@ export class BulkActionsComponent implements OnInit {
   setRejectionReason (candidate, reason) {
     candidate.rejectionList.opened = false;
     candidate.rejectionReason = reason;
+    candidate.rejectedReasonId = reason.id;
+    candidate.reason = reason.get('rejectionReason'); 
     candidate.personalRejectionReason = true;
     const data = {
       candidateId: candidate.id,
@@ -155,12 +145,16 @@ export class BulkActionsComponent implements OnInit {
       this.candidatesTempArray.forEach(candidate => {
         if (candidate.personalRejectionReason === false) {
           candidate.rejectionReason = reason;
+          candidate.rejectedReasonId = reason.id;
+          candidate.reason = reason.get('rejectionReason'); 
         }
       });
     } else {
       this.candidatesTempArray.forEach(candidate => {
         if (candidate.personalRejectionReason === false) {
             candidate.rejectionReason = reason;
+            candidate.rejectedReasonId = reason.id;
+            candidate.reason = reason.get('rejectionReason'); 
             candidate.hasRejectionReason = true;
             const data = {
               candidateId: candidate.id,
@@ -172,8 +166,35 @@ export class BulkActionsComponent implements OnInit {
     }
   }
 
+  getRejectionReasons(candidates) {
+    const query = this._parse.Query('RejectedCandidateReasons');
+    query.find().then(data => {
+      this.bulkRejectionReasons = data;
+        candidates.forEach(candidate => {
+          candidate.rejectionList.reasons = data;
+        });
+    });
+  }
+
+  rejectCandidates() {
+    console.log(this.candidatesArray);
+    this._socket.emit('updateHiringPipelineBulk', {
+      candidates: this.candidatesArray,
+      contractId: this._contractId,
+    });
+  }
+
+  addConctractId (candidates) {
+    candidates.forEach(candidate => {
+      candidate.contractId = this.contractId;
+    })
+  }
+
   showPage(params) {
     this.candidatesArray = this.candidatesTempArray.slice(params.from, params.to);
   }
 
+
+
+  
 }

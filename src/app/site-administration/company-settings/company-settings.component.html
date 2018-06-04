@@ -343,15 +343,15 @@
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                   Hiring pipeline stages
+                   Hiring workflow
                 </mat-panel-title>
             </mat-expansion-panel-header>
                 <div class="pipeline-wrapper">
                    <p class="pipeline-title">
                        Standart Hiring Workflow
                    </p>
-                    <div class="job-offer-stages" ngxDroppable [model]="stages">
-                        <div class="job-stage disabled move-disabled" (click)="log(stages)" ngxDraggable [moves]="false">
+                    <div class="job-offer-stages" style="padding: 10px 0; margin: 10px 0;" (drop)="dropDnD($event, stages)" ngxDroppable [model]="stages">
+                        <div class="job-stage disabled move-disabled" ngxDraggable [moves]="false">
                             <div class="job-stage-inner">
                                 <div class="property-value">—</div>
                                 <div class="property-title">Suggested</div>
@@ -412,50 +412,54 @@
                     <div *ngIf="workflowArray.length > 0">
                             <div *ngFor="let workflow of workflowArray">
                                 <h1 class="workflow-title">{{workflow.name}}</h1>
-                                <div class="job-offer-stages" ngxDroppable [model]="workflow.stages">
-                                    <div class="job-stage disabled move-disabled" style="cursor: default;" ngxDraggable [moves]="false">
+                                <div class="job-offer-stages" 
+                                    (drop)="dropDnD($event, workflow.stages)" 
+                                    [copy]="false" 
+                                    ngxDroppable="['workflow.name']" 
+                                    [model]="workflow.stages">
+                                    <div class="job-stage disabled move-disabled" style="cursor: not-allowed;" ngxDraggable [moves]="false">
                                         <div class="job-stage-inner">
                                             <div class="property-value">—</div>
                                             <div class="property-title">Suggested</div>
                                         </div>
                                     </div>
-                                    <div class="job-stage disabled move-disabled" style="cursor: default;" ngxDraggable [moves]="false">
+                                    <div class="job-stage disabled move-disabled" style="cursor: not-allowed;"  ngxDraggable [moves]="false">
                                         <div class="job-stage-inner">
                                             <div class="property-value">—</div>
                                             <div class="property-title">Applied</div>
                                         </div>
                                     </div>
-                                    <div class="job-stage disabled move-disabled" style="cursor: default;" ngxDraggable [moves]="false">
+                                    <div class="job-stage disabled move-disabled" style="cursor: not-allowed;"  ngxDraggable [moves]="false">
                                         <div class="job-stage-inner">
                                             <div class="property-value">—</div>
                                             <div class="property-title">Employee Referrals</div>
                                         </div>
                                     </div>
-                                        <div class="job-stage" 
-                                                *ngFor="let flow of workflow.stages; let i = index;"
-                                                ngxDraggable 
-                                                [model]="flow"
-                                                style="cursor: move;"                                                
-                                                (click)="flow.editable = true">
-                                            <div class="job-stage-inner" (click)="openStageEdit(flow)">
-                                                <mat-icon (click)="workflow.stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>
-                                                <div class="property-value">—</div>
-                                                <div class="property-title" *ngIf="!flow.editable">{{flow.title}}</div>
-                                                <input
-                                                    id="editStageTitleInput"
-                                                    type="text"
-                                                    #editStageTitleInput
-                                                    (keydown.enter)="editStageTitle(editStageTitleInput.value, flow.title, i, workflow.stages)"
-                                                    *ngIf="flow.editable"
-                                                    [placeholder]="flow.title"
-                                                    (clickOutside)="flow.editable = false"
-                                                    [exclude]="'.job-stage-inner'"
-                                                    [delayClickOutsideInit]="true"
-                                                    [excludeBeforeClick]="true">
-                                            </div>
+                                    <div class="job-stage" 
+                                            *ngFor="let flow of workflow.stages; let i = index;"
+                                            ngxDraggable="['workflow.name']" 
+                                            [model]="flow"
+                                            style="cursor: move;"                                                
+                                            (click)="flow.editable = true">
+                                        <div class="job-stage-inner" (click)="openStageEdit(flow)">
+                                            <mat-icon (click)="workflow.stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>
+                                            <div class="property-value">—</div>
+                                            <div class="property-title" *ngIf="!flow.editable">{{flow.title}}</div>
+                                            <input
+                                                id="editStageTitleInput"
+                                                type="text"
+                                                #editStageTitleInput
+                                                (keydown.enter)="editStageTitle(editStageTitleInput.value, flow.title, i, workflow.stages)"
+                                                *ngIf="flow.editable"
+                                                [placeholder]="flow.title"
+                                                (clickOutside)="flow.editable = false"
+                                                [exclude]="'.job-stage-inner'"
+                                                [delayClickOutsideInit]="true"
+                                                [excludeBeforeClick]="true">
                                         </div>
+                                    </div>
                                     <div class="job-stage add-new-stage">
-                                        <div class="job-stage-inner" (click)="addNewStageInCustomWorkFlow(workflow.stages)">
+                                        <div class="job-stage-inner" (click)="addNewStageInCustomWorkFlow(workflow)">
                                             <div class="property-title">
                                                 +Add new stage
                                             </div>
@@ -463,7 +467,7 @@
                                 </div>
                                 </div>
                             </div>
-                        </div>
+                    </div>
                 </div>
         </mat-expansion-panel>
         <mat-expansion-panel>

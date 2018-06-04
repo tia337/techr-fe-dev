@@ -79,6 +79,9 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 				}
 			});
 		});
+		this._socket.on('pipelineUpdateBulk', data => {
+			console.log(data);
+		});
 	}
 
 
@@ -161,6 +164,7 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			onSendSubscription.unsubscribe();
 		});
 	}
+	
 
 	showMoveMenu() {
 		this._renderer.addClass(this.moveCandidateMenu.nativeElement, 'opened');

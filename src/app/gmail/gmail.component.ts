@@ -119,7 +119,7 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 		this.bodyField.nativeElement.value = this.emailBody;
 		this.subjectField.nativeElement.value = this.emailSubj;
 		this._gapi.getGapi().then(received_gapi => {
-			console.log('received_gapi', received_gapi);
+			// console.log('received_gapi', received_gapi);
 			this.gapi = received_gapi;
 			this._isSignedIn = this.gapi.auth2.getAuthInstance().isSignedIn.get();
 			this.gapi.auth2.getAuthInstance().isSignedIn.listen(status => {
@@ -196,6 +196,7 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 			this.candidateEmail = data.fCandidateEmail;
 		});
 	}
+
 
 
 

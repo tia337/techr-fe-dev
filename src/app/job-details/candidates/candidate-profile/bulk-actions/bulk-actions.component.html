@@ -33,11 +33,11 @@
             <li class="bulk-reasons__item" 
                 *ngFor="let reason of bulkRejectionReasons" 
                 (click)="setBulkRejectionReason(reason); $event.stopImmediatePropagation();">
-                {{reason.reason}}
+                {{reason.get('rejectionReason')}}
             </li>
           </ul>
         </div>
-        <p class="reject-candidates-btn" (click)="closeModal()">Reject Candidates</p>
+        <p class="reject-candidates-btn" (click)="rejectCandidates()">Reject Candidates</p>
       </div>
     </div>
     <div class="bulk-candidates-list">
@@ -72,7 +72,7 @@
                    [ngClass]="{'opened': candidate.rejectionList.opened === true}"
                    (click)="candidate.rejectionList.opened = true" 
                    *ngIf="candidate.rejectionReason !== null">
-                  {{candidate.rejectionReason.reason}}
+                  {{candidate.rejectionReason.get('rejectionReason')}}
               </div>
               <div *ngIf="candidate.rejectionList.opened">
                 <ul class="rejection-reason__list" 
@@ -81,7 +81,7 @@
                     <li class="rejection-reason__item" 
                         *ngFor="let reason of candidate.rejectionList.reasons" 
                         (click)="setRejectionReason(candidate, reason); $event.stopImmediatePropagation();">
-                        {{reason.reason}}
+                        {{reason.get('rejectionReason')}}
                     </li>
                 </ul>
               </div>

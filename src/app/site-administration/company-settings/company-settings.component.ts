@@ -275,7 +275,9 @@ export class CompanySettingsComponent implements OnInit {
 				editable: false,
 				type: null
 			};
+			console.log(this.stages);
 			this.stages.push(newStage);
+			console.log(this.stages);			
 		} else if (this.stages.length === 0) {
 			const newStage: Stage = {
 				index: 3,
@@ -298,7 +300,7 @@ export class CompanySettingsComponent implements OnInit {
 		if (client === null) {
 			return;
 		} else {
-			const stages: StagesArray = this.stagesTemp;
+			const stages: StagesArray = this.stagesTemp.slice();
 			const id = Math.random().toFixed(36).substring(5, 10);
 			const data = {
 				name: client.name,
@@ -310,17 +312,25 @@ export class CompanySettingsComponent implements OnInit {
 	}
 
 	addNewStageInCustomWorkFlow(stages) {
-		console.log(stages[stages.length - 1]);
-		if (stages.length > 0) {
+		console.log(stages);
+		console.log(stages.stages[stages.length - 1]);
+		if (stages.stages.length > 0) {
 			const newStage: Stage = {
-				index: stages[stages.length - 1].index + 1,
+				// index: stages.stages[stages.length - 1].index + 1,
+				index: 1,
 				value: 0,
 				title: 'New Stage',
 				editable: false,
 				type: null
 			};
-			stages.push(newStage);
-		} else if (stages.length === 0) {
+			this.workflowArray.forEach(flow => {
+				if (flow.name === stages.name) {
+					console.log(flow.name);
+					flow.stages.push(newStage);
+				}
+			});
+			return;
+		} else if (stages.stages.length === 0) {
 			const newStage: Stage = {
 				index: 3,
 				value: 0,
@@ -328,8 +338,17 @@ export class CompanySettingsComponent implements OnInit {
 				editable: false,
 				type: null
 			};
-			stages.push(newStage);
+			this.workflowArray.forEach(flow => {
+				if (flow.name === stages.name) {
+					console.log(flow.name);					
+					flow.stages.push(newStage);
+				}
+			});
 		}
+	}
+
+	dropDnD(event, val) {
+		console.log(event, val);
 	}
 
 

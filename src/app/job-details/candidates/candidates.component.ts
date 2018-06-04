@@ -552,7 +552,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
             console.log('onSend works');
             onSendSubscription.unsubscribe();
         });
-    }
+	}
 
 	sortBySkillFunc(){
         this._candidatesService.getSuggestedCandidates(this.contractId, 0, 1000).then(suggestions => {
@@ -826,6 +826,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 			});
 			const bulkActions = this._root_vcr.createComponent(BulkActionsComponent);
 			bulkActions.candidates = checkedCandidates;
+			bulkActions.contractId = this.contractId;
 		}
 		
 	}
