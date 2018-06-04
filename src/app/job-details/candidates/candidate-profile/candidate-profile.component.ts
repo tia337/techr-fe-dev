@@ -74,30 +74,13 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 					this.allert(1, 'Job Offered');
 				} else if (listId == 4) {
 					this.allert(1, 'Hired');
+				} else if (listId == 6) {
+					this.allert(1, 'Rejected');
 				}
 			});
 		});
 	}
 
-	// redirectToStage(data: any) {
-	// 	console.log(this._candidateProfileService);
-	// 	console.log(this);
-	// 	if(this._candidateProfileService)
-	// 	this._candidateProfileService.getUserList(data.userListId).then(userList => {
-	// 		this._jobDetailsService.activeStage = userList.get('listType');
-	// 		if (userList.get('listType') == 0) {
-	// 			this.allert(1, 'Shortlist');
-	// 		} else if (userList.get('listType') == 1) {
-	// 			this.allert(1, 'Phone Interview');
-	// 		} else if (userList.get('listType') == 2) {
-	// 			this.allert(1, 'F2F Interview');
-	// 		} else if (userList.get('listType') == 3) {
-	// 			this.allert(1, 'Job Offered');
-	// 		} else if (userList.get('listType') == 4) {
-	// 			this.allert(1, 'Hired');
-	// 		}
-	// 	});
-	// }
 
 	ngOnChanges(changes: any) {
 		this.verdicts = {
@@ -160,6 +143,7 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			});
 		}
 	}
+
 	sendEmail() {
 		const email = this._root_vcr.createComponent(GmailComponent);
 		email.userId = this.userId;
@@ -204,30 +188,10 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			user: this._parse.Parse.User.current().toPointer()
 		});
 
-		// this._parse.Parse.Cloud.run("moveCandidateToList",{candidateId : this.candidate.id, contractId : this.contractId, listId : listId }).then(success => {
-
-		// !!!!
-		// 	this._jobDetailsService.activeStage = success.listInstance.get('listType');
-		// 	console.log(success);
-		// 	if (success.listInstance.get('listType') == 0) {
-		// 		this.allert(1, 'Shortlist');
-		// 	} else if (success.listInstance.get('listType') == 1) {
-		// 		this.allert(1, 'Phone Interview');
-		// 	} else if (success.listInstance.get('listType') == 2) {
-		// 		this.allert(1, 'F2F Interview');
-		// 	} else if (success.listInstance.get('listType') == 3) {
-		// 		this.allert(1, 'Job Offered');
-		// 	} else if (success.listInstance.get('listType') == 4) {
-		// 		this.allert(1, 'Hired');
-		// 	}
-		// }, error => {
-		// 	console.log(error);
-		// 	this.allert(0);
-		// });
-
 	}
 
 	allert(alertCode, stage?) {
+		this._root_vcr.clear();
 		if (alertCode === 1) {
 			const alert = this._root_vcr.createComponent(AlertComponent);
 			alert.title = 'Congrats!';

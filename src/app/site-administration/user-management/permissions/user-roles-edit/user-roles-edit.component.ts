@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SiteAdministrationService } from '../../../site-administration.service';
 import { RootVCRService } from '../../../../root_vcr.service';
+import { MatSnackBar } from '@angular/material';
 //tslint:disable:indent
 @Component({
   selector: 'app-user-roles-edit',
@@ -18,7 +19,9 @@ export class UserRolesEditComponent implements OnInit {
 
   constructor(
     private _siteAdministrationService: SiteAdministrationService,
-    private _rootVCRService: RootVCRService ) { }
+    private _rootVCRService: RootVCRService,
+    private _snackbar: MatSnackBar
+  ) { }
 
   ngOnInit() {
      this._siteAdministrationService.getUserRolesRights()
@@ -74,6 +77,7 @@ export class UserRolesEditComponent implements OnInit {
     
     this._siteAdministrationService.editUserRole(this.currentUserRole, newUserRole);
     this.userRolesFormGroup.reset();
+		this._snackbar.open('User Role Edited', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});            
     this.closeModal();
   }
 

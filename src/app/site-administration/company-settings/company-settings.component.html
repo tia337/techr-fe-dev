@@ -469,12 +469,12 @@
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    Client &amp; Project Based Recruitment
+                    Clients and Projects
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <h3>Use client &amp; project based recruitment to configure the clients and projects that you are hiring for</h3>
             
-            <div class="clients-projects-wrapper">
+            <div class="clients-projects-wrapper"> 
                 <form 
                     class="clients-form" 
                     [formGroup]="clientsFormGroup">
@@ -508,6 +508,7 @@
                                 formControlName="editClientOfClientName"
                                 *ngIf="clientOfClient.editClient" 
                                 type="text" 
+                                (keydown.enter)="saveEditedClient(clientOfClient); clientOfClient.editClient = false;"
                                 (clickOutside)="clientOfClient.editClient = false"
                                 [delayClickOutsideInit]="true"
                                 [exclude]="'.edit-client-input'"
@@ -542,30 +543,41 @@
                 </form>
                 <form class="projects-form" [formGroup]="projectsFormGroup">
                     <div class="projects-form-header">
-                        <span>Projects</span>
-                        <span>Client</span>    
-                        <button 
+                        <span style="flex-basis: 30%">Projects</span>
+                        <span style="flex-basis: 30%">Client</span>    
+                        <button style="flex-basis: 30%"
                             *ngIf="!newProject"
                             mat-raised-button 
                             color='primary'
+                            type="button"
                             (click)="addNewProject()"
                             >Add new project
                         </button>
-                        <button 
+                        <button style="flex-basis: 30%; margin-right: 10px;"
                             id="saveNewProjectBtn"
                             *ngIf="newProject"
                             mat-raised-button 
-                            color='primary' 
+                            color='primary'
+                            type="button"                            
                             (click)="saveNewProject()">
                             Save
+                        </button>
+                        <button style="flex-basis: 30%"
+                            id="cancelNewProjectBtn"
+                            *ngIf="newProject"
+                            mat-raised-button 
+                            color='primary'
+                            type="button"                            
+                            (click)="saveNewProject()">
+                            Cancel
                         </button>
                     </div>
                     <div class="projects-form-body">
                         <div 
                             *ngFor="let projectOfClient of projectsOfClient"
                             class="projects">
-                            <span *ngIf="!projectOfClient.editClient">{{projectOfClient.projectName}}</span>
-                            <input
+                            <span style="flex-basis: 30%;" *ngIf="!projectOfClient.editClient">{{projectOfClient.projectName}}</span>
+                            <input style="flex-basis: 30%;"
                                 *ngIf="projectOfClient.editClient" 
                                 class="edit-project-input"
                                 id="editProjectInput"
@@ -575,8 +587,8 @@
                                 [delayClickOutsideInit]="true"
                                 [exclude]="'.edit-project-input, .edit-project-select'"
                                 >
-                            <span *ngIf="!projectOfClient.editClient">{{projectOfClient.projectEndClientName}}</span>
-                            <select 
+                            <span style="flex-basis: 30%;" *ngIf="!projectOfClient.editClient">{{projectOfClient.projectEndClientName}}</span>
+                            <select style="flex-basis: 30%;"
                                 *ngIf="projectOfClient.editClient"
                                 class="edit-project-select"
                                 formControlName="projectEndClientName"
@@ -587,7 +599,7 @@
                                     {{clientOfClient.clientOfClientName}}
                                 </option>
                             </select>
-                            <div class="projects-options">
+                            <div style="flex-basis: 30%; text-align: center;" class="projects-options">
                                 <span 
                                     *ngIf="!projectOfClient.editClient"
                                     (click)="editProjectOfClient(projectOfClient)">
@@ -601,29 +613,32 @@
                                 <span (click)="deleteProject(projectOfClient)">Remove</span> 
                             </div> 
                         </div>
-                        <input 
-                            *ngIf="newProject"
-                            formControlName="projectName"
-                            type="text" 
-                            placeholder="New Project"
-                            id="newProjectInput"
-                            class="new-project-input"
-                            (keydown.enter)="saveNewProject()"
-                            (clickOutside)="addNewProject()"
-                            [exclude]="'.new-project-input, .new-project-select-client'"
-                            [delayClickOutsideInit]="true"
-                        >
-                        <select 
-                            class="new-project-select-client"
-                            *ngIf="newProject" 
-                            formControlName="projectEndClientName"
-                            (clickOutside)="addNewProject()"
-                            [exclude]="'.new-project-input, .new-project-select-client'"
-                            [delayClickOutsideInit]="true">
-                                <option *ngFor="let clientOfClient of clientsofClientArr" [value]="clientOfClient.id">
-                                    {{clientOfClient.clientOfClientName}}
-                                </option>
-                        </select>
+                        <div class="projects">
+                            <input style="flex-basis: 30%;"
+                                *ngIf="newProject"
+                                formControlName="projectName"
+                                type="text" 
+                                placeholder="New Project"
+                                id="newProjectInput"
+                                class="new-project-input"
+                                (keydown.enter)="saveNewProject()"
+                                (clickOutside)="addNewProject()"
+                                [exclude]="'.new-project-input, .new-project-select-client'"
+                                [delayClickOutsideInit]="true"
+                            >
+                            <select style="flex-basis: 30%;"
+                                class="new-project-select-client"
+                                *ngIf="newProject" 
+                                formControlName="projectEndClientName"
+                                (clickOutside)="addNewProject()"
+                                [exclude]="'.new-project-input, .new-project-select-client'"
+                                [delayClickOutsideInit]="true">
+                                    <option *ngFor="let clientOfClient of clientsofClientArr" [value]="clientOfClient.id">
+                                        {{clientOfClient.clientOfClientName}}
+                                    </option>
+                            </select>
+                            <small style="flex-basis: 30%; color: #ff3d3d;" *ngIf="newProject && projectEndClientNameEmpty">Please, select project</small>
+                        </div>
                     </div>
                 </form>
             </div>

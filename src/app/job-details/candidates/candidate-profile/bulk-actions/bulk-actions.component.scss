@@ -29,7 +29,8 @@
     z-index: 999999;
     position: relative;
     width: 65%;  
-    min-height: 851px;
+    // min-height: 851px;
+    min-height: 500px;
     margin-bottom: 40px;
     margin-top: 40px;
     &__title {
@@ -104,8 +105,10 @@
     &__avatar-wrap {
         img {
             border-radius: 50%;
-            max-width: 70px;
-            max-height: 70px;
+            // max-width: 70px;
+            // max-height: 70px;
+            width: 70px;
+            height: 70px;
         }
     }    
     &__candidate-name {
@@ -182,7 +185,8 @@
     position: relative;
     width: 100%;
     &__selector {
-        background: #4da3ec;    
+        // background: #4da3ec;  
+        background: #595959;  
         display: flex;
         align-items: center;
         justify-content: center;

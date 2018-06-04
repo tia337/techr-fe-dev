@@ -8,10 +8,14 @@
     Change theme
   </button> -->
   <div class="buttons-wrap">
-    <div *ngIf="!currentUser" class="linkedin-signin-button" (click)="signIn()">
+    <div *ngIf="!currentUser" class="microsoft-signin-button" (click)="signInWithMicrosoft()">
+      <img src="../../assets/icons/microsoft-icon.png" alt="">
+      <span>Sign in with Microsoft</span>
+    </div>
+    <div *ngIf="!currentUser" class="linkedin-signin-button" (click)="signInWithLinkedin()">
       <img src="../../assets/img/linkedin-logo-icon.png"/>
-      <a class="sign-in" style="white-space:nowrap">Sign In</a>
-      <a style="white-space:nowrap">with LinkedIn</a>
+      <a class="sign-in" style="white-space: nowrap;">Sign In</a>
+      <a style="white-space: nowrap;">with LinkedIn</a>
     </div>
 
     <div *ngIf="currentUser" class="profile-icons-wrap">

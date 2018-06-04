@@ -24,6 +24,7 @@ import {
 	MatSlideToggleModule,
 	MatExpansionModule,
 	MatButtonModule,
+	MatSnackBarModule,
 } from '@angular/material';
 import {
 	MatRadioModule
@@ -192,6 +193,7 @@ import { EditUserRoleComponent } from './user-management/access-level-page/edit-
 		NgxDnDModule,
 		NewRecruitmentTeamModule,
 		EditRecruitmentTeamModule,
+		MatSnackBarModule
 	],
 	providers: [
 		AccessLevelPageService,

@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { SiteAdministrationService } from './../../../site-administration.service';
 import { Parse } from '../../../../parse.service';
+import { MatSnackBar } from '@angular/material';
 //tslint:disable:indent
 @Component({
   selector: 'app-user-roles',
@@ -19,7 +20,8 @@ export class UserRolesComponent implements OnInit {
   constructor(
     private _siteAdministrationService: SiteAdministrationService,
     private _rootVCRService: RootVCRService,
-    private _parse: Parse
+    private _parse: Parse,
+    private _snackbar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -59,6 +61,7 @@ export class UserRolesComponent implements OnInit {
     this._siteAdministrationService.addUserRole(userRole);
     this.userRolesFormGroup.reset();
     this.closeModal();
+		this._snackbar.open('User Role Added', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});    
   }
 
   closeModal() {

@@ -51,7 +51,7 @@ export class RejectModalComponent implements OnInit {
     this._jobDetailsService.movedUser = this.candidate.id;
     if (this.rejectionNoteOpened === true) {
       const note = document.getElementById('rejection-note') as HTMLTextAreaElement;
-      this.response = 'success';
+      // this.response = 'success';
       this._socket.emit('updateHiringPipeline', {
         candidateId: this.candidate.id,
         contractId: this.contract,
@@ -61,11 +61,11 @@ export class RejectModalComponent implements OnInit {
         reason: this.rejectionReason.get('rejectionReason'),
         rejectionNote: note.value
       });
-      setTimeout(() => {
-        this._root_vcr.clear();
-      }, 1500);
+      // setTimeout(() => {
+      //   this._root_vcr.clear();
+      // }, 1500);
     } else if (this.rejectionNoteOpened === false) {
-      this.response = 'success';
+      // this.response = 'success';
       this._socket.emit('updateHiringPipeline', {
         candidateId: this.candidate.id,
         contractId: this.contract,
@@ -75,9 +75,9 @@ export class RejectModalComponent implements OnInit {
         reason: this.rejectionReason.get('rejectionReason'),
         rejectionNote: undefined
       });
-      setTimeout(() => {
-        this._root_vcr.clear();
-      }, 1500);
+      // setTimeout(() => {
+      //   this._root_vcr.clear();
+      // }, 1500);
     }
   }
 
@@ -85,7 +85,6 @@ export class RejectModalComponent implements OnInit {
     const note = document.getElementById('rejection-note') as HTMLTextAreaElement;
     note.value = '';
   }
-
 
   close() {
     this._root_vcr.clear();

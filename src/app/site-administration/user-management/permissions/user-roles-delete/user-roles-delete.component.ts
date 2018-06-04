@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RootVCRService } from 'app/root_vcr.service';
 import { SiteAdministrationService } from './../../../site-administration.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({ 
   selector: 'app-user-roles-delete',
@@ -14,7 +15,9 @@ export class UserRolesDeleteComponent implements OnInit {
 
   constructor(
     private _rootVCRService: RootVCRService,
-    private _siteAdministrationService: SiteAdministrationService) { }
+    private _siteAdministrationService: SiteAdministrationService,
+    private _snackbar: MatSnackBar
+  ) { }
 
   ngOnInit() {}
 
@@ -33,6 +36,7 @@ export class UserRolesDeleteComponent implements OnInit {
     this._siteAdministrationService.deleteUserRole(this.currentUserRole);
 
     this.closeModal();
+		this._snackbar.open('User Role Deleted', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});        
   }
 
   closeModal() {

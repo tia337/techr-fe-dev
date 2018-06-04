@@ -1,5 +1,7 @@
-<div class="modal-overlay" (click)="closeModal()">
-  <div class="modal" (click)="$event.stopPropagation()">
+<div class="modal-overlay">
+  <div class="modal" 
+    [delayClickOutsideInit]="true"  
+    (clickOutside)="closeModal()">
     <p class="modal__title">
       Select rejection reason
     </p>
@@ -13,19 +15,21 @@
         <div class="bulk-reasons">
           <div class="bulk-reasons__selector" 
                style="width: 100%;"
-              [ngClass]="{'opened': bulkRejectionReasonsList === true}"
-              *ngIf="currentBulkReason === null"
+              [ngClass]="{'opened': bulkRejectionReasonsList === true }"
               (click)="bulkRejectionReasonsList = !bulkRejectionReasonsList">
             Select bulk reason
           </div>
-          <div class="bulk-reasons__selector" 
+          <!-- <div class="bulk-reasons__selector" 
               style="width: 100%;"
               [ngClass]="{'opened': bulkRejectionReasonsList === true}"
               *ngIf="currentBulkReason !== null"              
               (click)="bulkRejectionReasonsList = !bulkRejectionReasonsList">
               {{currentBulkReason.reason}}
-          </div>
-          <ul class="bulk-reasons__list" *ngIf="bulkRejectionReasonsList">
+          </div> -->
+          <ul class="bulk-reasons__list" 
+            *ngIf="bulkRejectionReasonsList" 
+            [delayClickOutsideInit]="true"
+            (clickOutside)="bulkRejectionReasonsList = false">
             <li class="bulk-reasons__item" 
                 *ngFor="let reason of bulkRejectionReasons" 
                 (click)="setBulkRejectionReason(reason); $event.stopImmediatePropagation();">
@@ -71,7 +75,9 @@
                   {{candidate.rejectionReason.reason}}
               </div>
               <div *ngIf="candidate.rejectionList.opened">
-                <ul class="rejection-reason__list">
+                <ul class="rejection-reason__list" 
+                    [delayClickOutsideInit]="true"
+                    (clickOutside)="candidate.rejectionList.opened = false">
                     <li class="rejection-reason__item" 
                         *ngFor="let reason of candidate.rejectionList.reasons" 
                         (click)="setRejectionReason(candidate, reason); $event.stopImmediatePropagation();">

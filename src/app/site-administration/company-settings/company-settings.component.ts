@@ -18,6 +18,7 @@ import { FeedbackAlertComponent } from 'app/core/feedback-alert/feedback-alert.c
 import { ContactUsComponent } from "app/contact-us/contact-us.component";
 import { NewWorkflowComponent } from './new-workflow/new-workflow.component';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
 	selector: 'app-company-settings',
@@ -91,7 +92,8 @@ export class CompanySettingsComponent implements OnInit {
 	public stages: StagesArray;
 	public clients: ClientsArray;
 	public projects: ProjectsArray;
-	public workflowArray: Array<{id: string, name: string, stages: StagesArray}> = [];
+	public workflowArray: Array<{ id: string, name: string, stages: StagesArray }> = [];
+	projectEndClientNameEmpty = false;
 	stagesTemp: StagesArray = [
 		{
 			index: 3,
@@ -135,7 +137,8 @@ export class CompanySettingsComponent implements OnInit {
 		private sanitizer: DomSanitizer,
 		private _root_vcr: RootVCRService,
 		private _router: Router,
-		private renderer: Renderer
+		private renderer: Renderer,
+		private _snackbar: MatSnackBar
 	) {
 		this.erpBaseLink = _CompanySettingsService.erpBaseLink;
 	}
@@ -693,6 +696,7 @@ export class CompanySettingsComponent implements OnInit {
 					});
 				});
 			this.clientsFormGroup.reset();
+			this._snackbar.open('Client Added', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});
 		} else {
 			return this.clientsFormGroup.reset();
 		}
@@ -717,6 +721,7 @@ export class CompanySettingsComponent implements OnInit {
 			this._CompanySettingsService.editClientOfClient(clientOfClient.id, editedClientName);
 			clientOfClient.clientOfClientName = editedClientName;
 			this.clientsFormGroup.reset();
+			this._snackbar.open('Client Edited', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});			
 		} else {
 			return this.clientsFormGroup.reset();
 		}
@@ -727,25 +732,27 @@ export class CompanySettingsComponent implements OnInit {
 		this._CompanySettingsService.deleteClientOfClient(clientOfClientId);
 		const clientOfClientIndex = this.clientsofClientArr.indexOf(clientOfClient);
 		this.clientsofClientArr.splice(clientOfClientIndex, 1);
+		this._snackbar.open('Client Removed', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});		
 	}
 
 	addNewProject() {
 		if (this.newProject) {
 			this.newProject = false;
+			this.projectEndClientNameEmpty = false;			
 			this.projectsFormGroup.reset();
 		} else {
 			this.newProject = true;
 			setTimeout(() => {
 				const newProjectInput = document.getElementById('newProjectInput');
 				this.renderer.invokeElementMethod(newProjectInput, 'focus');
-		});
+			}, 4);
 		}
 	}
 
 	saveNewProject() {
 		const projectName = this.projectsFormGroup.value.projectName !== null ? this.projectsFormGroup.value.projectName.toString().trim() : '';
-		const clientOfClientId =  this.projectsFormGroup.value.projectEndClientName;
-		if (projectName !== '' && clientOfClientId !== null) {
+		const clientOfClientId = this.projectsFormGroup.value.projectEndClientName;
+		if (projectName !== '' && clientOfClientId !== '') {
 			this._CompanySettingsService.createClientRecruitmentProject(clientOfClientId, projectName)
 				.then(newProject => {
 					this.projectsOfClient.push({
@@ -753,16 +760,19 @@ export class CompanySettingsComponent implements OnInit {
 						projectName: newProject.get('projectName'),
 						projectEndClientName: newProject.get('projectEndClientName')
 					});
+					this.projectsFormGroup.reset();
+					this.newProject = false;
+					this.projectEndClientNameEmpty = false;			
+					this._snackbar.open('Project Added', '', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'bottom'});
 				});
-			this.projectsFormGroup.reset();
-		} else {
-			return this.projectsFormGroup.reset();
-		}
+		} else if (projectName !== '' && clientOfClientId === '') { 
+			this.projectEndClientNameEmpty = true;
+		} 
 	}
 
 	editProjectOfClient(projectOfClient) {
 		if (projectOfClient.editClient) {
-			projectOfClient.editClient =  false;
+			projectOfClient.editClient = false;
 			this.projectsFormGroup.reset();
 		} else {
 			projectOfClient.editClient = true;
@@ -775,6 +785,7 @@ export class CompanySettingsComponent implements OnInit {
 					'projectEndClientName': projectOfClient.projectEndClientName
 				});
 			}, 4);
+
 		}
 	}
 
@@ -795,6 +806,7 @@ export class CompanySettingsComponent implements OnInit {
 			});
 			projectOfClient.projectName = projectName;
 			this.projectsFormGroup.reset();
+			this._snackbar.open('Project Edited', '', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'bottom'});
 		} else {
 			return this.projectsFormGroup.reset();
 		}
@@ -807,6 +819,7 @@ export class CompanySettingsComponent implements OnInit {
 
 		const projectIndex = this.projectsOfClient.indexOf(projectOfClient);
 		this.projectsOfClient.splice(projectIndex, 1);
+		this._snackbar.open('Project Removed', '', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'bottom'});			
 
 	}
 }
