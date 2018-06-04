@@ -435,7 +435,7 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	singInOutlook() {
-
+		
 	}
 
 	loadDraft(draft, sub, body) {
