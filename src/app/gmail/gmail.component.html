@@ -246,7 +246,7 @@
                     <label class="switch"> 
 					<div>
 						<input *ngIf='isSignedIn' type="checkbox"  checked disabled>
-						<input *ngIf='!isSignedIn' type="checkbox" (click)="signInGapi('gmail')">
+						<input *ngIf='!isSignedIn' type="checkbox" (click)="signInGapi()">
 						<span class="slider round"></span>  
 					</div>
 				</label>
@@ -259,7 +259,7 @@
                         <label class="switch"> 
                         <div>
                             <input *ngIf='isSignedIn' type="checkbox"  checked disabled>
-                            <input *ngIf='!isSignedIn' type="checkbox" (click)="signInGapi('outlook')">
+                            <input *ngIf='!isSignedIn' type="checkbox" (click)="singInOutlook()">
                             <span class="slider round"></span>  
                         </div>
                     </label>

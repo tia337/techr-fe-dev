@@ -424,20 +424,18 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 		});
 	}
 	signInGapi(type) {
-		if (type === 'gmail') {
-			this._gapi.handleAuthClick().then(res => {
-				if (this.gapi.auth2 && ((this._isSignedIn = this.gapi.auth2.getAuthInstance().isSignedIn.get()))) {
-					// console.log(this.gapi.auth2.getAuthInstance().isSignedIn.get());
-					this.getAllDrafts('me');
-					this.fillEmail(this.gapi.auth2.getAuthInstance().currentUser.get());
-					this.makeApiCall();
-				}
-			});
-		};
+		this._gapi.handleAuthClick().then(res => {
+			if (this.gapi.auth2 && ((this._isSignedIn = this.gapi.auth2.getAuthInstance().isSignedIn.get()))) {
+				// console.log(this.gapi.auth2.getAuthInstance().isSignedIn.get());
+				this.getAllDrafts('me');
+				this.fillEmail(this.gapi.auth2.getAuthInstance().currentUser.get());
+				this.makeApiCall();
+			}
+		});
+	}
 
-		if (type === 'outlook') {
-			
-		}
+	singInOutlook() {
+
 	}
 
 	loadDraft(draft, sub, body) {
