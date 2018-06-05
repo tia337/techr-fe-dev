@@ -15,6 +15,7 @@ export class NewWorkflowComponent implements OnInit {
   currentClientsArray: Array<any>;
   currentClient = null;
   currentName = null;
+  currentProject = null;
 
   constructor(
     private _root_vcr: RootVCRService,
@@ -45,7 +46,11 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   addCustomWorkFlow () {
-    this._companySettingService.throwClient(this.currentClient);
+    const data = {
+      name: this.currentClient,
+      project: this.currentProject ? this.currentProject : undefined
+    }
+    this._companySettingService.throwClient(data);
     this._root_vcr.clear();
   }
 }

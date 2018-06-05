@@ -3,7 +3,7 @@
   <div class="modal-section">
     <button class="blue-btn" 
       [ngClass]="{'active': currentArray === clientsArray }" 
-      (click)="currentArray = clientsArray; currentClient = null;">for client <mat-icon class="icon">play</mat-icon> 
+      (click)="currentArray = clientsArray; currentClient = null; currentProject = null;">for client <mat-icon class="icon">play</mat-icon> 
     </button>
     <button class="blue-btn" 
       [ngClass]="{'active': currentArray === projectsArray }" 
@@ -31,7 +31,7 @@
     <button class="blue-btn"
       [ngClass]="{'active': activeLink === item.name }" 
       *ngFor="let item of currentArray" 
-      (click)="currentClientsArray = item.clients; activeLink = item.name">
+      (click)="currentClientsArray = item.clients; activeLink = item.name; currentProject = item.name;">
       {{item.name}}
     </button>
   </div>

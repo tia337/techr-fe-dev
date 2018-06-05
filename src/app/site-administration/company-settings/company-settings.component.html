@@ -411,7 +411,11 @@
                     </button>
                     <div *ngIf="workflowArray.length > 0">
                             <div *ngFor="let workflow of workflowArray">
-                                <h1 class="workflow-title">{{workflow.name}}</h1>
+                                <h1 class="workflow-title">Client: {{workflow.name.name}} <span  *ngIf="workflow.project">/</span> <span *ngIf="workflow.project" style="">Project: {{workflow.project}}</span></h1>
+                                <span style="cursor: pointer; margin-bottom: 10px; display: flex; align-items: center;" class="delete-workflow" (click)="removeWorkflow(workflow, workflowArray)">
+                                    Remove workflow 
+                                    <mat-icon style="font-size: 19px; width: 19px; height: 19px;">delete</mat-icon>
+                                </span>
                                 <div class="job-offer-stages" 
                                     (drop)="dropDnD($event, workflow.stages)" 
                                     [copy]="false" 

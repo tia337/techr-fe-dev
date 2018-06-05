@@ -304,11 +304,16 @@ export class CompanySettingsComponent implements OnInit {
 			const id = Math.random().toFixed(36).substring(5, 10);
 			const data = {
 				name: client.name,
+				project: client.project,
 				stages: stages,
 				id: id
 			};
 			this.workflowArray.push(data);
 		}
+	}
+
+	removeWorkflow(currentFlow, array) {
+		array.splice(currentFlow);
 	}
 
 	addNewStageInCustomWorkFlow(stages) {
