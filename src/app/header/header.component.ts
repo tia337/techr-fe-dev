@@ -38,8 +38,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	loadLogoSubscPJ;
 	loadLogo;
 
-	public authMsUrl: string;
-
 	public containerRef: ViewContainerRef;
 	private accessLevel: number;
 	private _closeAnim = false;
@@ -111,7 +109,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			this.notificationsCount = parseFloat(data);
 		});
 
-
 		this.loadLogoSubsc = this._companySettingsService.logoUpdate.subscribe(() => {
 			this.getLogo();
 		});
@@ -135,31 +132,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this._parse.execCloud('getAuthUrl', {}).then(res => {
-			this.authMsUrl = res;
-		});
-
-		if (window.location.href.indexOf('?code=')) {
+		if (window.location.href.includes('?code=')) {
 			const location = window.location.href;
 			const index = window.location.href.indexOf('?code=') + 6;
 			const code = location.slice(index, location.length);
 			console.log(`auth_code: ${code}`);
 
-			this._parse.execCloud('getTokenFromCode', { code: code })
-			.then(user => {
-					if (!user.authenticated()) {
-						return this._parse.Parse.User.logIn(user.get('username'), this._login.getPassword(user.get('username')));
-					} else {
-						return user;
-					}
-			})
-			.then(user => {
-				this.router.navigate(['/dashboard']);
-				this._vcr.clear();
-			})
-			.catch(err => {
-				console.error(err);
-			})
+			this._login.signInWithMicrosoft(code);
 		}
 	}
 
@@ -185,7 +164,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}
 	}
 
-    closeUserMenu(event?) {
+  closeUserMenu(event?) {
         if (event) {
             if (event.clientY < 55) {
                 this._closeUserAnim= true;
@@ -224,7 +203,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	signInWithMicrosoft() {
-		window.location.href = this.authMsUrl;
+		this._parse.execCloud('getAuthUrl', {}).then(authUrl => {
+			window.location.href = authUrl;
+		});
 	}
 
 	signOut() {
@@ -240,7 +221,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this._menuOpened = true;
 	}
 
-    openUserMenu() {
+  openUserMenu() {
         this._closeUserAnim = false;
         this._userMenuOpened = true;
     }
@@ -307,8 +288,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	get menuOpened() {
 		return this._menuOpened;
 	}
-    get userMenuOpened() {
-        return this._userMenuOpened;
+  get userMenuOpened() {
+    return this._userMenuOpened;
 	}
 	changeNotifications (notifications: boolean): void {
 		this._notificationsOpened = notifications;
