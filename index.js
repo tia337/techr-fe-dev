@@ -3,6 +3,7 @@ const http = require('http');
 const path = require('path');
 const cors = require('cors');
 const compression = require('compression');
+const authorize = require('./authorize');
 
 const app = express();
 
@@ -19,6 +20,7 @@ const forceSSL = function () {
 
 app.use(forceSSL());
 app.use(cors());
+app.use(authorize());
 app.use(compression());
 app.use(express.static(path.join(__dirname, 'dist')));
 

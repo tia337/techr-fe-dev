@@ -38,6 +38,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	loadLogoSubscPJ;
 	loadLogo;
 
+	public authMsUrl: string;
+
 	public containerRef: ViewContainerRef;
 	private accessLevel: number;
 	private _closeAnim = false;
@@ -132,6 +134,33 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				// });
 			}
 		});
+
+		this._parse.execCloud('getAuthUrl', {}).then(res => {
+			this.authMsUrl = res;
+		});
+
+		if (window.location.href.indexOf('?code=')) {
+			const location = window.location.href;
+			const index = window.location.href.indexOf('?code=') + 6;
+			const code = location.slice(index, location.length);
+			console.log(`auth_code: ${code}`);
+
+			this._parse.execCloud('getTokenFromCode', { code: code })
+			.then(user => {
+					if (!user.authenticated()) {
+						return this._parse.Parse.User.logIn(user.get('username'), this._login.getPassword(user.get('username')));
+					} else {
+						return user;
+					}
+			})
+			.then(user => {
+				this.router.navigate(['/dashboard']);
+				this._vcr.clear();
+			})
+			.catch(err => {
+				console.error(err);
+			})
+		}
 	}
 
 	closeAdminMenu(event?) {
@@ -195,7 +224,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	signInWithMicrosoft() {
-		console.log('signInWithMicrosoft');
+		window.location.href = this.authMsUrl;
 	}
 
 	signOut() {
