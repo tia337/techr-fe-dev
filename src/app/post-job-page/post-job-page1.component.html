@@ -341,8 +341,8 @@
                         </td>
                     </tr>
                     <!-- JOB LOCATION INPUT -->
-                    <tr>
-                        <td id="job-location-title" class="option-title" [ngClass]="{'red-color': alertHappend && contractForm.value.JobLocationFEinput === ''}">Job Location</td>
+                    <tr id="job-location-input">
+                        <td id="job-location-title" class="option-title" [ngClass]="{'red-color': alertHappend && contractForm.value.JobLocationFEinput === ''}">Job Location <span *ngIf="secondLocationOpened">1</span> </td>
                         <td>
                             <mat-form-field class="">
                                 <input matInput placeholder="Enter City" aria-label="State" [matAutocomplete]="auto" formControlName="JobLocationFEinput" (keypress)="suggestionsSet()">
@@ -355,8 +355,60 @@
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
+                            <span class="add-multiple-locations" style="cursor: pointer;"><mat-icon matTooltip="Add multiple locations" (click)="addLocation()" matTooltipPosition="above">add</mat-icon></span>
                         </td>
                     </tr>
+                    <tr *ngIf="secondLocationOpened">
+                        <td id="job-location-title" class="option-title" [ngClass]="{'red-color': alertHappend && contractForm.value.JobLocationFEinput === ''}">Job Location 2</td>
+                        <td>
+                            <mat-form-field class="">
+                                <input matInput placeholder="Enter City" aria-label="State" [matAutocomplete]="auto" formControlName="JobLocationFEinput" (keypress)="suggestionsSet()">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option *ngIf="matSpinnerActive">
+                                        <mat-spinner [diameter]="40" [strokeWidth]="3.2"></mat-spinner>
+                                    </mat-option>
+                                    <mat-option (onSelectionChange)="showPlace(place)" *ngFor="let place of places" value="{{place.description}}">
+                                        <span>{{ place.description }}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            <span class="remove-multiple-locations" style="cursor: pointer;"><mat-icon (click)="secondLocationOpened = false;">delete</mat-icon></span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="thirdLocationOpened">
+                        <td id="job-location-title" class="option-title" [ngClass]="{'red-color': alertHappend && contractForm.value.JobLocationFEinput === ''}">Job Location 3</td>
+                        <td>
+                            <mat-form-field class="">
+                                <input matInput placeholder="Enter City" aria-label="State" [matAutocomplete]="auto" formControlName="JobLocationFEinput" (keypress)="suggestionsSet()">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option *ngIf="matSpinnerActive">
+                                        <mat-spinner [diameter]="40" [strokeWidth]="3.2"></mat-spinner>
+                                    </mat-option>
+                                    <mat-option (onSelectionChange)="showPlace(place)" *ngFor="let place of places" value="{{place.description}}">
+                                        <span>{{ place.description }}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                            <span class="remove-multiple-locations" style="cursor: pointer;"><mat-icon (click)="thirdLocationOpened = false;">delete</mat-icon></span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="fourthLocationOpened">
+                            <td id="job-location-title" class="option-title" [ngClass]="{'red-color': alertHappend && contractForm.value.JobLocationFEinput === ''}">Job Location 4</td>
+                            <td>
+                                <mat-form-field class="">
+                                    <input matInput placeholder="Enter City" aria-label="State" [matAutocomplete]="auto" formControlName="JobLocationFEinput" (keypress)="suggestionsSet()">
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngIf="matSpinnerActive">
+                                            <mat-spinner [diameter]="40" [strokeWidth]="3.2"></mat-spinner>
+                                        </mat-option>
+                                        <mat-option (onSelectionChange)="showPlace(place)" *ngFor="let place of places" value="{{place.description}}">
+                                            <span>{{ place.description }}</span>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                                <span class="remove-multiple-locations" style="cursor: pointer;"><mat-icon (click)="fourthLocationOpened = false;">delete</mat-icon></span>
+                            </td>
+                        </tr>
                     <!-- FLEXIBILITY INPUT -->
                     <tr>
                         <td id='flexibility-title' [ngClass]="{'red-color': alertHappend && contractForm.value.Flexibility === 0}">Flexibility </td>

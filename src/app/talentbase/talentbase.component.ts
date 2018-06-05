@@ -13,7 +13,7 @@ import { RootVCRService } from '../root_vcr.service';
 import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import { AddCandidateService } from './add-candidate/add-candidate.service';
-
+import { GmailComponent } from '../gmail/gmail.component';
 // tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -23,6 +23,7 @@ import { AddCandidateService } from './add-candidate/add-candidate.service';
 export class TalentbaseComponent implements OnInit, OnDestroy {
 
   public filtersOpened = false;
+  public actionsOpened = false;  
   allSelected = false;
   checkedCandidates: Array<any> = [];
   public activePanel: string = 'main';
@@ -491,6 +492,19 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
 
   sortBulkUploadsHistory(parameter: string): void {
     this.bulkUploads = this._talentBaseService.sortBulkUploadHistory(parameter, this.bulkUploads);
+  }
+
+  openEmailModal() {
+    const email = this._root_vcr.createComponent(GmailComponent);
+		email.userId = '';
+		email.contractId = '';
+		email.saveNote = true;
+		email.saveChat = true;
+		email.needTemplates = true;
+		email.templateOptions = ['all'];
+		email.emailBody = '';
+		email.emailSubj = '';
+		email.attachments = [];
   }
 
 

@@ -811,7 +811,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	openRejectionModal() {
-		console.log(this.arrayOfDevs);
 		if (this.arrayOfDevs.length === 0) {
 			return;
 		} 
@@ -832,7 +831,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnDestroy() {
-		console.log('DESTROYED');
 		this._stageSubscription.unsubscribe();
 		this._candidatesCountSubscription.unsubscribe();
 		this._jobDetailsService = null;

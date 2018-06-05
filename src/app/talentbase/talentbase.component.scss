@@ -118,7 +118,8 @@
             padding: 8px 16px;
             transition: .3s all ease-in-out;
             border: 1px solid transparent;    
-            cursor: pointer;        
+            cursor: pointer;
+            position: relative;      
             &:hover {
                 background: #000;
                 color: #fff;
@@ -740,6 +741,30 @@
 .pulsing {
     animation: all pulsing 2s ease infinite;
 }
+
+.actions-list {
+    position: absolute;
+    list-style: none;
+    border: 1px solid #000;
+    width: 103%;
+    left: -1px;
+    top: 32px;
+    text-align: center;
+    li {
+        padding: 5px;
+        background: #fff!important;
+        color: #000!important;        
+        border-bottom: 1px solid #000!important;
+        &:last-child {
+            border-bottom: none!important;
+        }
+        &:hover {
+            background: #000!important;
+            color: #fff!important;
+        }
+    }
+}
+
 @keyframes blink-animation {
    0% {
        opacity: 1;

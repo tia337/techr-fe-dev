@@ -14,7 +14,7 @@
       <span> / </span>
       <span [ngClass]="{'active': activePanel === 'import'}" (click)="activePanel = 'import'">Import candidate data</span>
       <span> / </span>
-      <span>Export candidate data</span>
+      <span [ngClass]="{'active': activePanel === 'export'}" (click)="activePanel = 'export'">Export candidate data</span>
     </div>
   </div>
   <!-- IMPORT/EXPORT BUTTONS END -->  
@@ -63,7 +63,18 @@
               </ul>
           </div>
           <div class="talentbase__filter-header--action-buttons">
-            <span>Actions</span>
+            <span class="action-button" (click)="actionsOpened = !actionsOpened">
+              Actions
+              <ul *ngIf="actionsOpened" class="actions-list" 
+                  (clickOutside)="actionsOpened = false" 
+                  [delayClickOutsideInit]="true"
+                  [exclude]="'.action-button'">
+                <li (click)="actionsOpened = false; openEmailModal();">Email</li>
+                <li (click)="actionsOpened = false;">Reject</li>
+                <li (click)="actionsOpened = false;">Copy to job</li>
+                <li (click)="actionsOpened = false;">Delete</li>
+              </ul>
+            </span>
             <span (click)="openAddCandidateModal()">Add Candidate</span>
           </div>
         </div>
@@ -252,6 +263,91 @@
     </div>
   </div>
   <!-- IMPORT PANEL END -->
+
+  <!-- EXPORT PANEL START -->
+
+  <div class="talentbase__import-panel" *ngIf="activePanel === 'export'">
+      <img class="GDPR" src="../../assets/img/GDPR-logo.png" alt="">
+      <div class="talentbase__import-panel container">
+        <div class="talentbase__import-panel-header">
+          <mat-icon class="copy-icon">
+              file_copy
+          </mat-icon>
+          <span class="bold">
+            Easily export your data &nbsp;
+          </span>
+          <span>
+              from SwipeIn
+          </span> 
+        </div>
+        <div class="talentbase__import-panel-item">
+            <div class="talentbase__import-panel-item-info-wrap">
+              <span class="talentbase__import-panel-item-title">
+                Export data in JSON format
+              </span>
+              <span class="talentbase__import-panel-item-info">
+                <!-- Export candidates from json, .cvs or xml files -->
+              </span>
+              <div class="talentbase__import-panel-item-inputs">
+               <!-- <span>Excel sample/</span> -->
+               <!-- <span>cvs sample/</span> -->
+               <!-- <span>json sample</span> -->
+              </div>
+            </div>
+            <div class="filename">
+              <span *ngIf="jsonFileName !== ''">{{jsonFileName}}</span> 
+              <mat-icon class="icon-clear" *ngIf="jsonFileName !== ''" (click)="jsonInput.value = null; jsonFileName = ''">clear</mat-icon>           
+            </div>
+            <label class="talentbase__import-panel-item-input">
+              <label for="json">Start export</label>
+              <form action="" enctype="multipart/form-data" [formGroup]="jsonForm">
+                <input #jsonInput formControlName="jsonFile" (change)="setFileName(jsonFileName, jsonInput, $event)"  style="display: none;" type="file" id="json" accept=".json, application/json, .csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx, .xls">
+              </form>
+            </label>
+        </div>
+        <div class="talentbase__import-panel-item">
+            <div class="talentbase__import-panel-item-info-wrap">
+              <span class="talentbase__import-panel-item-title">
+                Export data in Excel format
+              </span>
+              <span class="talentbase__import-panel-item-info">
+                <!-- Export candidates via ZIP or folder files -->
+              </span>
+            </div>
+            <div class="filename" *ngIf="zipFileName !== null">
+                <span><span class="bold">File name: </span>{{zipFileName.name}}; &nbsp;</span>
+                <span><span class="bold">File size: </span>{{zipFileName.size | fileSize}} mb;</span>
+                <mat-icon class="icon-clear" (click)="zipInput.value = null; zipFileName = null;  zipFileSizeExceed = false;">clear</mat-icon>           
+              </div>
+            <label (click)="sendZip($event, zipInput.value);  $event.stopImmediatePropagation();" class="talentbase__import-panel-item-input">
+              <form action="" enctype="multipart/form-data" (ngSubmit)="sendZip($event)" [formGroup]="zipForm">
+                <label *ngIf="zipInput.value === ''" for="zip">Start Export</label>
+                <button (click)="$event.stopImmediatePropagation()" *ngIf="zipInput.value !== ''" type="submit">Start export</button>
+                <input #zipInput formControlName="zipFile" 
+                  (change)="setZipFileName(zipFileName, zipInput, $event)"  style="display: none;" type="file" id="zip" accept=".zip, .rar">
+              </form>
+              <!-- <small *ngIf="!zipFileSizeExceed">Max file size 100mb</small> -->
+              <!-- <small class="error" *ngIf="zipFileSizeExceed">Max file size 100mb exceeded</small> -->
+            </label>
+  
+        </div>
+        <div class="talentbase__import-panel-item">
+            <div class="talentbase__import-panel-item-info-wrap">
+              <span class="talentbase__import-panel-item-title">
+                Need help? Custom Export Service
+              </span>
+              <span class="talentbase__import-panel-item-info">
+                We can help you export your data from SwipeIn at no cost 
+              </span>
+            </div>
+            <div class="talentbase__import-panel-item-input contact-us">
+              <label>Contact Us</label>
+            </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- EXPORT PANEL END -->
 
   <!-- BULK UPLOADS HISTORY START -->
   <div class="talentbase__bulk-upload-history-panel" *ngIf="activePanel === 'bulkUpload'">

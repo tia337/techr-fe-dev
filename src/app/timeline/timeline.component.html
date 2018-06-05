@@ -15,9 +15,9 @@
     </div>
     <div class="timeline-day-items-wrap">
       <div *ngFor="let timelineItem of timelineDay[1].timeline">
-        <div class="timeline-day-item">
+        <!-- <div class="timeline-day-item">
             {{timelineItem | json}}
-        </div>
+        </div> -->
         <div class="timeline-day-item" *ngIf="timelineItem.type === 'note mention'" style="display: none;">
             <!-- {{timelineItem | json}} -->
             note mention
@@ -29,7 +29,7 @@
         <div class="timeline-day-item" 
              *ngIf="timelineItem.type === 'application' && timelineItem.userId === currentUser.id"
              (click)="route(timelineItem.contractId, -1)">
-             TYPE: {{timelineItem.type}}
+             <!-- TYPE: {{timelineItem.type}} -->
           <div class="timeline-day-item-image">
               <img src="../../assets/icons/timeline-applicant.svg" alt="">
           </div>

@@ -182,6 +182,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 	projectsList: Array<any> = [];
 	projectsListShown = false;
 
+	secondLocationOpened = false;
+	thirdLocationOpened = false;
+	fourthLocationOpened = false;
+	
 	approversSubscription;
 
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
@@ -440,6 +444,18 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 		} else if (this.currentContract) {
 			this.initContract();
 			this.updateContract(this.contractForm.value);
+		}
+	}
+
+	addLocation() {
+		if (this.secondLocationOpened === false ) {
+			this.secondLocationOpened = true;
+			return;
+		} else if (this.secondLocationOpened === true && this.thirdLocationOpened === false) {
+			this.thirdLocationOpened = true;
+			return;
+		} else if (this.thirdLocationOpened === true) {
+			this.fourthLocationOpened = true;
 		}
 	}
 
