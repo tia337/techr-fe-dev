@@ -138,4 +138,15 @@ type BulkActionsArray = Array<{
         uploadSize: number,
         uploadUserFilename: string
     }
+
+    type Experience = {
+        id: string,
+        jobTitle: string,
+        companyName: string,
+        location: string,
+        dateFrom: string | Date,
+        dateTo: string | Date,
+        currentlyWorks: boolean,
+        description: string
+    }
     // TALENT DATA BASE TYPES END  

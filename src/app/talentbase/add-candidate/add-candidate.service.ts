@@ -65,12 +65,22 @@ export class AddCandidateService {
 	  return years;
   }
 
-  createDays(): Array<string> {
-	  const days = [];
-	  for (let i = 1; i < 32; i++) {
-		  days.push(i.toString());
-	  };
-	  return days;
+  createMonths(): Array<string> {
+	const months = [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	];
+	return months;
   }
 
   sendCV(base64: any, filename: string) {

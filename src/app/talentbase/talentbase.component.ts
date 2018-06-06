@@ -450,8 +450,6 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   definePendingBulkUploads(pendingBulkUpload: BulkUploadItem | undefined): void {
     if (pendingBulkUpload === undefined) return;
 
-    // this.initiate();
-
     this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
       this.setFillPercentage(pendingBulkUpload.filesTotal, data.filesSuccess);
       this.pendingBulkUpload.filesError = data.filesError;

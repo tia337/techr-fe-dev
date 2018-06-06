@@ -1,4 +1,4 @@
-<div class="modal-overlay" (click)="closeModal()">
+<div class="modal-overlay">
   <div class="modal">
     <p class="modal__title" *ngIf="!cvUploaded">
       Add candidate
@@ -344,7 +344,7 @@
           <h2 class="big-title">Experience</h2>          
           <span class="add-property" *ngIf="!experienceFormOpened">Add experince <mat-icon  class="icon-add" (click)="buildExperienceForm(); $event.stopPropagation();">add</mat-icon></span>
         </div>
-        <div class="property-form" *ngIf="experienceFormOpened" [formGroup]="experienceForm">
+        <div class="property-form" *ngIf="experienceFormOpened" (ngSubmit)="addExperience()" [formGroup]="experienceForm">
           <p class="input-holder">
             <span class="input-title">Job Title</span>
             <input type="text" placeholder="Job Title" formControlName="jobTitle">
@@ -361,38 +361,60 @@
           </div>
           <div class="input-holder dates">
             <p>
-              <span class="input-title date">Date from</span>
+              <span class="input-name date">Date from</span>
               <span class="form-field-holder"> 
                 <mat-form-field class="year-select">
-                  <mat-select placeholder="Year" formControlName="yearDateFrom">
-                    <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                  <mat-select placeholder="Month" formControlName="monthDateFrom">
+                    <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <mat-form-field>
-                  <mat-select placeholder="Day" formControlName="dayDateFrom">
-                    <mat-option (click)="$event.stopPropagation()" [value]="day" *ngFor="let day of days">{{day}}</mat-option>
+                <mat-form-field >
+                  <mat-select placeholder="Year" formControlName="yearDateFrom">
+                    <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </span>
             </p>
             <p>
-              <span class="input-title date">Date to</span>
-              <span> 
+              <span class="input-name date">Date to</span>
+              <span class="form-field-holder"> 
+                <mat-form-field class="year-select">
+                  <mat-select placeholder="Month" formControlName="monthDateTo">
+                    <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
                 <mat-form-field>
                   <mat-select placeholder="Year" formControlName="yearDateTo">
                     <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <mat-form-field>
-                  <mat-select placeholder="Day" formControlName="dayDateTo">
-                    <mat-option (click)="$event.stopPropagation()" [value]="day" *ngFor="let day of days">{{day}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
               </span>
+            </p>
+          </div>
+            <p class="input-holder">
+              <span class="input-name">Currently works here</span>
+              <input style="width: auto!important;" type="checkbox" formControlName="currentlyWorks">
+            </p>
+            <p class="input-holder">
+              <span class="input-name">Description</span>
+              <textarea formControlName="description" cols="30" rows="10"></textarea>
+            </p>
+          <div class="buttons-holder">
+            <button class="add-experience-btn" (click)="addExperience(); $event.stopPropagation();" type="submit">Add experience</button>
+            <button class="cancel-experience-btn" type="button">Cancel</button>
+          </div>
+        </div>
+        <div class="experience-holder" *ngIf="experience.length > 0">
+          <div *ngFor="let exp of experience" class="experience-item">
+            <span class="experience-date">{{exp.dateFrom}} - {{exp.dateTo}}</span>
+            <p class="holder">
+              <span class="experience-job-title">{{exp.jobTitle}}</span>
+              <span class="experience-company-name" *ngIf="exp.companyName">{{exp.companyName}}</span>
             </p>
           </div>
         </div>
       </div>
+      
     </form>
 
     <!-- CANDIDATE FORM END -->

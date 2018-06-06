@@ -238,11 +238,13 @@
         flex-basis: 50%;
         &.dates {
             flex-basis: 100%;
+            flex-direction: row;
             p {
                 width: 50%;
             }
             .form-field-holder {
                 display: flex;
+                margin-top: 10px;
             }
             .year-select {
                 margin-right: 10px;

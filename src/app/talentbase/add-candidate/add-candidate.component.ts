@@ -55,9 +55,10 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	public skills;
 	public roles;
 	public years: Array<string> = [];
-	public days: Array<string> = [];
+	public months: Array<string> = [];
 	public experienceFormOpened: boolean = false;
 	public candidateFormOpened: boolean = false;
+	public experience: Array<Experience> = [];
 
 	@ViewChild('scrollpanel', { read: ElementRef }) public panel: ElementRef;
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
@@ -103,7 +104,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		});
 
 		this.years = this._addCandidateService.createYears().reverse();
-		this.days = this._addCandidateService.createDays();
+		this.months = this._addCandidateService.createMonths();
   }
 
 	log(a) {
@@ -121,10 +122,28 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			companyName: undefined,
 			location: undefined,
 			yearDateFrom: undefined,
-			dayDateFrom: undefined,
+			monthDateFrom: undefined,
 			yearDateTo: undefined,
-			dayDateTo: undefined
+			monthDateTo: undefined,
+			currentlyWorks: undefined,
+			description: undefined
 		});
+	}
+
+	addExperience(): void {
+		const experience: Experience = {
+			id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+			jobTitle: this.experienceForm.value.jobTitle,
+			companyName: this.experienceForm.value.companyName,
+			location: this.experienceForm.value.location,
+			dateFrom: this.experienceForm.value.monthDateFrom + ' ' + this.experienceForm.value.yearDateFrom ,
+			dateTo:this.experienceForm.value.monthDateTo + ' ' + this.experienceForm.value.yearDateTo,
+			currentlyWorks: this.experienceForm.value.currentlyWorks,
+			description: this.experienceForm.value.description ? this.experienceForm.value.description : undefined
+		};
+		this.experience.push(experience);
+		this.experienceForm.reset();
+		this.experienceFormOpened = false;
 	}
 
   closeModal(): void {
@@ -173,7 +192,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
         JobBoard: undefined,
         Job: undefined,
 				Stage: undefined,
-				skills: undefined
+				skills: undefined,
       });
     }
 
@@ -190,7 +209,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
         JobBoard: '',        
         Job: '',
 				Stage: '', 
-				skills: candidate.skills				
+				skills: candidate.skills,
       });
     }
   }

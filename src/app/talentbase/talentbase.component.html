@@ -235,10 +235,10 @@
               <span><span class="bold">File size: </span>{{zipFileName.size | fileSize}} mb;</span>
               <mat-icon class="icon-clear" (click)="zipInput.value = null; zipFileName = null;  zipFileSizeExceed = false;">clear</mat-icon>           
             </div>
-          <label (click)="sendZip($event, zipInput.value);  $event.stopImmediatePropagation();" class="talentbase__import-panel-item-input">
-            <form action="" enctype="multipart/form-data" (ngSubmit)="sendZip($event)" [formGroup]="zipForm">
-              <label *ngIf="zipInput.value === ''" for="zip">Select file</label>
-              <button (click)="$event.stopImmediatePropagation()" *ngIf="zipInput.value !== ''" type="submit">Send file</button>
+          <label (click)="sendZip($event, zipInput.value); $event.stopPropagation();" class="talentbase__import-panel-item-input">
+            <form action="" enctype="multipart/form-data" [formGroup]="zipForm">
+              <span *ngIf="zipInput.value === ''" for="zip">Select file</span>
+              <button style="cursor: pointer;"  *ngIf="zipInput.value !== ''" type="button">Send file</button>
               <input #zipInput formControlName="zipFile" 
                 (change)="setZipFileName(zipFileName, zipInput, $event)"  style="display: none;" type="file" id="zip" accept=".zip, .rar">
             </form>
@@ -320,7 +320,7 @@
                 <mat-icon class="icon-clear" (click)="zipInput.value = null; zipFileName = null;  zipFileSizeExceed = false;">clear</mat-icon>           
               </div>
             <label (click)="sendZip($event, zipInput.value);  $event.stopImmediatePropagation();" class="talentbase__import-panel-item-input">
-              <form action="" enctype="multipart/form-data" (ngSubmit)="sendZip($event)" [formGroup]="zipForm">
+              <form action="" enctype="multipart/form-data" [formGroup]="zipForm">
                 <label *ngIf="zipInput.value === ''" for="zip">Start Export</label>
                 <button (click)="$event.stopImmediatePropagation()" *ngIf="zipInput.value !== ''" type="submit">Start export</button>
                 <input #zipInput formControlName="zipFile" 
