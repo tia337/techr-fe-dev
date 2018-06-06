@@ -83,12 +83,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 
-		if (window.location.href.indexOf('?code=')) {
-            const location = window.location.href;
-            const index = window.location.href.indexOf('?code=') + 1;
-			const code = location.slice(index, location.length - 1);
-			this.router.navigate(['/dashboard']);
-        }
 
 		if (localStorage.getItem('theme')) {
 			const theme = localStorage.getItem('theme');
@@ -139,14 +133,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		if (window.location.href.includes('?code=')) {
-			const location = window.location.href;
-			const index = window.location.href.indexOf('?code=') + 6;
-			const code = location.slice(index, location.length);
-			console.log(`auth_code: ${code}`);
-
-			this._login.signInWithMicrosoft(code);
-		}
 	}
 
 	closeAdminMenu(event?) {

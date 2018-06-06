@@ -91,11 +91,37 @@
         }(document, "script", "twitter-wjs"));
     </script>
 
+    
+    <style>
+        #sign-in-with-microsoft {
+            display: none;
+            text-align: center; 
+            margin-top: 10%;
+        }
+    </style>
+
 </head>
 
 <body id="body">
 
-    <app-root>Loading...</app-root>
+    <app-root>
+        <span id="common-loading">Loading...</span>
+        <div id="sign-in-with-microsoft">
+            <!-- <img src="https://loading.io/spinners/ellipsis/lg.discuss-ellipsis-preloader.gif" alt=""> -->
+            <p>Signing in with Microsoft....</p> 
+        </div>
+        <script>
+            if (window.location.href.includes('?code=')) {
+                var commonLoading = document.getElementById('common-loading');
+                commonLoading.style.display = 'none';
+                var microsoftSignIn = document.getElementById('sign-in-with-microsoft');
+                microsoftSignIn.style.display = 'block';
+            }
+        </script>
+    </app-root>
+    
+    
+
 </body>
 
 </html>

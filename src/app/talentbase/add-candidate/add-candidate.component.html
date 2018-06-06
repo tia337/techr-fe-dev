@@ -1,10 +1,11 @@
 <div class="modal-overlay" (click)="closeModal()">
-  <div class="modal" (click)="$event.stopPropagation()">
+  <div class="modal">
     <p class="modal__title" *ngIf="!cvUploaded">
       Add candidate
     </p>
     <p class="modal__title" *ngIf="cvUploaded">
-      Enhance candidate information
+      <span *ngIf="!candidateFormOpened">Enhance candidate information</span> 
+      <span *ngIf="candidateFormOpened">Add candidate</span>
     </p>
 
     <!-- WARNING BOX START -->
@@ -27,13 +28,13 @@
           <ol>
             <li *ngFor="let file of files; let i = index;">
               {{file.name}}
-              <mat-icon (click)="deleteCV(i, files)" class="icon-clear">cancel</mat-icon>
+              <mat-icon (click)="deleteCV(i, files); $event.stopPropagation();" class="icon-clear">cancel</mat-icon>
             </li>
           </ol>
         </div>
         <p class="upload-cvs-btn" 
             *ngIf="files.length > 0"
-            (click)="uploadCVs()">
+            (click)="uploadCVs(); $event.stopPropagation();">
           Upload CVs
           <mat-icon class="upload-cvs-btn-icon">cloud_upload</mat-icon>
         </p>
@@ -47,6 +48,7 @@
         </ng4-files-click>
       </div>
     </ng4-files-drop>
+    <p class="assets-block__fill-manually" *ngIf="!cvUploaded" (click)="cvUploaded = true; $event.stopPropagation();">Fill Manually</p>
 
     <!-- DROP BOX END -->
 
@@ -126,6 +128,270 @@
           <span class="input-name">Stage</span>
           <input type="text" formControlName="Stage">
         </p>
+      </div>
+      <div class="row">
+        <div class="container">
+          <mat-form-field>
+              <input matInput placeholder="Skills" [(ngModel)]="query" formControlName="skills" (keydown)="prevDef($event, skillsdsuggestions)" (blur)="activeUnSet()" (keyup)="keyPressing($event)" autocomplete="off">
+          </mat-form-field>
+          <label class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); dropdownVisible = !dropdownVisible; dropdownRolesVisible = false; dropdownIndustriesVisible = false;">
+            <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownVisible" [ngModelOptions]="{standalone: true}" />
+            <div class="arrow-button" >
+              <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </div>
+          </label>
+  
+          <!-- ROLES INPUT -->
+  
+          <mat-form-field>
+              <input matInput placeholder="Roles" [(ngModel)]="queryRoles" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'role', rolessuggestions)" (blur)="activeRolesUnSet()" (keyup)="keyRnIPressing($event, 'role')" autocomplete="off">
+          </mat-form-field>
+  
+          <label class="arrow-button-group" (click)="activeDropdown('roles',rolesdropdown, $event);  dropdownVisible  = false; dropdownRolesVisible = !dropdownRolesVisible; dropdownIndustriesVisible = false;">
+            <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownRolesVisible" [ngModelOptions]="{standalone: true}"  />
+            <div class="arrow-button">
+              <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </div>
+          </label>
+  
+          <!-- INDUSTRIES INPUT -->
+  
+          <mat-form-field>
+              <input matInput placeholder="Industries" [(ngModel)]="queryIndustries" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'industry', industriessuggestions)" (blur)="activeIndustriesUnSet()" (keyup)="keyRnIPressing($event, 'industry')"
+                 autocomplete="off">
+          </mat-form-field>
+  
+          <label class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event); dropdownIndustriesVisible = !dropdownIndustriesVisible; dropdownRolesVisible = false; dropdownVisible = false;">
+            <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownIndustriesVisible" [ngModelOptions]="{standalone: true}" />
+            <div class="arrow-button">
+              <i class="fa fa-angle-down" aria-hidden="true"></i>
+            </div>
+          </label>
+  
+          <!-- SKILLS SUGGESTIONS -->
+          <!--  -->
+          <div #skillsdsuggestions>
+              <div class="suggestions" *ngIf="filteredList.length > 0 && active == true">
+                  <div class="suggestions-skills-wrap">
+                      <table cellpadding="0" cellspacing="0" border="0">
+                          <tr class="header">
+                              <th class="skill-header">Skill</th>
+                              <th class="experience-header">Experience Level (years)</th>
+                              <th class="category-header">Skill Area</th>
+                          </tr>
+                      </table>
+                      <div class="inner-area" #scrollpanel>
+                          <table cellpadding="0" cellspacing="0" border="0">
+                              <tr class="items-container" [ngClass]="{'container-selected': i == selectionCounter}" *ngFor="let item of filteredList; let i = index" (mouseenter)="selectionCounter = i" (click)="selectSkill(item, expPosition); $event.stopPropagation();">
+                                  <td class="name">
+                                      <a *ngIf="i != selectionCounter" class="item">{{item.get("title")}}</a>
+                                      <a *ngIf="i == selectionCounter" class="item-selected">{{item.get("title")}}</a>
+                                  </td>
+                                  <td class="experience" *ngIf="i == selectionCounter">
+                                      <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 1" [ngClass]="{'selected-exp': expPosition == 1}">any</span>
+                                      <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 2" [ngClass]="{'selected-exp': expPosition == 2}">+3</span>
+                                      <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 3" [ngClass]="{'selected-exp': expPosition == 3}">+5</span>
+                                  </td>
+                                  <td class="experience" *ngIf="i != selectionCounter">
+                                      <span class="exp">any</span>
+                                      <span class="exp">+3</span>
+                                      <span class="exp">+5</span>
+                                  </td>
+                                  <td class="category">
+                                      <a *ngFor="let cat of categories">
+                                          <a *ngFor="let c of item.get('categories'); let first = first">
+                                              <a *ngIf="first && c == cat.id">{{cat.get('title')}}</a>
+                                          </a>
+                                      </a>
+                                  </td>
+                              </tr>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- ROLES SUGGESTIONS -->
+          <div #rolessuggestions>
+              <div class="suggestions suggestions-roles" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForRoles == true">
+                  <div class="suggestions-roles-wrap">
+                      <div class="inner-area" #scrollpanel>
+                          <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectRole(item)">
+                              <td class="name">
+                                  <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
+                                  <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
+                              </td>
+                          </tr>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- INDUSTRIES SUGGESTIONS -->
+  
+          <div #industriessuggestions>
+              <div class="suggestions suggestions-industries" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForIndustries == true">
+                  <div class="suggestions-industries-wrap">
+                      <div class="inner-area" #scrollpanel>
+                          <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectIndustry(item)">
+                              <td class="name">
+                                  <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
+                                  <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
+                              </td>
+                          </tr>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- SKILLS DROPDOWN -->
+          <div #skillsdropdown>
+              <div class="dropdown-wrap" *ngIf="dropdownVisible === true">
+                  <div class="categories-wrap" (clickOutside)="dropdownVisible = false; log('a'); $event.stopPropagation()" [delayClickOutsideInit]="true">
+                      <div class="category-wrap" *ngFor="let category of categories; let i = index">
+                          <div *ngIf="category" class="category-title" (click)="getCategorySkills(i); activeSkillsCategory = category.get('title')">
+                              {{category.get('title')}}
+                          </div>
+                          <div #categoryTitles class="skills-wrap"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+  
+          <!-- ROLES DROPDOWN -->
+          <div #rolesdropdown>
+              <div class="dropdown-wrap dropdown-roles" *ngIf="dropdownRolesVisible === true">
+                  <div class="roles-wrap" (clickOutside)="dropdownRolesVisible = false" [delayClickOutsideInit]="true">
+                      <div>
+                          <div class="role-wrap" *ngFor="let item of roles; let i = index" (click)="prevDfSelecting($event)">
+                              <div *ngIf="item" class="item-title" (click)="prevDfSelecting($event); selectRole(item)">
+                                  {{item.get('title')}}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- INDUSTRIES DROPDOWN -->
+          <div #industriesdropdown>
+              <div class="dropdown-wrap dropdown-industries" *ngIf="dropdownIndustriesVisible === true">
+                  <div class="roles-wrap" (clickOutside)="dropdownIndustriesVisible = false" [delayClickOutsideInit]="true">
+                      <div class="role-wrap" *ngFor="let item of industries; let i = index">
+                          <div *ngIf="item" class="item-title" (click)="selectIndustry(item)">
+                              {{item.get('title')}}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- SELECTED SKILLS -->
+  
+          <div class="selected-title" *ngIf="selected && selected.length > 0">Selected Skills</div>
+          <div class="selected-items-container" [ngClass]="{'selected-no-display': selected.length === 0}">
+              <div class="selected-items" *ngFor="let item of selected">
+                  <div class="selected-skill">
+                      <div class="selected" class="editable" (click)="remove(item)">
+                          <div class="sel-skill-cont">
+                              <span>{{item.get('skill').get('title')}}</span>
+                              <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 1">any</span>
+                              <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 2">3+</span>
+                              <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 3">5+</span>
+                          </div>
+                          <div class="delete-title">
+                              <p>Remove</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- SELECTED ROLES -->
+  
+          <div class="selected-title" *ngIf="selectedRoles && selectedRoles.length > 0">Selected Roles</div>
+          <div class="selected-items-container" [ngClass]="{'selected-no-display': selectedRoles.length <= 0}">
+              <div class="selected-items" *ngFor="let item of selectedRoles">
+                  <div class="selected-skill">
+                      <div class="selected" class="editable" (click)="roleRemove(item)">
+                          <div class="sel-skill-cont">
+                              <span>{{item.get('title')}}</span>
+                          </div>
+                          <div class="delete-title">Remove</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+  
+          <!-- SELECTED INDUSTRIES -->
+  
+          <div class="selected-title" *ngIf="selectedIndustries && selectedIndustries.length > 0">Selected Industries</div>
+          <div class="selected-items-container" [ngClass]="{'selected-no-display': selectedIndustries.length <= 0}">
+              <div class="selected-items" *ngFor="let item of selectedIndustries">
+                  <div class="selected-skill">
+                      <div class="selected" [class.editable]="editable" (click)="editable && industryRemove(item)">
+                          <div class="sel-skill-cont">
+                              <span>{{item.get('title')}}</span>
+                          </div>
+                          <div class="delete-title">Remove</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="row form-row">
+        <div class="title-holder">
+          <h2 class="big-title">Experience</h2>          
+          <span class="add-property" *ngIf="!experienceFormOpened">Add experince <mat-icon  class="icon-add" (click)="buildExperienceForm(); $event.stopPropagation();">add</mat-icon></span>
+        </div>
+        <div class="property-form" *ngIf="experienceFormOpened" [formGroup]="experienceForm">
+          <p class="input-holder">
+            <span class="input-title">Job Title</span>
+            <input type="text" placeholder="Job Title" formControlName="jobTitle">
+          </p>
+          <div class="double-inputs-holder">
+            <p class="input-holder">
+              <span class="input-title">Company Name</span>
+              <input type="text" placeholder="Company Name" formControlName="companyName">
+            </p>
+            <p class="input-holder">
+              <span class="input-title">Location</span>
+              <input type="text" placeholder="Location" formControlName="location">
+            </p>
+          </div>
+          <div class="input-holder dates">
+            <p>
+              <span class="input-title date">Date from</span>
+              <span class="form-field-holder"> 
+                <mat-form-field class="year-select">
+                  <mat-select placeholder="Year" formControlName="yearDateFrom">
+                    <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-select placeholder="Day" formControlName="dayDateFrom">
+                    <mat-option (click)="$event.stopPropagation()" [value]="day" *ngFor="let day of days">{{day}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </span>
+            </p>
+            <p>
+              <span class="input-title date">Date to</span>
+              <span> 
+                <mat-form-field>
+                  <mat-select placeholder="Year" formControlName="yearDateTo">
+                    <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field>
+                  <mat-select placeholder="Day" formControlName="dayDateTo">
+                    <mat-option (click)="$event.stopPropagation()" [value]="day" *ngFor="let day of days">{{day}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
     </form>
 

@@ -1,3 +1,7 @@
+@import '../../../styles/buttons.scss';
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins';
+
 .modal-overlay {
     position: fixed;
     display: flex;
@@ -160,10 +164,25 @@
         cursor: pointer;
         border: 1px solid transparent;
         transition: .3s all ease-in-out;
+        margin-bottom: 10px;
         &:hover {
             color: #50a047;
             border: 1px solid #50a047;
             background: #fafafa;
+        }
+    }
+    &__fill-manually {
+        background: #000;
+        padding: 5px 20px;
+        font-size: 16px;
+        color: #fff;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: .3s all ease-in-out;
+        &:hover {
+            color: #000;
+            border: 1px solid #000;
+            background: #fff;
         }
     }
 }
@@ -188,10 +207,57 @@
     display: flex;
     padding: 20px;
     justify-content: space-between;
+    .title-holder {
+        display: flex;
+        align-items: center;
+    }
+    &.form-row {
+        flex-direction: column;
+    }
+    .add-property {
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+        .icon-add {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+    }
+    .double-inputs-holder {
+        display: flex;
+    }
+    .big-title {
+        font-size: 20px;
+        font-weight: bold;
+    }
     .input-holder {
         display: flex;
         flex-direction: column;
         flex-basis: 50%;
+        &.dates {
+            flex-basis: 100%;
+            p {
+                width: 50%;
+            }
+            .form-field-holder {
+                display: flex;
+            }
+            .year-select {
+                margin-right: 10px;
+            }
+            ::ng-deep .mat-form-field-flex {
+                border: 1px solid;
+            }
+            ::ng-deep .mat-form-field-infix {
+                border-top: none!important;
+                background: #fafafa;
+            }
+            ::ng-deep .mat-form-field-type-mat-select .mat-form-field-placeholder {
+                margin-left: 10px;
+            }
+        }
     }
     .input-name {
         margin-bottom: 10px;
@@ -231,6 +297,7 @@
     }
 }
 
+
 .source-add-candidate-talentdb {
     ::ng-deep .mat-form-field-infix {
         border: 1px solid #424242!important;
@@ -262,3 +329,394 @@
         padding-left: 8px;
     }
  }
+
+
+ .property-form {
+    margin-top: 15px;
+    background: #d6d6d6;
+    padding: 10px;
+    .input-holder {
+        margin-bottom: 10px;
+        &.title {
+            flex-basis: 90%;
+        }
+        .input-title {
+            margin-bottom: 5px;
+        }
+        
+    }
+ }
+
+
+//  SKILLS ROLES INDUSTRIES START
+
+ .edit-buttons-container {
+    z-index: 1000;
+    width: 15%;
+    margin-left: 80%;
+    display: block;
+    position: sticky;
+    top: 15px;
+    .create-button {
+        cursor: pointer;
+        border: none;
+        font-size: $font-size-14;
+        padding: 8px 20px;
+        background-color: #3688f7;
+        color: white;
+        border-radius: 3px;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 100px;
+        font-size: 18px;
+        height: 50px;
+    }
+    .create-button:hover {
+        background-color: #2264bd;
+    }
+}
+
+.arrow-button-group {
+    .arrow-checkbox {
+        display: none;
+    }
+    .arrow-checkbox+.arrow-button {
+        margin-left: -25px;
+        position: relative;
+        display: inline-block;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 100;
+    }
+    .arrow-checkbox:checked+.arrow-button {
+        background-color: rgb(194, 193, 193);
+    }
+}
+
+.dropdown-roles {
+    margin-left: 230px;
+}
+
+.dropdown-industries {
+    margin-left: 480px;
+}
+
+.dropdown-wrap {
+    position: relative;
+    z-index: 100;
+    min-width: 400px;
+    .roles-wrap {
+        max-height: 400px;
+        overflow-y: auto;
+        position: absolute;
+        border: 1px solid $dark-grey;
+        padding: 15px 10px;
+        background-color: $white;
+        z-index: 99;
+        .role-wrap {
+            cursor: pointer;
+            .item-title {
+                padding: 5px;
+                &:not(:last-child) {
+                    border-bottom: 1px solid $dark-grey;
+                }
+                &:hover {
+                    background-color: #dfdddd;
+                }
+            }
+        }
+    }
+    .categories-wrap {
+        position: absolute;
+        border: 1px solid $dark-grey;
+        padding: 15px 10px;
+        background-color: $white;
+        z-index: 99;
+        .category-wrap {
+            cursor: pointer;
+            .category-title {
+                padding: 5px;
+                &:not(:last-child) {
+                    border-bottom: 1px solid $dark-grey;
+                }
+            }
+            .skills-wrap {
+                padding-left: 20px;
+                overflow: hidden;
+                height: auto;
+                max-height: 0;
+                overflow-y: auto;
+                @include animation-transition(max-height,
+                .5s);
+                &.opened {
+                    max-height: 100vh !important;
+                    @include animation-transition(max-height,
+                    .5s);
+                }
+                .skill-row {
+                    @include displayFlex;
+                    @include flex-direction(row);
+                    @include flex-justify-content(space-between);
+                    @include flex-align-items(center);
+                    padding: 3px 0;
+                    .skill-title {
+                        @include flex(1,
+                        0,
+                        auto);
+                    }
+                    .experience-wrap {
+                        @include flex(0,
+                        0,
+                        auto);
+                        @include displayFlex;
+                        @include flex-direction(row);
+                        @include flex-justify-content(space-between);
+                        @include flex-align-items(center);
+                        .experience-button {
+                            @include displayFlex;
+                            @include flex-direction(row);
+                            @include flex-justify-content(center);
+                            @include flex-align-items(center);
+                            width: 30px;
+                            height: 30px;
+                            font-size: $font-size-10;
+                            margin: 0 5px;
+                            cursor: pointer;
+                            border-radius: 2px;
+                            color: white;
+                            background-color: rgb(59, 137, 240);
+                            @include animation-transition(background-color,
+                            .4s);
+                            &:hover {
+                                background-color: $blue;
+                                @include animation-transition(background-color,
+                                .4s);
+                            }
+                        }
+                        &:hover {
+                            .experience-button {
+                                background-color: rgb(177, 174, 174) !important;
+                            }
+                            .any-button:hover {
+                                background-color: $blue !important;
+                            }
+                            .three-button:hover {
+                                background-color: $blue !important;
+                            }
+                            .four-button:hover {
+                                background-color: $blue !important;
+                            }
+                        }
+                    }
+                    &:hover {
+                        background-color: rgb(223, 221, 221);
+                        .any-button {
+                            background-color: $blue !important;
+                        }
+                        .three-button {
+                            background-color: rgb(177, 174, 174) !important;
+                        }
+                        .four-button {
+                            background-color: rgb(177, 174, 174) !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.selected a {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.suggestions {
+    position: relative !important;
+    z-index: 10;
+    background: white;
+    display: block;
+    width: 100%;
+    min-width: 600px;
+    .suggestions-skills-wrap {
+        background: white;
+        position: absolute;
+        border: 1px solid rgb(219, 217, 217);
+    }
+    .suggestions-roles-wrap {
+        background: white;
+        position: absolute;
+        border: 1px solid rgb(219, 217, 217);
+    }
+    .suggestions-industries-wrap {
+        background: white;
+        position: absolute;
+        border: 1px solid rgb(219, 217, 217);
+    }
+    table {
+        table-layout: fixed;
+    }
+    table {
+        padding: 5px;
+        word-wrap: break-word;
+    }
+    .header {
+        position: sticky;
+    }
+    .skill-header {
+        width: 37.5%;
+        min-width: 225px;
+        padding: 10px;
+        background: rgb(170, 197, 231);
+        font-weight: normal;
+    }
+    .experience-header {
+        width: 25%;
+        min-width: 150px;
+        padding: 10px;
+        background: rgb(193, 212, 236);
+        font-weight: normal;
+    }
+    .category-header {
+        width: 37.5%;
+        min-width: 37.5%;
+        padding: 10px;
+        background: rgb(235, 235, 235);
+        font-weight: normal;
+    }
+    .name {
+        border-color: red;
+        padding: 10px 0px;
+        width: 305px;
+        max-width: 305px;
+    }
+    .experience {
+        text-align: center;
+        width: 205px;
+        max-width: 205px;
+    }
+    .category {
+        padding-left: 5px;
+        text-align: left;
+        font-size: 12px;
+        width: 290px;
+        max-width: 290px;
+    }
+    .inner-area {
+        max-height: 434px;
+        overflow-y: auto;
+    }
+    .items-container {
+        padding: 3px;
+        cursor: pointer;
+        .item {
+            padding-left: 10px;
+            width: 100%;
+            margin-top: 20px;
+            color: rgb(131, 130, 130);
+        }
+        .item-selected {
+            padding-left: 10px;
+            width: 100%;
+            color: black;
+            background-color: rgb(228, 226, 226);
+        }
+    }
+    .container-selected {
+        color: black;
+        background-color: rgb(228, 226, 226);
+    }
+}
+
+.selected-title {
+    font-weight: bold;
+}
+
+.selected-items-container {
+    display: flex;
+    flex-direction: row;
+    flex: 1 0 auto;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    .selected-items {
+        .selected {
+            height: 100%;
+            width: 100%;
+            margin: 3px;
+            border: solid rgb(59, 137, 240) 1px;
+            position: relative;
+            .sel-skill-cont {
+                height: 100%;
+                width: 100%;
+                padding: 12px 15px;
+                color: rgb(131, 130, 130);
+                float: left;
+            }
+            
+        }
+    }
+    .editable {
+        .delete-title {
+            visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;    
+        }
+        .sel-skill-cont{
+            height: 100%;
+            width: 100%;
+        }
+        &:hover {
+            cursor: pointer;
+            color: black;
+            background: rgba(196, 193, 193, 0.596);
+            .sel-skill-cont {
+                span {
+                    visibility: hidden;
+                }
+            }
+            .delete-title {
+                visibility: visible;
+                color: rgb(83, 82, 82);
+            }
+        }
+    }
+}
+
+.exp {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    background-color: rgb(199, 196, 196);
+    border-radius: 2px;
+    color: white;
+    font-size: $font-size-10;
+}
+
+.selected-exp {
+    background-color: rgb(59, 137, 240) !important;
+}
+
+.selected-skill {
+    height: 100%;
+    width: 100%;
+}
+
+.skills-adding-title {
+    vertical-align: text-top;
+}
+
+.skills-adding-title-container {
+    margin-top: 20px;
+}
+
+.selected-no-display {
+    display: none;
+}
+
+//  SKILLS ROLES INDUSTRIES END

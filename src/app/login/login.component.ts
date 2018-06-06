@@ -36,11 +36,27 @@ export class LoginComponent implements OnInit {
 		}
 	];
 
-	constructor(private _router: Router, private _root_vcr: RootVCRService, private _login: Login) {
+	constructor(
+		private _router: Router, 
+		private _root_vcr: RootVCRService, 
+		private _login: Login
+	) {
 		this._router.navigate(['/', 'login', {outlets: {'login-slider': ['reach-and-manage-candidates']}}], {skipLocationChange: true});
+		
 	}
 
 	ngOnInit() {
+
+		if (window.location.href.includes('?code=')) {
+			const location = window.location.href;
+			const index = window.location.href.indexOf('?code=') + 6;
+			const code = location.slice(index, location.length);
+			document.getElementById('ios-wrap').style.display = 'none';
+			document.getElementById('sign-in-with-microsoft').style.display = 'block';
+			console.log(`auth_code: ${code}`);
+			this._login.signInWithMicrosoft(code);
+		}
+
 		switch (this.getMobileOperatingSystem()) {
 			case 'iOS':
                 document.getElementById('ios-wrap').style.display = 'none';

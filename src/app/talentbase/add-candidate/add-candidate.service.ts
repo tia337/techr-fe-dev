@@ -55,11 +55,30 @@ export class AddCandidateService {
 	});
   }
 
+  createYears(): Array<string> {
+	  const years = [];
+	  const currentDate: Date = new Date();
+	  const currentYear = currentDate.getFullYear();
+	  for (let i = 1970; i < currentYear + 1; i++) {
+		years.push(i.toString());
+	  };
+	  return years;
+  }
+
+  createDays(): Array<string> {
+	  const days = [];
+	  for (let i = 1; i < 32; i++) {
+		  days.push(i.toString());
+	  };
+	  return days;
+  }
+
   sendCV(base64: any, filename: string) {
 	  return new Promise ((resolve, reject) => {
 		this._parse.execCloud('parsingCV', { base64: base64, filename: filename })
 			.then(response => {
-				resolve(response);
+				console.log('response', response);
+				resolve(this.concatCandidateResult(response));
 				reject(response);
 			});
 	  });
@@ -120,6 +139,17 @@ export class AddCandidateService {
 
   redirectToImport(value: boolean): void {
 	this.goToImport.next(value);
+  }
+
+  concatCandidateResult(array: Array<any>) {
+	let temp = {};
+	array.forEach(item => {
+		for (let x in item) {
+			temp[x] = item[x];
+		}
+	});
+	console.log(temp, 'temp');
+	return temp;
   }
 
 
