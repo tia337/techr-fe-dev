@@ -92,6 +92,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     });
 
     this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
+      console.log('data from subscribeToPendingBulkUploading: ', data);
       this.setFillPercentage(this.pendingBulkUpload.filesTotal, data.filesSuccess);
       this.pendingBulkUpload.filesError = data.filesError;
     });
@@ -451,6 +452,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     if (pendingBulkUpload === undefined) return;
 
     this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
+      console.log(data);
       this.setFillPercentage(pendingBulkUpload.filesTotal, data.filesSuccess);
       this.pendingBulkUpload.filesError = data.filesError;
     });
@@ -459,6 +461,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   subscribeToPendingBulkUploading(): Observable<any> {
     const observable = new Observable (observer => {
 			this._socket.on('bulkUploadProgress', data => {
+        console.log('data', data);
 				observer.next(data);
 			});
 		});

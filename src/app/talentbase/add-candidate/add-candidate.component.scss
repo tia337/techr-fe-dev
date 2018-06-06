@@ -218,6 +218,7 @@
         display: flex;
         align-items: center;
         margin-left: 10px;
+        color: #13579a;
         .icon-add {
             font-size: 16px;
             width: 16px;
@@ -296,6 +297,64 @@
         label {
             margin-bottom: 5px;
         }
+    }
+}
+
+.add-experience-btn {
+    border: none;
+    border-radius: 0;
+    padding: 5px 10px;
+    outline: 0;
+    background: #50a047;
+    border: 1px solid transparent;
+    color: #fafafa;
+    font-size: 14px;
+    margin-right: 10px;
+    cursor: pointer;
+    &:hover {
+        color: #50a047;
+        border: 1px solid #50a047;
+        background: #fafafa;
+    }
+}
+
+.cancel-experience-btn {
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    background: #fff;
+    outline: none;
+    color: #424242;
+    border: 1px solid transparent;
+    cursor: pointer;
+    &:hover {
+        color: #fff;
+        border: 1px solid #424242;
+        background: #424242;
+    }
+}
+
+.experience {
+    &-item {
+        display: flex;
+        margin-top: 20px;
+        margin: 20px 0 15px;
+        .holder {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    &-date {
+        font-size: 16px;
+    }
+    &-job-title {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    &-company-name {
+        font-size: 14px;
+        opacity: .8;
     }
 }
 
