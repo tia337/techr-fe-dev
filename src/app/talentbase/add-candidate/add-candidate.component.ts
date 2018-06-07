@@ -20,27 +20,28 @@ import * as _ from 'underscore';
 })
 export class AddCandidateComponent implements OnInit, OnDestroy {
 
-  public files: Array<Blob> = [];
-  public loading: boolean = false;
-  public cvUploaded: boolean = true;
-  public uploadedCandidates = [];
+	public files: Array<Blob> = [];
+	public loading: boolean = false;
+	public cvUploaded: boolean = true;
+	public uploadedCandidates = [];
 	public candidateForm: FormGroup;
 	public experienceForm: FormGroup;
-  private filesConfig: Ng4FilesConfig = { acceptExtensions: ['pdf', 'doc', 'docx', 'rtf'], maxFilesCount: 5 };
-  private _candidatesRchilliSubscription;
-  public avatar: SafeUrl;
-  public sourceItems: Array<{ name: string, id: string }> = [];
-  public jobBoards: Array<{ name: string, id: string }> = [];
-  public source: { name: string, id: string };
+	public educationForm: FormGroup;
+	private filesConfig: Ng4FilesConfig = { acceptExtensions: ['pdf', 'doc', 'docx', 'rtf'], maxFilesCount: 5 };
+	private _candidatesRchilliSubscription;
+	public avatar: SafeUrl;
+	public sourceItems: Array<{ name: string, id: string }> = [];
+	public jobBoards: Array<{ name: string, id: string }> = [];
+	public source: { name: string, id: string };
 	public query = '';
-  public selectionCounter: number = 0;
-  public expPosition: number = 1;
-  public editable: boolean = false;
+	public selectionCounter: number = 0;
+	public expPosition: number = 1;
+	public editable: boolean = false;
 	public active: boolean = false;
-  public dropdownVisible: boolean = false;
+	public dropdownVisible: boolean = false;
 	public dropdownRolesVisible: boolean = false;
 	public dropdownIndustriesVisible: boolean = false;  
-  public filteredList: Array<any> = [];
+	public filteredList: Array<any> = [];
 	public selectedRoles: Array<any> = [];
 	public activeForRoles: boolean = false;
 	public queryRoles: string = '';
@@ -58,7 +59,11 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	public months: Array<string> = [];
 	public experienceFormOpened: boolean = false;
 	public candidateFormOpened: boolean = false;
+	public educationFormOpened: boolean = false;	
 	public experience: Array<Experience> = [];
+	public educations: Array<Education> = [];
+	public tags: Array<any> = [];
+	public seeMore: boolean = false;
 
 	@ViewChild('scrollpanel', { read: ElementRef }) public panel: ElementRef;
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
@@ -80,8 +85,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
   ngOnInit() {
 		this._ng4FilesService.addConfig(this.filesConfig, 'files-config');
 		
-    this.buildForm();
-    this.getJobBoards();
+		this.buildForm();
+		this.getJobBoards();
 		this.getSources();
 
 		this._postJobService.getSkills().then(skills => {
@@ -111,13 +116,14 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		console.log(a);
 	}
 
-	openCandidateForm() {
+	openCandidateForm(): void {
 		this.cvUploaded = true;
 	}
 
-	buildExperienceForm() {
+	buildExperienceForm(): void {
 		this.experienceFormOpened = true;
 		this.experienceForm = this._formBuilder.group({
+			id: undefined,
 			jobTitle: undefined,
 			companyName: undefined,
 			location: undefined,
@@ -130,198 +136,328 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	addExperience(): void {
-		const experience: Experience = {
-			id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
-			jobTitle: this.experienceForm.value.jobTitle,
-			companyName: this.experienceForm.value.companyName,
-			location: this.experienceForm.value.location,
-			dateFrom: this.experienceForm.value.monthDateFrom + ' ' + this.experienceForm.value.yearDateFrom ,
-			dateTo:this.experienceForm.value.monthDateTo + ' ' + this.experienceForm.value.yearDateTo,
-			currentlyWorks: this.experienceForm.value.currentlyWorks,
-			description: this.experienceForm.value.description ? this.experienceForm.value.description : undefined
-		};
-		this.experience.push(experience);
-		this.experienceForm.reset();
-		this.experienceFormOpened = false;
+	buildEducationForm(): void {
+		this.educationFormOpened = true;
+		this.educationForm = this._formBuilder.group({
+			id: undefined,
+			schoolInstitutionName: undefined,
+			degree: undefined,
+			major: undefined,
+			location: undefined,
+			yearDateFrom: undefined,
+			monthDateFrom: undefined,
+			yearDateTo: undefined,
+			monthDateTo: undefined,
+			currentlyAttends: undefined,
+			description: undefined
+		});
 	}
 
-  closeModal(): void {
-    this._root_vcr.clear();
-  }
+	addExperience(): void {
+		console.log(this.experienceForm.value.id);
+		if (this.experienceForm.value.id !== null) {
+			this.experience.forEach(item => {
+				if (item.id === this.experienceForm.value.id) {
+					item.id = item.id;
+					item.jobTitle = this.experienceForm.value.jobTitle;
+					item.companyName = this.experienceForm.value.companyName;
+					item.location = this.experienceForm.value.location;
+					item.monthDateFrom = this.experienceForm.value.monthDateFrom;
+					item.yearDateFrom = this.experienceForm.value.yearDateFrom;
+					item.monthDateTo = this.experienceForm.value.monthDateTo;
+					item.yearDateTo = this.experienceForm.value.yearDateTo;
+					item.currentlyWorks = this.experienceForm.value.currentlyWorks;
+					item.description = this.experienceForm.value.description ? this.experienceForm.value.description : undefined;
+				}
+			});
+			this.experienceFormOpened = false;	
+			this.experienceForm.reset();	
+			this.experience.forEach(item => item.hidden = false);				
+			return;
+		} else if (this.experienceForm.value.id === null) {
+			const experience: Experience = {
+				id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+				jobTitle: this.experienceForm.value.jobTitle,
+				companyName: this.experienceForm.value.companyName ? this.experienceForm.value.companyName : undefined,
+				location: this.experienceForm.value.location ? this.experienceForm.value.location : undefined,
+				monthDateFrom: this.experienceForm.value.monthDateFrom ? this.experienceForm.value.monthDateFrom : undefined,
+				yearDateFrom: this.experienceForm.value.yearDateFrom ? this.experienceForm.value.yearDateFrom : undefined,
+				monthDateTo: this.experienceForm.value.monthDateTo ? this.experienceForm.value.monthDateTo : undefined,
+				yearDateTo: this.experienceForm.value.yearDateTo ? this.experienceForm.value.yearDateTo : undefined,
+				currentlyWorks: this.experienceForm.value.currentlyWorks ? this.experienceForm.value.currentlyWorks : undefined,
+				description: this.experienceForm.value.description ? this.experienceForm.value.description : undefined,
+				hidden: false
+			};
+			this.experience.push(experience);
+			this.experienceFormOpened = false;
+			this.experienceForm.reset();
+		}
+	}
 
-  filesSelect(selectedFiles: Ng4FilesSelected): void {
-    if (selectedFiles.status !== Ng4FilesStatus.STATUS_SUCCESS) return;
-    this.files = Array.from(selectedFiles.files).map(file => file);
-  }
+	addEducation() {
+		console.log(this.educationForm.value.id);
+		if (this.educationForm.value.id !== null) {
+			this.educations.forEach(item => {
+				if (item.id === this.educationForm.value.id) {
+					item.id = item.id;
+					item.schoolInstitutionName = this.educationForm.value.schoolInstitutionName;
+					item.degree = this.educationForm.value.degree;
+					item.major = this.educationForm.value.major;
+					item.location = this.educationForm.value.location;
+					item.monthDateFrom = this.educationForm.value.monthDateFrom;
+					item.yearDateFrom = this.educationForm.value.yearDateFrom;
+					item.monthDateTo = this.educationForm.value.monthDateTo;
+					item.yearDateTo = this.educationForm.value.yearDateTo;
+					item.currentlyAttends = this.educationForm.value.currentlyAttends;
+					item.description = this.educationForm.value.description ? this.educationForm.value.description : undefined;
+				}
+			});
+			this.educationFormOpened = false;	
+			this.educationForm.reset();	
+			this.educations.forEach(item => item.hidden = false);				
+			return;
+		} else if (this.educationForm.value.id === null) {
+			const education: Education = {
+				id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+				schoolInstitutionName: this.educationForm.value.schoolInstitutionName,
+				degree: this.educationForm.value.degree ? this.educationForm.value.degree : undefined,
+				major: this.educationForm.value.major ? this.educationForm.value.major : undefined,
+				location: this.educationForm.value.location ? this.educationForm.value.location : undefined,
+				monthDateFrom: this.educationForm.value.monthDateFrom ? this.educationForm.value.monthDateFrom : undefined,
+				yearDateFrom: this.educationForm.value.yearDateFrom ? this.educationForm.value.yearDateFrom : undefined,
+				monthDateTo: this.educationForm.value.monthDateTo ? this.educationForm.value.monthDateTo : undefined,
+				yearDateTo: this.educationForm.value.yearDateTo ? this.educationForm.value.yearDateTo : undefined,
+				currentlyAttends: this.educationForm.value.currentlyAttends ? this.educationForm.value.currentlyAttends : undefined,
+				description: this.educationForm.value.description ? this.educationForm.value.description : undefined,
+				hidden: false
+			};
+			this.educations.push(education);
+			this.educationFormOpened = false;
+			this.educationForm.reset();
+		}
+	}
 
-  deleteCV(index, array): void {
-    array.splice(index, 1);
-  }
+	deleteExperienceItem(index, array): void {
+		array.splice(index, 1);
+	}
 
-  uploadCVs(): void {
-    this.loading = true;
-    this.files.forEach(file => {
-      this._addCandidateService.parsingCv(file);
-    });
-    this._candidatesRchilliSubscription = this._addCandidateService.candidatesUploaded
-      .skipWhile(val => val === null)
-      .take(this.files.length)
-      .distinctUntilChanged()
-      .subscribe(candidate => {
-        // console.log('response',  candidate);
-        this.loading = false;
-        this.cvUploaded = true;
-        if (this.uploadedCandidates.length === 0) this.buildForm(candidate);
-				this.uploadedCandidates.push(candidate);
-      });
-  }
+	editExperienceItem(item: Experience): void {
+		this.experienceFormOpened = true;
+		item.hidden = true;
+		this.experienceForm.setValue({
+			id: item.id,
+			jobTitle: item.jobTitle,
+			companyName: item.companyName == undefined ? '' : item.companyName,
+			location: item.location == undefined ? '' : item.location,
+			yearDateFrom: item.yearDateFrom == undefined ? '' : item.yearDateFrom,
+			monthDateFrom: item.monthDateFrom == undefined ? '' : item.monthDateFrom,
+			yearDateTo: item.monthDateTo == undefined ? '' : item.monthDateTo,
+			monthDateTo: item.monthDateTo == undefined ?  '' : item.monthDateTo,
+			currentlyWorks: item.currentlyWorks == undefined ? '' : item.currentlyWorks,
+			description: item.description == undefined ? '' : item.description
+		});
+	}
 
-  buildForm(candidate?): void {
-   
-    if (!candidate) {
-      this.candidateForm = this._formBuilder.group({
-        firstName: undefined,
-        lastName: undefined,
-        // Avatar: undefined,
-        City: undefined,
-        Phone: undefined,
-        email: undefined,
-        WebPrecense: undefined,
-        Source: undefined,
-        JobBoard: undefined,
-        Job: undefined,
-				Stage: undefined,
-				skills: undefined,
-      });
-    }
+	editEducationItem(item: Education): void {
+		this.educationFormOpened = true;
+		item.hidden = true;
+		this.educationForm.setValue({
+			id: item.id,
+			schoolInstitutionName: item.schoolInstitutionName,
+			degree: item.degree == undefined ? '' : item.degree,
+			major: item.major == undefined ? '' : item.major,
+			location: item.location == undefined ? '' : item.location,
+			yearDateFrom: item.yearDateFrom == undefined ? '' : item.yearDateFrom,
+			monthDateFrom: item.monthDateFrom == undefined ? '' : item.monthDateFrom,
+			yearDateTo: item.monthDateTo == undefined ? '' : item.monthDateTo,
+			monthDateTo: item.monthDateTo == undefined ?  '' : item.monthDateTo,
+			currentlyAttends: item.currentlyAttends == undefined ? '' : item.currentlyAttends,
+			description: item.description == undefined ? '' : item.description
+		});
+	}
 
-    if (candidate) {
-      this.candidateForm.setValue({
-        firstName: candidate.firstName,
-        lastName: candidate.lastName,
-        // Avatar: '',
-        City: '',
-        Phone: candidate.Phone ? candidate.Phone : '',
-        email: candidate.email,
-        WebPrecense: '',
-        Source: '',
-        JobBoard: '',        
-        Job: '',
-				Stage: '', 
-				skills: candidate.skills,
-      });
-    }
-  }
+	addTag(value: string): void  {
+		if (value !== '') {
+			this.tags.push(value);
+		}
+	}
 
-  redirectToImport(value: boolean): void {
-    this._addCandidateService.redirectToImport(value);
-  }
+	closeModal(): void {
+		this._root_vcr.clear();
+	}
+
+	filesSelect(selectedFiles: Ng4FilesSelected): void {
+		if (selectedFiles.status !== Ng4FilesStatus.STATUS_SUCCESS) return;
+		this.files = Array.from(selectedFiles.files).map(file => file);
+	}
+
+	deleteCV(index, array): void {
+		array.splice(index, 1);
+	}
+
+	uploadCVs(): void {
+		this.loading = true;
+		this.files.forEach(file => {
+		this._addCandidateService.parsingCv(file);
+		});
+		this._candidatesRchilliSubscription = this._addCandidateService.candidatesUploaded
+		.skipWhile(val => val === null)
+		.take(this.files.length)
+		.distinctUntilChanged()
+		.subscribe(candidate => {
+			// console.log('response',  candidate);
+			this.loading = false;
+			this.cvUploaded = true;
+			if (this.uploadedCandidates.length === 0) this.buildForm(candidate);
+					this.uploadedCandidates.push(candidate);
+		});
+	}
+
+	buildForm(candidate?): void {
+	
+		if (!candidate) {
+		this.candidateForm = this._formBuilder.group({
+			firstName: undefined,
+			lastName: undefined,
+			// Avatar: undefined,
+			City: undefined,
+			Phone: undefined,
+			email: undefined,
+			WebPrecense: undefined,
+			Source: undefined,
+			JobBoard: undefined,
+			Job: undefined,
+			Stage: undefined,
+			skills: undefined,
+		});
+		}
+
+		if (candidate) {
+		this.candidateForm.setValue({
+			firstName: candidate.firstName,
+			lastName: candidate.lastName,
+			// Avatar: '',
+			City: '',
+			Phone: candidate.Phone ? candidate.Phone : '',
+			email: candidate.email,
+			WebPrecense: '',
+			Source: '',
+			JobBoard: '',        
+			Job: '',
+			Stage: '', 
+			skills: candidate.skills,
+		});
+		}
+	}
+
+	redirectToImport(value: boolean): void {
+		this._addCandidateService.redirectToImport(value);
+	}
+	
+	getSources(): void {
+		this._uploadCVService.getAllCandiadateSources().then((result: { name: string, id: string }[]) => {
+			this.sourceItems = result;
+		});
+	}
+
+	getJobBoards(): void {
+		this._uploadCVService.getAllJobBoards().then((result: { name: string, id: string }[]) => {
+			this.jobBoards = result;
+		});
+	}
+
+	changeAvatar(event, avatarInput): void {
+		const reader = new FileReader();
+		reader.onload = (event: any) => {
+			this.avatar = event.target.result;
+		}
+		reader.readAsDataURL(event.target.files[0]);
+	}
+
+	removeAvatar() {
+		this.avatar = undefined;
+		const input: HTMLElement = document.getElementById('avatar') as HTMLInputElement;
+	}
+
+	prevDef(value, suggestions) {
+			if (value.code == 'ArrowDown') {
+				if(value.preventDefault){
+					value.preventDefault();
+				}else{
+					event.returnValue = false;
+				}
+				if (this.selectionCounter < (this.filteredList.length - 1)) {
+					this.selectionCounter += 1;
+					this.expPosition = 1;
+					this.panel.nativeElement.scrollTop += 36.36;
+				}
+			}
+			if (value.code == 'ArrowUp') {
+				if(value.preventDefault){
+					value.preventDefault();
+				}else{
+					event.returnValue = false;
+				}
+				if (this.selectionCounter > 0) {
+					this.selectionCounter -= 1;
+					this.expPosition = 1;
+					this.panel.nativeElement.scrollTop -= 35;
+				}
+			}
+			if (value.code == 'Enter') {
+				if(value.preventDefault){
+					value.preventDefault();
+				}else{
+					event.returnValue = false;
+				}
+			}
+			if (value.code != 'Click') {
+				this.active = true;
+				this.dropdownVisible = false;
+				this.dropdownRolesVisible = false;
+			}
+			if (value.code == 'ArrowRight') {
+				if(value.preventDefault){
+					value.preventDefault();
+				}else{
+					event.returnValue = false;
+				}
+			}
+			if (value.code == 'ArrowLeft') {
+				if(value.preventDefault){
+					value.preventDefault();
+				}else{
+					event.returnValue = false;
+				}
+			}
+	}
   
-  getSources() {
-    this._uploadCVService.getAllCandiadateSources().then((result: { name: string, id: string }[]) => {
-      this.sourceItems = result;
-    });
-  }
+	keyPressing(value: any) {
+			if (value.code == 'Enter') {
+				if (this.selectionCounter >= 0 && this.filteredList.length > 0) {
+					this.selectSkill(this.filteredList[this.selectionCounter], this.expPosition);
+				}
+			}
 
-  getJobBoards() {
-    this._uploadCVService.getAllJobBoards().then((result: { name: string, id: string }[]) => {
-      this.jobBoards = result;
-    })
-  }
+			if (value.code == 'ArrowRight') {
+				if (this.expPosition > 0 && this.expPosition < 3) {
+					this.expPosition += 1;
+				}
+			}
 
-  changeAvatar(event, avatarInput) {
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      this.avatar = event.target.result;
-    }
-    reader.readAsDataURL(event.target.files[0]);
-  }
+			if (value.code == 'ArrowLeft') {
+				if (this.expPosition > 1 && this.expPosition <= 3) {
+					this.expPosition -= 1;
+				}
+			} else if (value.code != 'ArrowDown' && value.code != 'ArrowUp' && value.code != 'Enter' && value.code != 'ArrowRight' && value.code != 'Click') {
 
-  removeAvatar() {
-    this.avatar = undefined;
-    const input: HTMLElement = document.getElementById('avatar') as HTMLInputElement;
-  }
+				setTimeout(() => {
+					this.filter();
+				}, 750);
+			}
+	}
 
-  prevDef(value, suggestions) {
-		if (value.code == 'ArrowDown') {
-			if(value.preventDefault){
-				value.preventDefault();
-			}else{
-				event.returnValue = false;
-			}
-			if (this.selectionCounter < (this.filteredList.length - 1)) {
-				this.selectionCounter += 1;
-				this.expPosition = 1;
-				this.panel.nativeElement.scrollTop += 36.36;
-			}
-		}
-		if (value.code == 'ArrowUp') {
-			if(value.preventDefault){
-				value.preventDefault();
-			}else{
-				event.returnValue = false;
-			}
-			if (this.selectionCounter > 0) {
-				this.selectionCounter -= 1;
-				this.expPosition = 1;
-				this.panel.nativeElement.scrollTop -= 35;
-			}
-		}
-		if (value.code == 'Enter') {
-			if(value.preventDefault){
-				value.preventDefault();
-			}else{
-				event.returnValue = false;
-			}
-		}
-		if (value.code != 'Click') {
-			this.active = true;
-			this.dropdownVisible = false;
-			this.dropdownRolesVisible = false;
-		}
-		if (value.code == 'ArrowRight') {
-			if(value.preventDefault){
-				value.preventDefault();
-			}else{
-				event.returnValue = false;
-			}
-		}
-		if (value.code == 'ArrowLeft') {
-			if(value.preventDefault){
-				value.preventDefault();
-			}else{
-				event.returnValue = false;
-			}
-		}
-  }
-  
-  keyPressing(value: any) {
-		if (value.code == 'Enter') {
-			if (this.selectionCounter >= 0 && this.filteredList.length > 0) {
-				this.selectSkill(this.filteredList[this.selectionCounter], this.expPosition);
-			}
-		}
-
-		if (value.code == 'ArrowRight') {
-			if (this.expPosition > 0 && this.expPosition < 3) {
-				this.expPosition += 1;
-			}
-		}
-
-		if (value.code == 'ArrowLeft') {
-			if (this.expPosition > 1 && this.expPosition <= 3) {
-				this.expPosition -= 1;
-			}
-		} else if (value.code != 'ArrowDown' && value.code != 'ArrowUp' && value.code != 'Enter' && value.code != 'ArrowRight' && value.code != 'Click') {
-
-			setTimeout(() => {
-				this.filter();
-			}, 750);
-		}
-  }
-
-  keyRnIPressing(value: any, name: string) {
+	keyRnIPressing(value: any, name: string) {
 		if (value.code === 'Enter') {
 			if (name === 'role') {
 				if (this.selectionRnICounter >= 0 && this.filteredRnIList.length > 0) {
@@ -341,8 +477,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		}
 	}
   
-  activeSet() {
-		this.active = true;
+	activeSet() {
+			this.active = true;
 	}
 
 	activeUnSet() {
@@ -436,19 +572,19 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		}
 	}
 
-  activeDropdown(name: string, loc, value?) {}
-  
-  selectSkill(skill, experience) {
-		const skillComponent = this._postJobService.createSkillComponent(skill, experience);
-		this.selected.push(skillComponent);
-		const skillRows = this._elementRef.nativeElement.querySelectorAll('._' + skill.id);
-		skillRows.forEach(element => {
-			this._renderer.setStyle(element, 'display', 'none');
-		});
-		this.skills = _.without(this.skills, skill);
-		this.query = '';
-		this.filteredList = [];
-  }
+	activeDropdown(name: string, loc, value?) {}
+	
+	selectSkill(skill, experience) {
+			const skillComponent = this._postJobService.createSkillComponent(skill, experience);
+			this.selected.push(skillComponent);
+			const skillRows = this._elementRef.nativeElement.querySelectorAll('._' + skill.id);
+			skillRows.forEach(element => {
+				this._renderer.setStyle(element, 'display', 'none');
+			});
+			this.skills = _.without(this.skills, skill);
+			this.query = '';
+			this.filteredList = [];
+	}
 	
 	getCategorySkills(index) {
 		const skillsWrap = this.categoryTitles.toArray()[index].nativeElement;
@@ -610,36 +746,10 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		});
 	}
 
-
-  ngOnDestroy(): void {
-    if (this._candidatesRchilliSubscription !== undefined) this._candidatesRchilliSubscription.unsubscribe();
-    if (this.candidateForm !== undefined) this.candidateForm.reset();
-    // let arra = [
-    //   {
-    //     id: string,
-    //     jobTitle: string,
-    //     companyName: string,
-    //     location: string, 
-    //     dateFrom: Date,
-    //     dateTo: Date,
-    //     currentlyWorks: boolean,
-    //     description: string
-    //   }
-    // ]
-    // let edu = [
-    //   {
-    //     id: string,
-    //     schoolInstitutionName: string,
-    //     location: string,
-    //     degree: string,
-    //     major: string,
-    //     dateFrom: Date,
-    //     dateTo: Date,
-    //     currentlyAttends: boolean,
-    //     description: string
-    //   }
-    // ]
-  }
+	ngOnDestroy(): void {
+		if (this._candidatesRchilliSubscription !== undefined) this._candidatesRchilliSubscription.unsubscribe();
+		if (this.candidateForm !== undefined) this.candidateForm.reset();
+	}
 
 
 }

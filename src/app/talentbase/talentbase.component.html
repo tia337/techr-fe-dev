@@ -368,7 +368,7 @@
                 </tr>
                 <tr>
                   <td>Total CV processed</td>
-                  <td>{{pendingBulkUpload.filesSuccess}}</td>
+                  <td>{{pendingBulkUpload.filesSuccess + pendingBulkUpload.filesError}}</td>
                 </tr>
                 <tr>
                   <td>Estimated time left</td>
@@ -376,12 +376,30 @@
                 </tr>
               </table>
             </div>
-            <div class="bulk-upload-pending__info--magic">
-              <span>Some little magic is happening right now to upload all your data</span>
-              <img src="../../assets/images/bulk_magic.png" alt="">
+            <div class="bulk-upload-pending__info--magic" [ngClass]="{'flb': bulkUploadStarted }">
+              <div *ngIf="!bulkUploadStarted" style="display: flex; align-items: center; justify-content: center;">
+                <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+              </div>
+              <div *ngIf="bulkUploadStarted">
+                <div class="bulk-upload-pending__bar">
+                  <div class="bulk-upload-pending__bar-fill" [ngStyle]="fillPercentage">
+                    <div class="bulk-upload-pending__bar-fill--percentage"><span>{{fillPercentage.width}}</span></div>
+                    <div class="bulk-upload-pending__bar-fill--processed">
+                      <p>Total processed</p>
+                      <p>{{pendingBulkUpload.filesSuccess + pendingBulkUpload.filesError}}</p>
+                    </div>
+                  </div>
+                  <div class="bulk-upload-pending__bar-total">
+                      <p>Total CV files</p>
+                      <p>{{pendingBulkUpload.filesTotal}}</p>
+                  </div>
+                </div>
+              </div>
+              <!-- <span>Some little magic is happening right now to upload all your data</span>
+              <img src="../../assets/images/bulk_magic.png" alt=""> -->
             </div>
         </div>
-        <div class="bulk-upload-pending__bar-wrap">
+        <!-- <div class="bulk-upload-pending__bar-wrap">
           <div class="bulk-upload-pending__bar">
             <div class="bulk-upload-pending__bar-fill" [ngStyle]="fillPercentage">
               <div class="bulk-upload-pending__bar-fill--percentage"><span>{{fillPercentage.width}}</span></div>
@@ -395,7 +413,7 @@
                 <p>{{pendingBulkUpload.filesTotal}}</p>
             </div>
           </div>
-        </div>
+        </div> -->
     </div>
     <div class="bulk-upload-pending__history">
       <p class="bulk-upload-pending__history--title">Upload History</p>

@@ -765,6 +765,10 @@
     }
 }
 
+.flb {
+    flex-basis: 50%;
+}
+
 @keyframes blink-animation {
    0% {
        opacity: 1;

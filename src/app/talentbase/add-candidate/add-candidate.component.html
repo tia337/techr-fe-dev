@@ -91,7 +91,7 @@
       </div>
       <div class="row">
         <p class="input-holder">
-          <span class="input-name">Email</span>
+          <span class="input-name">* Email</span>
           <input type="email" formControlName="email" name="email">
         </p>
         <p class="input-holder">
@@ -120,6 +120,16 @@
             </mat-select>
           </mat-form-field>
         </p>
+        <!-- <p class="input-holder">
+          <span class="input-name">Add To Job</span>
+          <input type="text" formControlName="Job">
+        </p>
+        <p class="input-holder">
+          <span class="input-name">Stage</span>
+          <input type="text" formControlName="Stage">
+        </p> -->
+      </div>
+      <div class="row">
         <p class="input-holder">
           <span class="input-name">Add To Job</span>
           <input type="text" formControlName="Job">
@@ -137,7 +147,7 @@
           <label class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); dropdownVisible = !dropdownVisible; dropdownRolesVisible = false; dropdownIndustriesVisible = false;">
             <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownVisible" [ngModelOptions]="{standalone: true}" />
             <div class="arrow-button" >
-              <i class="fa fa-angle-down" aria-hidden="true"></i>
+              <mat-icon style="transform: rotate(90deg)">play</mat-icon>
             </div>
           </label>
   
@@ -150,7 +160,7 @@
           <label class="arrow-button-group" (click)="activeDropdown('roles',rolesdropdown, $event);  dropdownVisible  = false; dropdownRolesVisible = !dropdownRolesVisible; dropdownIndustriesVisible = false;">
             <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownRolesVisible" [ngModelOptions]="{standalone: true}"  />
             <div class="arrow-button">
-              <i class="fa fa-angle-down" aria-hidden="true"></i>
+              <mat-icon style="transform: rotate(90deg)">play</mat-icon>
             </div>
           </label>
   
@@ -164,7 +174,7 @@
           <label class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event); dropdownIndustriesVisible = !dropdownIndustriesVisible; dropdownRolesVisible = false; dropdownVisible = false;">
             <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownIndustriesVisible" [ngModelOptions]="{standalone: true}" />
             <div class="arrow-button">
-              <i class="fa fa-angle-down" aria-hidden="true"></i>
+              <mat-icon style="transform: rotate(90deg)">play</mat-icon>              
             </div>
           </label>
   
@@ -339,79 +349,214 @@
           </div>
         </div>
       </div>
-      <div class="row form-row">
-        <div class="title-holder">
-          <h2 class="big-title">Experience</h2>          
-          <span class="add-property" *ngIf="!experienceFormOpened">Add experince <mat-icon  class="icon-add" (click)="buildExperienceForm(); $event.stopPropagation();">add</mat-icon></span>
+      <span class="see-less-more-btn" (click)="seeMore = true" *ngIf="!seeMore">See More</span>
+      <span class="see-less-more-btn" (click)="seeMore = false" *ngIf="seeMore">See Less</span>
+      <div *ngIf="seeMore">
+        <div class="row form-row">
+          <div class="title-holder">
+            <h2 class="big-title">Experience</h2>          
+            <span class="add-property" *ngIf="!experienceFormOpened">Add experience <mat-icon  class="icon-add" (click)="buildExperienceForm(); $event.stopPropagation();">add</mat-icon></span>
+          </div>
+          <div class="property-form" *ngIf="experienceFormOpened" (ngSubmit)="addExperience()" [formGroup]="experienceForm">
+            <input type="hidden" formControlName="id">
+            <p class="input-holder">
+              <span class="input-title">Job Title</span>
+              <input type="text" required placeholder="Job Title" formControlName="jobTitle">
+            </p>
+            <div class="double-inputs-holder">
+              <p class="input-holder">
+                <span class="input-title">Company Name</span>
+                <input type="text" placeholder="Company Name" formControlName="companyName">
+              </p>
+              <p class="input-holder">
+                <span class="input-title">Location</span>
+                <input type="text" placeholder="Location" formControlName="location">
+              </p>
+            </div>
+            <div class="input-holder dates">
+              <p>
+                <span class="input-name date">Date from</span>
+                <span class="form-field-holder"> 
+                  <mat-form-field class="year-select">
+                    <mat-select placeholder="Month" formControlName="monthDateFrom">
+                      <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field >
+                    <mat-select placeholder="Year" formControlName="yearDateFrom">
+                      <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </span>
+              </p>
+              <p>
+                <span class="input-name date">Date to</span>
+                <span class="form-field-holder"> 
+                  <mat-form-field class="year-select">
+                    <mat-select placeholder="Month" formControlName="monthDateTo">
+                      <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field>
+                    <mat-select placeholder="Year" formControlName="yearDateTo">
+                      <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </span>
+              </p>
+            </div>
+              <p class="input-holder">
+                <span class="input-name">Currently works here</span>
+                <input style="width: auto!important;" type="checkbox" formControlName="currentlyWorks">
+              </p>
+              <p class="input-holder">
+                <span class="input-name">Description</span>
+                <textarea formControlName="description" cols="30" rows="10"></textarea>
+              </p>
+            <div class="buttons-holder">
+              <button class="add-experience-btn" *ngIf="experienceForm.value.id === null" (click)="addExperience(); $event.stopPropagation();" type="button">Add experience</button>
+              <button class="add-experience-btn" *ngIf="experienceForm.value.id !== null" (click)="addExperience(); $event.stopPropagation();" type="button">Save experience</button>            
+              <button class="cancel-experience-btn" type="button" (click)="experienceForm.reset(); experienceFormOpened = false;">Cancel</button>
+            </div>
+          </div>
+          <div class="experience-holder" *ngIf="experience.length > 0">
+            <div *ngFor="let exp of experience; let i = index;" class="experience-item">
+                <span class="experience-date" *ngIf="!exp.hidden" style="flex-basis: 30%;">
+                  <span style="margin-bottom: 5px;">
+                    <span *ngIf="exp.monthDateFrom !== null">{{exp.monthDateFrom}}&nbsp;</span>
+                    <span *ngIf="exp.yearDateFrom !== null">{{exp.yearDateFrom}}&nbsp;</span>
+                    -
+                    <span *ngIf="exp.monthDateTo !== null">{{exp.monthDateTo}}</span>
+                    <span *ngIf="exp.yearDateTo !== null">{{exp.yearDateTo}}</span>
+                  </span>
+                  <span class="experience-location" *ngIf="exp.location !== null">{{exp.location}}</span>
+                </span>
+                <p class="holder" *ngIf="!exp.hidden" style="flex-basis: 30%;">
+                  <span class="experience-job-title">{{exp.jobTitle}}</span>
+                  <span class="experience-company-name" *ngIf="exp.companyName !== null">{{exp.companyName}}</span>
+                  <span *ngIf="exp.description !== null" class="experience-description">{{exp.description}}</span>
+                </p>
+                <div class="buttons-edit-delete" *ngIf="!exp.hidden" style="flex-basis: 30%;">
+                  <button class="edit-experience" type="button" (click)="editExperienceItem(exp)">Edit</button> 
+                  &nbsp;|&nbsp;
+                  <button class="delete-experience"  type="button" (click)="deleteExperienceItem(i, experience)">Delete</button>              
+                </div>
+            </div>
+          </div>
         </div>
-        <div class="property-form" *ngIf="experienceFormOpened" (ngSubmit)="addExperience()" [formGroup]="experienceForm">
-          <p class="input-holder">
-            <span class="input-title">Job Title</span>
-            <input type="text" placeholder="Job Title" formControlName="jobTitle">
-          </p>
-          <div class="double-inputs-holder">
-            <p class="input-holder">
-              <span class="input-title">Company Name</span>
-              <input type="text" placeholder="Company Name" formControlName="companyName">
-            </p>
-            <p class="input-holder">
-              <span class="input-title">Location</span>
-              <input type="text" placeholder="Location" formControlName="location">
-            </p>
+        <div class="row form-row">
+            <div class="title-holder">
+              <h2 class="big-title">Education</h2>          
+              <span class="add-property" *ngIf="!educationFormOpened">Add education <mat-icon  class="icon-add" (click)="buildEducationForm(); $event.stopPropagation();">add</mat-icon></span>
+            </div>
+            <div class="property-form" *ngIf="educationFormOpened" (ngSubmit)="addEducation()" [formGroup]="educationForm">
+              <input type="hidden" formControlName="id">
+              <div class="double-inputs-holder">
+                <p class="input-holder">
+                  <span class="input-title">School / Institution</span>
+                  <input type="text" required placeholder="School / Institution" formControlName="schoolInstitutionName">
+                </p>
+                <p class="input-holder">
+                    <span class="input-title">Location</span>
+                    <input type="text" placeholder="Location" formControlName="location">
+                  </p>
+              </div>
+              <div class="double-inputs-holder">
+                <p class="input-holder">
+                  <span class="input-title">Degree</span>
+                  <input type="text" placeholder="Degree" formControlName="degree">
+                </p>
+                <p class="input-holder">
+                  <span class="input-title">Major</span>
+                  <input type="text" placeholder="Major" formControlName="major">
+                </p>
+              </div>
+              <div class="input-holder dates">
+                <p>
+                  <span class="input-name date">Date from</span>
+                  <span class="form-field-holder"> 
+                    <mat-form-field class="year-select">
+                      <mat-select placeholder="Month" formControlName="monthDateFrom">
+                        <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field >
+                      <mat-select placeholder="Year" formControlName="yearDateFrom">
+                        <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </span>
+                </p>
+                <p>
+                  <span class="input-name date">Date to</span>
+                  <span class="form-field-holder"> 
+                    <mat-form-field class="year-select">
+                      <mat-select placeholder="Month" formControlName="monthDateTo">
+                        <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <mat-select placeholder="Year" formControlName="yearDateTo">
+                        <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </span>
+                </p>
+              </div>
+                <p class="input-holder">
+                  <span class="input-name">Currently attends</span>
+                  <input style="width: auto!important;" type="checkbox" formControlName="currentlyAttends">
+                </p>
+                <p class="input-holder">
+                  <span class="input-name">Description</span>
+                  <textarea formControlName="description" cols="30" rows="10"></textarea>
+                </p>
+              <div class="buttons-holder">
+                <button class="add-experience-btn" *ngIf="educationForm.value.id === null" (click)="addEducation(); $event.stopPropagation();" type="button">Add experience</button>
+                <button class="add-experience-btn" *ngIf="educationForm.value.id !== null" (click)="addEducation(); $event.stopPropagation();" type="button">Save experience</button>            
+                <button class="cancel-experience-btn" type="button" (click)="educationForm.reset(); educationFormOpened = false;">Cancel</button>
+              </div>
+            </div>
+            <div class="experience-holder" *ngIf="educations.length > 0">
+              <div *ngFor="let education of educations; let i = index;" class="experience-item">
+                  <span class="experience-date" *ngIf="!education.hidden" style="flex-basis: 30%;">
+                    <span style="margin-bottom: 5px;">
+                      <span *ngIf="education.monthDateFrom !== null">{{education.monthDateFrom}}&nbsp;</span>
+                      <span *ngIf="education.yearDateFrom !== null">{{education.yearDateFrom}}&nbsp;</span>
+                      -
+                      <span *ngIf="education.monthDateTo !== null">{{education.monthDateTo}}</span>
+                      <span *ngIf="education.yearDateTo !== null">{{education.yearDateTo}}</span>
+                    </span>
+                    <span class="experience-location" *ngIf="education.location !== null">{{education.location}}</span>
+                  </span>
+                  <p class="holder" *ngIf="!education.hidden" style="flex-basis: 30%;">
+                    <span class="experience-job-title">{{education.schoolInstitutionName}}</span>
+                    <span class="experience-company-name" *ngIf="education.degree !== null">{{education.degree}} <span *ngIf="education.major !== null">of {{education.major}}</span></span>
+                    <span class="experience-description">{{education.description}}</span>
+                  </p>
+                  <div class="buttons-edit-delete" *ngIf="!education.hidden" style="flex-basis: 30%;">
+                    <button class="edit-experience" type="button" (click)="editEducationItem(education)">Edit</button> 
+                    &nbsp;|&nbsp;
+                    <button class="delete-experience" type="button" (click)="deleteExperienceItem(i, educations)">Delete</button>              
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="row">
+          <div class="title-holder">
+            <h2 class="big-title">Tags</h2>      
+            <input type="text" placeholder="Add tag" #addTagInput (keydown.enter)="addTag(addTagInput.value); addTagInput.value = '';">
           </div>
-          <div class="input-holder dates">
-            <p>
-              <span class="input-name date">Date from</span>
-              <span class="form-field-holder"> 
-                <mat-form-field class="year-select">
-                  <mat-select placeholder="Month" formControlName="monthDateFrom">
-                    <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field >
-                  <mat-select placeholder="Year" formControlName="yearDateFrom">
-                    <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </span>
-            </p>
-            <p>
-              <span class="input-name date">Date to</span>
-              <span class="form-field-holder"> 
-                <mat-form-field class="year-select">
-                  <mat-select placeholder="Month" formControlName="monthDateTo">
-                    <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field>
-                  <mat-select placeholder="Year" formControlName="yearDateTo">
-                    <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </span>
-            </p>
-          </div>
-            <p class="input-holder">
-              <span class="input-name">Currently works here</span>
-              <input style="width: auto!important;" type="checkbox" formControlName="currentlyWorks">
-            </p>
-            <p class="input-holder">
-              <span class="input-name">Description</span>
-              <textarea formControlName="description" cols="30" rows="10"></textarea>
-            </p>
-          <div class="buttons-holder">
-            <button class="add-experience-btn" (click)="addExperience(); $event.stopPropagation();" type="submit">Add experience</button>
-            <button class="cancel-experience-btn" type="button">Cancel</button>
+          <div class="tags-holder" *ngIf="tags.length > 0">
+            <span class="tag" *ngFor="let tag of tags; let i = index;">{{tag}}<mat-icon (click)="tags.splice(i, 1)">clear</mat-icon></span>
           </div>
         </div>
-        <div class="experience-holder" *ngIf="experience.length > 0">
-          <div *ngFor="let exp of experience" class="experience-item">
-            <span class="experience-date">{{exp.dateFrom}} - {{exp.dateTo}}</span>
-            <p class="holder">
-              <span class="experience-job-title">{{exp.jobTitle}}</span>
-              <span class="experience-company-name" *ngIf="exp.companyName">{{exp.companyName}}</span>
-            </p>
-          </div>
+        <div class="row">
+            <div class="title-holder">
+              <h2 class="big-title">Attach CV file</h2>      
+              <label for="cv" class="add-property">Upload files <mat-icon  class="icon-add" (click)="$event.stopPropagation()">add</mat-icon></label>
+              <input id="cv" type="file" style="display: none;">
+            </div>
         </div>
       </div>
       

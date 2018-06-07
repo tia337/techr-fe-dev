@@ -144,9 +144,27 @@ type BulkActionsArray = Array<{
         jobTitle: string,
         companyName: string,
         location: string,
-        dateFrom: string | Date,
-        dateTo: string | Date,
+        monthDateFrom: string,
+        yearDateFrom: string,
+        monthDateTo: string,
+        yearDateTo: string,
         currentlyWorks: boolean,
-        description: string
+        description: string,
+        hidden?: boolean
+    }
+
+    type Education = {
+        id: string,
+        schoolInstitutionName: string,
+        degree: string,
+        major: string,
+        location: string,
+        yearDateFrom: string,
+        monthDateFrom: string,
+        yearDateTo: string,
+        monthDateTo: string,
+        currentlyAttends: boolean,
+        description: string,
+        hidden?: boolean
     }
     // TALENT DATA BASE TYPES END  

@@ -50,11 +50,8 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   private filterParamsStorage = [];
   public bulkUploads: Array<BulkUploadItem> = [];
   public pendingBulkUpload: BulkUploadItem | undefined;
-  public fillPercentage = {
-    width: '0%'
-  };
-  filesTotal = 1680;
-  filesProcessed = 0;
+  public fillPercentage = { width: '0%' };
+  public bulkUploadStarted: boolean = false;
 
   constructor(
     private _talentBaseService: TalentbaseService,
@@ -90,13 +87,6 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       this.activePanel = 'import';
       this._root_vcr.clear();
     });
-
-    this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
-      console.log('data from subscribeToPendingBulkUploading: ', data);
-      this.setFillPercentage(this.pendingBulkUpload.filesTotal, data.filesSuccess);
-      this.pendingBulkUpload.filesError = data.filesError;
-    });
-
 
   }
 
@@ -452,31 +442,23 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     if (pendingBulkUpload === undefined) return;
 
     this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
-      console.log(data);
-      this.setFillPercentage(pendingBulkUpload.filesTotal, data.filesSuccess);
+      console.log('data from bulkUploadProgress: ', data);
+      if (!this.bulkUploadStarted) this.bulkUploadStarted = true;
+      this.setFillPercentage(pendingBulkUpload.filesTotal, data.filesSuccess + data.filesError);
       this.pendingBulkUpload.filesError = data.filesError;
+      this.pendingBulkUpload.filesSuccess = data.filesSuccess;
     });
   }
 
   subscribeToPendingBulkUploading(): Observable<any> {
     const observable = new Observable (observer => {
 			this._socket.on('bulkUploadProgress', data => {
-        console.log('data', data);
 				observer.next(data);
 			});
 		});
 		return observable;
   }
 
-  initiate() {
-    this.filesProcessed = this.filesProcessed + 5.25;
-    setInterval(() => {
-      if (this.filesTotal !== this.filesProcessed && this.filesTotal > this.filesProcessed) {
-        this.initiate();
-      }
-    }, 1500);
-    this.setFillPercentage(this.filesTotal, this.filesProcessed);
-  }
 
   setFillPercentage(filesTotal: number, filesProcessed: number): void {
     const percentage = this._talentBaseService.calculatePercentageOfBulkUploading(filesTotal, filesProcessed);

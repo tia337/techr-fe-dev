@@ -232,6 +232,7 @@
     .big-title {
         font-size: 20px;
         font-weight: bold;
+        width: 120px;
     }
     .input-holder {
         display: flex;
@@ -345,8 +346,15 @@
             flex-direction: column;
         }
     }
+    &-location {
+        font-size: 14px;
+        opacity: .8;
+    }
     &-date {
         font-size: 16px;
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: column;
     }
     &-job-title {
         font-size: 16px;
@@ -356,8 +364,57 @@
         font-size: 14px;
         opacity: .8;
     }
+    &-description {
+        margin-top: 5px;
+    }
 }
 
+
+::ng-deep .mat-form-field-underline {
+    display: none!important;
+}
+
+.container {
+    ::ng-deep .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder, .mat-form-field-empty.mat-form-field-placeholder {
+        margin-left: 10px;
+        margin-top: 5px;
+    }
+}
+
+.edit-experience,
+.delete-experience {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+        background: #000;
+        color: #fff;
+    }
+}
+
+.tags {
+    display: flex;
+    align-items: center;
+}
+
+.tag {
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    background: #dadada;
+    border-radius: 2px;
+    margin-right: 10px;
+    .icon-remove {
+        cursor: pointer;
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        margin-left: 10px;
+    }
+} 
 
 .source-add-candidate-talentdb {
     ::ng-deep .mat-form-field-infix {
@@ -692,6 +749,12 @@
 
 .selected-title {
     font-weight: bold;
+}
+
+.see-less-more-btn {
+    color: #13579a;
+    cursor: pointer;
+    margin-left: 20px;
 }
 
 .selected-items-container {
