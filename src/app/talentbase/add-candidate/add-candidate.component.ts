@@ -5,7 +5,7 @@ import { ViewContainerData } from '@angular/core/src/view';
 import { AddCandidateService } from './add-candidate.service';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
-import { FormControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { UploadCvService } from '../../upload-cv/upload-cv.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { SanitizerPipe } from '../../shared/sanitizer.pipe';
@@ -64,53 +64,62 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	public educations: Array<Education> = [];
 	public tags: Array<any> = [];
 	public seeMore: boolean = false;
+	public CV;
+	public attachment;
+	public Phone;
+	public Phone1;
+	public newPhone = false;
+	public firstNameEmpty = false;
+	public lastNameEmpty = false;
+	public emailEmpty = false;
+	public sourceEmpty = false;	
 
 	@ViewChild('scrollpanel', { read: ElementRef }) public panel: ElementRef;
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
 	@ViewChild('categoriesDropdown') categoriesDropdown: ElementRef;
 	
   
-  constructor(
-    private _root_vcr: RootVCRService,
-    private _addCandidateService: AddCandidateService,
-    private _uploadCVService: UploadCvService,
-    private _formBuilder: FormBuilder,
-    private _ng4FilesService: Ng4FilesService,
-		private _parse: Parse,
-		private _postJobService: PostJobService,
-		private _renderer: Renderer2,
-		private _elementRef: ElementRef,
-  ) { }
+	constructor(
+		private _root_vcr: RootVCRService,
+		private _addCandidateService: AddCandidateService,
+		private _uploadCVService: UploadCvService,
+		private _formBuilder: FormBuilder,
+		private _ng4FilesService: Ng4FilesService,
+			private _parse: Parse,
+			private _postJobService: PostJobService,
+			private _renderer: Renderer2,
+			private _elementRef: ElementRef,
+	) { }
 
-  ngOnInit() {
-		this._ng4FilesService.addConfig(this.filesConfig, 'files-config');
-		
-		this.buildForm();
-		this.getJobBoards();
-		this.getSources();
+	ngOnInit() {
+			this._ng4FilesService.addConfig(this.filesConfig, 'files-config');
+			
+			this.buildForm();
+			this.getJobBoards();
+			this.getSources();
 
-		this._postJobService.getSkills().then(skills => {
-			this.skills = skills;
-			this.skills = _.sortBy(this.skills, function(skill){ return skill.get("title"); });
-		});
+			this._postJobService.getSkills().then(skills => {
+				this.skills = skills;
+				this.skills = _.sortBy(this.skills, function(skill){ return skill.get("title"); });
+			});
 
-		this._postJobService.getCategories().then(categories => {
-			this.categories = categories;
-		});
+			this._postJobService.getCategories().then(categories => {
+				this.categories = categories;
+			});
 
-		this._postJobService.getRoles().then(roles => {
-			this.roles = roles;
-			this.roles = _.sortBy(this.roles, function(roles){ return roles.get("title"); });
-		});
+			this._postJobService.getRoles().then(roles => {
+				this.roles = roles;
+				this.roles = _.sortBy(this.roles, function(roles){ return roles.get("title"); });
+			});
 
-		this._postJobService.getIndustries().then(industries => {
-			this.industries = industries;
-			this.industries = _.sortBy(this.industries, function(industries){ return industries.get("title"); });
-		});
+			this._postJobService.getIndustries().then(industries => {
+				this.industries = industries;
+				this.industries = _.sortBy(this.industries, function(industries){ return industries.get("title"); });
+			});
 
-		this.years = this._addCandidateService.createYears().reverse();
-		this.months = this._addCandidateService.createMonths();
-  }
+			this.years = this._addCandidateService.createYears().reverse();
+			this.months = this._addCandidateService.createMonths();
+	}
 
 	log(a) {
 		console.log(a);
@@ -314,40 +323,40 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	}
 
 	buildForm(candidate?): void {
-	
 		if (!candidate) {
-		this.candidateForm = this._formBuilder.group({
-			firstName: undefined,
-			lastName: undefined,
-			// Avatar: undefined,
-			City: undefined,
-			Phone: undefined,
-			email: undefined,
-			WebPrecense: undefined,
-			Source: undefined,
-			JobBoard: undefined,
-			Job: undefined,
-			Stage: undefined,
-			skills: undefined,
-		});
-		}
-
+			this.candidateForm = this._formBuilder.group({
+				firstName: this._formBuilder.control('', Validators.required),
+				lastName: this._formBuilder.control('', Validators.required),
+				Avatar: undefined,
+				City: undefined,
+				Phone: undefined,
+				Phone2: undefined,
+				email: this._formBuilder.control('', Validators.required),
+				precenses: this._formBuilder.array([ this.createPrecense() ]),
+				Source: this._formBuilder.control('', Validators.required),
+				JobBoard: undefined,
+				Job: undefined,
+				Stage: undefined,
+				skills: undefined,
+			});
+		};
 		if (candidate) {
-		this.candidateForm.setValue({
-			firstName: candidate.firstName,
-			lastName: candidate.lastName,
-			// Avatar: '',
-			City: '',
-			Phone: candidate.Phone ? candidate.Phone : '',
-			email: candidate.email,
-			WebPrecense: '',
-			Source: '',
-			JobBoard: '',        
-			Job: '',
-			Stage: '', 
-			skills: candidate.skills,
-		});
+			this.candidateForm.setValue({
+				firstName: candidate.firstName,
+				lastName: candidate.lastName,
+				// Avatar: '',
+				City: '',
+				Phone: candidate.Phone ? candidate.Phone : '',
+				email: candidate.email,
+				WebPrecense: '',
+				Source: '',
+				JobBoard: '',        
+				Job: '',
+				Stage: '', 
+				skills: candidate.skills,
+			});
 		}
+		console.log(this.candidateForm);
 	}
 
 	redirectToImport(value: boolean): void {
@@ -377,6 +386,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	removeAvatar() {
 		this.avatar = undefined;
 		const input: HTMLElement = document.getElementById('avatar') as HTMLInputElement;
+		this.candidateForm.controls['Avatar'].setValue('');
 	}
 
 	prevDef(value, suggestions) {
@@ -478,7 +488,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	}
   
 	activeSet() {
-			this.active = true;
+		this.active = true;
 	}
 
 	activeUnSet() {
@@ -744,6 +754,90 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		industryRows.forEach(element => {
 			this._renderer.removeStyle(element, 'display');
 		});
+	}
+
+	setCVName(event) {
+		const ev = event;
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		reader.onload = (ev) => {
+			this.CV = file;
+		};
+		reader.readAsText(file);
+	}
+
+	setAttachments(event) {
+		const ev = event;
+		const file = event.target.files[0];
+		const reader = new FileReader();
+		reader.onload = (ev) => {
+			this.attachment = file;
+		};
+		reader.readAsText(file);
+	}
+
+	addPhone() {
+		this.candidateForm.addControl('Phone1', new FormControl ('', Validators.required));
+		this.newPhone = true;
+	}
+
+	addPrecense() {
+		const precenses = this.candidateForm.get('precenses') as FormArray;
+		precenses.push(this.createPrecense());
+	}
+
+	createPrecense(): FormGroup {
+		return this._formBuilder.group({
+		  socialWebPrecense: ''
+		});
+	}
+
+	sendForm() {
+		console.log(this.candidateForm);
+		if (this.candidateForm.controls['firstName'].errors) {
+			this.firstNameEmpty = true;
+		};
+		if (this.candidateForm.controls['lastName'].errors) {
+			this.lastNameEmpty = true;
+		};
+		if (this.candidateForm.controls['email'].errors) {
+			this.emailEmpty = true;
+		};
+		if (this.candidateForm.controls['Source'].errors) {
+			this.sourceEmpty = true;
+		};
+		if (this.candidateForm.invalid) return;
+
+		this.firstNameEmpty = false;
+		this.lastNameEmpty = false;
+		this.emailEmpty = false;
+		this.sourceEmpty = false;
+		
+		let formData = this.candidateForm.value;
+		formData['skills'] = this.selected;
+		formData['roles'] = this.selectedRoles;
+		formData['industries'] = this.selectedIndustries;
+		formData['experience'] = this.experience;
+		formData['education'] = this.educations;
+		formData['tags'] = this.tags;
+		formData['attachement'] = this.attachment;
+		formData['cv'] = this.CV;
+		console.log(formData);
+	}
+
+	cancelForm() {
+		this.closeModal();
+	}
+
+	removePhone1() {
+		this.candidateForm.removeControl('Phone1');
+		this.Phone1 = '';
+		this.newPhone = false;
+	}
+
+	removeWebPrecense(array, i) {
+		const precenses = this.candidateForm.get('precenses') as FormArray;
+		precenses.controls.splice(i, 1);
 	}
 
 	ngOnDestroy(): void {
