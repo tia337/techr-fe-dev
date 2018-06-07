@@ -25,7 +25,10 @@
           <img src="../../assets/img/invitation/bird.png" srcset="../../assets/img/invitation/bird@2x.png 2x, ../../assets/img/invitation/bird@3x.png 3x" class="bird-img">
         </div>
       </div>
-      <button *ngIf="loading == Loading.success" class="signup-button" type="button" (click)="signUp()">Join with LinkedIn</button>
+      <div *ngIf="loading == Loading.success">
+        <button class="signup-button" type="button" (click)="signUpWithLinkedin()">Join with LinkedIn</button>
+        <button class="signup-button" type="button" (click)="signUpWithMicrosoft()">Join with Microsoft</button>
+      </div>
     </div>
   </div>
 </section>

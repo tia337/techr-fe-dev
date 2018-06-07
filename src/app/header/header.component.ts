@@ -133,6 +133,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			}
 		});
 
+		// Microsoft login stuff, after redirect
+		if (window.location.href.includes('?code=')) {
+			const location = window.location.href;
+			const index = window.location.href.indexOf('?code=') + 6;
+			const code = location.slice(index, location.length);
+			console.log(`auth_code: ${code}`);
+
+			if (localStorage.getItem('branchdata')) {
+				let branchData = JSON.parse(localStorage.getItem('branchdata'));
+				localStorage.removeItem('branchData');
+				this._login.signUpWithMicrosoft(code, branchData);
+				return;
+			}
+			this._login.signInWithMicrosoft(code);
+		}
+
 	}
 
 	closeAdminMenu(event?) {

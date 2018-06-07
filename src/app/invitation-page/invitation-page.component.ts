@@ -35,8 +35,12 @@ export class InvitationPageComponent implements OnInit {
 		});
 	}
 
-	signUp() {
-		this._invitationPageService.signUp();
+	signUpWithLinkedin() {
+		this._invitationPageService.signUpWithLinkedin();
+	}
+
+	signUpWithMicrosoft() {
+		this._invitationPageService.signUpWithMicrosoft();
 	}
 
 	get Loading() {
