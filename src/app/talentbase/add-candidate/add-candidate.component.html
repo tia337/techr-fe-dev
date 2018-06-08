@@ -1,572 +1,598 @@
-<div class="modal-overlay">
-  <div class="modal">
-    <p class="modal__title" *ngIf="!cvUploaded">
-      Add candidate
-    </p>
-    <p class="modal__title" *ngIf="cvUploaded">
-      <span *ngIf="!candidateFormOpened">Enhance candidate information</span> 
-      <span *ngIf="candidateFormOpened">Add candidate</span>
-    </p>
-
-    <!-- WARNING BOX START -->
-
-    <div [hidden]="maxWarningHidden" class="max-warning-wrap" *ngIf="!loading && !cvUploaded"> 
-      <span>Maximum 5 CVs!</span>
-      <span>For bulk upload <span class="bold" style="text-decoration: underline; cursor: pointer;" (click)="redirectToImport(true)">go to bulk import</span></span>
-      <mat-icon (click)="maxWarningHidden = true" class="icon-close">clear</mat-icon>
-    </div>
+<div class="ngdialog modal modal--clean ngdialog--noClose ngdialog-disabled-animation">
+  <div class="ngdialog modal modal--clean ngdialog--noClose ngdialog-disabled-animation">
+    <div class="ngdialog-overlay"></div>
+    <div class="ngdialog-content">
+      <div class="modal--wide">
+        <p class="modal__title" *ngIf="!cvUploaded">
+          Add candidate
+        </p>
+        <p class="modal__title" style="display: flex; justify-content: center;" *ngIf="cvUploaded && uploadedCandidates.length > 0">
+          <span  style="display: flex; width: 100%; justify-content: space-between;">
+            <span style="flex-basis: 65%; justify-content: flex-end; display: flex;">Enhance candidate information</span> 
+            <span style="display: flex; flex-basis: 13%; background: #fafafa; justify-content: flex-end; color: #606060; padding: 0 10px;">
+              <span class="candidates-count">{{currentCandidateIndex}}/{{uploadedCandidates.length - 1}}</span> 
+              <p class="candidates-prev-next-buttons" style="margin-left: 5px;" *ngIf="uploadedCandidates.length === 2">
+                <span (click)="showPreviousCandidate(currentCandidateIndex)" style="margin-right: 5px;"><mat-icon style="transform: rotate(-180deg)">forward</mat-icon></span>
+                <span (click)="showNextCandidate(currentCandidateIndex)"><mat-icon>forward</mat-icon></span>
+              </p>
+            </span>
+          </span> 
+        </p>
+        <p class="modal__title" *ngIf="cvUploaded && uploadedCandidates.length === 0">
+          <span>Add candidate</span>
+        </p>
     
-    <!-- WARNING BOX END -->
+        <!-- WARNING BOX START -->
     
-    <!-- DROP BOX START -->
-
-    <ng4-files-drop [configId]="'files-config'" (filesSelect)="filesSelect($event)" *ngIf="!cvUploaded && !loading">
-      <div class="drop-box" [ngClass]="{'files-choosen': files.length > 0 }">
-        <span *ngIf="files.length === 0">Drop file here</span>
-        <mat-icon class="icon-cloud-upload" *ngIf="files.length === 0">move_to_inbox</mat-icon>
-        <div class="drop-box__files-list" *ngIf="files.length > 0">
-          <ol>
-            <li *ngFor="let file of files; let i = index;">
-              {{file.name}}
-              <mat-icon (click)="deleteCV(i, files); $event.stopPropagation();" class="icon-clear">cancel</mat-icon>
-            </li>
-          </ol>
+        <div [hidden]="maxWarningHidden" class="max-warning-wrap" *ngIf="!loading && !cvUploaded"> 
+          <span>Maximum 5 CVs!</span>
+          <span>For bulk upload <span class="bold" style="text-decoration: underline; cursor: pointer;" (click)="redirectToImport(true)">go to bulk import</span></span>
+          <mat-icon (click)="maxWarningHidden = true" class="icon-close">clear</mat-icon>
         </div>
-        <p class="upload-cvs-btn" 
-            *ngIf="files.length > 0"
-            (click)="uploadCVs(); $event.stopPropagation();">
-          Upload CVs
-          <mat-icon class="upload-cvs-btn-icon">cloud_upload</mat-icon>
-        </p>
-      </div>
-      <div class="assets-block">
-        <p class="assets-block__formats">
-          (PDF, WORD or Rich Text file)
-        </p>
-        <ng4-files-click [configId]="'files-config'" (filesSelect)="filesSelect($event)">
-            <p class="assets-block__upload-file-btn">Upload File</p>
-        </ng4-files-click>
-      </div>
-    </ng4-files-drop>
-    <p class="assets-block__fill-manually" *ngIf="!cvUploaded" (click)="cvUploaded = true; $event.stopPropagation();">Fill Manually</p>
-
-    <!-- DROP BOX END -->
-
-    <div class="spinner-wrap">
-      <mat-progress-spinner class="progress-spinner" *ngIf="loading && !cvUploaded"  mode="indeterminate"></mat-progress-spinner>
-    </div> 
-
-    <!-- CANDIDATE FORM START -->
-
-    <form action="" class="candidate-form" [formGroup]="candidateForm" (ngSubmit)="sendForm()"  *ngIf="cvUploaded">
-      <div class="row">
-        <p class="input-holder">
-          <span class="input-name">* First Name</span>
-          <input type="text" formControlName="firstName" name="firstName">
-          <small class="error" style="color: red; margin-top: 3px;" *ngIf="firstNameEmpty">This field is mandatory!</small>
-        </p>
-        <p class="input-holder">
-          <span class="input-name">* Last Name</span>          
-          <input type="text" formControlName="lastName" name="lastName">
-          <small class="error" style="color: red;" *ngIf="lastNameEmpty">This field is mandatory!</small>          
-        </p>
-      </div>
-      <div class="avatar">
-        <img *ngIf="!avatar" src="../../../assets/img/default-userpic.png" alt="">
-        <img *ngIf="avatar" [src]="avatar | sanitizer: 'url'" alt="">
-        <label for="avatar" *ngIf="uploadedCandidates.length > 0">Change avatar</label>
-        <label for="avatar" *ngIf="uploadedCandidates.length === 0 && avatar !== undefined">
-          Upload avatar
-        </label>
-        <span *ngIf="avatar" (click)="removeAvatar()">Remove avatar</span>
-        <input style="display: none;" id="avatar" #avatarInput (change)="changeAvatar($event, avatarInput)" type="file" formControlName="Avatar" name="avatar">
-      </div>
-      <div class="row">
-        <p class="input-holder">
-          <span class="input-name">Location</span>
-          <input type="text" formControlName="City" name="City">
-        </p>
-        <p class="input-holder">
-          <span class="input-name display-flex align-items-c">Phone Number <mat-icon *ngIf="!newPhone" style="margin-left: 10px; cursor: pointer; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPhone()">add</mat-icon></span>
-          <span> 
-            <input type="text" formControlName="Phone" name="Phone">
-          </span>
-          <span *ngIf="newPhone" style="display: flex; align-items: center; margin-top: 10px;">
-            <input type="text" #Phone1Input formControlName="Phone1" name="Phone1">
-            <mat-icon style="cursor: pointer;" (click)="removePhone1()">delete</mat-icon>
-            {{Phone1Input.value}}
-          </span>
-        </p>
-      </div>
-      <div class="row">
-        <p class="input-holder">
-          <span class="input-name">* Email</span>
-          <input type="email" formControlName="email" name="email">
-          <small class="error" style="color: red;" *ngIf="emailEmpty">This field is mandatory!</small>          
-        </p>
-        <p class="input-holder" formArrayName="precenses">
-            <span class="input-name">Social/Web precense <mat-icon style="margin-left: 10px; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPrecense()">add</mat-icon></span>
-            <span *ngFor="let precense of candidateForm.controls['precenses'].controls; let i = index;">
-              <span class="display-flex align-items-c"  [formGroupName]="i" style="margin-bottom: 5px;">
-                <input type="text" formControlName="socialWebPrecense" style="margin-bottom: 5px;">
-                <mat-icon class="icon-fz16" style="margin-left: 10px;" *ngIf="i !== 0" (click)="removeWebPrecense(candidateForm.controls['precenses'].controls, i)">clear</mat-icon>
+        
+        <!-- WARNING BOX END -->
+        
+        <!-- DROP BOX START -->
+    
+        <ng4-files-drop [configId]="'files-config'" (filesSelect)="filesSelect($event)" *ngIf="!cvUploaded && !loading">
+          <div class="drop-box" [ngClass]="{'files-choosen': files.length > 0 }">
+            <span *ngIf="files.length === 0">Drop file here</span>
+            <mat-icon class="icon-cloud-upload" *ngIf="files.length === 0">move_to_inbox</mat-icon>
+            <div class="drop-box__files-list" *ngIf="files.length > 0">
+              <ol>
+                <li *ngFor="let file of files; let i = index;">
+                  {{file.name}}
+                  <mat-icon (click)="deleteCV(i, files); $event.stopPropagation();" class="icon-clear">cancel</mat-icon>
+                </li>
+              </ol>
+            </div>
+            <p class="upload-cvs-btn" 
+                *ngIf="files.length > 0"
+                (click)="uploadCVs(); $event.stopPropagation();">
+              Upload CVs
+              <mat-icon class="upload-cvs-btn-icon">cloud_upload</mat-icon>
+            </p>
+          </div>
+          <div class="assets-block">
+            <p class="assets-block__formats">
+              (PDF, WORD or Rich Text file)
+            </p>
+            <ng4-files-click [configId]="'files-config'" (filesSelect)="filesSelect($event)">
+                <p class="assets-block__upload-file-btn">Upload Files</p>
+            </ng4-files-click>
+          </div>
+        </ng4-files-drop>
+        <div class="display-flex justify-content-c">
+          <p class="assets-block__fill-manually" style="min-width: 122px;" *ngIf="!cvUploaded && !loading" (click)="cvUploaded = true; $event.stopPropagation();">Fill Manually</p>
+        </div>
+    
+        <!-- DROP BOX END -->
+    
+        <div class="spinner-wrap">
+          <mat-progress-spinner class="progress-spinner" *ngIf="loading && !cvUploaded"  mode="indeterminate"></mat-progress-spinner>
+        </div> 
+    
+        <!-- CANDIDATE FORM START -->
+    
+        <form action="" class="candidate-form" [formGroup]="candidateForm"  *ngIf="cvUploaded">
+          <div class="row">
+            <p class="input-holder">
+              <span class="input-name">* First Name</span>
+              <input type="text" (keydown)="checkFields()" formControlName="firstName" name="firstName">
+              <small class="error" style="color: red; margin-top: 3px;" *ngIf="firstNameEmpty">This field is mandatory!</small>
+            </p>
+            <p class="input-holder">
+              <span class="input-name">* Last Name</span>          
+              <input type="text" (keydown)="checkFields()" formControlName="lastName" name="lastName">
+              <small class="error" style="color: red;" *ngIf="lastNameEmpty">This field is mandatory!</small>          
+            </p>
+          </div>
+          <div class="avatar">
+            <img *ngIf="!avatar" src="../../../assets/img/default-userpic.png" alt="">
+            <img *ngIf="avatar" [src]="avatar | sanitizer: 'url'" alt="">
+            <label for="avatar" *ngIf="uploadedCandidates.length > 0">Change avatar</label>
+            <label for="avatar" *ngIf="cvUploaded && uploadedCandidates.length === 0">
+              Upload avatar
+            </label>
+            <span *ngIf="avatar" (click)="removeAvatar()">Remove avatar</span>
+            <input style="display: none;" id="avatar" #avatarInput (change)="changeAvatar($event, avatarInput)" type="file" formControlName="avatarURL" name="avatar">
+          </div>
+          <div class="row">
+            <p class="input-holder">
+              <span class="input-name">Location</span>
+              <input type="text" formControlName="location" name="location">
+            </p>
+            <p class="input-holder">
+              <span class="input-name display-flex align-items-c">Phone Number <mat-icon *ngIf="!newPhone" style="margin-left: 10px; cursor: pointer; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPhone()">add</mat-icon></span>
+              <span> 
+                <input type="text" formControlName="Phone" name="Phone">
               </span>
-          </span>
-        </p>
-      </div>
-      <div class="row source-add-candidate-talentdb"> 
-        <p class="input-holder">
-          <span class="input-name">* Source</span>
-          <mat-form-field class="source-select">
-            <mat-select placeholder="Select source" [(ngModel)]="source" formControlName="Source">
-              <mat-option *ngFor="let source of sourceItems" [value]="source">
-                {{source.name}}
-              </mat-option> 
-            </mat-select>
-          </mat-form-field>
-          <small class="error" style="color: red;" *ngIf="sourceEmpty">This field is mandatory!</small>                    
-        </p>
-        <p class="input-holder" *ngIf="source && source.name === 'Online JobBoard'">
-          <span class="input-name">* Job Board</span>
-          <mat-form-field class="source-select">
-            <mat-select placeholder="Select source" formControlName="JobBoard">
-              <mat-option *ngFor="let board of jobBoards" [value]="board">
-                {{board.name}}
-              </mat-option> 
-            </mat-select>
-          </mat-form-field>
-        </p>
-      </div>
-      <div class="row">
-        <p class="input-holder">
-          <span class="input-name">Add To Job</span>
-          <input type="text" formControlName="Job">
-        </p>
-        <p class="input-holder">
-          <span class="input-name">Stage</span>
-          <input type="text" formControlName="Stage">
-        </p>
-      </div>
-      <div class="row">
-        <div class="container" style="display: flex;">
-          <mat-form-field>
-              <input matInput placeholder="Skills" [(ngModel)]="query" formControlName="skills" (keydown)="prevDef($event, skillsdsuggestions)" (blur)="activeUnSet()" (keyup)="keyPressing($event)" autocomplete="off">
-          </mat-form-field>
-          <label class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); dropdownVisible = !dropdownVisible; dropdownRolesVisible = false; dropdownIndustriesVisible = false;">
-            <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownVisible" [ngModelOptions]="{standalone: true}" />
-            <div class="arrow-button" >
-              <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>
-            </div>
-          </label>
-  
-          <!-- ROLES INPUT -->
-  
-          <mat-form-field style="margin: 0 15px; margin-right: 25px;">
-              <input matInput placeholder="Roles" [(ngModel)]="queryRoles" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'role', rolessuggestions)" (blur)="activeRolesUnSet()" (keyup)="keyRnIPressing($event, 'role')" autocomplete="off">
-          </mat-form-field>
-  
-          <label class="arrow-button-group" (click)="activeDropdown('roles',rolesdropdown, $event);  dropdownVisible  = false; dropdownRolesVisible = !dropdownRolesVisible; dropdownIndustriesVisible = false;">
-            <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownRolesVisible" [ngModelOptions]="{standalone: true}"  />
-            <div class="arrow-button" style="margin-left: -55px;">
-              <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>
-            </div>
-          </label>
-  
-          <!-- INDUSTRIES INPUT -->
-  
-          <mat-form-field>
-              <input matInput placeholder="Industries" [(ngModel)]="queryIndustries" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'industry', industriessuggestions)" (blur)="activeIndustriesUnSet()" (keyup)="keyRnIPressing($event, 'industry')"
-                 autocomplete="off">
-          </mat-form-field>
-  
-          <label class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event); dropdownIndustriesVisible = !dropdownIndustriesVisible; dropdownRolesVisible = false; dropdownVisible = false;">
-            <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownIndustriesVisible" [ngModelOptions]="{standalone: true}" />
-            <div class="arrow-button">
-              <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>              
-            </div>
-          </label>
-  
-          <!-- SKILLS SUGGESTIONS -->
-          <!--  -->
-          <div #skillsdsuggestions>
-              <div class="suggestions" *ngIf="filteredList.length > 0 && active == true">
-                  <div class="suggestions-skills-wrap">
-                      <table cellpadding="0" cellspacing="0" border="0">
-                          <tr class="header">
-                              <th class="skill-header">Skill</th>
-                              <th class="experience-header">Experience Level (years)</th>
-                              <th class="category-header">Skill Area</th>
-                          </tr>
-                      </table>
-                      <div class="inner-area" #scrollpanel>
+              <span *ngIf="newPhone" style="display: flex; align-items: center; margin-top: 10px;">
+                <input type="text" #Phone1Input formControlName="Phone1" name="Phone1">
+                <mat-icon style="cursor: pointer;" (click)="removePhone1()">delete</mat-icon>
+                {{Phone1Input.value}}
+              </span>
+            </p>
+          </div>
+          <div class="row">
+            <p class="input-holder">
+              <span class="input-name">* Email</span>
+              <input type="email" formControlName="email" (keydown)="checkFields()" name="email">
+              <small class="error" style="color: red;" *ngIf="emailEmpty">This field is mandatory!</small>          
+            </p>
+            <p class="input-holder" formArrayName="WebSites">
+                <span class="input-name">Social/Web precense <mat-icon style="margin-left: 10px; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPrecense()">add</mat-icon></span>
+                <span *ngFor="let precense of candidateForm.controls['WebSites'].controls; let i = index;">
+                  <span class="display-flex align-items-c"  [formGroupName]="i" style="margin-bottom: 5px;">
+                    <input type="text" formControlName="Url"  placeholder="Url" style="margin-bottom: 5px;">
+                    <input type="text" formControlName="Type" placeholder="Type" style="margin-bottom: 5px;">                    
+                    <mat-icon class="icon-fz16" style="margin-left: 10px;" *ngIf="i !== 0" (click)="removeWebPrecense(candidateForm.controls['WebSites'].controls, i)">clear</mat-icon>
+                  </span>
+              </span>
+            </p>
+          </div>
+          <div class="row source-add-candidate-talentdb"> 
+            <p class="input-holder">
+              <span class="input-name">* Source</span>
+              <mat-form-field class="source-select">
+                <mat-select (blur)="checkFields()" placeholder="Select source" (change)="checkSource(source); checkFields(); checkInitialCandidateProperties()" [(ngModel)]="source" formControlName="Source">
+                  <mat-option *ngFor="let source of sourceItems" [value]="source">
+                    {{source.name}}
+                  </mat-option> 
+                </mat-select>
+              </mat-form-field>
+              <small class="error" style="color: red;" *ngIf="sourceEmpty">This field is mandatory!</small>                    
+            </p>
+            <p class="input-holder" *ngIf="source && source.name === 'Online JobBoard'">
+              <span class="input-name">* Job Board</span>
+              <mat-form-field class="source-select" >
+                <mat-select placeholder="Select source" (blur)="checkFields()" (change)="checkInitialCandidateProperties(); checkFields()" formControlName="JobBoard">
+                  <mat-option *ngFor="let board of jobBoards" [value]="board">
+                    {{board.name}}
+                  </mat-option> 
+                </mat-select>
+              </mat-form-field>
+              <small class="error" style="color: red;" *ngIf="jobBoardEmpty">This field is mandatory!</small>                                  
+            </p>
+          </div>
+          <div class="row">
+            <p class="input-holder">
+              <span class="input-name">Add To Job</span>
+              <input type="text" formControlName="Job">
+            </p>
+            <p class="input-holder">
+              <span class="input-name">Stage</span>
+              <input type="text" formControlName="Stage">
+            </p>
+          </div>
+          <div class="row">
+            <div class="container" style="display: flex;">
+              <mat-form-field>
+                  <input matInput placeholder="Skills" formControlName="Skills" [(ngModel)]="query" (keydown)="prevDef($event, skillsdsuggestions)" (blur)="activeUnSet()" (keyup)="keyPressing($event)" autocomplete="off">
+              </mat-form-field>
+              <label class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); dropdownVisible = !dropdownVisible; dropdownRolesVisible = false; dropdownIndustriesVisible = false;">
+                <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownVisible" [ngModelOptions]="{standalone: true}" />
+                <div class="arrow-button" >
+                  <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>
+                </div>
+              </label>
+      
+              <!-- ROLES INPUT -->
+              
+              <mat-form-field style="margin: 0 15px; margin-right: 25px;">
+                  <input matInput placeholder="Roles" [(ngModel)]="queryRoles" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'role', rolessuggestions)" (blur)="activeRolesUnSet()" (keyup)="keyRnIPressing($event, 'role')" autocomplete="off">
+              </mat-form-field>
+              <label class="arrow-button-group" (click)="activeDropdown('roles',rolesdropdown, $event);  dropdownVisible  = false; dropdownRolesVisible = !dropdownRolesVisible; dropdownIndustriesVisible = false;">
+                <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownRolesVisible" [ngModelOptions]="{standalone: true}"  />
+                <div class="arrow-button" style="margin-left: -55px;">
+                  <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>
+                </div>
+              </label>
+      
+              <!-- INDUSTRIES INPUT -->
+      
+              <mat-form-field>
+                  <input matInput placeholder="Industries" [(ngModel)]="queryIndustries" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'industry', industriessuggestions)" (blur)="activeIndustriesUnSet()" (keyup)="keyRnIPressing($event, 'industry')"
+                     autocomplete="off">
+              </mat-form-field>
+      
+              <label class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event); dropdownIndustriesVisible = !dropdownIndustriesVisible; dropdownRolesVisible = false; dropdownVisible = false;">
+                <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownIndustriesVisible" [ngModelOptions]="{standalone: true}" />
+                <div class="arrow-button">
+                  <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>              
+                </div>
+              </label>
+      
+              <!-- SKILLS SUGGESTIONS -->
+              <!--  -->
+              <div #skillsdsuggestions>
+                  <div class="suggestions" *ngIf="filteredList.length > 0 && active == true">
+                      <div class="suggestions-skills-wrap">
                           <table cellpadding="0" cellspacing="0" border="0">
-                              <tr class="items-container" [ngClass]="{'container-selected': i == selectionCounter}" *ngFor="let item of filteredList; let i = index" (mouseenter)="selectionCounter = i" (click)="selectSkill(item, expPosition); $event.stopPropagation();">
-                                  <td class="name">
-                                      <a *ngIf="i != selectionCounter" class="item">{{item.get("title")}}</a>
-                                      <a *ngIf="i == selectionCounter" class="item-selected">{{item.get("title")}}</a>
-                                  </td>
-                                  <td class="experience" *ngIf="i == selectionCounter">
-                                      <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 1" [ngClass]="{'selected-exp': expPosition == 1}">any</span>
-                                      <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 2" [ngClass]="{'selected-exp': expPosition == 2}">+3</span>
-                                      <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 3" [ngClass]="{'selected-exp': expPosition == 3}">+5</span>
-                                  </td>
-                                  <td class="experience" *ngIf="i != selectionCounter">
-                                      <span class="exp">any</span>
-                                      <span class="exp">+3</span>
-                                      <span class="exp">+5</span>
-                                  </td>
-                                  <td class="category">
-                                      <a *ngFor="let cat of categories">
-                                          <a *ngFor="let c of item.get('categories'); let first = first">
-                                              <a *ngIf="first && c == cat.id">{{cat.get('title')}}</a>
-                                          </a>
-                                      </a>
-                                  </td>
+                              <tr class="header">
+                                  <th class="skill-header">Skill</th>
+                                  <th class="experience-header">Experience Level (years)</th>
+                                  <th class="category-header">Skill Area</th>
                               </tr>
                           </table>
-                      </div>
-                  </div>
-              </div>
-          </div>
-  
-          <!-- ROLES SUGGESTIONS -->
-          <div #rolessuggestions>
-              <div class="suggestions suggestions-roles" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForRoles == true">
-                  <div class="suggestions-roles-wrap">
-                      <div class="inner-area" #scrollpanel>
-                          <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectRole(item)">
-                              <td class="name">
-                                  <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
-                                  <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
-                              </td>
-                          </tr>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <!-- INDUSTRIES SUGGESTIONS -->
-  
-          <div #industriessuggestions>
-              <div class="suggestions suggestions-industries" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForIndustries == true">
-                  <div class="suggestions-industries-wrap">
-                      <div class="inner-area" #scrollpanel>
-                          <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectIndustry(item)">
-                              <td class="name">
-                                  <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
-                                  <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
-                              </td>
-                          </tr>
-                      </div>
-                  </div>
-              </div>
-          </div>
-  
-          <!-- SKILLS DROPDOWN -->
-          <div #skillsdropdown>
-              <div class="dropdown-wrap" *ngIf="dropdownVisible === true">
-                  <div class="categories-wrap" (clickOutside)="dropdownVisible = false; log('a'); $event.stopPropagation()" [delayClickOutsideInit]="true">
-                      <div class="category-wrap" *ngFor="let category of categories; let i = index">
-                          <div *ngIf="category" class="category-title" (click)="getCategorySkills(i); activeSkillsCategory = category.get('title')">
-                              {{category.get('title')}}
+                          <div class="inner-area" #scrollpanel>
+                              <table cellpadding="0" cellspacing="0" border="0">
+                                  <tr class="items-container" [ngClass]="{'container-selected': i == selectionCounter}" *ngFor="let item of filteredList; let i = index" (mouseenter)="selectionCounter = i" (click)="selectSkill(item, expPosition); $event.stopPropagation(); checkInitialCandidatePropertiesArrays();">
+                                      <td class="name">
+                                          <a *ngIf="i != selectionCounter" class="item">{{item.get("title")}}</a>
+                                          <a *ngIf="i == selectionCounter" class="item-selected">{{item.get("title")}}</a>
+                                      </td>
+                                      <td class="experience" *ngIf="i == selectionCounter">
+                                          <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 1" [ngClass]="{'selected-exp': expPosition == 1}">any</span>
+                                          <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 2" [ngClass]="{'selected-exp': expPosition == 2}">+3</span>
+                                          <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 3" [ngClass]="{'selected-exp': expPosition == 3}">+5</span>
+                                      </td>
+                                      <td class="experience" *ngIf="i != selectionCounter">
+                                          <span class="exp">any</span>
+                                          <span class="exp">+3</span>
+                                          <span class="exp">+5</span>
+                                      </td>
+                                      <td class="category">
+                                          <a *ngFor="let cat of categories">
+                                              <a *ngFor="let c of item.get('categories'); let first = first">
+                                                  <a *ngIf="first && c == cat.id">{{cat.get('title')}}</a>
+                                              </a>
+                                          </a>
+                                      </td>
+                                  </tr>
+                              </table>
                           </div>
-                          <div #categoryTitles class="skills-wrap"></div>
                       </div>
                   </div>
               </div>
-          </div>
-  
-          <!-- ROLES DROPDOWN -->
-          <div #rolesdropdown>
-              <div class="dropdown-wrap dropdown-roles" *ngIf="dropdownRolesVisible === true">
-                  <div class="roles-wrap" (clickOutside)="dropdownRolesVisible = false" [delayClickOutsideInit]="true">
-                      <div>
-                          <div class="role-wrap" *ngFor="let item of roles; let i = index" (click)="prevDfSelecting($event)">
-                              <div *ngIf="item" class="item-title" (click)="prevDfSelecting($event); selectRole(item)">
+      
+              <!-- ROLES SUGGESTIONS -->
+              <div #rolessuggestions>
+                  <div class="suggestions suggestions-roles" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForRoles == true">
+                      <div class="suggestions-roles-wrap">
+                          <div class="inner-area" #scrollpanel>
+                              <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectRole(item); checkInitialCandidatePropertiesArrays();">
+                                  <td class="name">
+                                      <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
+                                      <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
+                                  </td>
+                              </tr>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- INDUSTRIES SUGGESTIONS -->
+      
+              <div #industriessuggestions>
+                  <div class="suggestions suggestions-industries" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForIndustries == true">
+                      <div class="suggestions-industries-wrap">
+                          <div class="inner-area" #scrollpanel>
+                              <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectIndustry(item); checkInitialCandidatePropertiesArrays();">
+                                  <td class="name">
+                                      <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
+                                      <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
+                                  </td>
+                              </tr>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+      
+              <!-- SKILLS DROPDOWN -->
+              <div #skillsdropdown>
+                  <div class="dropdown-wrap" *ngIf="dropdownVisible === true">
+                      <div class="categories-wrap" (clickOutside)="dropdownVisible = false; log('a'); $event.stopPropagation()" [delayClickOutsideInit]="true">
+                          <div class="category-wrap" *ngFor="let category of categories; let i = index">
+                              <div *ngIf="category" class="category-title" (click)="getCategorySkills(i); activeSkillsCategory = category.get('title')">
+                                  {{category.get('title')}}
+                              </div>
+                              <div #categoryTitles class="skills-wrap"></div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+      
+              <!-- ROLES DROPDOWN -->
+              <div #rolesdropdown>
+                  <div class="dropdown-wrap dropdown-roles" *ngIf="dropdownRolesVisible === true">
+                      <div class="roles-wrap" (clickOutside)="dropdownRolesVisible = false" [delayClickOutsideInit]="true">
+                          <div>
+                              <div class="role-wrap" *ngFor="let item of roles; let i = index" (click)="prevDfSelecting($event)">
+                                  <div *ngIf="item" class="item-title" (click)="prevDfSelecting($event); selectRole(item); checkInitialCandidatePropertiesArrays();">
+                                      {{item.get('title')}}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+      
+              <!-- INDUSTRIES DROPDOWN -->
+              <div #industriesdropdown>
+                  <div class="dropdown-wrap dropdown-industries" *ngIf="dropdownIndustriesVisible === true">
+                      <div class="roles-wrap" (clickOutside)="dropdownIndustriesVisible = false" [delayClickOutsideInit]="true">
+                          <div class="role-wrap" *ngFor="let item of industries; let i = index">
+                              <div *ngIf="item" class="item-title" (click)="selectIndustry(item); checkInitialCandidatePropertiesArrays();">
                                   {{item.get('title')}}
                               </div>
                           </div>
                       </div>
                   </div>
               </div>
+              
+            </div>
           </div>
-  
-          <!-- INDUSTRIES DROPDOWN -->
-          <div #industriesdropdown>
-              <div class="dropdown-wrap dropdown-industries" *ngIf="dropdownIndustriesVisible === true">
-                  <div class="roles-wrap" (clickOutside)="dropdownIndustriesVisible = false" [delayClickOutsideInit]="true">
-                      <div class="role-wrap" *ngFor="let item of industries; let i = index">
-                          <div *ngIf="item" class="item-title" (click)="selectIndustry(item)">
-                              {{item.get('title')}}
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          
-        </div>
-      </div>
-      <div class="row">
-        <p class="input-holder">
-          <span class="input-name">Skills selected</span>
-          <span *ngIf="selected.length === 0" class="no-selected-roles-skills-industries-title">No skills selected</span>                    
-          <span *ngIf="selected.length > 0" class="display-flex" style="flex-direction: column;">
-            <span *ngFor="let item of selected" class="display-flex align-items-c">
-              <span style="font-size: 12px;">{{item.get('skill').get('title')}}</span>
-              <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 1">any</span>
-              <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 2">3+</span>
-              <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 3">5+</span>
-              <mat-icon class="icon-fz16" (click)="remove(item)">clear</mat-icon>
-            </span>
-          </span>
-        </p>
-        <p class="input-holder">
-          <span class="input-name">Roles selected</span>
-          <span *ngIf="selectedRoles.length === 0" class="no-selected-roles-skills-industries-title">No roles selected</span>          
-          <span class="display-flex" style="flex-direction: column;" *ngIf="selectedRoles.length > 0">
-              <span *ngFor="let item of selectedRoles" class="display-flex align-items-c">
-                {{item.get('title')}} <mat-icon class="icon-fz16" (click)="roleRemove(item)">clear</mat-icon>
-              </span>            
-          </span>
-        </p>
-        <p class="input-holder">
-          <span class="input-name">Industries selected</span>
-          <span *ngIf="selectedIndustries.length === 0" class="no-selected-roles-skills-industries-title">No industries selected</span>
-          <span *ngIf="selectedIndustries.length > 0">
-            <span *ngFor="let item of selectedIndustries">
-                <span class="display-flex align-items-c">
-                  {{item.get('title')}}
-                  <mat-icon class="icon-fz16" (click)="industryRemove(item)">clear</mat-icon>
-                </span>              
-            </span>
-          </span>
-        </p>
-      </div>
-      <span class="see-less-more-btn" (click)="seeMore = true" *ngIf="!seeMore">See More</span>
-      <span class="see-less-more-btn" (click)="seeMore = false" *ngIf="seeMore">See Less</span>
-      <div *ngIf="seeMore">
-        <div class="row form-row">
-          <div class="title-holder">
-            <h2 class="big-title">Experience</h2>          
-            <span class="add-property" *ngIf="!experienceFormOpened" (click)="buildExperienceForm(); $event.stopPropagation();">Add experience <mat-icon  class="icon-add">add</mat-icon></span>
-          </div>
-          <div class="property-form" *ngIf="experienceFormOpened" (ngSubmit)="addExperience()" [formGroup]="experienceForm">
-            <input type="hidden" formControlName="id">
+          <div class="row" style="margin-bottom: 20px;">
             <p class="input-holder">
-              <span class="input-title">Job Title</span>
-              <input type="text" required placeholder="Job Title" formControlName="jobTitle">
+              <span class="input-name">Skills selected</span>
+              <span *ngIf="selected.length === 0" class="no-selected-roles-skills-industries-title">No skills selected</span>                    
+              <span *ngIf="selected.length > 0" class="display-flex" style="flex-flow: row wrap;">
+                <span *ngFor="let item of selected" class="display-flex align-items-c selected-skill">
+                  <span style="font-size: 12px;">{{item.get('skill').get('title')}}</span>
+                  <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 1">any</span>
+                  <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 2">3+</span>
+                  <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 3">5+</span>
+                  <mat-icon class="icon-fz16" (click)="remove(item); checkInitialCandidatePropertiesArrays();">clear</mat-icon>
+                </span>
+              </span>
             </p>
-            <div class="double-inputs-holder">
-              <p class="input-holder">
-                <span class="input-title">Company Name</span>
-                <input type="text" placeholder="Company Name" formControlName="companyName">
-              </p>
-              <p class="input-holder">
-                <span class="input-title">Location</span>
-                <input type="text" placeholder="Location" formControlName="location">
-              </p>
-            </div>
-            <div class="input-holder dates">
-              <p>
-                <span class="input-name date">Date from</span>
-                <span class="form-field-holder"> 
-                  <mat-form-field class="year-select">
-                    <mat-select placeholder="Month" formControlName="monthDateFrom">
-                      <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  <mat-form-field >
-                    <mat-select placeholder="Year" formControlName="yearDateFrom">
-                      <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+            <p class="input-holder" style="margin: 0 55px;">
+              <span class="input-name">Roles selected</span>
+              <span *ngIf="selectedRoles.length === 0" class="no-selected-roles-skills-industries-title">No roles selected</span>          
+              <span class="display-flex" style="flex-direction: column;" *ngIf="selectedRoles.length > 0">
+                  <span *ngFor="let item of selectedRoles" class="display-flex align-items-c">
+                    {{item.get('title')}} <mat-icon class="icon-fz16" (click)="roleRemove(item); checkInitialCandidatePropertiesArrays();">clear</mat-icon>
+                  </span>            
+              </span>
+            </p>
+            <p class="input-holder">
+              <span class="input-name">Industries selected</span>
+              <span *ngIf="selectedIndustries.length === 0" class="no-selected-roles-skills-industries-title">No industries selected</span>
+              <span *ngIf="selectedIndustries.length > 0">
+                <span *ngFor="let item of selectedIndustries">
+                    <span class="display-flex align-items-c">
+                      {{item.get('title')}}
+                      <mat-icon class="icon-fz16" (click)="industryRemove(item)">clear</mat-icon>
+                    </span>              
                 </span>
-              </p>
-              <p style="margin-left: 10px;">
-                <span class="input-name date">Date to</span>
-                <span class="form-field-holder"> 
-                  <mat-form-field class="year-select">
-                    <mat-select placeholder="Month" formControlName="monthDateTo">
-                      <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  <mat-form-field>
-                    <mat-select placeholder="Year" formControlName="yearDateTo">
-                      <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </span>
-              </p>
-            </div>
-              <p class="input-holder">
-                <span class="input-name">Currently works here</span>
-                <input style="width: auto!important;" type="checkbox" formControlName="currentlyWorks">
-              </p>
-              <p class="input-holder">
-                <span class="input-name">Description</span>
-                <textarea formControlName="description" cols="30" rows="10"></textarea>
-              </p>
-            <div class="buttons-holder">
-              <button class="add-experience-btn" *ngIf="experienceForm.value.id === null" (click)="addExperience(); $event.stopPropagation();" type="button">Add experience</button>
-              <button class="add-experience-btn" *ngIf="experienceForm.value.id !== null" (click)="addExperience(); $event.stopPropagation();" type="button">Save experience</button>            
-              <button class="cancel-experience-btn" type="button" (click)="experienceForm.reset(); experienceFormOpened = false;">Cancel</button>
-            </div>
+              </span>
+            </p>
           </div>
-          <div class="experience-holder" *ngIf="experience.length > 0">
-            <div *ngFor="let exp of experience; let i = index;" class="experience-item">
-                <span class="experience-date" *ngIf="!exp.hidden" style="flex-basis: 30%;">
-                  <span style="margin-bottom: 5px;">
-                    <span *ngIf="exp.monthDateFrom !== null">{{exp.monthDateFrom}}&nbsp;</span>
-                    <span *ngIf="exp.yearDateFrom !== null">{{exp.yearDateFrom}}&nbsp;</span>
-                    -
-                    <span *ngIf="exp.monthDateTo !== null">{{exp.monthDateTo}}</span>
-                    <span *ngIf="exp.yearDateTo !== null">{{exp.yearDateTo}}</span>
-                  </span>
-                  <span class="experience-location" *ngIf="exp.location !== null">{{exp.location}}</span>
-                </span>
-                <p class="holder" *ngIf="!exp.hidden" style="flex-basis: 30%;">
-                  <span class="experience-job-title">{{exp.jobTitle}}</span>
-                  <span class="experience-company-name" *ngIf="exp.companyName !== null">{{exp.companyName}}</span>
-                  <span *ngIf="exp.description !== null" class="experience-description">{{exp.description}}</span>
-                </p>
-                <div class="buttons-edit-delete" *ngIf="!exp.hidden" style="flex-basis: 30%;">
-                  <button class="edit-experience" type="button" (click)="editExperienceItem(exp)">Edit</button> 
-                  &nbsp;|&nbsp;
-                  <button class="delete-experience"  type="button" (click)="deleteExperienceItem(i, experience)">Delete</button>              
-                </div>
-            </div>
-          </div>
-        </div>
-        <div class="row form-row">
-            <div class="title-holder">
-              <h2 class="big-title">Education</h2>          
-              <span class="add-property" *ngIf="!educationFormOpened" (click)="buildEducationForm(); $event.stopPropagation();">Add education <mat-icon  class="icon-add">add</mat-icon></span>
-            </div>
-            <div class="property-form" *ngIf="educationFormOpened" (ngSubmit)="addEducation()" [formGroup]="educationForm">
-              <input type="hidden" formControlName="id">
-              <div class="double-inputs-holder">
+          <span class="see-less-more-btn" (click)="seeMore = !seeMore">See <span *ngIf="seeMore">Less</span><span *ngIf="!seeMore">More</span></span>
+          <div *ngIf="seeMore">
+            <div class="row form-row">
+              <div class="title-holder">
+                <h2 class="big-title">Experience</h2>          
+                <span class="add-property" *ngIf="!experienceFormOpened" (click)="buildExperienceForm(); $event.stopPropagation();">Add experience <mat-icon  class="icon-add">add</mat-icon></span>
+              </div>
+              <div class="property-form" *ngIf="experienceFormOpened" (ngSubmit)="addExperience(); checkInitialCandidateProperties();" [formGroup]="experienceForm">
+                <input type="hidden" formControlName="id">
                 <p class="input-holder">
-                  <span class="input-title">School / Institution</span>
-                  <input type="text" required placeholder="School / Institution" formControlName="schoolInstitutionName">
+                  <span class="input-title">Job Title</span>
+                  <input type="text" required placeholder="Job Title" formControlName="jobTitle">
                 </p>
-                <p class="input-holder">
+                <div class="double-inputs-holder">
+                  <p class="input-holder">
+                    <span class="input-title">Company Name</span>
+                    <input type="text" placeholder="Company Name" formControlName="companyName">
+                  </p>
+                  <p class="input-holder">
                     <span class="input-title">Location</span>
                     <input type="text" placeholder="Location" formControlName="location">
                   </p>
-              </div>
-              <div class="double-inputs-holder">
-                <p class="input-holder">
-                  <span class="input-title">Degree</span>
-                  <input type="text" placeholder="Degree" formControlName="degree">
-                </p>
-                <p class="input-holder">
-                  <span class="input-title">Major</span>
-                  <input type="text" placeholder="Major" formControlName="major">
-                </p>
-              </div>
-              <div class="input-holder dates">
-                <p>
-                  <span class="input-name date">Date from</span>
-                  <span class="form-field-holder"> 
-                    <mat-form-field class="year-select">
-                      <mat-select placeholder="Month" formControlName="monthDateFrom">
-                        <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                    <mat-form-field >
-                      <mat-select placeholder="Year" formControlName="yearDateFrom">
-                        <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </span>
-                </p>
-                <p style="margin-left: 10px;">
-                  <span class="input-name date">Date to</span>
-                  <span class="form-field-holder"> 
-                    <mat-form-field class="year-select">
-                      <mat-select placeholder="Month" formControlName="monthDateTo">
-                        <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                    <mat-form-field>
-                      <mat-select placeholder="Year" formControlName="yearDateTo">
-                        <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </span>
-                </p>
-              </div>
-                <p class="input-holder">
-                  <span class="input-name">Currently attends</span>
-                  <input style="width: auto!important;" type="checkbox" formControlName="currentlyAttends">
-                </p>
-                <p class="input-holder">
-                  <span class="input-name">Description</span>
-                  <textarea formControlName="description" cols="30" rows="10"></textarea>
-                </p>
-              <div class="buttons-holder">
-                <button class="add-experience-btn" *ngIf="educationForm.value.id === null" (click)="addEducation(); $event.stopPropagation();" type="button">Add experience</button>
-                <button class="add-experience-btn" *ngIf="educationForm.value.id !== null" (click)="addEducation(); $event.stopPropagation();" type="button">Save experience</button>            
-                <button class="cancel-experience-btn" type="button" (click)="educationForm.reset(); educationFormOpened = false;">Cancel</button>
-              </div>
-            </div>
-            <div class="experience-holder" *ngIf="educations.length > 0">
-              <div *ngFor="let education of educations; let i = index;" class="experience-item">
-                  <span class="experience-date" *ngIf="!education.hidden" style="flex-basis: 30%;">
-                    <span style="margin-bottom: 5px;">
-                      <span *ngIf="education.monthDateFrom !== null">{{education.monthDateFrom}}&nbsp;</span>
-                      <span *ngIf="education.yearDateFrom !== null">{{education.yearDateFrom}}&nbsp;</span>
-                      -
-                      <span *ngIf="education.monthDateTo !== null">{{education.monthDateTo}}</span>
-                      <span *ngIf="education.yearDateTo !== null">{{education.yearDateTo}}</span>
+                </div>
+                <div class="input-holder dates">
+                  <p>
+                    <span class="input-name date">Date from</span>
+                    <span class="form-field-holder"> 
+                      <mat-form-field class="year-select">
+                        <mat-select placeholder="Month" formControlName="monthDateFrom">
+                          <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field >
+                        <mat-select placeholder="Year" formControlName="yearDateFrom">
+                          <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
                     </span>
-                    <span class="experience-location" *ngIf="education.location !== null">{{education.location}}</span>
-                  </span>
-                  <p class="holder" *ngIf="!education.hidden" style="flex-basis: 30%;">
-                    <span class="experience-job-title">{{education.schoolInstitutionName}}</span>
-                    <span class="experience-company-name" *ngIf="education.degree !== null">{{education.degree}} <span *ngIf="education.major !== null">of {{education.major}}</span></span>
-                    <span class="experience-description">{{education.description}}</span>
                   </p>
-                  <div class="buttons-edit-delete" *ngIf="!education.hidden" style="flex-basis: 30%;">
-                    <button class="edit-experience" type="button" (click)="editEducationItem(education)">Edit</button> 
-                    &nbsp;|&nbsp;
-                    <button class="delete-experience" type="button" (click)="deleteExperienceItem(i, educations)">Delete</button>              
-                  </div>
+                  <p style="margin-left: 10px;">
+                    <span class="input-name date">Date to</span>
+                    <span class="form-field-holder"> 
+                      <mat-form-field class="year-select">
+                        <mat-select placeholder="Month" formControlName="monthDateTo">
+                          <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field>
+                        <mat-select placeholder="Year" formControlName="yearDateTo">
+                          <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </span>
+                  </p>
+                </div>
+                  <p class="input-holder">
+                    <span class="input-name">Currently works here</span>
+                    <input style="width: auto!important;" type="checkbox" formControlName="currentlyWorks">
+                  </p>
+                  <p class="input-holder">
+                    <span class="input-name">Description</span>
+                    <textarea formControlName="description" cols="30" rows="10"></textarea>
+                  </p>
+                <div class="buttons-holder">
+                  <button class="add-experience-btn" *ngIf="experienceForm.value.id === null" (click)="addExperience(); checkInitialCandidateProperties(); $event.stopPropagation();" type="button">Add experience</button>
+                  <button class="add-experience-btn" *ngIf="experienceForm.value.id !== null" (click)="addExperience(); checkInitialCandidateProperties(); $event.stopPropagation();" type="button">Save experience</button>            
+                  <button class="cancel-experience-btn" type="button" (click)="experienceForm.reset(); experienceFormOpened = false;">Cancel</button>
+                </div>
+              </div>
+              <div class="experience-holder" *ngIf="experience.length > 0">
+                <div *ngFor="let exp of experience; let i = index;" class="experience-item">
+                    <span class="experience-date" *ngIf="!exp.hidden" style="flex-basis: 30%;">
+                      <span style="margin-bottom: 5px;">
+                        <span *ngIf="exp.monthDateFrom !== null">{{exp.monthDateFrom}}&nbsp;</span>
+                        <span *ngIf="exp.yearDateFrom !== null">{{exp.yearDateFrom}}&nbsp;</span>
+                        -
+                        <span *ngIf="exp.monthDateTo !== null">{{exp.monthDateTo}}</span>
+                        <span *ngIf="exp.yearDateTo !== null">{{exp.yearDateTo}}</span>
+                      </span>
+                      <span class="experience-location" *ngIf="exp.location !== null">{{exp.location}}</span>
+                    </span>
+                    <p class="holder" *ngIf="!exp.hidden" style="flex-basis: 30%;">
+                      <span class="experience-job-title">{{exp.jobTitle}}</span>
+                      <span class="experience-company-name" *ngIf="exp.companyName !== null">{{exp.companyName}}</span>
+                      <span *ngIf="exp.description !== null" class="experience-description">{{exp.description}}</span>
+                    </p>
+                    <div class="buttons-edit-delete" *ngIf="!exp.hidden" style="flex-basis: 30%;">
+                      <button class="edit-experience" type="button" (click)="editExperienceItem(exp)">Edit</button> 
+                      &nbsp;|&nbsp;
+                      <button class="delete-experience"  type="button" (click)="deleteExperienceItem(i, experience); checkInitialCandidateProperties();">Delete</button>              
+                    </div>
+                </div>
               </div>
             </div>
-        </div>
-        <div class="row">
-          <div class="title-holder">
-            <h2 class="big-title">Tags</h2>      
-            <input type="text" style="margin-right: 10px;" placeholder="Add tag" #addTagInput (keydown.enter)="addTag(addTagInput.value); addTagInput.value = '';">
-          </div>
-          <div class="tags-holder" *ngIf="tags.length > 0">
-            <span class="tag" *ngFor="let tag of tags; let i = index;">{{tag}}<mat-icon (click)="tags.splice(i, 1)">clear</mat-icon></span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="title-holder">
-            <h2 class="big-title">Attachments</h2>
-            <label for="attachments" class="add-property cv-input" (click)="$event.stopPropagation()">Attach file<mat-icon  class="icon-add">add</mat-icon></label>
-            <span class="CVName" *ngIf="attachment !== undefined">{{attachment.name}}<mat-icon class="icon-fz18 icon" (click)="attachmentInput.value = ''; attachment = '';">clear</mat-icon></span>            
-            <input *ngIf="attachment === undefined" id="attachments" #attachmentInput (change)="setAttachments($event)" accept=".pdf, .doc, .docx, .img, .jpg, .png" type="file" style="display: none;">
-          </div>
-        </div>
-        <div class="row">
-            <div class="title-holder">
-              <h2 class="big-title">CV File</h2>      
-              <label *ngIf="CV === undefined" for="cv" class="add-property cv-input" (click)="$event.stopPropagation()">Upload files <mat-icon  class="icon-add">add</mat-icon></label>
-              <span class="CV" *ngIf="CV !== undefined">{{CV.name}}<mat-icon class="icon-fz18 icon" (click)="CVInput.value = ''; CV = '';">clear</mat-icon></span>
-              <input id="cv" #CVInput (change)="setCVName($event)" accept=".pdf, .doc, .docx" type="file" style="display: none;">
+            <div class="row form-row">
+                <div class="title-holder">
+                  <h2 class="big-title">Education</h2>          
+                  <span class="add-property" *ngIf="!educationFormOpened" (click)="buildEducationForm(); $event.stopPropagation();">Add education <mat-icon  class="icon-add">add</mat-icon></span>
+                </div>
+                <div class="property-form" *ngIf="educationFormOpened" (ngSubmit)="addEducation(); checkInitialCandidateProperties();" [formGroup]="educationForm">
+                  <input type="hidden" formControlName="id">
+                  <div class="double-inputs-holder">
+                    <p class="input-holder">
+                      <span class="input-title">School / Institution</span>
+                      <input type="text" required placeholder="School / Institution" formControlName="schoolInstitutionName">
+                    </p>
+                    <p class="input-holder">
+                        <span class="input-title">Location</span>
+                        <input type="text" placeholder="Location" formControlName="location">
+                      </p>
+                  </div>
+                  <div class="double-inputs-holder">
+                    <p class="input-holder">
+                      <span class="input-title">Degree</span>
+                      <input type="text" placeholder="Degree" formControlName="degree">
+                    </p>
+                    <p class="input-holder">
+                      <span class="input-title">Major</span>
+                      <input type="text" placeholder="Major" formControlName="major">
+                    </p>
+                  </div>
+                  <div class="input-holder dates">
+                    <p>
+                      <span class="input-name date">Date from</span>
+                      <span class="form-field-holder"> 
+                        <mat-form-field class="year-select">
+                          <mat-select placeholder="Month" formControlName="monthDateFrom">
+                            <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field >
+                          <mat-select placeholder="Year" formControlName="yearDateFrom">
+                            <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </span>
+                    </p>
+                    <p style="margin-left: 10px;">
+                      <span class="input-name date">Date to</span>
+                      <span class="form-field-holder"> 
+                        <mat-form-field class="year-select">
+                          <mat-select placeholder="Month" formControlName="monthDateTo">
+                            <mat-option (click)="$event.stopPropagation()" [value]="month" *ngFor="let month of months">{{month}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field>
+                          <mat-select placeholder="Year" formControlName="yearDateTo">
+                            <mat-option (click)="$event.stopPropagation()" [value]="year" *ngFor="let year of years">{{year}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </span>
+                    </p>
+                  </div>
+                    <p class="input-holder">
+                      <span class="input-name">Currently attends</span>
+                      <input style="width: auto!important;" type="checkbox" formControlName="currentlyAttends">
+                    </p>
+                    <p class="input-holder">
+                      <span class="input-name">Description</span>
+                      <textarea formControlName="description" cols="30" rows="10"></textarea>
+                    </p>
+                  <div class="buttons-holder">
+                    <button class="add-experience-btn" *ngIf="educationForm.value.id === null" (click)="addEducation(); checkInitialCandidateProperties(); $event.stopPropagation();" type="button">Add experience</button>
+                    <button class="add-experience-btn" *ngIf="educationForm.value.id !== null" (click)="addEducation(); checkInitialCandidateProperties(); $event.stopPropagation();" type="button">Save experience</button>            
+                    <button class="cancel-experience-btn" type="button" (click)="educationForm.reset(); educationFormOpened = false;">Cancel</button>
+                  </div>
+                </div>
+                <div class="experience-holder" *ngIf="educations.length > 0">
+                  <div *ngFor="let education of educations; let i = index;" class="experience-item">
+                      <span class="experience-date" *ngIf="!education.hidden" style="flex-basis: 30%;">
+                        <span style="margin-bottom: 5px;">
+                          <span *ngIf="education.monthDateFrom !== null">{{education.monthDateFrom}}&nbsp;</span>
+                          <span *ngIf="education.yearDateFrom !== null">{{education.yearDateFrom}}&nbsp;</span>
+                          -
+                          <span *ngIf="education.monthDateTo !== null">{{education.monthDateTo}}</span>
+                          <span *ngIf="education.yearDateTo !== null">{{education.yearDateTo}}</span>
+                        </span>
+                        <span class="experience-location" *ngIf="education.location !== null">{{education.location}}</span>
+                      </span>
+                      <p class="holder" *ngIf="!education.hidden" style="flex-basis: 30%;">
+                        <span class="experience-job-title">{{education.schoolInstitutionName}}</span>
+                        <span class="experience-company-name" *ngIf="education.degree !== null">{{education.degree}} <span *ngIf="education.major !== null">of {{education.major}}</span></span>
+                        <span class="experience-description">{{education.description}}</span>
+                      </p>
+                      <div class="buttons-edit-delete" *ngIf="!education.hidden" style="flex-basis: 30%;">
+                        <button class="edit-experience" type="button" (click)="editEducationItem(education)">Edit</button> 
+                        &nbsp;|&nbsp;
+                        <button class="delete-experience" type="button" (click)="deleteExperienceItem(i, educations); checkInitialCandidateProperties();">Delete</button>              
+                      </div>
+                  </div>
+                </div>
             </div>
-        </div>
-      </div>
-      <div class="form-buttons">
-        <button type="submit" class="send-add-candidate-form" (click)="sendForm(); $event.stopPropagation();">Add Candidate</button>
-        <button type="button" class="cancel-add-candidate-form" (click)="cancelForm(); $event.stopPropagation();">Cancel</button>
-      </div>
-    </form>
-
-    <!-- CANDIDATE FORM END -->
+            <div class="row">
+              <div class="title-holder">
+                <h2 class="big-title">Tags</h2>      
+                <input type="text" style="margin-right: 10px;" placeholder="Add tag" #addTagInput (keydown.enter)="addTag(addTagInput.value); addTagInput.value = ''; checkInitialCandidateProperties();">
+              </div>
+              <div class="tags-holder" *ngIf="tags.length > 0">
+                <span class="tag" *ngFor="let tag of tags; let i = index;">{{tag}}<mat-icon (click)="tags.splice(i, 1)">clear</mat-icon></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="title-holder">
+                <h2 class="big-title">Attachments</h2>
+                <label for="attachments" class="add-property cv-input" (click)="$event.stopPropagation()">Attach file<mat-icon  class="icon-add">add</mat-icon></label>
+                <span class="CVName" *ngIf="attachment !== undefined">{{attachment.name}}<mat-icon class="icon-fz18 icon" (click)="attachmentInput.value = ''; attachment = '';">clear</mat-icon></span>            
+                <input *ngIf="attachment === undefined" id="attachments" #attachmentInput (change)="setAttachments($event); checkInitialCandidateProperties();" accept=".pdf, .doc, .docx, .img, .jpg, .png" type="file" style="display: none;">
+              </div>
+            </div>
+            <div class="row">
+                <div class="title-holder">
+                  <h2 class="big-title">CV File</h2>      
+                  <label *ngIf="CV === undefined" for="cv" class="add-property cv-input" (click)="$event.stopPropagation()">Upload files <mat-icon  class="icon-add">add</mat-icon></label>
+                  <span class="CV" *ngIf="CV !== undefined">{{CV.name}}<mat-icon class="icon-fz18 icon" (click)="CVInput.value = ''; CV = '';">clear</mat-icon></span>
+                  <input id="cv" #CVInput (change)="setCVName($event); checkInitialCandidateProperties();" accept=".pdf, .doc, .docx" type="file" style="display: none;">
+                </div>
+            </div>
+          </div>
+          <div class="form-buttons" *ngIf="cvUploaded && uploadedCandidates.length === 0">
+            <button type="button" class="send-add-candidate-form" (click)="sendForm(); $event.stopPropagation();">Add Candidate</button>
+            <button type="button" class="cancel-add-candidate-form" (click)="cancelForm(); $event.stopPropagation();">Cancel</button>
+          </div>
+          <div class="form-buttons display-flex justify-content-sb" *ngIf="cvUploaded && uploadedCandidates.length > 0" >
+            <span>
+              <button type="button" [disabled]="disabledCandidateSaveChanges" [ngClass]="{'disabled': disabledCandidateSaveChanges}" class="send-add-candidate-form" (click)="saveCandidate(); $event.stopPropagation();">Save Changes</button>
+              <button type="button" class="cancel-add-candidate-form" (click)="removeCandidate(); $event.stopPropagation();">Remove Candidate</button>
+            </span>
+            <span>
+              <button type="button" [disabled]="!disabledCandidateSaveChanges" [ngClass]="{'disabled': !disabledCandidateSaveChanges}" class="send-add-candidate-form" (click)="saveCandidate(); $event.stopPropagation();">Confirm Candidates </button>
+            </span>
+          </div>
+        </form>
     
+        <!-- CANDIDATE FORM END -->
+      </div>
+    </div>
   </div>
 </div>

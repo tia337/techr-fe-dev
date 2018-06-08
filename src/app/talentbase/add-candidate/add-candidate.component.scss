@@ -2,37 +2,101 @@
 @import '../../../styles/variables.scss';
 @import '../../../styles/mixins';
 
-.modal-overlay {
+
+.modal {
     position: fixed;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
-    width: 100vw;
-    height: 100%;
-    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.6);
+    top: 0;
+    background: #000;
+    background: rgba(0,0,0,0.5);
+    overflow-x: hidden;
     overflow-y: auto;
     z-index: 999;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    * {
-        transition: .3s all ease-in-out;
-    }
+}
+
+.modal--clean {
+    background: transparent!important;
+}
+
+.alignment--vertical:after, .modal:after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.ngdialog-overlay {
+    background: rgba(0,0,0,0.4);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    -webkit-backface-visibility: hidden;
+}
+
+.ngdialog--noClose>.ngdialog-content {
+    width: 100%;
+}
+
+.ngdialog-content {
+    display: inline-block;
+    position: relative;
+    z-index: 21;
+}
+
+.modal-dialog {
+    background: #fafafa;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 30px 0;
+    outline: 0;
+    position: relative;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.modal--wide {
+    max-width: 900px;
+    width: 84%;
+    background: #fafafa;
+    margin: 40px auto;
+}
+
+.modal-overlay {
+    // position: fixed;
+    // display: flex;
+    // flex-direction: row;
+    // align-items: flex-start;
+    // justify-content: center;
+    // width: 100vw;
+    // height: 100%;
+    // top: 0;
+    // bottom: 0;
+    // left: 0;
+    // right: 0;
+    // background-color: rgba(0, 0, 0, 0.6);
+    // overflow-y: auto;
+    // z-index: 999;
+    // -webkit-box-align: center;
+    // -ms-flex-align: center;
+    // align-items: center;
+    // * {
+    //     transition: .3s all ease-in-out;
+    // }
 }   
 
 .modal {
-    background: #fafafa;
-    padding: 0 0 25px;
-    z-index: 999999;
-    position: relative;
-    border: 1px solid #fafafa;
-    min-width: 50%;
-    max-width: 75%;
+    // background: #fafafa;
+    // padding: 0 0 25px;
+    // z-index: 999999;
+    // position: relative;
+    // border: 1px solid #fafafa;
+    // min-width: 50%;
+    // max-width: 75%;
     &__title {
         font-size: 20px;
         padding: 10px 10px;
@@ -169,6 +233,7 @@ mat-icon {
         border: 1px solid transparent;
         transition: .3s all ease-in-out;
         margin-bottom: 10px;
+        min-width: 122px;
         &:hover {
             color: #50a047;
             border: 1px solid #50a047;
@@ -201,6 +266,7 @@ mat-icon {
     justify-content: center;
     text-align: center;
     margin-top: 20px;
+    padding-bottom: 20px;
     .mat-progress-spinner circle,
     .mat-spinner circle {
         stroke: #13579a!important;
@@ -287,6 +353,7 @@ mat-icon {
 .candidate-form {
     position: relative;
     padding-right: 60px;
+    padding-bottom: 15px;
     .avatar {
         position: absolute;
         margin-right: 20px;
@@ -460,6 +527,7 @@ mat-icon {
  }
 
 
+
  .property-form {
     margin-top: 15px;
     background: #d6d6d6;
@@ -529,7 +597,7 @@ mat-icon {
 
 .dropdown-industries {
     .roles-wrap {
-        top: 35rem!important;
+        top: 28rem!important;
         left: 29.2rem!important;
     }
 }
@@ -553,7 +621,7 @@ mat-icon {
         padding: 15px 10px;
         background-color: $white;
         z-index: 99;
-        top: 35rem;
+        top: 28rem;
         left: 15.2rem;
         .role-wrap {
             cursor: pointer;
@@ -574,7 +642,7 @@ mat-icon {
         padding: 15px 10px;
         background-color: $white;
         z-index: 101;
-        top: 35rem;
+        top: 28rem;
         left: 1.2rem;
         .category-wrap {
             cursor: pointer;
@@ -687,7 +755,7 @@ mat-icon {
         background: white;
         position: absolute;
         border: 1px solid rgb(219, 217, 217);
-        top: 35rem;        
+        top: 32em;        
         left: 13.2rem;
         z-index: 999;
     }
@@ -696,7 +764,7 @@ mat-icon {
         position: absolute;
         z-index: 999;
         border: 1px solid rgb(219, 217, 217);
-        top: 35rem;        
+        top: 32em;        
         left: 13.2rem;
     }
     .suggestions-industries-wrap {
@@ -704,7 +772,7 @@ mat-icon {
         position: absolute;
         z-index: 999;
         border: 1px solid rgb(219, 217, 217);
-        top: 35rem;        
+        top: 32rem;        
         left: 13.2rem;
     }
     table {
@@ -790,6 +858,7 @@ mat-icon {
     color: #13579a;
     cursor: pointer;
     margin-left: 20px;
+    font-size: 18px;
 }
 
 .selected-items-container {
@@ -969,7 +1038,6 @@ mat-icon {
     margin-top: 20px;
     padding-top: 20px;
     padding-left: 20px;
-    border-top: 1px solid;
     .send-add-candidate-form {
         background: #4f9f48;
         padding: 5px 10px;
@@ -977,7 +1045,14 @@ mat-icon {
         border: none;
         outline: none;
         margin-right: 15px;
-        font-size: 15px
+        font-size: 15px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        &:hover {
+            color: #4f9f48;
+            border: 1px solid #4f9f48;
+            background: #fff;
+        }
     }
     .cancel-add-candidate-form {
         background: red;
@@ -986,6 +1061,25 @@ mat-icon {
         border: none;
         outline: none;
         margin-right: 15px;
-        font-size: 15px
+        font-size: 15px;
+        border: 1px solid transparent;        
+        cursor: pointer;
+        &:hover {
+            color: red;
+            border: 1px solid red;
+            background: #fff;
+        }
     }
+}
+
+.selected-skill {
+    width: 49%;
+    &:nth-child(odd) {
+        padding-right: 2px;
+    }
+}
+
+.disabled {
+    opacity: .5!important;
+    cursor: not-allowed!important;
 }
