@@ -82,8 +82,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-
-
 		if (localStorage.getItem('theme')) {
 			const theme = localStorage.getItem('theme');
 			if (theme === 'old') {
@@ -132,22 +130,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				// });
 			}
 		});
-
-		// Microsoft login stuff, after redirect
-		if (window.location.href.includes('?code=')) {
-			const location = window.location.href;
-			const index = window.location.href.indexOf('?code=') + 6;
-			const code = location.slice(index, location.length);
-			console.log(`auth_code: ${code}`);
-
-			if (localStorage.getItem('branchdata')) {
-				let branchData = JSON.parse(localStorage.getItem('branchdata'));
-				localStorage.removeItem('branchData');
-				this._login.signUpWithMicrosoft(code, branchData);
-				return;
-			}
-			this._login.signInWithMicrosoft(code);
-		}
 
 	}
 
@@ -203,7 +185,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	signInWithLinkedin() {
-		this._login.signIn().then(user => {
+		this._login.signIn()
+		.then(user => {
 			if (!user.has('Client_Pointer')) {
 				this._root_vcr.clear();
 				this._root_vcr.createComponent(ConfirmationAlertComponent);
@@ -212,7 +195,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	signInWithMicrosoft() {
-		this._parse.execCloud('getAuthUrl', {}).then(authUrl => {
+		this._parse.execCloud('getAuthUrl', {})
+		.then(authUrl => {
 			window.location.href = authUrl;
 		});
 	}
