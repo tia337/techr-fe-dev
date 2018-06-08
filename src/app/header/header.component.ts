@@ -82,8 +82,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-
-
 		if (localStorage.getItem('theme')) {
 			const theme = localStorage.getItem('theme');
 			if (theme === 'old') {
@@ -187,7 +185,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	signInWithLinkedin() {
-		this._login.signIn().then(user => {
+		this._login.signIn()
+		.then(user => {
 			if (!user.has('Client_Pointer')) {
 				this._root_vcr.clear();
 				this._root_vcr.createComponent(ConfirmationAlertComponent);
@@ -196,7 +195,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	signInWithMicrosoft() {
-		this._parse.execCloud('getAuthUrl', {}).then(authUrl => {
+		this._parse.execCloud('getAuthUrl', {})
+		.then(authUrl => {
 			window.location.href = authUrl;
 		});
 	}

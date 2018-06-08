@@ -13,12 +13,7 @@ import { Subject } from 'rxjs/Subject';
 import * as md5 from 'crypto-js/md5';
 import { environment } from './../environments/environment';
 
-// import * as env2 from 'env2';
-
 import { IUser } from '../../imports/interfaces';
-
-// import { ConfirmationAlertComponent } from './confirmation-alert/confirmation-alert.component';
-
 
 @Injectable()
 export class Parse {
@@ -32,12 +27,7 @@ export class Parse {
 	public confirmEmail = new EventEmitter();
 
 	constructor(private _router: Router) {
-		// const env = new env2('../../env.json');
-		// console.log(env);
 		this._Parse = parse;
-		// this._Parse.initialize(process.env.APP_ID);
-		// this._Parse.serverURL = process.env.SERVER_URL;
-
 		this._Parse.initialize(environment.APP_ID);
 		this._Parse.serverURL = environment.SERVER_URL;
 
