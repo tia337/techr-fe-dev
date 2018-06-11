@@ -24,6 +24,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	public loading: boolean = false;
 	public cvUploaded: boolean = false;
 	public uploadedCandidates = [];
+	public currentCandidate;
 	public candidateForm: FormGroup;
 	public experienceForm: FormGroup;
 	public educationForm: FormGroup;
@@ -76,11 +77,14 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	public jobBoardEmpty = false;
 	public currentCandidateIndex = 1;
 	public disabledCandidateSaveChanges = true;
+	public experienceJobTitleEmpty = false;
+	public educationTitleEmpty = false;
+	public fileAttachmentsRangeError = false;
 
 	@ViewChild('scrollpanel', { read: ElementRef }) public panel: ElementRef;
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
 	@ViewChild('categoriesDropdown') categoriesDropdown: ElementRef;
-	
+	@ViewChild('avatarInput') avatarInput: ElementRef;
   
 	constructor(
 		private _root_vcr: RootVCRService,
@@ -136,7 +140,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		this.experienceFormOpened = true;
 		this.experienceForm = this._formBuilder.group({
 			id: undefined,
-			jobTitle: undefined,
+			jobTitle: this._formBuilder.control('', Validators.required),
 			companyName: undefined,
 			location: undefined,
 			yearDateFrom: undefined,
@@ -146,13 +150,21 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			currentlyWorks: undefined,
 			description: undefined
 		});
+		this.experienceForm.valueChanges.subscribe(value => {
+			if (this.experienceForm.controls['jobTitle'].value !== '') {
+				this.experienceJobTitleEmpty = false; 
+			};
+			if (this.experienceForm.controls['jobTitle'].value === '') {
+				this.experienceJobTitleEmpty = true; 
+			};
+		});
 	}
 
 	buildEducationForm(): void {
 		this.educationFormOpened = true;
 		this.educationForm = this._formBuilder.group({
 			id: undefined,
-			schoolInstitutionName: undefined,
+			schoolInstitutionName: this._formBuilder.control('', Validators.required),
 			degree: undefined,
 			major: undefined,
 			location: undefined,
@@ -163,10 +175,21 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			currentlyAttends: undefined,
 			description: undefined
 		});
+		this.educationForm.valueChanges.subscribe(value => {
+			if (this.educationForm.controls['schoolInstitutionName'].value !== '') {
+				this.educationTitleEmpty = false; 
+			};
+			if (this.educationForm.controls['schoolInstitutionName'].value === '') {
+				this.educationTitleEmpty = true; 
+			};
+		});
 	}
 
 	addExperience(): void {
-		console.log(this.experienceForm.value.id);
+		if (this.experienceForm.invalid) {
+			this.experienceJobTitleEmpty = true;
+			return;
+		};
 		if (this.experienceForm.value.id !== null) {
 			this.experience.forEach(item => {
 				if (item.id === this.experienceForm.value.id) {
@@ -184,7 +207,9 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			});
 			this.experienceFormOpened = false;	
 			this.experienceForm.reset();	
-			this.experience.forEach(item => item.hidden = false);				
+			this.experience.forEach(item => item.hidden = false);
+			this.disabledCandidateSaveChanges = false;
+			this.experienceJobTitleEmpty = false;
 			return;
 		} else if (this.experienceForm.value.id === null) {
 			const experience: Experience = {
@@ -201,13 +226,19 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 				hidden: false
 			};
 			this.experience.push(experience);
+			console.log(this.uploadedCandidates[this.currentCandidateIndex]['experience']);
 			this.experienceFormOpened = false;
 			this.experienceForm.reset();
+			this.disabledCandidateSaveChanges = false;	
+			this.experienceJobTitleEmpty = false;
 		}
 	}
 
 	addEducation() {
-		console.log(this.educationForm.value.id);
+		if (this.educationForm.invalid) {
+			this.educationTitleEmpty = true;
+			return;
+		};
 		if (this.educationForm.value.id !== null) {
 			this.educations.forEach(item => {
 				if (item.id === this.educationForm.value.id) {
@@ -226,7 +257,9 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			});
 			this.educationFormOpened = false;	
 			this.educationForm.reset();	
-			this.educations.forEach(item => item.hidden = false);				
+			this.educations.forEach(item => item.hidden = false);	
+			this.disabledCandidateSaveChanges = false;
+			this.educationTitleEmpty = false;
 			return;
 		} else if (this.educationForm.value.id === null) {
 			const education: Education = {
@@ -246,6 +279,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			this.educations.push(education);
 			this.educationFormOpened = false;
 			this.educationForm.reset();
+			this.disabledCandidateSaveChanges = false;
+			this.educationTitleEmpty = false;
 		}
 	}
 
@@ -294,6 +329,16 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	disableEmptyTitleWarning(titleName, event) {
+		if (titleName === true) {
+			if (event.target.value !== '') {
+				titleName = false;
+			} else {
+				titleName = true;
+			}
+		}
+	}
+
 	closeModal(): void {
 		this._root_vcr.clear();
 	}
@@ -324,43 +369,90 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 					this.uploadedCandidates.push('');
 					this.buildForm(candidate);
 					this.fillCandidatesForm(candidate);
+					this.currentCandidate = this.uploadedCandidates[this.currentCandidateIndex];
 				} 
 				this.uploadedCandidates.push(candidate);
+				this.addPropertiesArrays();
+				console.log(this.uploadedCandidates, 'UPLOADED CANDIDATES');
 			});
 	}
 
 	fillCandidatesForm(candidate) {
+		console.log(candidate);
+		this.educations = [];
+		this.tags = [];
 		if (candidate.skills) this.selected = candidate.skills.slice();
 		if (candidate.roles) this.selectedRoles = candidate.roles.slice();
+		if (candidate.experience) {
+			this.experience = candidate.experience.slice();
+		} else {
+			this.experience = [];
+		};
+		if (candidate.educations) {
+			this.educations = candidate.educations.slice();
+		} else {
+			this.educations = [];
+		}
+		if (candidate.tags) {
+			this.tags = candidate.tags.slice();
+		} else {
+			this.tags = [];
+		}
+		if (candidate.attachment) {
+			this.attachment = candidate.attachment;
+		} else {
+			
+		}
 	}
 
-
 	showPreviousCandidate(index) {
+		this.newPhone = false;
+		this.removePhone1('noDelete');
+		this.avatar = undefined;
 		if (index - 1 >= 1) {
 			index--;
 			this.currentCandidateIndex--;
+			if (this.uploadedCandidates[index].avatarFile !== undefined  || this.uploadedCandidates[index].avatarFile !== '') {
+				this.avatar = this.uploadedCandidates[index].avatarFile;
+			}
 			this.buildForm(this.uploadedCandidates[index]);
 			this.fillCandidatesForm(this.uploadedCandidates[index]);
+			this.currentCandidate = this.uploadedCandidates[this.currentCandidateIndex];
 		} else if (index === 0) {
 			this.currentCandidateIndex = 1;
+			if (this.uploadedCandidates[index].avatarFile !== undefined  || this.uploadedCandidates[index].avatarFile !== '') {
+				this.avatar = this.uploadedCandidates[index].avatarFile;
+			}
 			this.buildForm(this.uploadedCandidates[1]);
 			this.fillCandidatesForm(this.uploadedCandidates[1]);
+			this.currentCandidate = this.uploadedCandidates[this.currentCandidateIndex];
 		};
 		this.disabledCandidateSaveChanges = true;
 	}
 
 	showNextCandidate(index) {
+		this.newPhone = false;
+		this.removePhone1('noDelete');
+		this.avatar = undefined;
 		if (index + 1 < this.uploadedCandidates.length) {
 			index++;
 			this.currentCandidateIndex++;	
+			if (this.uploadedCandidates[index].avatarFile !== undefined || this.uploadedCandidates[index].avatarFile !== '') {
+				this.avatar = this.uploadedCandidates[index].avatarFile;
+			}
 			this.buildForm(this.uploadedCandidates[index]);
-			this.fillCandidatesForm(this.uploadedCandidates[index]);			
+			this.fillCandidatesForm(this.uploadedCandidates[index]);	
+			this.currentCandidate = this.uploadedCandidates[this.currentCandidateIndex];
 		};
 		if (index + 1 === this.uploadedCandidates.length) {
 			index++;
 			this.currentCandidateIndex = index - 1;	
+			if (this.uploadedCandidates[index].avatarFile !== undefined || this.uploadedCandidates[index].avatarFile !== '') {
+				this.avatar = this.uploadedCandidates[index].avatarFile;
+			}
 			this.buildForm(this.uploadedCandidates[this.uploadedCandidates.length - 1]);
 			this.fillCandidatesForm(this.uploadedCandidates[this.uploadedCandidates.length - 1]);
+			this.currentCandidate = this.uploadedCandidates[this.currentCandidateIndex];
 		};
 		this.disabledCandidateSaveChanges = true;
 	}
@@ -373,37 +465,46 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 				location: undefined,
 				avatarURL: undefined,
 				Phone: undefined,
-				Phone2: undefined,
 				email: this._formBuilder.control('', Validators.required),
 				WebSites: this._formBuilder.array([ this.createPrecense() ]),
-				Source: this._formBuilder.control('', Validators.required),
-				JobBoard: undefined,
-				Job: undefined,
-				Stage: undefined,
+				source: this._formBuilder.control('', Validators.required),
+				jobBoard: undefined,
+				job: undefined,
+				stage: undefined,
 				Skills: undefined
 			});
 		};
 		if (candidate) {
-			this.addPropertiesArrays();
 			this.candidateForm.removeControl('WebSites');
 			this.candidateForm.setValue({
-				firstName: candidate.firstName,
-				lastName:  candidate.lastName,
-				avatarURL: candidate.avatarURL ? candidate.avatarURL : '',
+				firstName: candidate.firstName ? candidate.firstName : '',
+				lastName: candidate.lastName ? candidate.lastName : '',
+				avatarURL: '',
 				location: candidate.location ? candidate.location : '',
 				Phone: candidate.Phone ? candidate.Phone : '',
-				Phone2: candidate.Phone2 ? candidate.Phone1 : '',
-				email: candidate.email,
-				Source: '',
-				JobBoard: '',        
-				Job: '',
-				Stage: '', 
-				Skills:  ''
+				email: candidate.email ? candidate.email : '',
+				source: candidate.source ? candidate.source : '',
+				jobBoard: candidate.jobBoard ? candidate.jobBoard : '',
+				job: candidate.job ? candidate.job : '',
+				stage: candidate.stage ? candidate.stage : '',
+				Skills: '',
 			});
+			console.log(this.candidateForm);
+			this.candidateForm.controls['jobBoard'].setValue({ source: null });
 			this.candidateForm.addControl('WebSites', this._formBuilder.array([ this.createPrecense(candidate) ]));
+			if (candidate.WebSites.length > 1) {
+				for (let i = 1; i < candidate.WebSites.length; i++) {
+					const WebSites = this.candidateForm.controls['WebSites'] as FormArray;
+					WebSites.push(this._formBuilder.group({ Type: candidate.WebSites[i].Type, Url: candidate.WebSites[i].Url}));
+				}
+			}
 			this.candidateForm.valueChanges.subscribe(values => {
 				this.checkInitialCandidateProperties(this.currentCandidateIndex, values);
 			});
+			this.disabledCandidateSaveChanges = true;
+			if (candidate.Phone1) {
+				this.addPhone(candidate.Phone1);
+			}
 		}
 	}
 
@@ -423,7 +524,20 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	changeAvatar(event, avatarInput): void {
+	paginateAvatar(file) {
+		const reader = new FileReader();
+		reader.onload = (file: any) => {
+			this.avatar = file;
+		}
+		reader.readAsDataURL(file);
+		this.avatar = file;
+	}
+
+	changeAv() {
+
+	}
+
+	changeAvatar(event?): void {
 		const reader = new FileReader();
 		reader.onload = (event: any) => {
 			this.avatar = event.target.result;
@@ -433,8 +547,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 
 	removeAvatar() {
 		this.avatar = undefined;
-		const input: HTMLElement = document.getElementById('avatar') as HTMLInputElement;
-		this.candidateForm.controls['Avatar'].setValue('');
+		this.candidateForm.controls['avatarURL'].reset();
 	}
 
 	prevDef(value, suggestions) {
@@ -654,7 +767,6 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 				} else {
 					return;
 				}
-
 			});
 
 			categorySkills.forEach(skill => {
@@ -824,9 +936,19 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		reader.readAsText(file);
 	}
 
-	addPhone() {
-		this.candidateForm.addControl('Phone1', new FormControl ('', Validators.required));
+	addPhone(phone?) {
+		if (phone) {
+			this.candidateForm.addControl('Phone1', new FormControl (phone, Validators.required));
+		} else {
+			this.candidateForm.addControl('Phone1', new FormControl ('', Validators.required));
+		};
+		this.candidateForm.updateValueAndValidity();
 		this.newPhone = true;
+		if (phone) {
+			this.uploadedCandidates[this.currentCandidateIndex]['Phone1'] = phone;
+			return;
+		}
+		this.uploadedCandidates[this.currentCandidateIndex]['Phone1'] = '';
 	}
 
 	addPrecense() {
@@ -836,10 +958,10 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 
 	createPrecense(candidate?): FormGroup {
 		if (candidate) {
-			return this._formBuilder.group({
-			  Type: candidate.WebSites.Type ? candidate.WebSites.Type : '',
-			  Url: candidate.WebSites.Url ? candidate.WebSites.Url : ''
-			});
+			return	this._formBuilder.group({
+					Type: new FormControl(candidate.WebSites[0].Type),
+					Url: new FormControl(candidate.WebSites[0].Url) 
+				});
 		};
 		if (!candidate) {
 			return this._formBuilder.group({
@@ -859,10 +981,10 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		if (this.candidateForm.controls['email'].errors) {
 			this.emailEmpty = true;
 		};
-		if (this.candidateForm.controls['Source'].errors) {
+		if (this.candidateForm.controls['source'].errors) {
 			this.sourceEmpty = true;
 		};
-		if (this.candidateForm.controls['JobBoard'].errors) {
+		if (this.candidateForm.controls['jobBoard'].errors) {
 			this.jobBoardEmpty = true;
 		};
 		if (this.candidateForm.invalid) return;
@@ -873,15 +995,16 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		this.sourceEmpty = false;
 		this.jobBoardEmpty = true;
 		
-		let formData = this.candidateForm.value;
+		let formData =  Object.assign({}, this.candidateForm.value);
 		formData['skills'] = this.selected;
 		formData['roles'] = this.selectedRoles;
 		formData['industryExperties'] = this.selectedIndustries;
 		formData['experience'] = this.experience;
 		formData['education'] = this.educations;
 		formData['tags'] = this.tags;
-		formData['attachement'] = this.attachment;
+		formData['attachment'] = this.attachment;
 		formData['cv'] = this.CV;
+
 		console.log(formData);
 	}
 
@@ -889,10 +1012,13 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		this.closeModal();
 	}
 
-	removePhone1() {
+	removePhone1(noDelete?) {
 		this.candidateForm.removeControl('Phone1');
+		this.candidateForm.updateValueAndValidity();
 		this.Phone1 = '';
 		this.newPhone = false;
+		if (noDelete) return;
+		delete this.uploadedCandidates[this.currentCandidateIndex].Phone1;
 	}
 
 	removeWebPrecense(array, i) {
@@ -901,19 +1027,17 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	}
 
 	checkSource(value) {
-		console.log(value);
 		if (value.name === 'Online JobBoard') {
-			this.candidateForm.controls['JobBoard'].setValidators(Validators.required);
-			this.candidateForm.controls['JobBoard'].updateValueAndValidity();
+			this.candidateForm.controls['jobBoard'].setValidators(Validators.required);
+			this.candidateForm.controls['jobBoard'].updateValueAndValidity();
 		} else {
-			this.candidateForm.controls['JobBoard'].clearValidators();
-			this.candidateForm.controls['JobBoard'].updateValueAndValidity();			
+			this.candidateForm.controls['jobBoard'].clearValidators();
+			this.candidateForm.controls['jobBoard'].updateValueAndValidity();			
 			this.jobBoardEmpty = false;	
 		}
 	}
 
 	checkFields() {
-		console.log(this.candidateForm.controls['lastName'])
 		if (this.candidateForm.controls['firstName'].value === '' && !this.candidateForm.controls['firstName'].pristine) {
 			this.firstNameEmpty = true;
 		} else {
@@ -932,13 +1056,13 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			this.emailEmpty = false;
 		};
 
-		if (this.candidateForm.controls['Source'].value === '' && !this.candidateForm.controls['Source'].pristine) {
+		if (this.candidateForm.controls['source'].value === '' && !this.candidateForm.controls['source'].pristine) {
 			this.sourceEmpty = true;
 		} else {
 			this.sourceEmpty = false;
 		};
 
-		if (this.candidateForm.controls['JobBoard'].value === '' && !this.candidateForm.controls['JobBoard'].pristine) {
+		if (this.candidateForm.controls['jobBoard'].value === '' && !this.candidateForm.controls['jobBoard'].pristine) {
 			this.jobBoardEmpty = true;
 		} else {
 			this.jobBoardEmpty = false;
@@ -947,66 +1071,163 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 
 	checkInitialCandidateProperties(index, formValue?) {
 		let formData = formValue;
-		formData['skills'] = this.selected;
-		formData['roles'] = this.selectedRoles;
-		formData['industryExperties'] = this.selectedIndustries;
 		formData['experience'] = this.experience;
 		formData['education'] = this.educations;
 		formData['tags'] = this.tags;
-		formData['attachement'] = this.attachment;
+		formData['attachment'] = this.attachment;
 		formData['cv'] = this.CV;
+		if (formData['jobBoard'].source === null && formData['source'] === undefined) {
+			formData['source'] = null;
+			formData['jobBoard'] = null;
+		};
 		this.disabledCandidateSaveChanges = true;
 		for (let x in formData) {
 			if (formData[x] !== this.uploadedCandidates[index][x] && this.uploadedCandidates[index][x] !== undefined && !Array.isArray(formData[x])) {
-				console.log('not equal',  x, formData[x], x, this.uploadedCandidates[index][x]);
 				this.disabledCandidateSaveChanges = false;
-			}
+				// console.log('not equal', x, formData[x], this.uploadedCandidates[index][x]);
+			};
 		} 
+	}
+
+	checkPhone1() {
+		if (this.candidateForm.controls['Phone1'].value === this.uploadedCandidates[this.currentCandidateIndex].Phone1) {
+			this.disabledCandidateSaveChanges = true;
+		};
+		if (this.candidateForm.controls['Phone1'].value !== this.uploadedCandidates[this.currentCandidateIndex].Phone1) {
+			this.disabledCandidateSaveChanges = false;
+		};
 	}
 
 	addPropertiesArrays() {
 		for (let i = 1; i < this.uploadedCandidates.length; i++) {
+			if (!this.uploadedCandidates[i].firstName) {
+				this.uploadedCandidates[i]['firstName'] = '';
+			};
+			if (!this.uploadedCandidates[i].lastName) {
+				this.uploadedCandidates[i]['lastName'] = '';
+			};
+			if (!this.uploadedCandidates[i].Phone) {
+				this.uploadedCandidates[i]['Phone'] = '';
+			};
+			if (!this.uploadedCandidates[i].WebSites) {
+				this.uploadedCandidates[i]['WebSites'] = {Type: '', Url: ''};
+			};
+			if (!this.uploadedCandidates[i].avatarURL) {
+				this.uploadedCandidates[i]['avatarURL'] = '';
+			};
+			if (!this.uploadedCandidates[i].location) {
+				this.uploadedCandidates[i]['location'] = '';
+			};
+			if (!this.uploadedCandidates[i].email) {
+				this.uploadedCandidates[i]['email'] = '';
+			};
+			this.uploadedCandidates[i]['experience'] = [];
+			this.uploadedCandidates[i]['education'] = [];
+			this.uploadedCandidates[i]['tags'] = [];
+			this.uploadedCandidates[i]['attachment'] = undefined;
+			this.uploadedCandidates[i]['cv'] = this.CV;
+			this.uploadedCandidates[i]['source'] = undefined;
+			this.uploadedCandidates[i]['jobBoard'] = null;
+			this.uploadedCandidates[i]['job'] = '';
+			this.uploadedCandidates[i]['stage'] = '';
+			this.uploadedCandidates[i]['avatarURL'] = '';
 			if (!this.uploadedCandidates[i].industryExperties) {
 				this.uploadedCandidates[i]['industryExperties'] = [];
+			} else { 
+				this.uploadedCandidates[i]['industryExperties'] = this.uploadedCandidates[i].industryExperties;
 			};
 			if (!this.uploadedCandidates[i].skills) {
 				this.uploadedCandidates[i]['skills'] = [];				
+			} else {
+				this.uploadedCandidates[i]['skills'] = this.uploadedCandidates[i].skills;				
 			};
 			if (!this.uploadedCandidates[i].roles) {
 				this.uploadedCandidates[i]['roles'] = [];				
-			};
+			} else {
+				this.uploadedCandidates[i]['roles'] = this.uploadedCandidates[i].roles;				
+			} ;
+			console.log('this.uploadedCandidates[i]', this.uploadedCandidates[i])
 		}
+		
 	}
 
-	checkInitialCandidatePropertiesArrays() {
-		if (this.uploadedCandidates[this.currentCandidateIndex].skills.length > 0) {
-			for (let i = 0; i < this.selected.length; i++) {
-				if (this.uploadedCandidates[this.currentCandidateIndex].skills[i].id !== this.selected[i].id) {
-					this.disabledCandidateSaveChanges = false;
-				}
-			}
-		} else if (this.uploadedCandidates[this.currentCandidateIndex].skills.length === 0) {
-			if (this.selected.length > 0) {
+	checkInitialCandidatePropertiesArrays(arrayOfCandidate?) {
+		if (arrayOfCandidate === 'skills') {
+			if (this.uploadedCandidates[this.currentCandidateIndex].skills.length === 0 && this.selected.length > 0) {
 				this.disabledCandidateSaveChanges = false;
-			}
-			if (this.selected.length === 0) {
-				this.disabledCandidateSaveChanges = true;
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].skills.length === 0 && this.selected.length === 0) {
+				this.disabledCandidateSaveChanges = true;			
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].skills.length > 0 && this.selected.length === 0) {
+				this.disabledCandidateSaveChanges = false;
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].skills.length > 0 && this.selected.length > 0) {
+				if (this.uploadedCandidates[this.currentCandidateIndex].skills.length > this.selected.length) {
+					this.disabledCandidateSaveChanges = false;
+				};
+				if (this.uploadedCandidates[this.currentCandidateIndex].skills.length < this.selected.length) {
+					this.disabledCandidateSaveChanges = false;
+				};
+				if (this.uploadedCandidates[this.currentCandidateIndex].skills.length === this.selected.length) {
+					this.disabledCandidateSaveChanges = true;
+					for (let i = 0; i < this.selected.length; i++) {
+						if (this.uploadedCandidates[this.currentCandidateIndex].skills[i].id !== this.selected[i].id) {
+							this.disabledCandidateSaveChanges = false;
+						}
+					}
+				};
 			}
 		};
-		if (this.uploadedCandidates[this.currentCandidateIndex].roles.length > 0) {
-			for (let i = 0; i < this.selectedRoles.length; i++) {
-				if (this.uploadedCandidates[this.currentCandidateIndex].roles[i].id !== this.selectedRoles[i].id) {
-					this.disabledCandidateSaveChanges = false;
-				}
-			}
-		} else if (this.uploadedCandidates[this.currentCandidateIndex].roles.length === 0) {
-			if (this.selectedRoles.length > 0) {
+
+		if (arrayOfCandidate === 'roles') {
+			if (this.uploadedCandidates[this.currentCandidateIndex].roles.length === 0 && this.selectedRoles.length > 0) {
 				this.disabledCandidateSaveChanges = false;
-			}
-			if (this.selectedRoles.length === 0) {
-				this.disabledCandidateSaveChanges = true;
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].roles.length === 0 && this.selectedRoles.length === 0) {
+				this.disabledCandidateSaveChanges = true;			
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].roles.length > 0 && this.selectedRoles.length === 0) {
+				this.disabledCandidateSaveChanges = false;
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].roles.length > 0 && this.selectedRoles.length > 0) {
+				if (this.uploadedCandidates[this.currentCandidateIndex].roles.length > this.selectedRoles.length) {
+					this.disabledCandidateSaveChanges = false;
+				};
+				if (this.uploadedCandidates[this.currentCandidateIndex].roles.length < this.selectedRoles.length) {
+					this.disabledCandidateSaveChanges = false;
+				};
+				if (this.uploadedCandidates[this.currentCandidateIndex].roles.length === this.selectedRoles.length) {
+					this.disabledCandidateSaveChanges = true;
+					for (let i = 0; i < this.selected.length; i++) {
+						if (this.uploadedCandidates[this.currentCandidateIndex].roles[i].id !== this.selectedRoles[i].id) {
+							this.disabledCandidateSaveChanges = false;
+						}
+					}
+				};
 			}
 		};
+
+		if (arrayOfCandidate === 'industries') {
+			if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length === 0 && this.selectedIndustries.length > 0) {
+				console.log('skills == 0', 'selected > 0');
+				this.disabledCandidateSaveChanges = false;
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length === 0 && this.selectedIndustries.length === 0) {
+				this.disabledCandidateSaveChanges = true;			
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length > 0 && this.selectedIndustries.length === 0) {
+				this.disabledCandidateSaveChanges = false;
+			} else if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length > 0 && this.selectedIndustries.length > 0) {
+				if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length > this.selectedIndustries.length) {
+					this.disabledCandidateSaveChanges = false;
+				};
+				if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length < this.selectedIndustries.length) {
+					this.disabledCandidateSaveChanges = false;
+				};
+				if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length === this.selectedIndustries.length) {
+					this.disabledCandidateSaveChanges = true;
+					for (let i = 0; i < this.selected.length; i++) {
+						if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties[i].id !== this.selectedIndustries[i].id) {
+							this.disabledCandidateSaveChanges = false;
+						}
+					}
+				};
+			}
+		};	
+
 	}
 
 	checkCandidateFormArrays() {
@@ -1014,24 +1235,30 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		webSites.controls.forEach(control => {
 			this.uploadedCandidates[this.currentCandidateIndex].WebSites.forEach(website => {
 				if (control.value.Type !== website.Type || control.value.Url !== website.Url) {
-					console.log('not equal', control.value, website);
+					this.disabledCandidateSaveChanges = false;
+				} else if (control.value.Type === website.Type || control.value.Url === website.Url) {
+					this.disabledCandidateSaveChanges = true;
 				}
 			});
 		});
 	}
 
 	saveCandidate() {
-		let formData = this.candidateForm.value;
+		let formData = Object.assign({}, this.candidateForm.value);
 		formData['skills'] = this.selected.slice();
 		formData['roles'] = this.selectedRoles.slice();
 		formData['industryExperties'] = this.selectedIndustries.slice();
 		formData['experience'] = this.experience.slice();
 		formData['education'] = this.educations.slice();
 		formData['tags'] = this.tags.slice();
-		formData['attachement'] = this.attachment;
+		formData['attachment'] = Object.assign({}, this.attachment);
 		formData['cv'] = this.CV;
-		this.uploadedCandidates[this.currentCandidateIndex] = Object.assign({}, formData);
+		formData['avatarFile'] = this.avatar;
+		for (let x in formData) {
+			this.uploadedCandidates[this.currentCandidateIndex][x] = formData[x];
+		}
 		this.disabledCandidateSaveChanges = true;
+		console.log(this.uploadedCandidates[this.currentCandidateIndex]);
 	}
 
 	confirmCandidates() {

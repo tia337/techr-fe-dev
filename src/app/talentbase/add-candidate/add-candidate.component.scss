@@ -476,6 +476,8 @@ mat-icon {
 .tags-holder {
     display: flex;
     align-items: center;
+    flex-basis: 50%;
+    flex-flow: row wrap;
 }
 
 .tag {
@@ -485,6 +487,7 @@ mat-icon {
     background: #dadada;
     border-radius: 2px;
     margin-right: 10px;
+    margin-bottom: 2px;
     .icon-remove {
         cursor: pointer;
         font-size: 14px;
@@ -1082,4 +1085,8 @@ mat-icon {
 .disabled {
     opacity: .5!important;
     cursor: not-allowed!important;
+}
+
+.error {
+    color: red!important;
 }

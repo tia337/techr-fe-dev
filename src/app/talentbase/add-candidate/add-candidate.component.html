@@ -9,9 +9,9 @@
         <p class="modal__title" style="display: flex; justify-content: center;" *ngIf="cvUploaded && uploadedCandidates.length > 0">
           <span  style="display: flex; width: 100%; justify-content: space-between;">
             <span style="flex-basis: 65%; justify-content: flex-end; display: flex;">Enhance candidate information</span> 
-            <span style="display: flex; flex-basis: 13%; background: #fafafa; justify-content: flex-end; color: #606060; padding: 0 10px;">
+            <span *ngIf="uploadedCandidates.length > 2" style="display: flex; flex-basis: 13%; background: #fafafa; justify-content: flex-end; color: #606060; padding: 0 10px;">
               <span class="candidates-count">{{currentCandidateIndex}}/{{uploadedCandidates.length - 1}}</span> 
-              <p class="candidates-prev-next-buttons" style="margin-left: 5px;" *ngIf="uploadedCandidates.length === 2">
+              <p class="candidates-prev-next-buttons" style="margin-left: 5px;">
                 <span (click)="showPreviousCandidate(currentCandidateIndex)" style="margin-right: 5px;"><mat-icon style="transform: rotate(-180deg)">forward</mat-icon></span>
                 <span (click)="showNextCandidate(currentCandidateIndex)"><mat-icon>forward</mat-icon></span>
               </p>
@@ -95,7 +95,7 @@
               Upload avatar
             </label>
             <span *ngIf="avatar" (click)="removeAvatar()">Remove avatar</span>
-            <input style="display: none;" id="avatar" #avatarInput (change)="changeAvatar($event, avatarInput)" type="file" formControlName="avatarURL" name="avatar">
+            <input style="display: none;" id="avatar" #avatarInput accept=".jpg, .jpeg, .png, .tif, .gif, .tiff, .ppm, .pgm, .pbm, .pnm" (change)="changeAvatar($event)" type="file" formControlName="avatarURL" name="avatar">
           </div>
           <div class="row">
             <p class="input-holder">
@@ -103,14 +103,20 @@
               <input type="text" formControlName="location" name="location">
             </p>
             <p class="input-holder">
-              <span class="input-name display-flex align-items-c">Phone Number <mat-icon *ngIf="!newPhone" style="margin-left: 10px; cursor: pointer; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPhone()">add</mat-icon></span>
+              <span class="input-name display-flex align-items-c">
+                Phone Number 
+                <mat-icon style="margin-left: 10px; cursor: pointer; cursor: pointer; font-size: 16px; width: 15px; height: 15px;"
+                    *ngIf="!newPhone" 
+                    (click)="addPhone(); disabledCandidateSaveChanges = false;">
+                    add
+                  </mat-icon>
+                </span>
               <span> 
                 <input type="text" formControlName="Phone" name="Phone">
               </span>
               <span *ngIf="newPhone" style="display: flex; align-items: center; margin-top: 10px;">
-                <input type="text" #Phone1Input formControlName="Phone1" name="Phone1">
-                <mat-icon style="cursor: pointer;" (click)="removePhone1()">delete</mat-icon>
-                {{Phone1Input.value}}
+                <input type="text" (input)="checkPhone1()"  #Phone1Input formControlName="Phone1" name="Phone1">
+                <mat-icon style="cursor: pointer;" (click)="removePhone1();">delete</mat-icon>
               </span>
             </p>
           </div>
@@ -124,8 +130,8 @@
                 <span class="input-name">Social/Web precense <mat-icon style="margin-left: 10px; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPrecense()">add</mat-icon></span>
                 <span *ngFor="let precense of candidateForm.controls['WebSites'].controls; let i = index;">
                   <span class="display-flex align-items-c"  [formGroupName]="i" style="margin-bottom: 5px;">
-                    <input type="text" formControlName="Url"  placeholder="Url" style="margin-bottom: 5px;">
-                    <input type="text" formControlName="Type" placeholder="Type" style="margin-bottom: 5px;">                    
+                    <input type="text" (input)="checkCandidateFormArrays()" formControlName="Url"  placeholder="Url" style="margin-bottom: 5px;">
+                    <input type="text" (input)="checkCandidateFormArrays()" formControlName="Type" placeholder="Type" style="margin-bottom: 5px;">                    
                     <mat-icon class="icon-fz16" style="margin-left: 10px;" *ngIf="i !== 0" (click)="removeWebPrecense(candidateForm.controls['WebSites'].controls, i)">clear</mat-icon>
                   </span>
               </span>
@@ -135,7 +141,7 @@
             <p class="input-holder">
               <span class="input-name">* Source</span>
               <mat-form-field class="source-select">
-                <mat-select (blur)="checkFields()" placeholder="Select source" (change)="checkSource(source); checkFields(); checkInitialCandidateProperties()" [(ngModel)]="source" formControlName="Source">
+                <mat-select (blur)="checkFields()" placeholder="Select source" (change)="checkSource(source); checkFields();" [(ngModel)]="source" formControlName="source">
                   <mat-option *ngFor="let source of sourceItems" [value]="source">
                     {{source.name}}
                   </mat-option> 
@@ -146,7 +152,7 @@
             <p class="input-holder" *ngIf="source && source.name === 'Online JobBoard'">
               <span class="input-name">* Job Board</span>
               <mat-form-field class="source-select" >
-                <mat-select placeholder="Select source" (blur)="checkFields()" (change)="checkInitialCandidateProperties(); checkFields()" formControlName="JobBoard">
+                <mat-select placeholder="Select source" (blur)="checkFields()" (change)="checkFields()" formControlName="jobBoard">
                   <mat-option *ngFor="let board of jobBoards" [value]="board">
                     {{board.name}}
                   </mat-option> 
@@ -158,17 +164,17 @@
           <div class="row">
             <p class="input-holder">
               <span class="input-name">Add To Job</span>
-              <input type="text" formControlName="Job">
+              <input type="text" formControlName="job">
             </p>
             <p class="input-holder">
               <span class="input-name">Stage</span>
-              <input type="text" formControlName="Stage">
+              <input type="text" formControlName="stage">
             </p>
           </div>
           <div class="row">
             <div class="container" style="display: flex;">
               <mat-form-field>
-                  <input matInput placeholder="Skills" formControlName="Skills" [(ngModel)]="query" (keydown)="prevDef($event, skillsdsuggestions)" (blur)="activeUnSet()" (keyup)="keyPressing($event)" autocomplete="off">
+                  <input matInput placeholder="Skills" formcontrolname="Skills" [(ngModel)]="query" (keydown)="prevDef($event, skillsdsuggestions)" (blur)="activeUnSet()" [ngModelOptions]="{standalone: true}" (keyup)="keyPressing($event)" autocomplete="off">
               </mat-form-field>
               <label class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); dropdownVisible = !dropdownVisible; dropdownRolesVisible = false; dropdownIndustriesVisible = false;">
                 <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownVisible" [ngModelOptions]="{standalone: true}" />
@@ -217,7 +223,7 @@
                           </table>
                           <div class="inner-area" #scrollpanel>
                               <table cellpadding="0" cellspacing="0" border="0">
-                                  <tr class="items-container" [ngClass]="{'container-selected': i == selectionCounter}" *ngFor="let item of filteredList; let i = index" (mouseenter)="selectionCounter = i" (click)="selectSkill(item, expPosition); $event.stopPropagation(); checkInitialCandidatePropertiesArrays();">
+                                  <tr class="items-container" [ngClass]="{'container-selected': i == selectionCounter}" *ngFor="let item of filteredList; let i = index" (mouseenter)="selectionCounter = i" (click)="selectSkill(item, expPosition); checkInitialCandidatePropertiesArrays('skills'); $event.stopPropagation();">
                                       <td class="name">
                                           <a *ngIf="i != selectionCounter" class="item">{{item.get("title")}}</a>
                                           <a *ngIf="i == selectionCounter" class="item-selected">{{item.get("title")}}</a>
@@ -251,7 +257,7 @@
                   <div class="suggestions suggestions-roles" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForRoles == true">
                       <div class="suggestions-roles-wrap">
                           <div class="inner-area" #scrollpanel>
-                              <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectRole(item); checkInitialCandidatePropertiesArrays();">
+                              <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectRole(item); checkInitialCandidatePropertiesArrays('roles');">
                                   <td class="name">
                                       <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
                                       <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
@@ -267,7 +273,7 @@
                   <div class="suggestions suggestions-industries" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForIndustries == true">
                       <div class="suggestions-industries-wrap">
                           <div class="inner-area" #scrollpanel>
-                              <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectIndustry(item); checkInitialCandidatePropertiesArrays();">
+                              <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectIndustry(item); checkInitialCandidatePropertiesArrays('industries');">
                                   <td class="name">
                                       <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
                                       <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
@@ -298,7 +304,7 @@
                       <div class="roles-wrap" (clickOutside)="dropdownRolesVisible = false" [delayClickOutsideInit]="true">
                           <div>
                               <div class="role-wrap" *ngFor="let item of roles; let i = index" (click)="prevDfSelecting($event)">
-                                  <div *ngIf="item" class="item-title" (click)="prevDfSelecting($event); selectRole(item); checkInitialCandidatePropertiesArrays();">
+                                  <div *ngIf="item" class="item-title" (click)="prevDfSelecting($event); selectRole(item); checkInitialCandidatePropertiesArrays('roles');">
                                       {{item.get('title')}}
                                   </div>
                               </div>
@@ -312,7 +318,7 @@
                   <div class="dropdown-wrap dropdown-industries" *ngIf="dropdownIndustriesVisible === true">
                       <div class="roles-wrap" (clickOutside)="dropdownIndustriesVisible = false" [delayClickOutsideInit]="true">
                           <div class="role-wrap" *ngFor="let item of industries; let i = index">
-                              <div *ngIf="item" class="item-title" (click)="selectIndustry(item); checkInitialCandidatePropertiesArrays();">
+                              <div *ngIf="item" class="item-title" (click)="selectIndustry(item); checkInitialCandidatePropertiesArrays('industries');">
                                   {{item.get('title')}}
                               </div>
                           </div>
@@ -332,7 +338,7 @@
                   <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 1">any</span>
                   <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 2">3+</span>
                   <span class="exp selected-exp" *ngIf="item.get('selectedExperienceDuration') == 3">5+</span>
-                  <mat-icon class="icon-fz16" (click)="remove(item); checkInitialCandidatePropertiesArrays();">clear</mat-icon>
+                  <mat-icon class="icon-fz16" (click)="remove(item); checkInitialCandidatePropertiesArrays('skills');">clear</mat-icon>
                 </span>
               </span>
             </p>
@@ -341,7 +347,7 @@
               <span *ngIf="selectedRoles.length === 0" class="no-selected-roles-skills-industries-title">No roles selected</span>          
               <span class="display-flex" style="flex-direction: column;" *ngIf="selectedRoles.length > 0">
                   <span *ngFor="let item of selectedRoles" class="display-flex align-items-c">
-                    {{item.get('title')}} <mat-icon class="icon-fz16" (click)="roleRemove(item); checkInitialCandidatePropertiesArrays();">clear</mat-icon>
+                    {{item.get('title')}} <mat-icon class="icon-fz16" (click)="roleRemove(item); checkInitialCandidatePropertiesArrays('roles');">clear</mat-icon>
                   </span>            
               </span>
             </p>
@@ -352,7 +358,7 @@
                 <span *ngFor="let item of selectedIndustries">
                     <span class="display-flex align-items-c">
                       {{item.get('title')}}
-                      <mat-icon class="icon-fz16" (click)="industryRemove(item)">clear</mat-icon>
+                      <mat-icon class="icon-fz16" (click)="industryRemove(item); checkInitialCandidatePropertiesArrays('industries');">clear</mat-icon>
                     </span>              
                 </span>
               </span>
@@ -365,11 +371,12 @@
                 <h2 class="big-title">Experience</h2>          
                 <span class="add-property" *ngIf="!experienceFormOpened" (click)="buildExperienceForm(); $event.stopPropagation();">Add experience <mat-icon  class="icon-add">add</mat-icon></span>
               </div>
-              <div class="property-form" *ngIf="experienceFormOpened" (ngSubmit)="addExperience(); checkInitialCandidateProperties();" [formGroup]="experienceForm">
+              <div class="property-form" *ngIf="experienceFormOpened" [formGroup]="experienceForm">
                 <input type="hidden" formControlName="id">
                 <p class="input-holder">
-                  <span class="input-title">Job Title</span>
-                  <input type="text" required placeholder="Job Title" formControlName="jobTitle">
+                  <span class="input-title">* Job Title</span>
+                  <input type="text" (input)="disableEmptyTitleWarning(experienceJobTitleEmpty, $event)" required placeholder="Job Title" formControlName="jobTitle">
+                  <small class="error" style="color: red;" *ngIf="experienceJobTitleEmpty">This field is mandatory!</small>
                 </p>
                 <div class="double-inputs-holder">
                   <p class="input-holder">
@@ -422,9 +429,9 @@
                     <textarea formControlName="description" cols="30" rows="10"></textarea>
                   </p>
                 <div class="buttons-holder">
-                  <button class="add-experience-btn" *ngIf="experienceForm.value.id === null" (click)="addExperience(); checkInitialCandidateProperties(); $event.stopPropagation();" type="button">Add experience</button>
-                  <button class="add-experience-btn" *ngIf="experienceForm.value.id !== null" (click)="addExperience(); checkInitialCandidateProperties(); $event.stopPropagation();" type="button">Save experience</button>            
-                  <button class="cancel-experience-btn" type="button" (click)="experienceForm.reset(); experienceFormOpened = false;">Cancel</button>
+                  <button class="add-experience-btn" *ngIf="experienceForm.value.id === null" (click)="addExperience(); $event.stopPropagation();" type="button">Add experience</button>
+                  <button class="add-experience-btn" *ngIf="experienceForm.value.id !== null" (click)="addExperience(); $event.stopPropagation();" type="button">Save experience</button>            
+                  <button class="cancel-experience-btn" type="button" (click)="experienceForm.reset(); experienceFormOpened = false; experienceJobTitleEmpty = false;">Cancel</button>
                 </div>
               </div>
               <div class="experience-holder" *ngIf="experience.length > 0">
@@ -447,7 +454,7 @@
                     <div class="buttons-edit-delete" *ngIf="!exp.hidden" style="flex-basis: 30%;">
                       <button class="edit-experience" type="button" (click)="editExperienceItem(exp)">Edit</button> 
                       &nbsp;|&nbsp;
-                      <button class="delete-experience"  type="button" (click)="deleteExperienceItem(i, experience); checkInitialCandidateProperties();">Delete</button>              
+                      <button class="delete-experience"  type="button" (click)="deleteExperienceItem(i, experience); disabledCandidateSaveChanges = false;">Delete</button>              
                     </div>
                 </div>
               </div>
@@ -457,12 +464,13 @@
                   <h2 class="big-title">Education</h2>          
                   <span class="add-property" *ngIf="!educationFormOpened" (click)="buildEducationForm(); $event.stopPropagation();">Add education <mat-icon  class="icon-add">add</mat-icon></span>
                 </div>
-                <div class="property-form" *ngIf="educationFormOpened" (ngSubmit)="addEducation(); checkInitialCandidateProperties();" [formGroup]="educationForm">
+                <div class="property-form" *ngIf="educationFormOpened" [formGroup]="educationForm">
                   <input type="hidden" formControlName="id">
                   <div class="double-inputs-holder">
                     <p class="input-holder">
-                      <span class="input-title">School / Institution</span>
-                      <input type="text" required placeholder="School / Institution" formControlName="schoolInstitutionName">
+                      <span class="input-title">* School / Institution</span>
+                      <input type="text" (input)="disableEmptyTitleWarning(educationTitleEmpty, $event)"  required placeholder="School / Institution" formControlName="schoolInstitutionName">
+                      <small class="error" style="color: red;" *ngIf="educationTitleEmpty">This field is mandatory!</small>
                     </p>
                     <p class="input-holder">
                         <span class="input-title">Location</span>
@@ -520,9 +528,9 @@
                       <textarea formControlName="description" cols="30" rows="10"></textarea>
                     </p>
                   <div class="buttons-holder">
-                    <button class="add-experience-btn" *ngIf="educationForm.value.id === null" (click)="addEducation(); checkInitialCandidateProperties(); $event.stopPropagation();" type="button">Add experience</button>
-                    <button class="add-experience-btn" *ngIf="educationForm.value.id !== null" (click)="addEducation(); checkInitialCandidateProperties(); $event.stopPropagation();" type="button">Save experience</button>            
-                    <button class="cancel-experience-btn" type="button" (click)="educationForm.reset(); educationFormOpened = false;">Cancel</button>
+                    <button class="add-experience-btn" *ngIf="educationForm.value.id === null" (click)="addEducation(); $event.stopPropagation();" type="button">Add education</button>
+                    <button class="add-experience-btn" *ngIf="educationForm.value.id !== null" (click)="addEducation(); $event.stopPropagation();" type="button">Save education</button>            
+                    <button class="cancel-experience-btn" type="button" (click)="educationForm.reset(); educationFormOpened = false; educationTitleEmpty = false;">Cancel</button>
                   </div>
                 </div>
                 <div class="experience-holder" *ngIf="educations.length > 0">
@@ -553,7 +561,7 @@
             <div class="row">
               <div class="title-holder">
                 <h2 class="big-title">Tags</h2>      
-                <input type="text" style="margin-right: 10px;" placeholder="Add tag" #addTagInput (keydown.enter)="addTag(addTagInput.value); addTagInput.value = ''; checkInitialCandidateProperties();">
+                <input type="text" style="margin-right: 10px;" placeholder="Add tag" #addTagInput (keydown.enter)="addTag(addTagInput.value); addTagInput.value = ''; disabledCandidateSaveChanges = false;">
               </div>
               <div class="tags-holder" *ngIf="tags.length > 0">
                 <span class="tag" *ngFor="let tag of tags; let i = index;">{{tag}}<mat-icon (click)="tags.splice(i, 1)">clear</mat-icon></span>
@@ -562,23 +570,25 @@
             <div class="row">
               <div class="title-holder">
                 <h2 class="big-title">Attachments</h2>
-                <label for="attachments" class="add-property cv-input" (click)="$event.stopPropagation()">Attach file<mat-icon  class="icon-add">add</mat-icon></label>
-                <span class="CVName" *ngIf="attachment !== undefined">{{attachment.name}}<mat-icon class="icon-fz18 icon" (click)="attachmentInput.value = ''; attachment = '';">clear</mat-icon></span>            
-                <input *ngIf="attachment === undefined" id="attachments" #attachmentInput (change)="setAttachments($event); checkInitialCandidateProperties();" accept=".pdf, .doc, .docx, .img, .jpg, .png" type="file" style="display: none;">
+                <label for="attachments" *ngIf="attachment === undefined" class="add-property cv-input"  [ngClass]="{'error': fileAttachmentsRangeError }" (click)="$event.stopPropagation()">Attach file<mat-icon  class="icon-add">add</mat-icon></label>
+                  <span *ngIf="attachment !== undefined" class="CVName">{{attachment.name}}<mat-icon class="icon-fz18 icon" (click)="attachmentInput.value = ''; attachment = undefined;">clear</mat-icon></span>      
+                <input id="attachments" #attachmentInput (change)="setAttachments($event); disabledCandidateSaveChanges = false;" accept=".pdf, .doc, .docx, .png, .jpg, .jpeg, .png, .tif, .gif, .tiff, .ppm, .pgm, .pbm, .pnm" type="file" style="display: none;">
               </div>
             </div>
             <div class="row">
                 <div class="title-holder">
                   <h2 class="big-title">CV File</h2>      
-                  <label *ngIf="CV === undefined" for="cv" class="add-property cv-input" (click)="$event.stopPropagation()">Upload files <mat-icon  class="icon-add">add</mat-icon></label>
-                  <span class="CV" *ngIf="CV !== undefined">{{CV.name}}<mat-icon class="icon-fz18 icon" (click)="CVInput.value = ''; CV = '';">clear</mat-icon></span>
-                  <input id="cv" #CVInput (change)="setCVName($event); checkInitialCandidateProperties();" accept=".pdf, .doc, .docx" type="file" style="display: none;">
+                  <label *ngIf="CV === undefined && uploadedCandidates.length === 0" for="cv" class="add-property cv-input" (click)="$event.stopPropagation()">Upload files <mat-icon  class="icon-add">add</mat-icon></label>
+                  <span class="CV display-flex align-items-c"
+                        *ngIf="uploadedCandidates.length > 0">{{uploadedCandidates[currentCandidateIndex].id}}</span>
+                  <span class="CV display-flex align-items-c" *ngIf="CV !== undefined && uploadedCandidates.length > 0">{{CV.name}}<mat-icon class="icon-fz18 icon" (click)="CVInput.value = ''; CV = '';">clear</mat-icon></span>
+                  <input id="cv" #CVInput (change)="setCVName($event);" accept=".pdf, .doc, .docx" type="file" style="display: none;">
                 </div>
             </div>
           </div>
           <div class="form-buttons" *ngIf="cvUploaded && uploadedCandidates.length === 0">
             <button type="button" class="send-add-candidate-form" (click)="sendForm(); $event.stopPropagation();">Add Candidate</button>
-            <button type="button" class="cancel-add-candidate-form" (click)="cancelForm(); $event.stopPropagation();">Cancel</button>
+            <button type="button" class="cancel-add-candidate-form" (click)="cvUploaded = false; candidateForm.reset(); $event.stopPropagation();">Cancel</button>
           </div>
           <div class="form-buttons display-flex justify-content-sb" *ngIf="cvUploaded && uploadedCandidates.length > 0" >
             <span>

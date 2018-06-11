@@ -87,7 +87,6 @@ export class AddCandidateService {
 	  return new Promise ((resolve, reject) => {
 		this._parse.execCloud('parsingCV', { base64: base64, filename: filename })
 			.then(response => {
-				console.log('response', response);
 				resolve(this.concatCandidateResult(response));
 				reject(response);
 			});
@@ -152,14 +151,13 @@ export class AddCandidateService {
   }
 
   concatCandidateResult(array: Array<any>) {
-	let temp = {};
-	array.forEach(item => {
-		for (let x in item) {
-			temp[x] = item[x];
-		}
-	});
-	console.log(temp, 'temp');
-	return temp;
+		let temp = {};
+		array.forEach(item => {
+			for (let x in item) {
+				temp[x] = item[x];
+			}
+		});
+		return temp;
   }
 
 
