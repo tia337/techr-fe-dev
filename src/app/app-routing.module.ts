@@ -79,9 +79,14 @@ import { CandidatesComponent } from './job-details/candidates/candidates.compone
 import { CandidateNotesComponent } from './job-details/candidates/candidates-info-tabs/candidate-notes/candidate-notes.component';
 import { JobDetailsGuard } from './guards/job-details.guard';
 import { TalentbaseComponent } from './talentbase/talentbase.component';
+import { AuthMicrosoftComponent } from './auth/auth-microsoft/auth-microsoft.component';
+import { AuthLinkedinComponent } from './auth/auth-linkedin/auth-linkedin.component';
+
 
 const routes: Routes = [
 	// { path: 'logout', component: LogoutComponent },
+	{ path: 'auth-ms', component: AuthMicrosoftComponent },
+	{ path: 'auth-li', component: AuthLinkedinComponent },
 	{ path: 'invitation', component: InvitationPageComponent },
 	{ path: 'terms-conditions', component: TermsConditionsComponent },
 	{ path: 'privacy-policy', component: PrivacyPolicyComponent },

@@ -11,18 +11,21 @@ import { RootVCRService } from 'app/root_vcr.service';
 export class Login {
 
 	private _profile: BehaviorSubject<ParseUser> = new BehaviorSubject(null);
-
 	private _maxTrialDays = 15;
-
 	private _global: any;
 
-	constructor(private _parse: Parse, private _router: Router, private _vcr: RootVCRService) {
+	constructor(
+		private _parse: Parse,
+		private _router: Router,
+		private _vcr: RootVCRService
+	) {
 		this._global = window as any;
 		if (this._parse.getCurrentUser()) {
 			this._profile.next(this._parse.Parse.User.current());
+			_router.navigate(['/dashboard']);
 		}
 	}
-
+/*
 	signIn(): Promise<ParseUser> {
 		return new Promise( (resolve, reject) => {
 			this._global.IN.User.authorize(() => {
@@ -50,10 +53,40 @@ export class Login {
 			});
 		});
 	}
+*/
+	getAuthUrl(provider: String) {
+		this._parse.execCloud('getAuthUrl', { provider: provider })
+		.then(authUrl => {
+			window.location.href = authUrl;
+		});
+	}
 
-	signInWithMicrosoft(code: String) {
-		this._vcr.createComponent(PreloaderComponent);
-		this._parse.execCloud('signUpWithMicrosoft', { code: code })
+	signInWithLinkedin(code: String, branchData?: Object) {
+		this._parse.execCloud('signInWithLinkedin', { code: code, branchData: branchData })
+		.then(user => {
+      if (user === 'unauthorized') {
+        throw 'unauthorized';
+      }
+			console.log(user);
+			if (!user.authenticated()) {
+				console.log('authenticating user'); // debug
+				return this._parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
+			} else {
+				return user;
+			}
+		})
+		.then(user => {
+			this._profile.next(user);
+			this._router.navigate(['/dashboard']);
+		})
+		.catch(err => {
+			console.error(err);
+      this._router.navigate(['/login'])
+		})
+	}
+
+	signInWithMicrosoft(code: String, branchData?: Object) {
+		this._parse.execCloud('signInWithMicrosoft', { code: code })
 		.then(user => {
 			console.log(user);
 			if (!user.authenticated()) {
@@ -66,15 +99,14 @@ export class Login {
 		.then(user => {
 			this._profile.next(user);
 			this._router.navigate(['/dashboard']);
-			this._vcr.clear();
 		})
 		.catch(err => {
 			console.error(err);
 		})
 	}
 
+/*
 	signUpWithMicrosoft(code: String, branchData: Object) {
-		this._vcr.createComponent(PreloaderComponent);
 		this._parse.execCloud('invitationSignUpWithMicrosoft', { code: code, branchData: branchData })
 		.then(user => {
 			console.log(user);
@@ -87,21 +119,22 @@ export class Login {
 		.then(user => {
 			this._profile.next(user);
 			this._router.navigate(['/dashboard']);
-			this._vcr.clear();
 		})
 		.catch(err => {
 			console.error(err);
 		})
 	}
-
+*/
 	getPassword(username: string) {
 		return md5(username).toString().toUpperCase();
 	}
 
 	signOut() {
-		this._parse.logOut().then(() => {
-			this._global.IN.User.logout();
+		console.log('logout')
+		this._parse.Parse.User.logOut().then(() => {
+			// this._global.IN.User.logout(); Linkedin JS SDK deprecated
 			// add ms logout, remove token from localStorage
+			console.log('redirecting to /login')
 			this._router.navigate(['/login']);
 			this.profile.next(null);
 		});

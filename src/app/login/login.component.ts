@@ -42,29 +42,9 @@ export class LoginComponent implements OnInit {
 		private _login: Login
 	) {
 		this._router.navigate(['/', 'login', {outlets: {'login-slider': ['reach-and-manage-candidates']}}], {skipLocationChange: true});
-
 	}
 
 	ngOnInit() {
-
-		// Microsoft login stuff, after redirect
-		if (window.location.href.includes('?code=')) {
-			const location = window.location.href;
-			const index = window.location.href.indexOf('?code=') + 6;
-			const code = location.slice(index, location.length);
-
-			document.getElementById('ios-wrap').style.display = 'none';
-			document.getElementById('sign-in-with-microsoft').style.display = 'block';
-
-			if (localStorage.getItem('branchdata')) {
-				let branchData = JSON.parse(localStorage.getItem('branchdata'));
-				localStorage.removeItem('branchData');
-				this._login.signUpWithMicrosoft(code, branchData);
-				return;
-			}
-			this._login.signInWithMicrosoft(code);
-		}
-
 		switch (this.getMobileOperatingSystem()) {
 			case 'iOS':
                 document.getElementById('ios-wrap').style.display = 'none';
@@ -100,12 +80,8 @@ export class LoginComponent implements OnInit {
         return "unknown";
     }
 
-	signIn() {
-		this._login.signIn().then(user => {
-			if (!user.get('Client_Pointer')) {
-				this._root_vcr.createComponent(ConfirmationAlertComponent);
-			}
-		});
+	signInWithLinkedin() {
+		this._login.getAuthUrl('linkedin');
 	}
 
 }

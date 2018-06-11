@@ -21,8 +21,13 @@ export class InvitationPageService {
 	) {
 		this._global = window as any;
 	}
-
+	/*
 	signUpWithLinkedin() {
+		console.log('signUpWithLinkedin');
+		this._parse.execCloud('getAuthUrl', {}).then(authUrl => {
+			window.location.href = authUrl;
+		});
+
 		this._root_vcr.createComponent(PreloaderComponent);
 		this._global.IN.User.authorize(() => {
 			this._global.IN.API.Raw(
@@ -47,16 +52,13 @@ export class InvitationPageService {
 				});
 			});
 		});
-	}
 
-	signUpWithMicrosoft() {
-		console.log('signUpWithMicrosoft');
-		this._branch.data.then(branchData => {
-			localStorage.setItem('branchdata', JSON.stringify(branchData));
-		});
-		this._parse.execCloud('getAuthUrl', {}).then(authUrl => {
-			window.location.href = authUrl;
-		});
 	}
+	*/
+/*
+	signUpWithMicrosoft() {
+		this._login.getAuthUrl('microsoft');
+	}
+	*/
 
 }

@@ -63,6 +63,8 @@ import { NgxDnDModule } from '@swimlane/ngx-dnd';
 import { EditUserRoleComponent } from './site-administration/user-management/access-level-page/edit-user-role/edit-user-role.component';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { TalentbaseModule } from './talentbase/talentbase.module';
+import { AuthMicrosoftComponent } from './auth/auth-microsoft/auth-microsoft.component';
+import { AuthLinkedinComponent } from './auth/auth-linkedin/auth-linkedin.component';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -78,6 +80,8 @@ const config: SocketIoConfig = {
 	declarations: [
 		AppComponent,
 		ClearStringPipe,
+		AuthMicrosoftComponent,
+		AuthLinkedinComponent,
 	],
 	imports: [
 		BrowserModule,

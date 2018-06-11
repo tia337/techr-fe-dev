@@ -39,29 +39,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Roboto+Mono|Roboto+Slab|Source+Sans+Pro" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
-    <script type="text/javascript" src="//platform.linkedin.com/in.js">
-        api_key: 77nkibz74seedy
-        authorize: false
-        onLoad: onLinkedInLoad
-    </script>
-
-    <script type="text/javascript">
-        function onLinkedInLoad() {
-          IN.Event.on(IN, "auth", getProfileData);
-        }
-
-        function getProfileData() {
-          IN.API.Raw("/people/~").result(onSuccess).error(onError);
-        }
-
-        function onSuccess(data) {
-          console.log(data);
-        }
-
-        function onError(error) {
-          console.error(error);
-        }
-    </script>
 
     <!-- Google auth -->
     <script src="https://apis.google.com/js/platform.js"></script>
@@ -69,9 +46,10 @@
 
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
-
+    <!-- Facebook login
     <script type="text/javascript" src="https://connect.facebook.net/en_US/sdk.js"></script>
-
+    -->
+    <!-- Twitter login
     <script>
         window.twttr = (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0],
@@ -90,15 +68,8 @@
             return t;
         }(document, "script", "twitter-wjs"));
     </script>
+    -->
 
-    
-    <style>
-        #sign-in-with-microsoft {
-            display: none;
-            text-align: center; 
-            margin-top: 10%;
-        }
-    </style>
 
 </head>
 
@@ -106,21 +77,7 @@
 
     <app-root>
         <span id="common-loading">Loading...</span>
-        <div id="sign-in-with-microsoft">
-            <!-- <img src="https://loading.io/spinners/ellipsis/lg.discuss-ellipsis-preloader.gif" alt=""> -->
-            <p>Signing in with Microsoft....</p> 
-        </div>
-        <script>
-            if (window.location.href.includes('?code=')) {
-                var commonLoading = document.getElementById('common-loading');
-                commonLoading.style.display = 'none';
-                var microsoftSignIn = document.getElementById('sign-in-with-microsoft');
-                microsoftSignIn.style.display = 'block';
-            }
-        </script>
     </app-root>
-    
-    
 
 </body>
 
