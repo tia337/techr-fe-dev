@@ -155,6 +155,12 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 				value: groupedUsers[DeveloperListType.rejected] ? groupedUsers[DeveloperListType.rejected].length : 0,
 				title: 'Rejected'
 			});
+			this._stages.push({
+				index: 9,
+				type: DeveloperListType.withdrawn,
+				value: groupedUsers[DeveloperListType.withdrawn] ? groupedUsers[DeveloperListType.withdrawn].length : 0,
+				title: 'Withdrawn'
+			});
 		}).then(() => {
 			return this._jobDetailsService.getReferralsCount(this.contract);
 		}).then(referralsCount => {

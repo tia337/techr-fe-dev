@@ -9,7 +9,8 @@ export const DeveloperListType = {
 	'jobOffered': 3,
 	'hired': 4,
 	'employeeReferrals': 5,
-	'rejected': 6
+	'rejected': 6,
+	'withdrawn': 7
 };
 
 export const TalentDbFilters = [

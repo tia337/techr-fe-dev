@@ -29,11 +29,13 @@ import { RejectModalComponent } from './candidate-profile/reject-modal/reject-mo
 import { RejectModalModule } from './candidate-profile/reject-modal/reject-modal.module';
 import { BulkActionsModule } from './candidate-profile/bulk-actions/bulk-actions.module';
 import { BulkActionsComponent } from './candidate-profile/bulk-actions/bulk-actions.component';
+import { WithdrawnModalComponent } from './candidate-profile/withdrawn-modal/withdrawn-modal.component';
+import { WithdrawnModalModule } from './candidate-profile/withdrawn-modal/withdrawn-modal.module';
 
 @NgModule({
   declarations: [
     CandidatesComponent,
-    CandidateProfileComponent
+    CandidateProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,11 +60,12 @@ import { BulkActionsComponent } from './candidate-profile/bulk-actions/bulk-acti
     MatProgressSpinnerModule,
     RejectModalModule,
     BulkActionsModule,
-    MatIconModule
+    MatIconModule,
+    WithdrawnModalModule
   ],
   exports: [CandidatesComponent],
   providers: [Parse, CandidatesService, CandidateProfileService],
-  entryComponents: [GmailComponent, RejectModalComponent, BulkActionsComponent]
+  entryComponents: [GmailComponent, RejectModalComponent, BulkActionsComponent, WithdrawnModalComponent]
 
 })
 export class CandidatesModule { }
