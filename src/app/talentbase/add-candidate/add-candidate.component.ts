@@ -1442,9 +1442,15 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		formData['cv'] = this.CV;
 		formData['avatarFile'] = this.avatar;
 		formData['jobs'] = this.jobsSelected.slice();
+		delete formData.Skills;
+		delete formData.job;
 		for (let x in formData) {
 			this.uploadedCandidates[this.currentCandidateIndex][x] = formData[x];
 		}
+		delete formData.cv;
+		formData['candidateId'] = this.uploadedCandidates[this.currentCandidateIndex]['objectId'];
+		formData['developerId'] = this.uploadedCandidates[this.currentCandidateIndex]['developer'].id;
+		console.log(formData);
 		this.disabledCandidateSaveChanges = true;
 	}
 

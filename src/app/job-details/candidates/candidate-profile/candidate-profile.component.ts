@@ -15,6 +15,8 @@ import { Socket } from 'ng-socket-io';
 import { AlertComponent } from '../../../shared/alert/alert.component';
 import { JobDetailsService } from '../../job-details.service';
 import { RejectModalComponent } from './reject-modal/reject-modal.component';
+import { WithdrawnModalComponent } from './withdrawn-modal/withdrawn-modal.component';
+
 @Component({
 	selector: 'app-candidate-profile',
 	templateUrl: './candidate-profile.component.html',
@@ -76,6 +78,9 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 					this.allert(1, 'Hired');
 				} else if (listId == 6) {
 					this.allert(1, 'Rejected');
+				} else if (listId == 7) {
+					console.log(listId, 'list id');
+					this.allert(1, 'Withdrawn');
 				}
 			});
 		});
@@ -238,6 +243,12 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 
 	openRejection(candidate) {
 		const rejectionModal = this._root_vcr.createComponent(RejectModalComponent);
+		rejectionModal.setCandidate = candidate;
+		rejectionModal.contractId = this.contractId;
+	}
+
+	openWithdrawn(candidate) {
+		const rejectionModal = this._root_vcr.createComponent(WithdrawnModalComponent);
 		rejectionModal.setCandidate = candidate;
 		rejectionModal.contractId = this.contractId;
 	}
