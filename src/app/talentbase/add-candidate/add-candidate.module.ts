@@ -7,6 +7,7 @@ import { AddCandidateComponent } from './add-candidate.component';
 import { AddCandidateService } from './add-candidate.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SanitizerPipe } from '../../shared/sanitizer.pipe';
+import { SearchJobPipe } from './search-job.pipe';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { SanitizerPipe } from '../../shared/sanitizer.pipe';
   ],
   declarations: [
     AddCandidateComponent,
-    SanitizerPipe
+    SanitizerPipe,
+    SearchJobPipe
   ],
   providers: [
     AddCandidateService

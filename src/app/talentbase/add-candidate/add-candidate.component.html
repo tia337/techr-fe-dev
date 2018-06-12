@@ -3,6 +3,7 @@
     <div class="ngdialog-overlay"></div>
     <div class="ngdialog-content">
       <div class="modal--wide">
+        <mat-icon class="icon-fz18 icon-close-modal" (click)="closeModal()">clear</mat-icon>
         <p class="modal__title" *ngIf="!cvUploaded">
           Add candidate
         </p>
@@ -55,7 +56,7 @@
           </div>
           <div class="assets-block">
             <p class="assets-block__formats">
-              (PDF, WORD or Rich Text file)
+              (PDF, DOCX, DOC or Rich Text file)
             </p>
             <ng4-files-click [configId]="'files-config'" (filesSelect)="filesSelect($event)">
                 <p class="assets-block__upload-file-btn">Upload Files</p>
@@ -69,6 +70,9 @@
         <!-- DROP BOX END -->
     
         <div class="spinner-wrap">
+          <span *ngIf="loading && !cvUploaded" style="text-align: center; margin: 10px 0;">
+            Candidates uploaded: {{candidatesUploaded - 1}}/{{files.length}}
+          </span>
           <mat-progress-spinner class="progress-spinner" *ngIf="loading && !cvUploaded"  mode="indeterminate"></mat-progress-spinner>
         </div> 
     
@@ -115,8 +119,8 @@
                 <input type="text" formControlName="Phone" name="Phone">
               </span>
               <span *ngIf="newPhone" style="display: flex; align-items: center; margin-top: 10px;">
-                <input type="text" (input)="checkPhone1()"  #Phone1Input formControlName="Phone1" name="Phone1">
-                <mat-icon style="cursor: pointer;" (click)="removePhone1();">delete</mat-icon>
+                <input type="text" (input)="checkphone2()"  #phone2Input formControlName="phone2" name="phone2">
+                <mat-icon style="cursor: pointer;" (click)="removephone2();">delete</mat-icon>
               </span>
             </p>
           </div>
@@ -129,10 +133,10 @@
             <p class="input-holder" formArrayName="WebSites">
                 <span class="input-name">Social/Web precense <mat-icon style="margin-left: 10px; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPrecense()">add</mat-icon></span>
                 <span *ngFor="let precense of candidateForm.controls['WebSites'].controls; let i = index;">
-                  <span class="display-flex align-items-c"  [formGroupName]="i" style="margin-bottom: 5px;">
+                  <span class="display-flex align-items-c"  [formGroupName]="i" style="margin-bottom: 5px; position: relative;">
                     <input type="text" (input)="checkCandidateFormArrays()" formControlName="Url"  placeholder="Url" style="margin-bottom: 5px;">
                     <input type="text" (input)="checkCandidateFormArrays()" formControlName="Type" placeholder="Type" style="margin-bottom: 5px;">                    
-                    <mat-icon class="icon-fz16" style="margin-left: 10px;" *ngIf="i !== 0" (click)="removeWebPrecense(candidateForm.controls['WebSites'].controls, i)">clear</mat-icon>
+                    <mat-icon class="icon-fz16 delete-website" *ngIf="i !== 0" (click)="removeWebPrecense(candidateForm.controls['WebSites'].controls, i); disabledCandidateSaveChanges = false;">delete</mat-icon>
                   </span>
               </span>
             </p>
@@ -141,7 +145,7 @@
             <p class="input-holder">
               <span class="input-name">* Source</span>
               <mat-form-field class="source-select">
-                <mat-select (blur)="checkFields()" placeholder="Select source" (change)="checkSource(source); checkFields();" [(ngModel)]="source" formControlName="source">
+                <mat-select (blur)="checkFields()" placeholder="Select Source" (change)="checkSource(source); checkFields();" [(ngModel)]="source" formControlName="source">
                   <mat-option *ngFor="let source of sourceItems" [value]="source">
                     {{source.name}}
                   </mat-option> 
@@ -151,7 +155,7 @@
             </p>
             <p class="input-holder" *ngIf="source && source.name === 'Online JobBoard'">
               <span class="input-name">* Job Board</span>
-              <mat-form-field class="source-select" >
+              <mat-form-field class="source-select">
                 <mat-select placeholder="Select source" (blur)="checkFields()" (change)="checkFields()" formControlName="jobBoard">
                   <mat-option *ngFor="let board of jobBoards" [value]="board">
                     {{board.name}}
@@ -161,20 +165,33 @@
               <small class="error" style="color: red;" *ngIf="jobBoardEmpty">This field is mandatory!</small>                                  
             </p>
           </div>
-          <div class="row">
+          <div class="row source-add-candidate-talentdb">
             <p class="input-holder">
               <span class="input-name">Add To Job</span>
-              <input type="text" formControlName="job">
+              <input type="text" placeholder="Search Job" class="job-input" #jobInput formControlName="job" (focus)="jobsListHidden = false">
+              <span (clickOutside)="jobsListHidden = true" [delayClickOutsideInit]="true" [exclude]="'.job-input'" class="jobs-list" *ngIf="!jobsListHidden">
+                <span (click)="selectJob(job, jobsSelected); checkInitialCandidatePropertiesArrays('jobs'); $event.stopPropagation(); jobInput.value = ''" *ngFor="let job of jobsArray | searchJob: jobInput.value">{{job.title}}</span>
+              </span>
+              <span *ngIf="jobsSelected.length > 0" style="margin: 5px 0;">Jobs</span>
+              <span style="display: flex; flex-direction: column;" *ngIf="jobsSelected.length > 0">
+                <span (click)="$event.stopPropagation()" style="cursor: pointer!important;" class="display-flex align-items-c job-item" *ngFor="let job of jobsSelected; let i = index;">{{job.title}} <mat-icon class="icon-fz16" (click)="jobsSelected.splice(i ,1); checkInitialCandidatePropertiesArrays('jobs')">clear</mat-icon></span>
+              </span>
             </p>
             <p class="input-holder">
               <span class="input-name">Stage</span>
-              <input type="text" formControlName="stage">
+              <mat-form-field class="source-select stage">
+                <mat-select placeholder="Select Stage" formControlName="stage">
+                  <mat-option  *ngFor="let stage of jobStages" [value]="stage">
+                    {{stage.title}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </p>
           </div>
           <div class="row">
             <div class="container" style="display: flex;">
               <mat-form-field>
-                  <input matInput placeholder="Skills" formcontrolname="Skills" [(ngModel)]="query" (keydown)="prevDef($event, skillsdsuggestions)" (blur)="activeUnSet()" [ngModelOptions]="{standalone: true}" (keyup)="keyPressing($event)" autocomplete="off">
+                  <input matInput placeholder="Select Skills" formcontrolname="Skills" [(ngModel)]="query" (keydown)="prevDef($event, skillsdsuggestions)" (blur)="activeUnSet()" [ngModelOptions]="{standalone: true}" (keyup)="keyPressing($event)" autocomplete="off">
               </mat-form-field>
               <label class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); dropdownVisible = !dropdownVisible; dropdownRolesVisible = false; dropdownIndustriesVisible = false;">
                 <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownVisible" [ngModelOptions]="{standalone: true}" />
@@ -186,7 +203,7 @@
               <!-- ROLES INPUT -->
               
               <mat-form-field style="margin: 0 15px; margin-right: 25px;">
-                  <input matInput placeholder="Roles" [(ngModel)]="queryRoles" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'role', rolessuggestions)" (blur)="activeRolesUnSet()" (keyup)="keyRnIPressing($event, 'role')" autocomplete="off">
+                  <input matInput placeholder="Select Roles" [(ngModel)]="queryRoles" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'role', rolessuggestions)" (blur)="activeRolesUnSet()" (keyup)="keyRnIPressing($event, 'role')" autocomplete="off">
               </mat-form-field>
               <label class="arrow-button-group" (click)="activeDropdown('roles',rolesdropdown, $event);  dropdownVisible  = false; dropdownRolesVisible = !dropdownRolesVisible; dropdownIndustriesVisible = false;">
                 <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownRolesVisible" [ngModelOptions]="{standalone: true}"  />
@@ -198,7 +215,7 @@
               <!-- INDUSTRIES INPUT -->
       
               <mat-form-field>
-                  <input matInput placeholder="Industries" [(ngModel)]="queryIndustries" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'industry', industriessuggestions)" (blur)="activeIndustriesUnSet()" (keyup)="keyRnIPressing($event, 'industry')"
+                  <input matInput placeholder="Select Industries" [(ngModel)]="queryIndustries" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'industry', industriessuggestions)" (blur)="activeIndustriesUnSet()" (keyup)="keyRnIPressing($event, 'industry')"
                      autocomplete="off">
               </mat-form-field>
       
@@ -328,9 +345,9 @@
               
             </div>
           </div>
-          <div class="row" style="margin-bottom: 20px;">
-            <p class="input-holder">
-              <span class="input-name">Skills selected</span>
+          <div class="row" style="margin-bottom: 20px; justify-content: flex-start;">
+            <p class="input-holder" style="width: 200px; flex-basis: initial;">
+              <span class="input-name">Skills</span>
               <span *ngIf="selected.length === 0" class="no-selected-roles-skills-industries-title">No skills selected</span>                    
               <span *ngIf="selected.length > 0" class="display-flex" style="flex-flow: row wrap;">
                 <span *ngFor="let item of selected" class="display-flex align-items-c selected-skill">
@@ -342,8 +359,8 @@
                 </span>
               </span>
             </p>
-            <p class="input-holder" style="margin: 0 55px;">
-              <span class="input-name">Roles selected</span>
+            <p class="input-holder" style="width: 200px; flex-basis: initial; margin: 0 25px;">
+              <span class="input-name">Roles</span>
               <span *ngIf="selectedRoles.length === 0" class="no-selected-roles-skills-industries-title">No roles selected</span>          
               <span class="display-flex" style="flex-direction: column;" *ngIf="selectedRoles.length > 0">
                   <span *ngFor="let item of selectedRoles" class="display-flex align-items-c">
@@ -351,8 +368,8 @@
                   </span>            
               </span>
             </p>
-            <p class="input-holder">
-              <span class="input-name">Industries selected</span>
+            <p class="input-holder" style="width: 200px; flex-basis: initial;">
+              <span class="input-name">Industries</span>
               <span *ngIf="selectedIndustries.length === 0" class="no-selected-roles-skills-industries-title">No industries selected</span>
               <span *ngIf="selectedIndustries.length > 0">
                 <span *ngFor="let item of selectedIndustries">
@@ -365,7 +382,7 @@
             </p>
           </div>
           <span class="see-less-more-btn" (click)="seeMore = !seeMore">See <span *ngIf="seeMore">Less</span><span *ngIf="!seeMore">More</span></span>
-          <div *ngIf="seeMore">
+          <div *ngIf="seeMore" style="margin-top: 10px;">
             <div class="row form-row">
               <div class="title-holder">
                 <h2 class="big-title">Experience</h2>          
@@ -435,14 +452,17 @@
                 </div>
               </div>
               <div class="experience-holder" *ngIf="experience.length > 0">
-                <div *ngFor="let exp of experience; let i = index;" class="experience-item">
+                <div *ngFor="let exp of experience.reverse(); let i = index;" class="experience-item">
                     <span class="experience-date" *ngIf="!exp.hidden" style="flex-basis: 30%;">
                       <span style="margin-bottom: 5px;">
                         <span *ngIf="exp.monthDateFrom !== null">{{exp.monthDateFrom}}&nbsp;</span>
                         <span *ngIf="exp.yearDateFrom !== null">{{exp.yearDateFrom}}&nbsp;</span>
                         -
-                        <span *ngIf="exp.monthDateTo !== null">{{exp.monthDateTo}}</span>
-                        <span *ngIf="exp.yearDateTo !== null">{{exp.yearDateTo}}</span>
+                        <span *ngIf="exp.currentlyWorks">present</span>
+                        <span *ngIf="!exp.currentlyWorks">
+                          <span *ngIf="exp.monthDateTo !== null">{{exp.monthDateTo}}</span>
+                          <span *ngIf="exp.yearDateTo !== null">{{exp.yearDateTo}}</span>
+                        </span>
                       </span>
                       <span class="experience-location" *ngIf="exp.location !== null">{{exp.location}}</span>
                     </span>
@@ -534,14 +554,17 @@
                   </div>
                 </div>
                 <div class="experience-holder" *ngIf="educations.length > 0">
-                  <div *ngFor="let education of educations; let i = index;" class="experience-item">
+                  <div *ngFor="let education of educations.reverse(); let i = index;" class="experience-item">
                       <span class="experience-date" *ngIf="!education.hidden" style="flex-basis: 30%;">
                         <span style="margin-bottom: 5px;">
                           <span *ngIf="education.monthDateFrom !== null">{{education.monthDateFrom}}&nbsp;</span>
                           <span *ngIf="education.yearDateFrom !== null">{{education.yearDateFrom}}&nbsp;</span>
                           -
-                          <span *ngIf="education.monthDateTo !== null">{{education.monthDateTo}}</span>
-                          <span *ngIf="education.yearDateTo !== null">{{education.yearDateTo}}</span>
+                          <span *ngIf="education.currentlyAttends">present</span>
+                          <span *ngIf="!education.currentlyAttends">
+                            <span *ngIf="education.monthDateTo !== null">{{education.monthDateTo}}</span>
+                            <span *ngIf="education.yearDateTo !== null">{{education.yearDateTo}}</span>
+                          </span>
                         </span>
                         <span class="experience-location" *ngIf="education.location !== null">{{education.location}}</span>
                       </span>
@@ -580,9 +603,9 @@
                   <h2 class="big-title">CV File</h2>      
                   <label *ngIf="CV === undefined && uploadedCandidates.length === 0" for="cv" class="add-property cv-input" (click)="$event.stopPropagation()">Upload files <mat-icon  class="icon-add">add</mat-icon></label>
                   <span class="CV display-flex align-items-c"
-                        *ngIf="uploadedCandidates.length > 0">{{uploadedCandidates[currentCandidateIndex].id}}</span>
-                  <span class="CV display-flex align-items-c" *ngIf="CV !== undefined && uploadedCandidates.length > 0">{{CV.name}}<mat-icon class="icon-fz18 icon" (click)="CVInput.value = ''; CV = '';">clear</mat-icon></span>
-                  <input id="cv" #CVInput (change)="setCVName($event);" accept=".pdf, .doc, .docx" type="file" style="display: none;">
+                        *ngIf="uploadedCandidates.length > 0">{{uploadedCandidates[currentCandidateIndex].documentCV.get('fileName')}}</span>
+                  <span class="CV display-flex align-items-c" *ngIf="CV !== undefined && uploadedCandidates.length === 0">{{CV.name}}<mat-icon class="icon-fz18 icon" (click)="CVInput.value = ''; CV = '';">clear</mat-icon></span>
+                  <input id="cv" #CVInput (change)="setCVName($event);" accept=".pdf, .doc, .docx, .rtf" type="file" style="display: none;">
                 </div>
             </div>
           </div>

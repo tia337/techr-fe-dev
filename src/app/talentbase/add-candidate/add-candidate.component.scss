@@ -64,6 +64,19 @@
     width: 84%;
     background: #fafafa;
     margin: 40px auto;
+    position: relative;
+}
+
+.icon-close-modal {
+    position: absolute;
+    right: 2px;
+    color: #fafafa;
+    top: 2px;
+    cursor: pointer;
+    transition: .3s all ease-in-out;
+    &:hover {
+        transform: rotate(180deg);
+    }
 }
 
 .modal-overlay {
@@ -100,6 +113,7 @@
     &__title {
         font-size: 20px;
         padding: 10px 10px;
+        padding-top: 20px;
         text-transform: uppercase;
         text-align: center;
         width: 100%;
@@ -267,6 +281,7 @@ mat-icon {
     text-align: center;
     margin-top: 20px;
     padding-bottom: 20px;
+    flex-direction: column;
     .mat-progress-spinner circle,
     .mat-spinner circle {
         stroke: #13579a!important;
@@ -275,7 +290,7 @@ mat-icon {
 
 .row {
     display: flex;
-    padding: 10px 20px;
+    padding: 5px 20px;
     justify-content: space-between;
     .title-holder {
         display: flex;
@@ -358,7 +373,7 @@ mat-icon {
         position: absolute;
         margin-right: 20px;
         right: 45px;
-        top: 20px;
+        top: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -1089,4 +1104,40 @@ mat-icon {
 
 .error {
     color: red!important;
+}
+
+.delete-website {
+    position: absolute;
+    right: -20px;
+    top: 6px;
+}
+
+.jobs-list {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    background: #fff;
+    border: 1px solid;
+    margin-top: -1px;
+    padding: 5px 2px;
+    span {
+        margin-bottom: 5px;
+        cursor: pointer;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.source-select.stage {
+    ::ng-deep .mat-form-field-infix {
+        border: 1px solid;
+    }
+    
+    ::ng-deep .mat-form-field-empty.mat-form-field-placeholder {
+        margin-left: 5px!important;
+    }
+    ::ng-deep .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder.mat-input-placeholder {
+        display: none!important;
+    }
 }
