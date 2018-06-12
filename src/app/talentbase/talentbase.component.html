@@ -378,9 +378,10 @@
             </div>
             <div class="bulk-upload-pending__info--magic" [ngClass]="{'flb': bulkUploadStarted }">
               <div *ngIf="!bulkUploadStarted" style="display: flex; align-items: center; justify-content: center;">
+                <span style="margin-bottom: 20px;">Waiting for bulk upload start...</span>
                 <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
               </div>
-              <div *ngIf="bulkUploadStarted">
+              <div *ngIf="bulkUploadStarted" style="width: 100%;">
                 <div class="bulk-upload-pending__bar">
                   <div class="bulk-upload-pending__bar-fill" [ngStyle]="fillPercentage">
                     <div class="bulk-upload-pending__bar-fill--percentage"><span>{{fillPercentage.width}}</span></div>

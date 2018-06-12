@@ -12,6 +12,7 @@ export class AddCandidateService {
 
   public candidatesUploaded: BehaviorSubject<any> = new BehaviorSubject(null);
   public goToImport: BehaviorSubject<boolean> = new BehaviorSubject(null);
+  
 
   private rchilliURL: string = 'https://rest.rchilli.com/RChilliParser/Rchilli/parseResumeBinary';
 
@@ -21,39 +22,31 @@ export class AddCandidateService {
   ) { }
 
   uploadCVs (cvFile): any {
-		const reader: FileReader = new FileReader();
-		reader.addEventListener('loadend', (event) => {
-			const data = reader.result.split(',')[1];
-			const jsonObject = JSON.stringify({
-				'filedata': data,
-				'filename': cvFile.name,
-				'userkey': 'VBDK5ZXUULD',
-				'version': '7.0.0',
-				'subuserid': 'SWIPEIN'
-			});
-			const headers: Headers = new Headers();
-			headers.append('Access-Control-Allow-Origin', '*');
-			headers.append('Content-Type', 'application/json');
-			const request = this._http.post(this.rchilliURL, jsonObject, { headers: headers });
-			request.map(res => {
-				return res.json();
-			}).subscribe(response => {
-				console.log(response);
-				this.candidatesUploaded.next(response.ResumeParserData);
-			});
+	const reader: FileReader = new FileReader();
+	reader.addEventListener('loadend', (event) => {
+		const data = reader.result.split(',')[1];
+		const jsonObject = JSON.stringify({
+			'filedata': data,
+			'filename': cvFile.name,
+			'userkey': 'VBDK5ZXUULD',
+			'version': '7.0.0',
+			'subuserid': 'SWIPEIN'
 		});
-		reader.readAsDataURL(cvFile);
-  }
-
-  parsingCv (cvFile) {
-	this.createBase64(cvFile).then(result => {
-		const filename = cvFile.name;
-		const base64 = result;
-		this.sendCV(base64, filename).then(result => {
-			this.candidatesUploaded.next(result);
-		}).catch(error => console.log(error));
+		const headers: Headers = new Headers();
+		headers.append('Access-Control-Allow-Origin', '*');
+		headers.append('Content-Type', 'application/json');
+		const request = this._http.post(this.rchilliURL, jsonObject, { headers: headers });
+		request.map(res => {
+			return res.json();
+		}).subscribe(response => {
+			console.log(response);
+			this.candidatesUploaded.next(response.ResumeParserData);
+		});
 	});
-  }
+	reader.readAsDataURL(cvFile);
+}
+
+  
 
   createYears(): Array<string> {
 	  const years = [];
@@ -83,11 +76,21 @@ export class AddCandidateService {
 	return months;
   }
 
+
+  parsingCv (cvFile) {
+	this.createBase64(cvFile).then(result => {
+		const filename = cvFile.name;
+		const base64 = result;
+		this.sendCV(base64, filename).then(result => {
+			this.candidatesUploaded.next(result);
+		}).catch(error => console.log(error));
+	});
+  }
+
   sendCV(base64: any, filename: string) {
 	  return new Promise ((resolve, reject) => {
 		this._parse.execCloud('parsingCV', { base64: base64, filename: filename })
 			.then(response => {
-				console.log('response', response);
 				resolve(this.concatCandidateResult(response));
 				reject(response);
 			});
@@ -152,16 +155,26 @@ export class AddCandidateService {
   }
 
   concatCandidateResult(array: Array<any>) {
-	let temp = {};
-	array.forEach(item => {
-		for (let x in item) {
-			temp[x] = item[x];
-		}
-	});
-	console.log(temp, 'temp');
-	return temp;
+		let temp = {};
+		array.forEach(item => {
+			for (let x in item) {
+				temp[x] = item[x];
+			}
+		});
+		return temp;
+  }
+
+  getJobs(clientId): Promise<Array<any>> {
+	  return new Promise ((resolve, reject) => {
+		  this._parse.execCloud('getJobs', { clientId: clientId }).then(response => {
+			resolve(response);
+			reject(response);
+		  });
+	  });
   }
 
 
   
 }
+
+

@@ -21,7 +21,6 @@ export class Gapi {
 
 	constructor() {
 		this.googleInit.then(() => {
-			console.log('got it!');
 		});
 	}
 
@@ -44,7 +43,6 @@ export class Gapi {
 			scope: scope
 		}).then(() => {
 			if (!(gapi.auth2.getAuthInstance().isSignedIn.get())) {
-				console.log('You are not logged in Google');
 			}
 			resolve();
 		});

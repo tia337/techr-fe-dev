@@ -2,40 +2,118 @@
 @import '../../../styles/variables.scss';
 @import '../../../styles/mixins';
 
-.modal-overlay {
+
+.modal {
     position: fixed;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
-    width: 100vw;
-    height: 100%;
-    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0, 0, 0, 0.6);
+    top: 0;
+    background: #000;
+    background: rgba(0,0,0,0.5);
+    overflow-x: hidden;
     overflow-y: auto;
     z-index: 999;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    * {
-        transition: .3s all ease-in-out;
+}
+
+.modal--clean {
+    background: transparent!important;
+}
+
+.alignment--vertical:after, .modal:after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.ngdialog-overlay {
+    background: rgba(0,0,0,0.4);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    -webkit-backface-visibility: hidden;
+}
+
+.ngdialog--noClose>.ngdialog-content {
+    width: 100%;
+}
+
+.ngdialog-content {
+    display: inline-block;
+    position: relative;
+    z-index: 21;
+}
+
+.modal-dialog {
+    background: #fafafa;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 30px 0;
+    outline: 0;
+    position: relative;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.modal--wide {
+    max-width: 900px;
+    width: 84%;
+    background: #fafafa;
+    margin: 40px auto;
+    position: relative;
+}
+
+.icon-close-modal {
+    position: absolute;
+    right: 2px;
+    color: #fafafa;
+    top: 2px;
+    cursor: pointer;
+    transition: .3s all ease-in-out;
+    &:hover {
+        transform: rotate(180deg);
     }
+}
+
+.modal-overlay {
+    // position: fixed;
+    // display: flex;
+    // flex-direction: row;
+    // align-items: flex-start;
+    // justify-content: center;
+    // width: 100vw;
+    // height: 100%;
+    // top: 0;
+    // bottom: 0;
+    // left: 0;
+    // right: 0;
+    // background-color: rgba(0, 0, 0, 0.6);
+    // overflow-y: auto;
+    // z-index: 999;
+    // -webkit-box-align: center;
+    // -ms-flex-align: center;
+    // align-items: center;
+    // * {
+    //     transition: .3s all ease-in-out;
+    // }
 }   
 
 .modal {
-    background: #fafafa;
-    padding: 0 0 25px;
-    z-index: 999999;
-    position: relative;
-    border: 1px solid #fafafa;
-    min-width: 50%;
-    max-width: 75%;
+    // background: #fafafa;
+    // padding: 0 0 25px;
+    // z-index: 999999;
+    // position: relative;
+    // border: 1px solid #fafafa;
+    // min-width: 50%;
+    // max-width: 75%;
     &__title {
         font-size: 20px;
         padding: 10px 10px;
+        padding-top: 20px;
         text-transform: uppercase;
         text-align: center;
         width: 100%;
@@ -123,6 +201,10 @@
     }
 }
 
+mat-icon {
+    cursor: pointer;
+}
+
 .upload-cvs-btn {
     padding: 5px 10px;
     font-size: 16px;
@@ -165,6 +247,7 @@
         border: 1px solid transparent;
         transition: .3s all ease-in-out;
         margin-bottom: 10px;
+        min-width: 122px;
         &:hover {
             color: #50a047;
             border: 1px solid #50a047;
@@ -197,6 +280,8 @@
     justify-content: center;
     text-align: center;
     margin-top: 20px;
+    padding-bottom: 20px;
+    flex-direction: column;
     .mat-progress-spinner circle,
     .mat-spinner circle {
         stroke: #13579a!important;
@@ -205,7 +290,7 @@
 
 .row {
     display: flex;
-    padding: 20px;
+    padding: 5px 20px;
     justify-content: space-between;
     .title-holder {
         display: flex;
@@ -217,13 +302,16 @@
     .add-property {
         display: flex;
         align-items: center;
-        margin-left: 10px;
         color: #13579a;
+        cursor: pointer;
+        &.cv-input {
+            display: flex;
+            align-items: center;
+        }
         .icon-add {
             font-size: 16px;
             width: 16px;
             height: 16px;
-            cursor: pointer;
         }
     }
     .double-inputs-holder {
@@ -233,6 +321,7 @@
         font-size: 20px;
         font-weight: bold;
         width: 120px;
+        margin-right: 15px;
     }
     .input-holder {
         display: flex;
@@ -278,10 +367,13 @@
 
 .candidate-form {
     position: relative;
+    padding-right: 60px;
+    padding-bottom: 15px;
     .avatar {
         position: absolute;
+        margin-right: 20px;
         right: 45px;
-        top: 20px;
+        top: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -375,7 +467,8 @@
 }
 
 .container {
-    ::ng-deep .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder, .mat-form-field-empty.mat-form-field-placeholder {
+    ::ng-deep .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder, 
+    ::ng-deep .mat-form-field-empty.mat-form-field-placeholder {
         margin-left: 10px;
         margin-top: 5px;
     }
@@ -395,9 +488,11 @@
     }
 }
 
-.tags {
+.tags-holder {
     display: flex;
     align-items: center;
+    flex-basis: 50%;
+    flex-flow: row wrap;
 }
 
 .tag {
@@ -407,6 +502,7 @@
     background: #dadada;
     border-radius: 2px;
     margin-right: 10px;
+    margin-bottom: 2px;
     .icon-remove {
         cursor: pointer;
         font-size: 14px;
@@ -447,6 +543,7 @@
         padding-left: 8px;
     }
  }
+
 
 
  .property-form {
@@ -499,12 +596,13 @@
         display: none;
     }
     .arrow-checkbox+.arrow-button {
-        margin-left: -25px;
+        margin-left: -30px;
         position: relative;
         display: inline-block;
         padding: 10px;
         cursor: pointer;
         z-index: 100;
+        margin-top: 10px;
     }
     .arrow-checkbox:checked+.arrow-button {
         background-color: rgb(194, 193, 193);
@@ -512,17 +610,27 @@
 }
 
 .dropdown-roles {
-    margin-left: 230px;
+    // margin-left: 230px;
 }
 
 .dropdown-industries {
-    margin-left: 480px;
+    .roles-wrap {
+        top: 28rem!important;
+        left: 29.2rem!important;
+    }
 }
 
+.no-selected-roles-skills-industries-title {
+    font-size: 12px;
+    opacity: .8;
+}
+
+
+
 .dropdown-wrap {
-    position: relative;
-    z-index: 100;
-    min-width: 400px;
+    // position: relative;
+    // z-index: 100;
+    // min-width: 400px;
     .roles-wrap {
         max-height: 400px;
         overflow-y: auto;
@@ -531,6 +639,8 @@
         padding: 15px 10px;
         background-color: $white;
         z-index: 99;
+        top: 28rem;
+        left: 15.2rem;
         .role-wrap {
             cursor: pointer;
             .item-title {
@@ -549,7 +659,9 @@
         border: 1px solid $dark-grey;
         padding: 15px 10px;
         background-color: $white;
-        z-index: 99;
+        z-index: 101;
+        top: 28rem;
+        left: 1.2rem;
         .category-wrap {
             cursor: pointer;
             .category-title {
@@ -651,26 +763,35 @@
 }
 
 .suggestions {
-    position: relative !important;
+    // position: relative !important;
     z-index: 10;
     background: white;
-    display: block;
+    // display: block;
     width: 100%;
     min-width: 600px;
     .suggestions-skills-wrap {
         background: white;
         position: absolute;
         border: 1px solid rgb(219, 217, 217);
+        top: 32em;        
+        left: 13.2rem;
+        z-index: 999;
     }
     .suggestions-roles-wrap {
         background: white;
         position: absolute;
+        z-index: 999;
         border: 1px solid rgb(219, 217, 217);
+        top: 32em;        
+        left: 13.2rem;
     }
     .suggestions-industries-wrap {
         background: white;
         position: absolute;
+        z-index: 999;
         border: 1px solid rgb(219, 217, 217);
+        top: 32rem;        
+        left: 13.2rem;
     }
     table {
         table-layout: fixed;
@@ -755,6 +876,7 @@
     color: #13579a;
     cursor: pointer;
     margin-left: 20px;
+    font-size: 18px;
 }
 
 .selected-items-container {
@@ -819,7 +941,9 @@
     background-color: rgb(199, 196, 196);
     border-radius: 2px;
     color: white;
-    font-size: $font-size-10;
+    font-size: 12px;
+    padding: 4px;
+    margin-left: 3px;
 }
 
 .selected-exp {
@@ -844,3 +968,176 @@
 }
 
 //  SKILLS ROLES INDUSTRIES END
+
+
+.CVName { 
+    display: flex;
+    align-items: center;
+    .icon {
+        font-size: 18px;
+        width: 18px;
+        cursor: pointer;
+        height: 18px;
+        margin-left: 5px;
+    }
+}
+
+.select-type {
+    background: #fff;
+    padding: 4px 10px;
+    border: 1px solid;
+    margin-left: -4px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    .types-list {
+        position: absolute;
+        top: 30px;
+        list-style: none;
+        background: #ffffff;
+        border: 1px solid;
+    }
+}
+
+
+
+.icon-fz14 {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+.icon-fz16 {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.icon-fz18 {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.display-inline-flex {
+    display: inline-flex;
+}
+
+.align-items-c {
+    align-items: center;
+}
+
+.justify-content-c {
+    justify-content: center;
+}
+
+.justify-content-sa {
+    justify-content: space-around;
+}
+
+.justify-content-sb {
+    justify-content: space-between;
+}
+
+.justify-content-fs {
+    justify-content: flex-start;
+}
+
+.justify-content-fe {
+    justify-content: flex-end;
+}
+
+.form-buttons {
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    .send-add-candidate-form {
+        background: #4f9f48;
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        outline: none;
+        margin-right: 15px;
+        font-size: 15px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        &:hover {
+            color: #4f9f48;
+            border: 1px solid #4f9f48;
+            background: #fff;
+        }
+    }
+    .cancel-add-candidate-form {
+        background: red;
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        outline: none;
+        margin-right: 15px;
+        font-size: 15px;
+        border: 1px solid transparent;        
+        cursor: pointer;
+        &:hover {
+            color: red;
+            border: 1px solid red;
+            background: #fff;
+        }
+    }
+}
+
+.selected-skill {
+    width: 49%;
+    &:nth-child(odd) {
+        padding-right: 2px;
+    }
+}
+
+.disabled {
+    opacity: .5!important;
+    cursor: not-allowed!important;
+}
+
+.error {
+    color: red!important;
+}
+
+.delete-website {
+    position: absolute;
+    right: -20px;
+    top: 6px;
+}
+
+.jobs-list {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    background: #fff;
+    border: 1px solid;
+    margin-top: -1px;
+    padding: 5px 2px;
+    span {
+        margin-bottom: 5px;
+        cursor: pointer;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.source-select.stage {
+    ::ng-deep .mat-form-field-infix {
+        border: 1px solid;
+    }
+    
+    ::ng-deep .mat-form-field-empty.mat-form-field-placeholder {
+        margin-left: 5px!important;
+    }
+    ::ng-deep .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder.mat-input-placeholder {
+        display: none!important;
+    }
+}
