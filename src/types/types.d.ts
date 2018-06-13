@@ -29,7 +29,10 @@ type StagesArray  = Array<{
     type: string, 
     title: string, 
     value: number, 
-    editable: boolean
+    editable: boolean,
+    settingsOpened?: boolean,
+    rejectedLogic: false,
+    withdrawnLogic: false
 }>;
 
 type Stage = {
@@ -37,7 +40,10 @@ type Stage = {
     type: string, 
     title: string, 
     value: number,
-    editable: boolean
+    editable: boolean,
+    settingsOpened?: boolean,
+    rejectedLogic: false,
+    withdrawnLogic: false,
 };
 
 type ClientsArray = Array<{

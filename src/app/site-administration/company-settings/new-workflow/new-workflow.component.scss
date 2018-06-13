@@ -33,6 +33,8 @@
     &-section {
         width: 25%;
         padding: 15px;
+        max-height: 250px;
+        overflow-y: auto;
         .blue-btn {
             text-transform: uppercase;
             background: #007ab6;

@@ -683,29 +683,35 @@ input {
     background-color: #F2F2F2;
     margin-bottom: 10px;
     .job-stage {
+        position: relative;
       @include flex(1, 1, 120px);
-      cursor: move!important;
       .job-stage-inner {
         height: 100%;
-        cursor: move!important;
         border: 1px solid rgb(201, 201, 201);
-        padding: 15px 0;
         font-size: 15px;
+        padding-bottom: 35px;
         background-color: #F2F2F2;
         position: relative;
+
+        &:hover .delete-stage {
+            visibility: visible;
+        }
         .delete-stage {
-            position: absolute;
-            top: 3px;
-            right: 7px;
+            width: 100%!important;
+            text-align: right;
+            visibility: hidden;
             z-index: 99;
             font-size: 19px;
-            height: 20px;
-            width: 12px;
+            height: 19px;
+            width: 19px;
+            margin-top: 0px;
+            position: absolute;
+            bottom: 20px;
+            right: 0;
         }
     }
       
       .job-stage-inner:hover {
-        cursor: pointer;
         background-color: rgb(238, 236, 236) !important;
       }
     }
@@ -722,8 +728,6 @@ input {
         }
     }
   }
-
-
 
   .job-offer-stages .job-stage.delete-stage .job-stage-inner {
     font-size: 50px;
@@ -765,52 +769,56 @@ input {
     cursor: default!important;
 }
 
-/**
- * @swimlane/ngx-dnd v"3.1.0" (https://github.com/swimlane/ngx-dnd)
- * Copyright 2017
- * Licensed under MIT
- */
-//  .ngx-dnd-item {
-//     margin: 10px;
-//     padding: 10px;
-//     background-color: rgba(0, 0, 0, 0.2);
-//     transition: opacity 0.4s ease-in-out;
-//     border: 1px solid lightblue;
-//     display: block; }
-//     .ngx-dnd-item:not(.has-handle):not(.move-disabled),
-//     .ngx-dnd-item.has-handle [ngxdraghandle],
-//     .ngx-dnd-item.has-handle [ngxDragHandle] {
-//       cursor: move;
-//       cursor: grab;
-//       cursor: -webkit-grab; }
-//     .ngx-dnd-item .ngx-dnd-content {
-//       -webkit-user-select: none;
-//          -moz-user-select: none;
-//           -ms-user-select: none;
-//               user-select: none; }
-//     .ngx-dnd-item:hover {
-//       border: 1px solid blue; }
+.settings-stage {
+    font-size: 19px;
+    text-align: right;
+    padding-top: 2px;
+    cursor: pointer;
+}
+
+  .icon-fz16 {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+  }
   
-//   .gu-mirror {
-//     position: fixed !important;
-//     margin: 0 !important;
-//     z-index: 9999 !important;
-//     opacity: 0.8;
-//     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-//     filter: alpha(opacity=80); }
-  
-//   .gu-hide {
-//     display: none !important; }
-  
-//   .gu-unselectable {
-//     -webkit-user-select: none !important;
-//     -moz-user-select: none !important;
-//     -ms-user-select: none !important;
-//     user-select: none !important; }
-  
-//   .gu-transit {
-//     opacity: 0.2;
-//     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
-//     filter: alpha(opacity=20); }
-  
-  /*# sourceMappingURL=index.map*/
+  .drag-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      cursor: drag;
+      cursor: move;
+      background: orange;
+  }
+
+  .job-stage-settings {
+      position: absolute;
+      background: #fafafa;
+      border: 1px solid #424242;
+      color: #424242;
+      text-align: left;
+      font-size: 11px;
+        width: 110%;
+        left: -5%;
+        padding: 0 2px;
+      span {
+          margin-bottom: 5px;
+      }
+      p {
+          cursor: pointer;
+      }
+      p:first-child {
+          border-bottom: 1px solid;
+      }
+  }
+
+  .disabled {
+      opacity: .5;
+      background: grey!important;
+      cursor: not-allowed!important;
+  }

@@ -889,6 +889,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			this.skills = _.without(this.skills, skill);
 			this.query = '';
 			this.filteredList = [];
+			this.checkInitialCandidatePropertiesArrays('skills');
 	}
 	
 	getCategorySkills(index) {
@@ -929,6 +930,10 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 				this._renderer.addClass(experienceButtonOne, 'experience-button');
 				this._renderer.addClass(experienceButtonOne, 'any-button');
 				this._renderer.addClass(experienceButtonTwo, 'experience-button');
+				experienceButtonOne.addEventListener('click', this.checkInitialCandidatePropertiesArrays('skills'));
+				experienceButtonTwo.addEventListener('click', this.checkInitialCandidatePropertiesArrays('skills'));
+				experienceButtonThree.addEventListener('click', this.checkInitialCandidatePropertiesArrays('skills'));
+
 
 				this._renderer.addClass(experienceButtonTwo, 'three-button');
 
@@ -1448,8 +1453,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			this.uploadedCandidates[this.currentCandidateIndex][x] = formData[x];
 		}
 		delete formData.cv;
-		formData['candidateId'] = this.uploadedCandidates[this.currentCandidateIndex]['objectId'];
-		formData['developerId'] = this.uploadedCandidates[this.currentCandidateIndex]['developer'].id;
+		formData['candidateId'] = this.uploadedCandidates[this.currentCandidateIndex]['candidateId'];
+		formData['developerId'] = this.uploadedCandidates[this.currentCandidateIndex]['developerId'];
 		console.log(formData);
 		this.disabledCandidateSaveChanges = true;
 	}

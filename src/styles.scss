@@ -881,12 +881,9 @@ app-chat .dropdown-menu {
     transition: opacity 0.4s ease-in-out;
     border: 1px solid lightblue;
     display: block; }
-    .ngx-dnd-item:not(.has-handle):not(.move-disabled),
-    .ngx-dnd-item.has-handle [ngxdraghandle],
-    .ngx-dnd-item.has-handle [ngxDragHandle] {
-      cursor: move;
-      cursor: grab;
-      cursor: -webkit-grab; }
+    // .ngx-dnd-item:not(.has-handle):not(.move-disabled),
+    // .ngx-dnd-item.has-handle [ngxdraghandle],
+    // .ngx-dnd-item.has-handle [ngxDragHandle] { }
     .ngx-dnd-item .ngx-dnd-content {
       -webkit-user-select: none;
          -moz-user-select: none;
@@ -926,9 +923,9 @@ app-chat .dropdown-menu {
     opacity: 0.8;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
     filter: alpha(opacity=80);
-    @include flex(1, 1, 120px);
-    height: 102px!important;
-    width: 120px!important;
+    // @include flex(1, 1, 120px);
+    // height: 102px!important;
+    // width: 120px!important;
     .job-stage-inner {
       height: 100%;
       height: 102px!important;
