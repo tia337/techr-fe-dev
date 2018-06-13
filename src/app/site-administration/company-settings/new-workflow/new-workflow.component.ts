@@ -18,6 +18,7 @@ export class NewWorkflowComponent implements OnInit {
   currentProject = null;
   currentRole = null;
   userRoles;
+  workflowName = '';
 
   constructor(
     private _root_vcr: RootVCRService,
@@ -29,7 +30,6 @@ export class NewWorkflowComponent implements OnInit {
 
   set clients (clients: ClientsArray) {
     this.clientsArray = clients;
-    console.log('clients: ', clients);
   }
 
   get clients () {
@@ -37,9 +37,8 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   set projects (projects: ProjectsArray) {
-    this.projectsArray = projects
-    console.log(this.clientsArray);
-    console.log('projects: ', projects);
+    this.projectsArray = projects;
+    console.log(this.projectsArray);
   }
 
   get projects () {
@@ -48,7 +47,6 @@ export class NewWorkflowComponent implements OnInit {
 
   set roles (value) {
     this.userRoles = value;
-    console.log('user roles: ', value);
   }
 
   get roles () {
@@ -59,14 +57,48 @@ export class NewWorkflowComponent implements OnInit {
     this._root_vcr.clear();
   }
 
+  setWorkFlowName(event) {
+    this.workflowName = event.target.value;
+  }
+
 
   addCustomWorkFlow () {
-    
-    const data = {
-      name: this.currentClient ,
-      project: this.currentProject ? this.currentProject : undefined
-    }
-    this._companySettingService.throwClient(data);
+
+    // const workflowName = request.params.workflowName;
+    // const clientName = request.params.name ? request.params.name : undefined;
+    // const projectName = request.params.project ? request.params.project : undefined;
+    // const userRoleName = request.params.userRole ? request.params.userRole : undefined;
+    // const hiringStages = request.params.stages;
+    // const objectId = request.params.id ? request.params.id : undefined;
+    // const workFlowTypeName = request.params.workFlowTypeName;
+
+    const workflowName: HTMLInputElement = document.getElementById('workflowName') as HTMLInputElement;
+
+    if (this.currentClient !== null) {
+      const data = {
+        clientName: this.currentClient.get('clientOfClientName'),
+        workflowName: workflowName.value,
+        workFlowTypeName: 'Client'
+      };
+      this._companySettingService.throwClient(data);
+    };
+    if (this.currentProject !== null) {
+      const data = {
+        clientName: this.currentProject.get('projectEndClientName'),
+        projectName: this.currentProject.get('projectName'),
+        workflowName: workflowName.value,
+        workFlowTypeName: 'Project'
+      };
+      this._companySettingService.throwClient(data);
+    };
+    if (this.currentRole !== null) {
+      const data = {
+        userRoleName: this.currentRole.get('title'),
+        workflowName: workflowName.value,
+        workFlowTypeName: 'Role'
+      };
+      this._companySettingService.throwClient(data);
+    };
     this._root_vcr.clear();
   }
 

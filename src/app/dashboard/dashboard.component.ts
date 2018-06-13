@@ -40,37 +40,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		window.scrollTo(0, 0);
 
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
-			console.log(profile);
+			// console.log(profile);
 			this.currentUser = profile;
 
 			if (profile && profile.has('Client_Pointer')) {
 				this._dashboardService.getClient().then(client => {
-					console.log(client);
-					console.log(client.get('ActiveSubscription'));
+					// console.log(client);
+					// console.log(client.get('ActiveSubscription'));
 					if(client.get('IsTrialActive')) {
-						console.log('TRIAL ACTIVE!');
+						// console.log('TRIAL ACTIVE!');
 						this._onTrial = client.get('IsTrialActive');
 						const daysTrialLeft = client.get('DaysTrialLeft');
 						this.trialDaysLeft = daysTrialLeft;
 						this.indicatorValue = (daysTrialLeft * 50) / this._login.maxTrialDays;
 						this.expiresOn = new Date(client.get('TrialExpiresOn'));
 					} else if(client.has('ActiveSubscription')) {
-						console.log('TRIAL NOT ACTIVE!');
+						// console.log('TRIAL NOT ACTIVE!');
 						return this._dashboardService.getPlan(client.get('ActiveSubscription').get('StripePlanID'));
 					}
 				}).then(plan => {
-					console.log('PLAN');
-					console.log(plan);
+					// console.log('PLAN');
+					// console.log(plan);
 					if(plan) {
-						console.log("plan getting");
-						console.log(plan.get('NameSwipeIn'));
+						// console.log("plan getting");
+						// console.log(plan.get('NameSwipeIn'));
 						this._currentPlan = plan.get('NameSwipeIn');
 					}
 				});
 			}
 
 			this._dashboardService.checkContractsCount().then(res => {
-				console.log(res);
+				// console.log(res);
 				this.isFirst = res;
 			});
 		}, error => {

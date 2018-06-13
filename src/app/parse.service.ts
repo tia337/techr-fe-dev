@@ -30,6 +30,7 @@ export class Parse {
 		this._Parse = parse;
 		this._Parse.initialize(environment.APP_ID);
 		this._Parse.serverURL = environment.SERVER_URL;
+		
 
 	}
 

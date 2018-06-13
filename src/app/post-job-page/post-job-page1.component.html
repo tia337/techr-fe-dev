@@ -476,6 +476,29 @@
             <section class="right-section">
                 <div class="settings-wrap">
                     <div class="settings-item">
+                        <span class="settings-item__title">Hiring Workflow</span>
+                        <input type="hidden" formControlName="hiringWorkflow">
+                        <input type="hidden" formControlName="hiringStages">
+                        <input type="hidden" formControlName="hiringWorkflowName">
+                        <div class="settings-item__select-holder">
+                            <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                *ngIf="currentcustomHiringWorkFlow === undefined"
+                                (click)="customHiringWorkFlowsListShown = true">Select workflow</p>
+                            <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
+                                *ngIf="currentcustomHiringWorkFlow !== undefined"
+                                (click)="customHiringWorkFlowsListShown = true">{{currentcustomHiringWorkFlow.workflowName}}</p> 
+                            <ul class="settings-item__office-list" 
+                                *ngIf="customHiringWorkFlowsListShown" 
+                                (clickOutside)="customHiringWorkFlowsListShown = false"
+                                [delayClickOutsideInit]="true">
+                                <li *ngFor="let workflow of customHiringWorkFlowsList" 
+                                    (click)="currentcustomHiringWorkFlow = workflow; customHiringWorkFlowSubject.next(workflow); customHiringWorkFlowsListShown = false; detectChange();">
+                                    {{workflow.workflowName}}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="settings-item">
                         <span class="settings-item__title">Department</span>
                         <input type="hidden" #departmentValue [ngModel]="currentDepartment" formControlName="jobDepartment">
                         <div class="settings-item__select-holder">

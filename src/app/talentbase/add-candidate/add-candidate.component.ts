@@ -1368,7 +1368,6 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	
 			if (arrayOfCandidate === 'industries') {
 				if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length === 0 && this.selectedIndustries.length > 0) {
-					console.log('skills == 0', 'selected > 0');
 					this.disabledCandidateSaveChanges = false;
 				} else if (this.uploadedCandidates[this.currentCandidateIndex].industryExperties.length === 0 && this.selectedIndustries.length === 0) {
 					this.disabledCandidateSaveChanges = true;			
@@ -1409,7 +1408,6 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 					if (this.uploadedCandidates[this.currentCandidateIndex].jobs.length === this.jobsSelected.length) {
 						this.disabledCandidateSaveChanges = true;
 						for (let i = 0; i < this.jobsSelected.length; i++) {
-							console.log(this.uploadedCandidates[this.currentCandidateIndex].jobs[i])
 							if (this.uploadedCandidates[this.currentCandidateIndex].jobs[i].id !== this.jobsSelected[i].id) {
 								this.disabledCandidateSaveChanges = false;
 							}
@@ -1455,8 +1453,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		delete formData.cv;
 		formData['candidateId'] = this.uploadedCandidates[this.currentCandidateIndex]['candidateId'];
 		formData['developerId'] = this.uploadedCandidates[this.currentCandidateIndex]['developerId'];
-		console.log(formData);
 		this.disabledCandidateSaveChanges = true;
+		this._parse.execCloud('saveCandidateForm', formData);
 	}
 
 	confirmCandidates() {

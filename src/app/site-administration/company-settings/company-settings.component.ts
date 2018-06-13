@@ -19,6 +19,10 @@ import { ContactUsComponent } from "app/contact-us/contact-us.component";
 import { NewWorkflowComponent } from './new-workflow/new-workflow.component';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
 import { MatSnackBar } from '@angular/material';
+import { Observable, Subscription } from 'rxjs';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/skipWhile';
+import 'rxjs/add/operator/distinct';
 
 @Component({
 	selector: 'app-company-settings',
@@ -87,13 +91,23 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	erpPageStyleDef = 0;
 	erpPageGreeting = '';
 	erpPageGreetingDef = '';
-	workFlowSubscription;
+	workFlowSubscription: Subscription;
 	step;
 	public stagesLength = 7;
 	public clients: ClientsArray;
 	public projects: ProjectsArray;
-	public workflowArray: Array<{ id: string, name: string, stages: StagesArray }> = [];
+	public workflowArray: Array<{ 
+			objectId?: string, 
+			userRoleName?: string, 
+			clientName?: string, 
+			projectName?: string, 
+			workflowName: string, 
+			workFlowTypeName: string, 
+			hiringStages: StagesArray, 
+			workflowSaveChanges: boolean 
+		}> = [];
 	projectEndClientNameEmpty = false;
+	clientHasStandartHiringWorkFlow = false;
 	stagesTemp: StagesArray = [
 		{
 			index: 3,
@@ -152,7 +166,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			title: 'Rejected',
 			editable: false,
 			settingsOpened: false,
-			rejectedLogic: false,
+			rejectedLogic: true,
 			withdrawnLogic: false
 		},
 		{
@@ -163,7 +177,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: true
 		}
 	];
 	public stages: StagesArray = [
@@ -224,7 +238,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			title: 'Rejected',
 			editable: false,
 			settingsOpened: false,
-			rejectedLogic: false,
+			rejectedLogic: true,
 			withdrawnLogic: false
 		},
 		{
@@ -235,11 +249,12 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: true
 		}
 	];
 	public stagesTempInitial = this.stagesTemp.slice();
 	public userRoles = [];
+	private tempCustomWorkFlowStages = [];
 	constructor(
 		private _parse: Parse,
 		private _CompanySettingsService: CompanySettingsService,
@@ -251,6 +266,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	) {
 		this.erpBaseLink = _CompanySettingsService.erpBaseLink;
 	}
+
 	saveErpPageStyle(val: number) {
 		this._CompanySettingsService.setErpPageStyle(val);
 		this.erpPageStyle = val;
@@ -347,16 +363,51 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		query.find().then(data => {
 			this.userRoles = data;
 		});
-		this.workFlowSubscription = this._CompanySettingsService.currentClient.subscribe(data => {
+
+		this.workFlowSubscription = this._CompanySettingsService.client.skipWhile(val => val === null).subscribe(data => {
 			this.createNewWorkFlow(data);
+		});
+		const clientId = this._parse.getClientId();
+		this._parse.execCloud('getStandartHiringWorkFlow', { clientId: clientId }).then(result => {
+			if (result.length === 0) {
+				console.log('getStandartHiringWorkFlow: ', result);
+			};
+			if (result.length > 0) {
+				this.stages = result[0].hiringStages;
+				this.clientHasStandartHiringWorkFlow = true;
+			}
+		});
+		this._parse.execCloud('getCustomHiringWorkFlow', { clientId: clientId }).then(result => {
+			if (result.length > 0) this.workflowArray = result;
+		});
+	}
+
+	saveStandartHiringWorkflow() {
+		if (!this.enableSaveStandartWorkFlow) return;
+		const clientId = this._parse.getClientId();
+		this._parse.execCloud('saveStandartHiringWorkflow', { clientId: clientId, hiringStages: this.stages }).then(result => {
+			this._snackbar.open('Workflow successfully updated', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});
+		});
+	}
+
+	saveCustomWorkFlow(workflow) {
+		console.log(workflow);
+		if (!workflow.workflowSaveChanges) return;
+		let clientId = this._parse.getClientId();
+		this._parse.execCloud('saveCustomHiringWorkFlow', { clientId: clientId, data: workflow }).then(result => {
+			workflow.workflowSaveChanges = false;
+			if (workflow._id) {
+				this._snackbar.open('Workflow successfully updated', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});
+			}
 		});
 	}
 
 	saveSettings() {
 	}
 
-	openStageEdit(stage: Stage) {
+	openStageEdit(stage: Stage, workflow) {
 		stage.editable = true;
+
 		setTimeout(() => {
 			const input = document.getElementById('editStageTitleInput') as HTMLInputElement;
 			this.renderer.invokeElementMethod(input, 'focus');
@@ -369,16 +420,23 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			return;
 		} else {
 			array[index].title = newValue;
-			array[index].type = newValue;
+			array[index].type = this.toCamelCase(newValue);
+			console.log(array[index]);
 			array[index].editable = false;
+			this.enableSaveStandartWorkFlow = true;
 		}
-		for (let i = 0; i < this.stagesTempInitial.length; i++) {
-			for(let x in this.stagesTempInitial[i]) {
-				if (this.stagesTempInitial[i][x] !== this.stages[i][x]) {
-					console.log(this.stagesTempInitial[i][x], ' = ',  this.stages[i][x]);
-					this.enableSaveStandartWorkFlow = true;
-				}
-			}
+	}
+
+	editCustomWorkFlowTitle(newValue, oldValue, index, array, editable) {
+		if (newValue === '' || newValue === null || newValue === oldValue) {
+			array[index].editable = false;
+			return;
+		} else {
+			array[index].title = newValue;
+			array[index].type = this.toCamelCase(newValue);
+			array[index].editable = false;
+			console.log(array[index]);
+			editable.workflowSaveChanges = true;
 		}
 	}
 
@@ -386,11 +444,20 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		for (let i = 0; i < this.stagesTempInitial.length; i++) {
 			for(let x in this.stagesTempInitial[i]) {
 				if (this.stagesTempInitial[i][x] !== this.stages[i][x]) {
-					console.log(this.stagesTempInitial[i][x], ' = ',  this.stages[i][x]);
 					this.enableSaveStandartWorkFlow = true;
 				}
 			}
 		}
+	}
+
+	detectCustomHiringWorkFlowChanges(workflow) {
+		// for (let i = 0; i < this.stagesTempInitial.length; i++) {
+		// 	for(let x in this.stagesTempInitial[i]) {
+		// 		if (this.stagesTempInitial[i][x] !== this.stages[i][x]) {
+		// 			this.enableSaveStandartWorkFlow = true;
+		// 		}
+		// 	}
+		// }
 	}
 
 	removeMovedItem(item, array) {
@@ -400,7 +467,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	addNewStage() {
 		if (this.stages.length > 0) {
 			const newStage: Stage = {
-				index: this.stages[this.stages.length - 1].index + 1,
+				index: this.stages.length + 2,
 				value: 0,
 				title: 'New Stage',
 				editable: true,
@@ -411,7 +478,11 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			};
 			console.log(this.stages);
 			this.stages.push(newStage);
-			console.log(this.stages);			
+			console.log(this.stages);	
+			setTimeout(() => {
+				const editDepartmentId = document.getElementById('editStageTitleInput');
+				this.renderer.invokeElementMethod(editDepartmentId, 'focus');
+			}, 4);		
 		} else if (this.stages.length === 0) {
 			const newStage: Stage = {
 				index: 3,
@@ -424,7 +495,18 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				withdrawnLogic: false
 			};
 			this.stages.push(newStage);
+			setTimeout(() => {
+				const editDepartmentId = document.getElementById('editStageTitleInput');
+				this.renderer.invokeElementMethod(editDepartmentId, 'focus');
+			}, 4);
 		}
+	}
+
+	toCamelCase (str) {
+		return str
+			.replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
+			.replace(/\s/g, '')
+			.replace(/^(.)/, function($1) { return $1.toLowerCase(); });
 	}
 
 	openNewWorkFlowModal() {
@@ -435,71 +517,202 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	}
 
 	createNewWorkFlow (client) {
-		if (client === null) {
-			return;
-		} else {
-			const stages: StagesArray = this.stagesTemp.slice();
-			const id = Math.random().toFixed(36).substring(5, 10);
-			const data = {
-				name: client.name,
-				project: client.project,
-				stages: stages,
-				id: id
-			};
+		const stages: StagesArray = [
+			{
+				index: 3,
+				type: 'shortlist',
+				value: 0,
+				title: 'Shortlist',
+				editable: false,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
+			},
+			{
+				index: 4,
+				type: 'phoneInterview',
+				value: 0,
+				title: 'Phone Interview',
+				editable: false,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
+			},
+			{
+				index: 5,
+				type: 'f2fInterview',
+				value: 0,
+				title: 'F2F Interview',
+				editable: false,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
+			},
+			{
+				index: 6,
+				type: 'jobOffered',
+				value: 0,
+				title: 'Job Offered',
+				editable: false,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
+			},
+			{
+				index: 7,
+				type: 'hired',
+				value: 0,
+				title: 'Hired',
+				editable: false,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
+			},
+			{
+				index: 8,
+				type: 'rejected',
+				value: 0,
+				title: 'Rejected',
+				editable: false,
+				settingsOpened: false,
+				rejectedLogic: true,
+				withdrawnLogic: false
+			},
+			{
+				index: 9,
+				type: 'withdrawn',
+				value: 0,
+				title: 'Withdrawn',
+				editable: false,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: true
+			}
+		];
+
+		const data = {
+			clientName: client.clientName ? client.clientName : undefined,
+			projectName: client.projectName ? client.projectName : undefined,
+			userRoleName: client.userRoleName ? client.userRoleName : undefined,
+			hiringStages: stages,
+			workflowName: client.workflowName,
+			workFlowTypeName: client.workFlowTypeName,
+			workflowSaveChanges: false,
+		};
+		console.log(data);
+		let clientId = this._parse.getClientId();
+		this._parse.execCloud('saveCustomHiringWorkFlow', { clientId: clientId, data: data }).then(result => {
+			console.log(result);
+			data['_id'] = result.id;
 			this.workflowArray.push(data);
-		}
+
+		});
+
 	}
+
 
 	removeWorkflow(currentFlow, array) {
-		array.splice(currentFlow);
+		this._parse.execCloud('deleteCustomWorkFlow', { flowId: currentFlow._id }).then(result => {
+			this.openRemoveSuccessModal();
+			array.splice(currentFlow, 1);
+		});
 	}
 
-	addNewStageInCustomWorkFlow(stages) {
-		console.log(stages);
-		console.log(stages.stages[stages.length - 1]);
-		if (stages.stages.length > 0) {
+	openStageRemoveAlert(currentFlow, array) {
+		const alert = this._root_vcr.createComponent(AlertComponent);
+		alert.title = 'Are you sure you want to delete this workflow?';
+		alert.type = 'lock';
+		alert.contentAlign = 'center';
+		alert.content = `<a style = "white-space:nowrap">You won't lose any candidates or data but you won't be able to use this flow again on future jobs</a>`;
+		alert.addButton({
+			title: 'Cancel',
+			type: 'primary',
+			onClick: () => {
+				this._root_vcr.clear();
+			} 
+		});
+		alert.addButton({
+			title: 'Delete workflow',
+			type: 'warn',
+			onClick: () => {
+				this._root_vcr.clear();
+				this.removeWorkflow(currentFlow, array);
+			} 
+		});
+	}
+
+	openRemoveSuccessModal() {
+		const alert = this._root_vcr.createComponent(AlertComponent);
+		alert.title = 'Congrats';
+		alert.type = 'congrats';
+		alert.contentAlign = 'center';
+		alert.content = `<a style = "white-space:nowrap">Workflow successfully removed!</a>`;
+		setTimeout(() => {
+			this._root_vcr.clear();
+		}, 1500)
+	}
+
+	addNewStageInCustomWorkFlow(i) {
+		if (this.workflowArray[i].hiringStages.length > 0) {
 			const newStage: Stage = {
-				// index: stages.stages[stages.length - 1].index + 1,
-				index: 1,
+				index: this.workflowArray[i].hiringStages.length + 2,
 				value: 0,
 				title: 'New Stage',
-				editable: false,
+				editable: true,
 				type: null,
 				settingsOpened: false,
 				rejectedLogic: false,
 				withdrawnLogic: false
 			};
-			this.workflowArray.forEach(flow => {
-				if (flow.name === stages.name) {
-					console.log(flow.name);
-					flow.stages.push(newStage);
-				}
-			});
+			this.workflowArray[i].hiringStages.push(newStage)
+			this.workflowArray[i].workflowSaveChanges = true;
+			setTimeout(() => {
+				const editDepartmentId = document.getElementById('editStageTitleInput');
+				this.renderer.invokeElementMethod(editDepartmentId, 'focus');
+			}, 4);
 			return;
-		} else if (stages.stages.length === 0) {
+		} else if (this.workflowArray[i].hiringStages.length === 0) {
 			const newStage: Stage = {
 				index: 3,
 				value: 0,
 				title: 'New Stage',
-				editable: false,
+				editable: true,
 				type: null,
 				settingsOpened: false,
 				rejectedLogic: false,
 				withdrawnLogic: false
 			};
-			this.workflowArray.forEach(flow => {
-				if (flow.name === stages.name) {
-					console.log(flow.name);					
-					flow.stages.push(newStage);
-				}
-			});
+			this.workflowArray[0].hiringStages.push(newStage)
+			this.workflowArray[0].workflowSaveChanges = true;
+			setTimeout(() => {
+				const editDepartmentId = document.getElementById('editStageTitleInput');
+				this.renderer.invokeElementMethod(editDepartmentId, 'focus');
+			}, 4);
 		}
 	}
 
 	dropDnD(event?, val?) {
 		for (let i = 0; i < this.stagesTempInitial.length; i++) {
-			if (this.stagesTempInitial[i].index !== this.stages[i].index) this.enableSaveStandartWorkFlow = true;
+			if (this.stagesTempInitial[i].index !== this.stages[i].index) {
+				this.enableSaveStandartWorkFlow = true;
+				break;
+			} 
+			this.enableSaveStandartWorkFlow = false;
 		}
+	}
+
+	dropDnDCustom(event, val: Array<any>, array) {
+		for (let i = 0; i < this.tempCustomWorkFlowStages.length; i++) {
+			if (this.tempCustomWorkFlowStages[i].type !== val[i].type) {
+				array.workflowSaveChanges = true;
+				break;
+			} 
+			array.workflowSaveChanges = false;
+		}
+	}
+
+	saveOnDragstartItemToCompare(stages) {
+		this.tempCustomWorkFlowStages = stages.slice();
 	}
 
 
@@ -959,6 +1172,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+
+
 	saveEditedProject(projectOfClient) {
 		const projectId = projectOfClient.id;
 		const projectName = this.projectsFormGroup.value.editProjectName !== null ? this.projectsFormGroup.value.editProjectName.toString().trim() : '';
@@ -994,9 +1209,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		if (this.workFlowSubscription !== undefined) {
-			this.workFlowSubscription.unsubscribe();
-		}
+		this.workFlowSubscription.unsubscribe();
 	}
 }
 

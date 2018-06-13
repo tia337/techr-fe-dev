@@ -684,6 +684,14 @@ input {
     margin-bottom: 10px;
     .job-stage {
         position: relative;
+        &.disabled {
+            .job-stage-inner {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding-top: 24px;
+            }
+        }
       @include flex(1, 1, 120px);
       .job-stage-inner {
         height: 100%;
@@ -692,12 +700,11 @@ input {
         padding-bottom: 35px;
         background-color: #F2F2F2;
         position: relative;
-
         &:hover .delete-stage {
             visibility: visible;
         }
         .delete-stage {
-            width: 100%!important;
+            width: auto!important;
             text-align: right;
             visibility: hidden;
             z-index: 99;
@@ -710,7 +717,6 @@ input {
             right: 0;
         }
     }
-      
       .job-stage-inner:hover {
         background-color: rgb(238, 236, 236) !important;
       }

@@ -48,6 +48,11 @@
             justify-content: flex-start;
             align-items: center;
             cursor: pointer;
+            position: relative;
+            font-size: 14px;
+            &.dark {
+                background: #006292;
+            }
             &:hover {
                 opacity: .7;
             }
@@ -93,4 +98,30 @@ li {
 li.active {
     background: #000;
     color: #fff;
+}
+
+small {
+    position: absolute;
+    font-size: 8px;
+    bottom: 0;
+}
+
+#workflowName {
+    border: 1px solid;
+    padding: 5px;
+    font-size: 14px;
+    background: darkgray;
+    color: #fff;
+    &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: #fff;
+    }
+    &::-moz-placeholder { /* Firefox 19+ */
+        color: #fff;
+    }
+    &:-ms-input-placeholder { /* IE 10+ */
+        color: #fff;
+    }
+    &:-moz-placeholder { /* Firefox 18- */
+        color: #fff;
+    }
 }
