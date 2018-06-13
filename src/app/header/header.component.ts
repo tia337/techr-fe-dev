@@ -185,20 +185,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	signInWithLinkedin() {
-		this._login.signIn()
-		.then(user => {
-			if (!user.has('Client_Pointer')) {
-				this._root_vcr.clear();
-				this._root_vcr.createComponent(ConfirmationAlertComponent);
-			}
-		});
+		this._login.getAuthUrl('linkedin');
 	}
 
 	signInWithMicrosoft() {
-		this._parse.execCloud('getAuthUrl', {})
-		.then(authUrl => {
-			window.location.href = authUrl;
-		});
+		this._login.getAuthUrl('microsoft');
 	}
 
 	signOut() {

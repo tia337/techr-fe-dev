@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InvitationPageService } from './invitation-page.service';
 import { Branch } from '../shared/services/branch.service';
 import { Loading } from '../shared/utils';
+import { Login } from '../login.service';
 
 @Component({
 	selector: 'app-invitation-page',
@@ -17,13 +18,17 @@ export class InvitationPageComponent implements OnInit {
 
 	constructor(
 		private _invitationPageService: InvitationPageService,
-		private _branch: Branch
+		private _branch: Branch,
+		private _login: Login
 	) { }
 
 	ngOnInit() {
 		this.loading = Loading.loading;
 		this._branch.data.then(branchData => {
 			console.log(branchData);
+
+			localStorage.setItem('branchdata', JSON.stringify(branchData));
+			
 			if (branchData.invitation_author && branchData.invited_user && branchData.client_name) {
 				this.authorName = branchData.invitation_author;
 				this.invitedUserName = branchData.invited_user;
@@ -35,12 +40,12 @@ export class InvitationPageComponent implements OnInit {
 		});
 	}
 
-	signUpWithLinkedin() {
-		this._invitationPageService.signUpWithLinkedin();
+	signInWithLinkedin() {
+		this._login.getAuthUrl('linkedin');
 	}
 
-	signUpWithMicrosoft() {
-		this._invitationPageService.signUpWithMicrosoft();
+	signInWithMicrosoft() {
+		this._login.getAuthUrl('microsoft');
 	}
 
 	get Loading() {
