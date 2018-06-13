@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer } from '@angular/core';
+import { Component, OnInit, Renderer, OnDestroy } from '@angular/core';
 import { CompanySettingsService } from './company-settings.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RootVCRService } from '../../root_vcr.service';
@@ -25,7 +25,7 @@ import { MatSnackBar } from '@angular/material';
 	templateUrl: './company-settings.component.html',
 	styleUrls: ['./company-settings.component.scss']
 })
-export class CompanySettingsComponent implements OnInit {
+export class CompanySettingsComponent implements OnInit, OnDestroy {
 
 	tableRows;
 	clientProbabilitiesToCloseJob;
@@ -78,6 +78,7 @@ export class CompanySettingsComponent implements OnInit {
 	admins: any[] = [];
 	isSafe: boolean;
 	isSafeDef: boolean;
+	enableSaveStandartWorkFlow = false;
 
 
 	erpBaseLink;
@@ -86,10 +87,9 @@ export class CompanySettingsComponent implements OnInit {
 	erpPageStyleDef = 0;
 	erpPageGreeting = '';
 	erpPageGreetingDef = '';
-
+	workFlowSubscription;
 	step;
 	public stagesLength = 7;
-	public stages: StagesArray;
 	public clients: ClientsArray;
 	public projects: ProjectsArray;
 	public workflowArray: Array<{ id: string, name: string, stages: StagesArray }> = [];
@@ -100,37 +100,146 @@ export class CompanySettingsComponent implements OnInit {
 			type: 'shortlist',
 			value: 0,
 			title: 'Shortlist',
-			editable: false
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
 		},
 		{
 			index: 4,
 			type: 'phoneInterview',
 			value: 0,
 			title: 'Phone Interview',
-			editable: false
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
 		},
 		{
 			index: 5,
 			type: 'f2fInterview',
 			value: 0,
 			title: 'F2F Interview',
-			editable: false
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
 		},
 		{
 			index: 6,
 			type: 'jobOffered',
 			value: 0,
 			title: 'Job Offered',
-			editable: false
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
 		},
 		{
 			index: 7,
 			type: 'hired',
 			value: 0,
 			title: 'Hired',
-			editable: false
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		},
+		{
+			index: 8,
+			type: 'rejected',
+			value: 0,
+			title: 'Rejected',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		},
+		{
+			index: 9,
+			type: 'withdrawn',
+			value: 0,
+			title: 'Withdrawn',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
 		}
 	];
+	public stages: StagesArray = [
+		{
+			index: 3,
+			type: 'shortlist',
+			value: 0,
+			title: 'Shortlist',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		},
+		{
+			index: 4,
+			type: 'phoneInterview',
+			value: 0,
+			title: 'Phone Interview',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		},
+		{
+			index: 5,
+			type: 'f2fInterview',
+			value: 0,
+			title: 'F2F Interview',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		},
+		{
+			index: 6,
+			type: 'jobOffered',
+			value: 0,
+			title: 'Job Offered',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		},
+		{
+			index: 7,
+			type: 'hired',
+			value: 0,
+			title: 'Hired',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		},
+		{
+			index: 8,
+			type: 'rejected',
+			value: 0,
+			title: 'Rejected',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		},
+		{
+			index: 9,
+			type: 'withdrawn',
+			value: 0,
+			title: 'Withdrawn',
+			editable: false,
+			settingsOpened: false,
+			rejectedLogic: false,
+			withdrawnLogic: false
+		}
+	];
+	public stagesTempInitial = this.stagesTemp.slice();
+	public userRoles = [];
 	constructor(
 		private _parse: Parse,
 		private _CompanySettingsService: CompanySettingsService,
@@ -201,6 +310,7 @@ export class CompanySettingsComponent implements OnInit {
 			});
 		this._CompanySettingsService.getClientsOfClient()
 			.then(data => {
+				this.clients = data;
 				data.forEach(clientOfClient => {
 					this.clientsofClientArr.push({
 						id: clientOfClient.id,
@@ -221,6 +331,7 @@ export class CompanySettingsComponent implements OnInit {
 
 		this._CompanySettingsService.getClientRecruitmentProjects()
 			.then(data => {
+				this.projects = data;
 				data.forEach(project => {
 					this.projectsOfClient.push({
 						id: project.id,
@@ -232,10 +343,11 @@ export class CompanySettingsComponent implements OnInit {
 
 		this.departmentFormGroupInit();
 		this.officesFormGroupInit();
-		this.stages = this._CompanySettingsService.getStages();
-		this.clients = this._CompanySettingsService.getClients();
-		this.projects = this._CompanySettingsService.getProjects();
-		this._CompanySettingsService.currentClient.subscribe(data => {
+		const query = this._parse.Query('UserRole');
+		query.find().then(data => {
+			this.userRoles = data;
+		});
+		this.workFlowSubscription = this._CompanySettingsService.currentClient.subscribe(data => {
 			this.createNewWorkFlow(data);
 		});
 	}
@@ -260,6 +372,25 @@ export class CompanySettingsComponent implements OnInit {
 			array[index].type = newValue;
 			array[index].editable = false;
 		}
+		for (let i = 0; i < this.stagesTempInitial.length; i++) {
+			for(let x in this.stagesTempInitial[i]) {
+				if (this.stagesTempInitial[i][x] !== this.stages[i][x]) {
+					console.log(this.stagesTempInitial[i][x], ' = ',  this.stages[i][x]);
+					this.enableSaveStandartWorkFlow = true;
+				}
+			}
+		}
+	}
+
+	detectHiringWorkFlowChanges() {
+		for (let i = 0; i < this.stagesTempInitial.length; i++) {
+			for(let x in this.stagesTempInitial[i]) {
+				if (this.stagesTempInitial[i][x] !== this.stages[i][x]) {
+					console.log(this.stagesTempInitial[i][x], ' = ',  this.stages[i][x]);
+					this.enableSaveStandartWorkFlow = true;
+				}
+			}
+		}
 	}
 
 	removeMovedItem(item, array) {
@@ -272,8 +403,11 @@ export class CompanySettingsComponent implements OnInit {
 				index: this.stages[this.stages.length - 1].index + 1,
 				value: 0,
 				title: 'New Stage',
-				editable: false,
-				type: null
+				editable: true,
+				type: null,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
 			};
 			console.log(this.stages);
 			this.stages.push(newStage);
@@ -283,8 +417,11 @@ export class CompanySettingsComponent implements OnInit {
 				index: 3,
 				value: 0,
 				title: 'New Stage',
-				editable: false,
-				type: null
+				editable: true,
+				type: null,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
 			};
 			this.stages.push(newStage);
 		}
@@ -294,6 +431,7 @@ export class CompanySettingsComponent implements OnInit {
 		const newWorkFlow = this._root_vcr.createComponent(NewWorkflowComponent);
 		newWorkFlow.clients = this.clients;
 		newWorkFlow.projects = this.projects;
+		newWorkFlow.roles = this.userRoles;
 	}
 
 	createNewWorkFlow (client) {
@@ -326,7 +464,10 @@ export class CompanySettingsComponent implements OnInit {
 				value: 0,
 				title: 'New Stage',
 				editable: false,
-				type: null
+				type: null,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
 			};
 			this.workflowArray.forEach(flow => {
 				if (flow.name === stages.name) {
@@ -341,7 +482,10 @@ export class CompanySettingsComponent implements OnInit {
 				value: 0,
 				title: 'New Stage',
 				editable: false,
-				type: null
+				type: null,
+				settingsOpened: false,
+				rejectedLogic: false,
+				withdrawnLogic: false
 			};
 			this.workflowArray.forEach(flow => {
 				if (flow.name === stages.name) {
@@ -352,8 +496,10 @@ export class CompanySettingsComponent implements OnInit {
 		}
 	}
 
-	dropDnD(event, val) {
-		console.log(event, val);
+	dropDnD(event?, val?) {
+		for (let i = 0; i < this.stagesTempInitial.length; i++) {
+			if (this.stagesTempInitial[i].index !== this.stages[i].index) this.enableSaveStandartWorkFlow = true;
+		}
 	}
 
 
@@ -845,6 +991,12 @@ export class CompanySettingsComponent implements OnInit {
 		this.projectsOfClient.splice(projectIndex, 1);
 		this._snackbar.open('Project Removed', '', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'bottom'});			
 
+	}
+
+	ngOnDestroy() {
+		if (this.workFlowSubscription !== undefined) {
+			this.workFlowSubscription.unsubscribe();
+		}
 	}
 }
 

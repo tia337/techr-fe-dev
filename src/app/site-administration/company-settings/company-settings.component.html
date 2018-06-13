@@ -1,5 +1,5 @@
 <div class="company-settings-title">
-    <h1> Company Settings </h1>
+    <h1 style="color: #424242;"> Company Settings </h1>
 </div>
 <div class="first" (click)="accessCheck()">
     <button (click)="setChanges()" [ngClass]="{'grey': website == websiteDef && careers == careersDef && picUrlDef === picUrl &&
@@ -350,51 +350,77 @@
                    <p class="pipeline-title">
                        Standart Hiring Workflow
                    </p>
-                    <div class="job-offer-stages" style="padding: 10px 0; margin: 10px 0;" (drop)="dropDnD($event, stages)" ngxDroppable [model]="stages">
-                        <div class="job-stage disabled move-disabled" ngxDraggable [moves]="false">
+                   <div class="job-stage add-new-stage" style="display: flex; justify-content: flex-end;">
+                        <div class="job-stage-inner"
+                            [ngClass]="{'disabled': !enableSaveStandartWorkFlow }"
+                            style="padding: 10px; background: green; color: #fff; cursor: pointer; margin-right: 10px;">
+                            <div class="property-title">
+                                Save Changes
+                            </div>
+                        </div>
+                        <div class="job-stage-inner"
+                            (click)="addNewStage()"
+                            style="padding: 10px; background: green; color: #fff; cursor: pointer;">
+                            <div class="property-title">
+                                +Add new stage
+                            </div>
+                        </div>
+                    </div>
+                    <div class="job-offer-stages" style="margin: 10px 0;">
+                        <div class="job-stage disabled move-disabled">
                             <div class="job-stage-inner">
                                 <div class="property-value">—</div>
                                 <div class="property-title">Suggested</div>
                             </div>
                         </div>
-                        <div class="job-stage disabled move-disabled" ngxDraggable [moves]="false">
+                        <div class="job-stage disabled move-disabled">
                             <div class="job-stage-inner">
                                 <div class="property-value">—</div>
                                 <div class="property-title">Applied</div>
                             </div>
                         </div>
-                        <div class="job-stage disabled move-disabled" ngxDraggable [moves]="false">
+                        <div class="job-stage disabled move-disabled">
                             <div class="job-stage-inner">
                                 <div class="property-value">—</div>
                                 <div class="property-title">Employee Referrals</div>
                             </div>
                         </div>
-                        <div class="job-stage"
-                                *ngFor="let stage of stages; let i = index;" 
-                                ngxDraggable 
-                                [model]="stage">
-                            <div class="job-stage-inner" (click)="openStageEdit(stage)">
-                                <mat-icon (click)="stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>
-                                <div class="property-value">—</div>
-                                <div class="property-title" *ngIf="!stage.editable">{{stage.title}}</div>
-                                <input
-                                    id="editStageTitleInput"
-                                    type="text"
-                                    #editStageTitleInput
-                                    (keydown.enter)="editStageTitle(editStageTitleInput.value, stage.title, i, stages)"
-                                    *ngIf="stage.editable"
-                                    [placeholder]="stage.title"
-                                    (clickOutside)="stage.editable = false"
-                                    [exclude]="'.job-stage-inner'"
-                                    [delayClickOutsideInit]="true"
-                                    [excludeBeforeClick]="true">
-                            </div>
-                        </div>
-                        <div class="job-stage add-new-stage">
-                            <div class="job-stage-inner"
-                                (click)="addNewStage()">
-                                <div class="property-title">
-                                    +Add new stage
+                        <div ngxDroppable style="display: flex; flex-basis: 85%;" (drop)="dropDnD($event, stages)" [model]="stages">
+                            <div class="job-stage has-handle" 
+                                    *ngFor="let stage of stages; let i = index;" 
+                                    ngxDraggable 
+                                    [model]="stage">
+                                <div class="job-stage-inner" >
+                                    <span style="display: flex; justify-content: space-between;">
+                                        <mat-icon class="settings-stage" (click)="openStageEdit(stage)">edit</mat-icon>
+                                        <mat-icon style="cursor: default;" matTooltip="Rejected stage logic" class="settings-stage" *ngIf="stage.rejectedLogic === true;">thumb_down</mat-icon>
+                                        <mat-icon style="cursor: default;" matTooltip="Withdrawn stage logic" class="settings-stage" *ngIf="stage.withdrawnLogic === true;">exit_to_app</mat-icon>
+                                        <mat-icon class="settings-stage" (click)="stage.settingsOpened = !stage.settingsOpened">settings</mat-icon>
+                                    </span>
+                                    <div class="property-value">—</div>
+                                    <div class="property-title" *ngIf="!stage.editable">{{stage.title}}</div>
+                                    <input
+                                        id="editStageTitleInput"
+                                        type="text"
+                                        #editStageTitleInput
+                                        (keydown.enter)="editStageTitle(editStageTitleInput.value, stage.title, i, stages)"
+                                        *ngIf="stage.editable"
+                                        [placeholder]="stage.title"
+                                        (clickOutside)="stage.editable = false"
+                                        [exclude]="'.job-stage-inner'"
+                                        [delayClickOutsideInit]="true"
+                                        [excludeBeforeClick]="true">
+                                    <mat-icon (click)="stages.splice(i, 1); detectHiringWorkFlowChanges()" style="cursor: pointer;" class="delete-stage">delete_forever</mat-icon>
+                                    <p class="drag-line" ngxDragHandle>
+                                        <mat-icon class="icon-fz16" style="transform: rotate(-180deg)">play_arrow</mat-icon>
+                                        <mat-icon class="icon-fz16">dehaze</mat-icon>
+                                        <mat-icon class="icon-fz16">play_arrow</mat-icon>
+                                    </p>
+                                </div>
+                                <div (clickOutside)="stage.settingsOpened = false" [delayClickOutsideInit]="true" *ngIf="stage.settingsOpened" class="job-stage-settings">
+                                    <span>Add logic as:</span>
+                                    <p (click)="stage.rejectedLogic = true; stage.withdrawnLogic = false; stage.settingsOpened = false; detectHiringWorkFlowChanges()">Rejected candidate stage</p>
+                                    <p (click)="stage.rejectedLogic = false; stage.withdrawnLogic = true; stage.settingsOpened = false; detectHiringWorkFlowChanges()">Candidate Withdraw stage</p>
                                 </div>
                             </div>
                         </div>
@@ -443,7 +469,6 @@
                                             *ngFor="let flow of workflow.stages; let i = index;"
                                             ngxDraggable="['workflow.name']" 
                                             [model]="flow"
-                                            style="cursor: move;"                                                
                                             (click)="flow.editable = true">
                                         <div class="job-stage-inner" (click)="openStageEdit(flow)">
                                             <mat-icon (click)="workflow.stages.splice(i, 1)" class="delete-stage">delete_forever</mat-icon>
@@ -461,6 +486,11 @@
                                                 [delayClickOutsideInit]="true"
                                                 [excludeBeforeClick]="true">
                                         </div>
+                                        <!-- <div class="job-stage-settings">
+                                            <span>Add logic as:</span>
+                                            <p>Rejected candidate stage</p>
+                                            <p>Candidate Withdraw stage</p>
+                                        </div> -->
                                     </div>
                                     <div class="job-stage add-new-stage">
                                         <div class="job-stage-inner" (click)="addNewStageInCustomWorkFlow(workflow)">

@@ -177,7 +177,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 	getCurrentPartner(): Promise<any> {
 		return new Promise ((resolve, reject) => {
 			const partner = this._parse.getPartner(this._parse.Parse.User.current());
-			console.log(partner);
+			// console.log(partner);
 			resolve(partner);
 		});
 	}

@@ -3,39 +3,57 @@
   <div class="modal-section">
     <button class="blue-btn" 
       [ngClass]="{'active': currentArray === clientsArray }" 
-      (click)="currentArray = clientsArray; currentClient = null; currentProject = null;">for client <mat-icon class="icon">play</mat-icon> 
+      (click)="currentArray = clientsArray; currentClient = null; currentProject = null;currentRole = null;">for client <mat-icon class="icon">play</mat-icon> 
     </button>
     <button class="blue-btn" 
       [ngClass]="{'active': currentArray === projectsArray }" 
-      (click)="currentArray = projectsArray; currentClient = null;">for project <mat-icon class="icon">play</mat-icon> 
+      (click)="currentArray = projectsArray; currentClient = null; currentProject = null;currentRole = null;">for project <mat-icon class="icon">play</mat-icon> 
     </button>
-    <button class="blue-btn">for user role <mat-icon class="icon">play</mat-icon> </button>
+    <button class="blue-btn" (click)="currentArray = userRoles; currentClient = null; currentProject = null; currentRole = null;">for job role <mat-icon class="icon">play</mat-icon> </button>
   </div>
   <div class="modal-section" *ngIf="currentArray === clientsArray">
-    <ul style="list-style: none;">
+    <!-- <ul style="list-style: none;">
       <li style="cursor: pointer;"
         [ngClass]="{'active': currentClient === item}"
         *ngFor="let item of currentArray" 
         (click)="currentClient = item">
-        {{item.name}}
+        {{item.get('clientOfClientName')}}
       </li>
-    </ul>
-      <!-- <button class="blue-btn" 
+    </ul> -->
+      <button class="blue-btn" 
         [ngClass]="{'active': currentClient === item}"
         *ngFor="let item of currentArray" 
         (click)="currentClient = item">
-        {{item.name}}
-      </button> -->
+        {{item.get('clientOfClientName')}}
+      </button>
   </div>
+  <!-- <div class="modal-section" *ngIf="currentArray === projectsArray">
+    <ul style="list-style: none;">
+      <li style="cursor: pointer;"
+        [ngClass]="{'active': activeLink === item.get('projectName') }"
+        *ngFor="let item of currentArray" 
+        (click)="activeLink = item.get('projectName'); currentProject = item">
+        {{item.get('projectName')}} <small> of client: {{item.get('projectEndClientName')}}</small>
+      </li>
+    </ul>
+  </div> -->
   <div class="modal-section" *ngIf="currentArray === projectsArray">
     <button class="blue-btn"
-      [ngClass]="{'active': activeLink === item.name }" 
+      [ngClass]="{'active': activeLink === item.get('projectName') }" 
       *ngFor="let item of currentArray" 
-      (click)="currentClientsArray = item.clients; activeLink = item.name; currentProject = item.name;">
-      {{item.name}}
+      (click)="activeLink = item.get('projectName'); currentProject = item">
+      {{item.get('projectName')}} <small> of client: {{item.get('projectEndClientName')}}</small>
     </button>
   </div>
-  <div class="modal-section" *ngIf="currentArray === projectsArray">
+  <div class="modal-section" *ngIf="currentArray === userRoles">
+      <button class="blue-btn"
+        [ngClass]="{'active': activeLink === item.get('title') }" 
+        *ngFor="let item of currentArray" 
+        (click)="activeLink = item.get('title'); currentRole = item">
+        {{item.get('title')}}
+      </button>
+  </div>
+  <!-- <div class="modal-section" *ngIf="currentArray === projectsArray">
     <ul style="list-style: none;">
       <li style="cursor: pointer; margin-bottom: 5px;" 
         [ngClass]="{'active': currentClient === client}"
@@ -44,12 +62,14 @@
         {{client.name}}
       </li>
     </ul>
-  </div>
-  <div class="modal-section" *ngIf="currentClient !== null">
+  </div> -->
+  <div class="modal-section" *ngIf="currentClient !== null || currentProject !== null || currentRole !== null">
     <button class="add-custom-workflow" (click)="addCustomWorkFlow()">
       add custom workflow <br>
     </button>
-    <span style="text-transform: initial;">For client: {{currentClient.name}}</span> 
+    <span *ngIf="currentClient" style="text-transform: initial;">For client: {{currentClient.get('clientOfClientName')}}</span> 
+    <span *ngIf="currentProject" style="text-transform: initial;">For project: {{currentProject.get('projectName')}}</span> 
+    <span *ngIf="currentRole" style="text-transform: initial;">For role: {{currentRole.get('title')}}</span> 
   </div>
   </div>
 </div>

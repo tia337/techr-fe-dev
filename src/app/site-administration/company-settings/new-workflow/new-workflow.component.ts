@@ -16,6 +16,8 @@ export class NewWorkflowComponent implements OnInit {
   currentClient = null;
   currentName = null;
   currentProject = null;
+  currentRole = null;
+  userRoles;
 
   constructor(
     private _root_vcr: RootVCRService,
@@ -27,6 +29,7 @@ export class NewWorkflowComponent implements OnInit {
 
   set clients (clients: ClientsArray) {
     this.clientsArray = clients;
+    console.log('clients: ', clients);
   }
 
   get clients () {
@@ -34,23 +37,37 @@ export class NewWorkflowComponent implements OnInit {
   }
 
   set projects (projects: ProjectsArray) {
-    this.projectsArray = projects;
+    this.projectsArray = projects
+    console.log(this.clientsArray);
+    console.log('projects: ', projects);
   }
 
   get projects () {
     return this.projectsArray;
   }
 
+  set roles (value) {
+    this.userRoles = value;
+    console.log('user roles: ', value);
+  }
+
+  get roles () {
+    return this.userRoles
+  }
+
   closeModal() {
     this._root_vcr.clear();
   }
 
+
   addCustomWorkFlow () {
+    
     const data = {
-      name: this.currentClient,
+      name: this.currentClient ,
       project: this.currentProject ? this.currentProject : undefined
     }
     this._companySettingService.throwClient(data);
     this._root_vcr.clear();
   }
+
 }
