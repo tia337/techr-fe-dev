@@ -62,39 +62,39 @@ export class Login {
 	}
 
 	signInWithLinkedin(code: String, branchData?: Object) {
-		const provider = 'signInWithLinkedin';
+		const providerFuncName = 'signInWithLinkedin';
+		const provider = 'linkedin';
 		const tokenName = 'token-li';
-		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem('token-li')) === 0)) {
-			this._parse.execCloud('getAccessToken', { provider: 'linkedin', code: code })
+		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem(tokenName)) === 0)) {
+			this._parse.execCloud('getAccessToken', { provider: provider, code: code })
 			.then(token => {
-				console.log(token);
 				localStorage.setItem(tokenName, JSON.stringify(token));
-				this.signIn(provider, token, branchData);
+				this.signIn(providerFuncName, token, branchData);
 			})
 			return;
 		}
 
 		let token = localStorage.getItem(tokenName);
 		token = JSON.parse(token);
-		this.signIn(provider, token, branchData);
+		this.signIn(providerFuncName, token, branchData);
 	}
 
 	signInWithMicrosoft(code: String, branchData?: Object) {
-		const provider = 'signInWithMicrosoft';
+		const providerFuncName = 'signInWithMicrosoft';
+		const provider = 'microsoft';
 		const tokenName = 'token-ms';
-		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem('token-li')) === 0)) {
-			this._parse.execCloud('getAccessToken', { provider: 'microsoft', code: code })
+		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem(tokenName)) === 0)) {
+			this._parse.execCloud('getAccessToken', { provider: provider, code: code })
 			.then(token => {
-				console.log(token);
 				localStorage.setItem(tokenName, JSON.stringify(token));
-				this.signIn(provider, token, branchData);
+				this.signIn(providerFuncName, token, branchData);
 			})
 			return;
 		}
 
 		let token = localStorage.getItem(tokenName);
 		token = JSON.parse(token);
-		this.signIn(provider, token, branchData);
+		this.signIn(providerFuncName, token, branchData);
 	}
 
 	signIn(provider: string, token: Object, branchData?: Object) {
