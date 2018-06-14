@@ -168,8 +168,12 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 	currentOfficeSubject: Subject<string> = new Subject;
 	currentOffice;
 	officeList: Array<{name: string}> = [];
+	customHiringWorkFlowsList = [];
+	customHiringWorkFlowsListShown = false;
+	currentcustomHiringWorkFlow;
+	customHiringWorkFlowSubject: Subject<any> = new Subject();
 	officeListShown = false;
-	currentDepartmentSubject: Subject<string> = new Subject;
+	currentDepartmentSubject: Subject<string> = new Subject();
 	currentDepartment;
 	departmentsList: Array<{name: string}> = [];
 	departmentListShown = false;
@@ -263,11 +267,18 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.industries = _.sortBy(this.industries, function(industries){ return industries.get("title"); });
 		});
 
+		const clientId = this._parse.getClientId();
+		this._parse.execCloud('getCustomHiringWorkFlow', { clientId: clientId }).then(result => {
+			console.log('getCustomHiringWorkFlow: ', result);
+			if (result.length > 0) this.customHiringWorkFlowsList = result;
+		});
+
 		this.editable = this.contractObj ? false : true;
 
 		this.currentContract = this.contractObj;
 		if (this.contractObj) {
 			this.currentDepartment = this.contractObj.get('jobDepartment');
+			this.currentcustomHiringWorkFlow = this.contractObj.get('hiringWorkFlowName');
 			this.currentOffice = this.contractObj.get('jobOffice');
 			this.currentClient = this.contractObj.get('jobClientOfClient');
 			this.currentProject = this.contractObj.get('jobRecruitmentProject');
@@ -311,7 +322,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				jobHiringTarget: this.contractObj.get('jobHiringTarget'),
 				purchaseOrderReference: this.contractObj.get('purchaseOrderReference'),
 				approvers: undefined,
-				jobRecruitmentProject: this.contractObj.get('jobRecruitmentProject')
+				jobRecruitmentProject: this.contractObj.get('jobRecruitmentProject'),
+				hiringStages: this.contractObj.get('hiringStages'),
+				hiringWorkflow: this.contractObj.get('hiringWorkflow'),
+				hiringWorkflowName: this.contractObj.get('hiringWorkflowName')
 			});
 			this.selectedIndustries = this.contractObj.get('industryTags');
 			this.selected = this.contractObj.get('programingSkills');
@@ -374,7 +388,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				jobHiringTarget: undefined,
 				purchaseOrderReference: undefined,
 				approvers: undefined,
-				jobRecruitmentProject: undefined
+				jobRecruitmentProject: undefined,
+				hiringWorkflow: undefined,
+				hiringStages: undefined,
+				hiringWorkflowName: undefined
 			});
 
 		}
@@ -427,6 +444,17 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		this.currentClientSubject.debounceTime(3000).subscribe(res => {
 			this.contractForm.value.jobClientOfClient = res;
+			if (this.editable === false) {
+				this.saveDraft();
+				console.log('1');
+			}
+		});
+
+		this.customHiringWorkFlowSubject.debounceTime(100).subscribe(res => {
+			this.contractForm.value.hiringWorkflow = res._id;
+			this.contractForm.value.hiringStages = res.hiringStages;
+			this.contractForm.value.hiringWorkflowName = res.hiringWorkflowName;
+			console.log(res);
 			if (this.editable === false) {
 				this.saveDraft();
 			}

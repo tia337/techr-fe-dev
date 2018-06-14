@@ -3,13 +3,14 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Observable } from 'rxjs';
 
 @Injectable()
 export class CompanySettingsService {
 
-	client: BehaviorSubject<any> = new BehaviorSubject(null);
+	client: Subject<any> = new Subject();
 	currentClient = this.client.asObservable();
+	
 	erpBaseLink;
 	logoUpdate: EventEmitter<any> = new EventEmitter();
 
