@@ -30,6 +30,7 @@ import { ApprovalComponent } from './approval/approval.component';
 import { NULL_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Subject } from 'rxjs';
 import { FilterProjects } from './post-job-page.pipes';
+import { CheckoutPageService } from '../checkout-page/checkout-page.service';
 
 @Component({
 	selector: 'app-post-job-page',
@@ -170,7 +171,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 	officeList: Array<{name: string}> = [];
 	customHiringWorkFlowsList = [];
 	customHiringWorkFlowsListShown = false;
-	currentcustomHiringWorkFlow;
+	currentcustomHiringWorkFlow = new Object();
 	customHiringWorkFlowSubject: Subject<any> = new Subject();
 	officeListShown = false;
 	currentDepartmentSubject: Subject<string> = new Subject();
@@ -212,7 +213,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 		private _root_vcr: RootVCRService,
 		private _dashboard: DashboardService,
 		public snackBar: MatSnackBar,
-		private _fp: FilterProjects
+		private _fp: FilterProjects,
+		private _chpS: CheckoutPageService
 	) {
 		_postJobService.checkIsPostJobShowAlert().then(isShowAlert => this.isJobPostShowAlert = isShowAlert);
 	}
@@ -269,16 +271,13 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		const clientId = this._parse.getClientId();
 		this._parse.execCloud('getCustomHiringWorkFlow', { clientId: clientId }).then(result => {
-			console.log('getCustomHiringWorkFlow: ', result);
 			if (result.length > 0) this.customHiringWorkFlowsList = result;
 		});
 
 		this.editable = this.contractObj ? false : true;
-
 		this.currentContract = this.contractObj;
 		if (this.contractObj) {
 			this.currentDepartment = this.contractObj.get('jobDepartment');
-			this.currentcustomHiringWorkFlow = this.contractObj.get('hiringWorkFlowName');
 			this.currentOffice = this.contractObj.get('jobOffice');
 			this.currentClient = this.contractObj.get('jobClientOfClient');
 			this.currentProject = this.contractObj.get('jobRecruitmentProject');
@@ -323,14 +322,17 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				purchaseOrderReference: this.contractObj.get('purchaseOrderReference'),
 				approvers: undefined,
 				jobRecruitmentProject: this.contractObj.get('jobRecruitmentProject'),
-				hiringStages: this.contractObj.get('hiringStages'),
-				hiringWorkflow: this.contractObj.get('hiringWorkflow'),
-				hiringWorkflowName: this.contractObj.get('hiringWorkflowName')
+				hiringStages: '',
+				hiringWorkflow: '',
+				hiringWorkflowName: this.contractObj.get('hiringWorkflowName'),
 			});
+			this.contractForm.value.hiringStages = this.contractObj.get('hiringStages');
+			this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.contractObj.get('hiringWorkflow').id);
+			Object.defineProperty(this.currentcustomHiringWorkFlow, 'workflowName', { value: this.contractObj.get('hiringWorkflowName'), writable: true});
+			console.log(this.currentcustomHiringWorkFlow);
 			this.selectedIndustries = this.contractObj.get('industryTags');
 			this.selected = this.contractObj.get('programingSkills');
 			this.selectedRoles = this.contractObj.get('roles');
-
 			this.loadCountries();
 			this.jobVal = this.contractObj.get('jobType');
 			this.asap = asapLocal.toString();
@@ -389,11 +391,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				purchaseOrderReference: undefined,
 				approvers: undefined,
 				jobRecruitmentProject: undefined,
-				hiringWorkflow: undefined,
 				hiringStages: undefined,
-				hiringWorkflowName: undefined
+				hiringWorkflow: undefined,
+				hiringWorkflowName: undefined,
 			});
-
 		}
 		this._postJobService.getCurrencies().then(currencies => {
 			this.salaryCurrencies = currencies;
@@ -430,40 +431,52 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 		this.currentOfficeSubject.debounceTime(3000).subscribe(res => {
 			this.contractForm.value.jobOffice = res;
-			if (this.editable === false) {
+			if (this.editable === true) {
 				this.saveDraft();
 			}
 		});
 
 		this.currentDepartmentSubject.debounceTime(3000).subscribe(res => {
 			this.contractForm.value.jobDepartment = res;
-			if (this.editable === false) {
+			if (this.editable === true) {
 				this.saveDraft();
 			}
 		});
 
 		this.currentClientSubject.debounceTime(3000).subscribe(res => {
 			this.contractForm.value.jobClientOfClient = res;
-			if (this.editable === false) {
+			if (this.editable === true) {
 				this.saveDraft();
-				console.log('1');
 			}
 		});
 
-		this.customHiringWorkFlowSubject.debounceTime(100).subscribe(res => {
-			this.contractForm.value.hiringWorkflow = res._id;
+		this.customHiringWorkFlowSubject.debounceTime(3000).subscribe(res => {
+			this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', res._id);
 			this.contractForm.value.hiringStages = res.hiringStages;
-			this.contractForm.value.hiringWorkflowName = res.hiringWorkflowName;
-			console.log(res);
-			if (this.editable === false) {
+			this.contractForm.value.hiringWorkflowName = res.workflowName;
+			if (this.editable === true) {
 				this.saveDraft();
 			}
 		});
 
 	}
 
+	createCandidatesPerStageCustomWorkflow(stages) {
+		let newArray = [];
+		for (let i = 0; i < stages.length; i++) {
+			const data = {
+				index: stages[i].index,
+				type: stages[i].type,
+				candidates: []
+			}
+			newArray.push(data);
+		};
+		return newArray;
+	}
+
 	detectChange() {
 		this.currentOfficeSubject.next(this.currentOffice);
+		this.customHiringWorkFlowSubject.next(this.currentcustomHiringWorkFlow);
 	}
 
 	saveDraft() {
@@ -603,17 +616,55 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.contractForm.value.jobClientOfClient = this.currentClient;
 		this.contractForm.value.jobOffice = this.currentOffice;
 		this.contractForm.value.jobDepartment = this.currentDepartment;
-		// console.log(this.logo);
 		this.contractForm.value.Client = this.currentUser.get('Client_Pointer');
 		this.contractForm.value.jobCountry = this.jobCountry;
 		this.contractForm.value.JobState = this.JobState;
 		if (this.postCode) {
 			this.contractForm.value.postCode = this.postCode;
 		}
+
+		if (this.contractObj) {
+			if (this.contractObj.get('hiringWorkflow')) {
+				this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.contractObj.get('hiringWorkflow').id);
+				this.contractForm.value.hiringStages = this.contractObj.get('hiringStages');
+				this.contractForm.value.hiringWorkflowName = this.contractObj.get('hiringWorkflowName');
+				if (this.currentcustomHiringWorkFlow['workflowName'] && !this.currentcustomHiringWorkFlow['hiringStages']) {
+					this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.contractObj.get('hiringWorkflow').id);
+					this.contractForm.value.hiringStages = this.contractObj.get('hiringStages');
+					this.contractForm.value.hiringWorkflowName = this.contractObj.get('hiringWorkflowName');
+				} else if (this.currentcustomHiringWorkFlow['workflowName'] && this.currentcustomHiringWorkFlow['hiringStages']) {
+					this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.currentcustomHiringWorkFlow['_id']);
+					this.contractForm.value.hiringStages = this.currentcustomHiringWorkFlow['hiringStages'];
+					this.contractForm.value.hiringWorkflowName = this.currentcustomHiringWorkFlow['workflowName'];
+				}
+			} else {
+				if (this.currentcustomHiringWorkFlow['workflowName']) {
+					this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.currentcustomHiringWorkFlow['_id']);
+					this.contractForm.value.hiringStages = this.currentcustomHiringWorkFlow['hiringStages'];
+					this.contractForm.value.hiringWorkflowName = this.currentcustomHiringWorkFlow['workflowName'];
+				} else {
+					this.contractForm.value.hiringWorkflow = undefined;
+					this.contractForm.value.hiringStages = undefined;
+					this.contractForm.value.hiringWorkflowName = undefined;
+				}
+			}
+		} else {
+			if (this.currentcustomHiringWorkFlow['workflowName'] && this.currentcustomHiringWorkFlow['hiringStages']) {
+				this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.currentcustomHiringWorkFlow['_id']);
+				this.contractForm.value.hiringStages = this.currentcustomHiringWorkFlow['hiringStages'];
+				this.contractForm.value.hiringWorkflowName = this.currentcustomHiringWorkFlow['workflowName'];
+			} else {
+				this.contractForm.value.hiringWorkflow = undefined;
+				this.contractForm.value.hiringStages = undefined;
+				this.contractForm.value.hiringWorkflowName = undefined;
+			}
+		}
+
 		this.contractForm.value.jobType = this.jobVal;
 		this.contractForm.value.programingSkills = this.selected;
 		this.contractForm.value.roles = this.selectedRoles;
 		this.contractForm.value.industryTags = this.selectedIndustries;
+		
 		if (!this.contractForm.value.durationMin && this.contractForm.value.durationMax) {
 			this.contractForm.value.durationMin = this.contractForm.value.durationMax;
 		} else if (this.contractForm.value.durationMin && !this.contractForm.value.durationMax) {
@@ -731,13 +782,11 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				res.save(options).then(saveResult => {
 					this.showAlert();
 					this.closeSnackBar();
-					// console.log(saveResult, 'Save Result in UpdateContract for DRAFTS');
 					this._router.navigateByUrl('/jobs');
 				});
 			} else {
 				res.save(options).then(saveResult => {
 					this.closeSnackBar();
-					// console.log(saveResult, 'Save Result in UpdateContract for Active');
 					callback();
 				});
 			}

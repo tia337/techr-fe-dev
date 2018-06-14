@@ -396,29 +396,15 @@
                   </div>
                 </div>
               </div>
-              <!-- <span>Some little magic is happening right now to upload all your data</span>
-              <img src="../../assets/images/bulk_magic.png" alt=""> -->
+              
             </div>
         </div>
-        <!-- <div class="bulk-upload-pending__bar-wrap">
-          <div class="bulk-upload-pending__bar">
-            <div class="bulk-upload-pending__bar-fill" [ngStyle]="fillPercentage">
-              <div class="bulk-upload-pending__bar-fill--percentage"><span>{{fillPercentage.width}}</span></div>
-              <div class="bulk-upload-pending__bar-fill--processed">
-                <p>Total processed</p>
-                <p>{{pendingBulkUpload.filesSuccess}}</p>
-              </div>
-            </div>
-            <div class="bulk-upload-pending__bar-total" (click)="initiate()">
-                <p>Total CV files</p>
-                <p>{{pendingBulkUpload.filesTotal}}</p>
-            </div>
-          </div>
-        </div> -->
+       
     </div>
     <div class="bulk-upload-pending__history">
       <p class="bulk-upload-pending__history--title">Upload History</p>
-      <table>
+      <p *ngIf="bulkUploads.length === 0">Your bulk upload history is empty.</p>
+      <table *ngIf="bulkUploads.length > 0">
         <tr>
           <th (click)="sortBulkUploadsHistory('date')">Upload Date</th>
           <th (click)="sortBulkUploadsHistory('uploadUserFilename')">File Name</th>

@@ -43,7 +43,7 @@
         <div class="mat-progress-spinner-layout" *ngIf="postLoader === true">
             <mat-progress-spinner class="candidates-loader" color="primary" mode="indeterminate"></mat-progress-spinner>
         </div>
-        <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
+        <div class="candidates-list-section" *ngIf="candidates.results.length > 0" (scroll)="loadCandidatesAtTheEnd($event)">
             <div class="candidate-block" 
                 *ngFor="let candidate of candidates.results"
                 (click)="userProfile(candidate.id, getPercentageMatch(candidate), getLocationMatch(candidate))" 
@@ -115,7 +115,7 @@
 
             </div>
         </div>
-        <div class="candidate-list-section" *ngIf="!candidates">
+        <div class="candidate-list-section" *ngIf="candidates.results.length === 0">
             No candidates found.
         </div>
     </div>

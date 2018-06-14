@@ -482,17 +482,17 @@
                         <input type="hidden" formControlName="hiringWorkflowName">
                         <div class="settings-item__select-holder">
                             <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
-                                *ngIf="currentcustomHiringWorkFlow === undefined"
+                                *ngIf="currentcustomHiringWorkFlow.workflowName === undefined"
                                 (click)="customHiringWorkFlowsListShown = true">Select workflow</p>
                             <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
-                                *ngIf="currentcustomHiringWorkFlow !== undefined"
+                                *ngIf="currentcustomHiringWorkFlow.workflowName !== undefined"
                                 (click)="customHiringWorkFlowsListShown = true">{{currentcustomHiringWorkFlow.workflowName}}</p> 
                             <ul class="settings-item__office-list" 
                                 *ngIf="customHiringWorkFlowsListShown" 
                                 (clickOutside)="customHiringWorkFlowsListShown = false"
                                 [delayClickOutsideInit]="true">
                                 <li *ngFor="let workflow of customHiringWorkFlowsList" 
-                                    (click)="currentcustomHiringWorkFlow = workflow; customHiringWorkFlowSubject.next(workflow); customHiringWorkFlowsListShown = false; detectChange();">
+                                    (click)="currentcustomHiringWorkFlow = workflow; detectChange(); customHiringWorkFlowsListShown = false;">
                                     {{workflow.workflowName}}
                                 </li>
                             </ul>

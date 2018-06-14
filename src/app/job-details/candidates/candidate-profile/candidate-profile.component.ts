@@ -79,7 +79,6 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 				} else if (listId == 6) {
 					this.allert(1, 'Rejected');
 				} else if (listId == 7) {
-					console.log(listId, 'list id');
 					this.allert(1, 'Withdrawn');
 				}
 			});
@@ -88,10 +87,12 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			this.allert(1, 'Rejected');
 			this._jobDetailsService.activeStage = 6;
 		});
+		// this._jobDetailsService._candidatesCustomHiringWorkflow.subscribe(can)
 	}
 
 
 	ngOnChanges(changes: any) {
+
 		this.verdicts = {
 			definitely: 0,
 			yes: 0,

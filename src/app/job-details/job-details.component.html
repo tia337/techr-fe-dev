@@ -74,11 +74,13 @@
       <div class="job-offer-properties">
 
 
-        <label class="job-property" *ngFor="let stage of stages" (change)="setActiveStage()">
+        <label class="job-property" *ngFor="let stage of stages"  (change)="setActiveStage();">
           <input type="radio" [value]="stage.type" class="interview-stage" name="interview-stage" [disabled]="stagesDisabled == Loading.loading" [(ngModel)]="currentInterviewStage" />
-          <div class="job-property-inner">
+          <div class="job-property-inner" (click)="setCandidatesCustomHiringWorkFlowStage(stage.candidates)">
             <div *ngIf="stage.value !== 0" class="property-value">{{stage.value}}</div>
-            <div *ngIf="stage.value === 0" class="property-value">—</div>
+            <div *ngIf="stage.value === 0 && !stage.candidates" class="property-value">—</div>
+            <span *ngIf="stage.candidates"><div *ngIf="stage.candidates.length > 0" class="property-value">{{stage.candidates.length}}</div></span>
+            <span *ngIf="stage.candidates"><div *ngIf="stage.candidates.length === 0" class="property-value">-</div></span>
             <div class="property-title">{{stage.title}}</div>
           </div>
         </label>

@@ -32,7 +32,8 @@ type StagesArray  = Array<{
     editable: boolean,
     settingsOpened?: boolean,
     rejectedLogic: boolean,
-    withdrawnLogic: boolean
+    withdrawnLogic: boolean,
+    candidates?: Array<any>
 }>;
 
 type Stage = {
@@ -44,6 +45,7 @@ type Stage = {
     settingsOpened?: boolean,
     rejectedLogic: boolean,
     withdrawnLogic: boolean,
+    candidates?: Array<any>
 };
 
 type ClientsArray = Array<{

@@ -100,7 +100,6 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		private _jobsPageService: JobsPageService,
 		private _jobDetailsService: JobDetailsService,
 		private _parse: Parse,
-		// private _login: Login,
 		private _filters: FiltersService,
 		private _graphicService: GraphicsService
 	) {
@@ -151,6 +150,7 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 				}
 			});
 		this.updateContracts();
+		
 	}
 
 	private clearButton(val) {
@@ -243,7 +243,6 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		if (this.filters.length === 1 && this.filters.indexOf(JobsToShow.myJobs) === 0) {
 			this.recruiterSearchControl.reset();
 		}
-		console.log(this.contractStatus)
 		if (this.contractStatus ) {
 			this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
 				this.separatedOffers = new Array();
