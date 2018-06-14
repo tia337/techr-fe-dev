@@ -239,13 +239,25 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 			this._parse.execCloud('sendEmailOutlook', { token: token, message: message })
 			.then(res => {
 				this.emailSending = false;
+				this.closePopup();
+				this._onSend.emit();
+				const alert = this._rootVCR.createComponent(AlertComponent);
+				alert.title = 'Information';
+				alert.contentAlign = 'left';
+				alert.content = `Email successfully sent!`;
+				alert.addButton({
+					type: 'primary',
+					title: 'Ok',
+					onClick: () => {
+						this._rootVCR.clear();
+					}
+				});
 			})
 			.catch(err => {
 				console.error(err);
-			})
-			.finally(() => {
 				this.emailSending = false;
-			})
+				this.closePopup();
+			});
 
 			return;
 		}
