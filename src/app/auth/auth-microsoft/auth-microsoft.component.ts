@@ -19,8 +19,8 @@ export class AuthMicrosoftComponent implements OnInit {
       const endIndex = window.location.href.indexOf('&');
       const code = location.slice(beginIndex, endIndex);
 
-      if (localStorage.getItem('branchdata')) {
-        let branchData = JSON.parse(localStorage.getItem('branchdata'));
+      if (localStorage.getItem('branchData')) {
+        let branchData = JSON.parse(localStorage.getItem('branchData'));
         localStorage.removeItem('branchData');
         this._login.signInWithMicrosoft(code, branchData);
         return;

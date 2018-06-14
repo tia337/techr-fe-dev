@@ -234,6 +234,33 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 				message.body = message.body + '\n>' + base64_url.decode(this.reply.message.payload.body.data).replace(/\n/g, '\n>');
 			}
 		}
+		if (localStorage.getItem('token-ms')) {
+			let token = localStorage.getItem('token-ms');
+			this._parse.execCloud('sendEmailOutlook', { token: token, message: message })
+			.then(res => {
+				this.emailSending = false;
+				this.closePopup();
+				this._onSend.emit();
+				const alert = this._rootVCR.createComponent(AlertComponent);
+				alert.title = 'Information';
+				alert.contentAlign = 'left';
+				alert.content = `Email successfully sent!`;
+				alert.addButton({
+					type: 'primary',
+					title: 'Ok',
+					onClick: () => {
+						this._rootVCR.clear();
+					}
+				});
+			})
+			.catch(err => {
+				console.error(err);
+				this.emailSending = false;
+				this.closePopup();
+			});
+
+			return;
+		}
 		if (this.isSignedIn) {
 			this._gapi.sendMessage(message, res => {
 				console.log(res.threadId);
@@ -436,7 +463,7 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	singInOutlook() {
-		
+
 	}
 
 	loadDraft(draft, sub, body) {
@@ -491,6 +518,10 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 
 	fillEmail(gUser) {
 		this.userEmail = 'userservice@mg.swipein.co.uk';
+		if (localStorage.getItem("token-ms")) {
+			this.userEmail = this._parse.getCurrentUser().get('microsoftEmail');
+			return;
+		}
 		if (gUser.getBasicProfile()) {
 			this.userEmail = gUser.getBasicProfile().getEmail();
 		}

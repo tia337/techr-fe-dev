@@ -27,8 +27,8 @@ export class InvitationPageComponent implements OnInit {
 		this._branch.data.then(branchData => {
 			console.log(branchData);
 
-			localStorage.setItem('branchdata', JSON.stringify(branchData));
-			
+			localStorage.setItem('branchData', JSON.stringify(branchData));
+
 			if (branchData.invitation_author && branchData.invited_user && branchData.client_name) {
 				this.authorName = branchData.invitation_author;
 				this.invitedUserName = branchData.invited_user;

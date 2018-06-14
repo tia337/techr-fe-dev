@@ -62,32 +62,47 @@ export class Login {
 	}
 
 	signInWithLinkedin(code: String, branchData?: Object) {
-		this._parse.execCloud('signInWithLinkedin', { code: code, branchData: branchData })
-		.then(user => {
-      if (user === 'unauthorized') {
-        throw 'unauthorized';
-      }
-			console.log(user);
-			if (!user.authenticated()) {
-				console.log('authenticating user'); // debug
-				return this._parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
-			} else {
-				return user;
-			}
-		})
-		.then(user => {
-			this._profile.next(user);
-			this._router.navigate(['/dashboard']);
-		})
-		.catch(err => {
-			console.error(err);
-      this._router.navigate(['/login'])
-		})
+		const provider = 'signInWithLinkedin';
+		const tokenName = 'token-li';
+		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem('token-li')) === 0)) {
+			this._parse.execCloud('getAccessToken', { provider: 'linkedin', code: code })
+			.then(token => {
+				console.log(token);
+				localStorage.setItem(tokenName, JSON.stringify(token));
+				this.signIn(provider, token, branchData);
+			})
+			return;
+		}
+
+		let token = localStorage.getItem(tokenName);
+		token = JSON.parse(token);
+		this.signIn(provider, token, branchData);
 	}
 
 	signInWithMicrosoft(code: String, branchData?: Object) {
-		this._parse.execCloud('signInWithMicrosoft', { code: code })
+		const provider = 'signInWithMicrosoft';
+		const tokenName = 'token-ms';
+		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem('token-li')) === 0)) {
+			this._parse.execCloud('getAccessToken', { provider: 'microsoft', code: code })
+			.then(token => {
+				console.log(token);
+				localStorage.setItem(tokenName, JSON.stringify(token));
+				this.signIn(provider, token, branchData);
+			})
+			return;
+		}
+
+		let token = localStorage.getItem(tokenName);
+		token = JSON.parse(token);
+		this.signIn(provider, token, branchData);
+	}
+
+	signIn(provider: string, token: Object, branchData?: Object) {
+		this._parse.execCloud(provider, { token: token, branchData: branchData })
 		.then(user => {
+			if (user === 'unauthorized') {
+				throw 'unauthorized';
+			}
 			console.log(user);
 			if (!user.authenticated()) {
 				console.log('authenticating user'); // debug
@@ -102,6 +117,7 @@ export class Login {
 		})
 		.catch(err => {
 			console.error(err);
+			this._router.navigate(['/login'])
 		})
 	}
 
@@ -132,6 +148,9 @@ export class Login {
 	signOut() {
 		console.log('logout')
 		this._parse.Parse.User.logOut().then(() => {
+			localStorage.removeItem('token-li');
+			localStorage.removeItem('token-ms');
+
 			// this._global.IN.User.logout(); Linkedin JS SDK deprecated
 			// add ms logout, remove token from localStorage
 			console.log('redirecting to /login')
