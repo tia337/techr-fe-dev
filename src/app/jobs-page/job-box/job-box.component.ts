@@ -11,6 +11,8 @@ import { AlertComponent } from '../../shared/alert/alert.component';
 import { Socket } from 'ng-socket-io';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { PreloaderComponent } from '../../shared/preloader/preloader.component';
+import { CandidateChatService } from '../../job-details/candidates/candidates-info-tabs/candidate-chat/candidate-chat.service';
+import { CandidatesService } from '../../job-details/candidates/candidates.service';
 
 
 @Component({
@@ -106,6 +108,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		private _parse: Parse,
 		private _router: Router,
 		private _jobDetailsService: JobDetailsService,
+		private _candidatesService: CandidatesService,
 		private _renderer: Renderer2,
 		private _route: ActivatedRoute,
 		private _root_vcr: RootVCRService,
@@ -159,34 +162,50 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 					}
 				});
 			});
-			const suggestionsPromise = this._jobBoxService.getSuggestedCandidatesCount(this.contract.id);
-			promises.push(suggestionsPromise);
-			suggestionsPromise.then(suggestionsCount => {
-				const data = {
+			this._stages.push(
+				{
 					index: 0,
-					type: DeveloperListType.suggested,
-					value: suggestionsCount,
-					title: 'Suggested'
-				}
-				this._stages.splice(0, 0, data);
-			});
-			const applied = {
-				index: 1,
-				type: DeveloperListType.applied,
-				value: this.contract.get('applies') ? this.contract.get('applies').length : 0,
-				title: 'Applied'
-			};
-			this._stages.splice(1, 0, applied);
-			const referralsPromise = this._jobBoxService.getReferralsCount(this.contract);
-			promises.push(referralsPromise);
-			referralsPromise.then(referralsCount => {
-				const data = {
+					type: 'suggested',
+					value: 0,
+					title: 'Suggested',
+					candidates: []
+				},
+				{
+					index: 1,
+					type: 'applied',
+					value: 0,
+					title: 'Applied',
+					candidates: []
+				},
+				{
 					index: 2,
-					type: DeveloperListType.employeeReferrals,
-					value: referralsCount,
-					title: 'Employee Referrals'
+					type: 'refferals',
+					value: 0,
+					title: 'Employee Referrals',
+					candidates: []
 				}
-				this._stages.splice(1, 0, data);
+			);
+			this._candidatesService.getSuggestedCandidatesWeb(this.contract.id).then(result => {
+				let candidates = [];
+				result.results.forEach(candidate => {
+					candidates.push(candidate.get('developer').id);
+				});
+				this._stages[0].candidates = candidates;
+			});
+			
+			this._candidatesService.getAppliedCandidates(this.contract.id).then(result => {
+				let candidates = [];
+				result.results.forEach(candidate => {
+					candidates.push(candidate.get('developer').id);
+				});
+				this._stages[1].candidates = candidates;
+			});
+			this._candidatesService.getReferrals(this.contract.id).then(result => {
+				let candidates = [];
+				result.results.forEach(candidate => {
+					candidates.push(candidate.get('developer').id);
+				});
+				this._stages[2].candidates = candidates;
 			});
 			this.contract.get('hiringStages').forEach(stage => {
 				this._stages.push(stage);
@@ -309,7 +328,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 	}
 
 	goToJobDetails(contractId: string, stage: number, candidates?: Array<any>) {
-		
+	
 		this._jobBoxService.activeContract = this.contract;
 		if (this.contract.get('status') == ContractStatus.draft) {
 			this._router.navigate(['/jobs', contractId]);
@@ -322,12 +341,17 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		if (this.contract.get('hiringStages')) {
 			if (stage === -2) {
 				this._jobDetailsService.activeStage = 'suggested';
+				this._jobDetailsService.setCandidatesCustomHiringWorkflow(this._stages[0].candidates);
+				this.setCustomHiringWorkflowStages(this.stages);
+			} else {
+				this._jobDetailsService.activeStage = stage;
+				this._jobDetailsService.setCandidatesCustomHiringWorkflow(candidates);
 			}
+			this._jobDetailsService.setHasCustomHiringWorkflow(true);
+		} else {
 			this._jobDetailsService.activeStage = stage;
-			this._jobDetailsService.setCandidatesCustomHiringWorkflow(candidates);
+			localStorage.setItem('activeStage', stage.toString());
 		}
-		this._jobDetailsService.activeStage = stage;
-		localStorage.setItem('activeStage', stage.toString());
 	}
 
 	openMenu() {
@@ -448,6 +472,10 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		contract.set('likelihoodToFill', value);
 		this._jobBoxService.setLikelihoodToFill(contract.id, value);
 		this.showLikelihood = false;
+	}
+
+	setCustomHiringWorkflowStages(stages) {
+		this._jobDetailsService.setCustomHiringWorkflowStages(stages);
 	}
 
 	ngOnDestroy() {

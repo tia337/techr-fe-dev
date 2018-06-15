@@ -20,6 +20,8 @@ export class JobDetailsService {
 	private _activeStage: BehaviorSubject<number> = new BehaviorSubject(DeveloperListType.suggested);
 	private _isStagesDisabled: BehaviorSubject<number> = new BehaviorSubject(Loading.success);
 	public _hasCustomHiringWorkflow: BehaviorSubject<boolean> = new BehaviorSubject(null);
+	public _customHiringWorkFlowStages: BehaviorSubject<any> = new BehaviorSubject(null);
+	public _setCandidatesAfterMovingCandidate: BehaviorSubject<any> = new BehaviorSubject(null);
 
 	constructor(private _parse: Parse) { }
 
@@ -131,6 +133,20 @@ export class JobDetailsService {
 
 	setCandidatesCustomHiringWorkflow(value) {
 		this._candidatesCustomHiringWorkflow.next(value);
+	}
+
+	setCustomHiringWorkflowStages(value) {
+		this._customHiringWorkFlowStages.next(value);
+	}
+
+	setCandidatesAfterMovingCandidate(stageType, candidate, previousStage, previousStageCandidates) {
+		const data = {
+			stageType: stageType,
+			candidate: candidate,
+			previousStage: previousStage,
+			previousStageCandidates: previousStageCandidates
+		};
+		this._setCandidatesAfterMovingCandidate.next(data);
 	}
 
 	setLikelihoodToFill(contractId: string, likelihoodToFill: number ) {

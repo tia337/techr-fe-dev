@@ -266,9 +266,8 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 				});
 
 			} else {
-					this.candidatesCustomHiringWorkflow = this._jobDetailsService._candidatesCustomHiringWorkflow.subscribe(candidates => {
+				this.candidatesCustomHiringWorkflow = this._jobDetailsService._candidatesCustomHiringWorkflow.subscribe(candidates => {
 					this.hasCandidates = Loading.loading;
-					// console.log(this._jobDetailsService.contractId);
 					this._candidatesService.getSuggestedCandidatesWeb(localStorage.getItem('contractId')).then(SuggestedCandidates => {
 						if (Object.keys(SuggestedCandidates.weights).length > 0) {
 							this.candidates.weights = SuggestedCandidates.weights;

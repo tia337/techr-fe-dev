@@ -106,20 +106,55 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	initData() {
-		console.log('in init data');
 		this._jobDetailsService.getContract().then(contract => {
 			this.contract = contract;
-			console.log(this.contract);	
 			if (this.contract.get('hiringStages')) {
-				this._jobDetailsService.setHasCustomHiringWorkflow(true);
-				const data = {
-					index: 1,
-					type: DeveloperListType.applied,
-					value: contract.get('applies') ? contract.get('applies').length : 0,
-					title: 'Applied'
-				}
-				this._stages.splice(1, 0, data);
-				return contract;
+					this._stages.push(
+						{
+							index: 0,
+							type: 'suggested',
+							value: 0,
+							title: 'Suggested',
+							candidates: []
+						},
+						{
+							index: 1,
+							type: 'applied',
+							value: 0,
+							title: 'Applied',
+							candidates: []
+						},
+						{
+							index: 2,
+							type: 'refferals',
+							value: 0,
+							title: 'Employee Referrals',
+							candidates: []
+						}
+					);
+				this._candidatesService.getSuggestedCandidatesWeb(this.contract.id).then(result => {
+					let candidates = [];
+					result.results.forEach(candidate => {
+						candidates.push(candidate.get('developer').id);
+					});
+					this._stages[0].candidates = candidates;
+				});
+				
+				this._candidatesService.getAppliedCandidates(this.contract.id).then(result => {
+					let candidates = [];
+					result.results.forEach(candidate => {
+						candidates.push(candidate.get('developer').id);
+					});
+					this._stages[1].candidates = candidates;
+				});
+				this._candidatesService.getReferrals(this.contract.id).then(result => {
+					let candidates = [];
+					result.results.forEach(candidate => {
+						candidates.push(candidate.get('developer').id);
+					});
+					this._stages[2].candidates = candidates;
+				});
+				
 			} else if (this.contract.get('hiringStages') === null || this.contract.get('hiringStages') === undefined || this.contract.get('hiringStages') === '') {
 				this._stages.push({
 					index: 1,
@@ -186,24 +221,27 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 		}).then(res => {
 			return this._jobDetailsService.getReferralsCount(this.contract);
 		}).then(referralsCount => {
-			this._stages.splice(1,0,{
-				index: 2,
-				type: DeveloperListType.employeeReferrals,
-				value: referralsCount,
-				title: 'Employee Referrals'
-			});
+			if (!this.contract.get('hiringStages')) {
+				this._stages.splice(1,0,{
+					index: 2,
+					type: this.contract.get('hiringStages') ? 'refferals' : DeveloperListType.employeeReferrals,
+					value: referralsCount,
+					title: 'Employee Referrals'
+				});
+			}
 		}).then(res => {
 			return this._jobDetailsService.getSuggestedCandidatesCount(this.contractId);
 		}).then(suggestionsCount => {
-			this._stages.splice(0, 0 ,{
-				index: 0,
-				type: DeveloperListType.suggested,
-				value: suggestionsCount,
-				title: 'Suggested'
-			});
+			
 			if (this.contract.get('hiringStages')) {
 				this.stages = this._stages;
 			} else {
+				this._stages.splice(0, 0 ,{
+					index: 0,
+					type: this.contract.get('hiringStages') ? 'suggested' : DeveloperListType.suggested,
+					value: suggestionsCount,
+					title: 'Suggested'
+				});
 				this.stages = this._stages.sort((stage1, stage2) => {
 					if (stage1.index > stage2.index) {
 						return 1;
@@ -218,6 +256,16 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 			this.pipelineLoader = Loading.success;
 		}, error => {
 			console.error(error);
+		});
+		this._jobDetailsService._setCandidatesAfterMovingCandidate.distinct().skipWhile(val => val === null).subscribe(value => {
+			this._stages.forEach(stage => {
+				if (stage.type === value.stageType) {
+					stage.candidates.push(value.candidate);
+				}
+				if (stage.type === value.previousStage) {
+					stage.candidates = value.previousStageCandidates;
+				}
+			});
 		});
 	}
 
@@ -249,6 +297,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	setCandidatesCustomHiringWorkFlowStage(candidates) {
+		console.log(candidates);
 		if (candidates) this._jobDetailsService.setCandidatesCustomHiringWorkflow(candidates);
 	}
 
