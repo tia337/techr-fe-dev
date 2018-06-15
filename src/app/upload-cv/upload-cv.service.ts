@@ -548,7 +548,7 @@ export class UploadCvService {
 		user.set('summary', enemy.summary);
 		user.set('email', enemy.email);
 		user.set('username', enemy.email);
-		user.set('Languages', [enemy.languages]);
+		user.set('Languages', enemy.languages);
 		user.set('WebSites', enemy.websites);
 		user.set('Phone', enemy.phone);
 		return this.createD(enemy).then(dev => {
@@ -757,4 +757,3 @@ export class UserFromCV {
 		expr: number
 	}[];
 }
-
