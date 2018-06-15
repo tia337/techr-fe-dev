@@ -61,10 +61,12 @@
 
     <div class="job-offer-stages">
 
-      <div class="job-stage" *ngFor="let stage of stages" (click)="goToJobDetails(contract.id, stage.type)">
-        <div class="job-stage-inner">
+      <div class="job-stage" *ngFor="let stage of stages" (click)="goToJobDetails(contract.id, stage.type, stage.candidates)">
+        <div class="job-stage-inner" (click)="setCustomHiringWorkflowStages(stages)">
           <div *ngIf="stage.value !== 0" class="property-value">{{stage.value}}</div>
-          <div *ngIf="stage.value === 0" class="property-value">—</div>
+          <div *ngIf="stage.value === 0 && !stage.candidates" class="property-value">—</div>
+          <span *ngIf="stage.candidates"><div *ngIf="stage.candidates.length > 0" class="property-value">{{stage.candidates.length}}</div></span>
+          <span *ngIf="stage.candidates"><div *ngIf="stage.candidates.length === 0" class="property-value">-</div></span>
           <div class="property-title">{{stage.title}}</div>
         </div>
       </div>

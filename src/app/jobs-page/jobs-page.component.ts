@@ -100,7 +100,6 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		private _jobsPageService: JobsPageService,
 		private _jobDetailsService: JobDetailsService,
 		private _parse: Parse,
-		// private _login: Login,
 		private _filters: FiltersService,
 		private _graphicService: GraphicsService
 	) {
@@ -151,6 +150,7 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 				}
 			});
 		this.updateContracts();
+		
 	}
 
 	private clearButton(val) {
@@ -243,7 +243,6 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		if (this.filters.length === 1 && this.filters.indexOf(JobsToShow.myJobs) === 0) {
 			this.recruiterSearchControl.reset();
 		}
-		console.log(this.contractStatus)
 		if (this.contractStatus ) {
 			this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
 				this.separatedOffers = new Array();
@@ -403,65 +402,6 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		this.roleSearchControl.reset();
 		this.updateContracts();
 	}
-		// sortOffers() {
-		// 	if(this.sortBy == 1)
-		// 	{
-		// 		this._allOffers = _.sortBy(this._allOffers, offer => {
-		// 			return -offer.createdAt;
-		// 		});
-		// 	}
-		// 	else
-		// 	{
-		// 		this._allOffers = this._allOffers.sort((offer1, offer2) => {
-		// 			if(offer1.numOfHired > offer2.numOfHired)
-		// 				return -1;
-		// 			else if(offer1.numOfHired < offer2.numOfHired)
-		// 				return 1;
-		// 			else if(offer1.numOfHired == offer2.numOfHired)
-		//
-		// 				if(offer1.numOfJobOffered > offer2.numOfJobOffered)
-		// 					return -1;
-		// 				else if(offer1.numOfJobOffered < offer2.numOfJobOffered)
-		// 					return 1;
-		// 				else if(offer1.numOfJobOffered == offer2.numOfJobOffered)
-		//
-		// 					if(offer1.numOfF2FInterview > offer2.numOfF2FInterview)
-		// 						return -1;
-		// 					else if(offer1.numOfF2FInterview < offer2.numOfF2FInterview)
-		// 						return 1;
-		// 					else if(offer1.numOfF2FInterview == offer2.numOfF2FInterview)
-		//
-		// 						if(offer1.numOfPhomeInterview > offer2.numOfPhomeInterview)
-		// 							return -1;
-		// 						else if(offer1.numOfPhomeInterview < offer2.numOfPhomeInterview)
-		// 							return 1;
-		// 						else if(offer1.numOfPhomeInterview == offer2.numOfPhomeInterview)
-		//
-		// 							if(offer1.numOfShortlist > offer2.numOfShortlist)
-		// 								return -1;
-		// 							else if(offer1.numOfShortlist < offer2.numOfShortlist)
-		// 								return 1;
-		// 							else if(offer1.numOfShortlist == offer2.numOfShortlist)
-		//
-		// 								if(offer1.numOfApplied > offer2.numOfApplied)
-		// 									return -1;
-		// 								else if(offer1.numOfApplied < offer2.numOfApplied)
-		// 									return 1;
-		// 							else if(offer1.numOfApplied == offer2.numOfApplied)
-		//
-		// 									if(offer1.numOfReferrals > offer2.numOfReferrals)
-		// 										return -1;
-		// 									else if(offer1.numOfReferrals < offer2.numOfReferrals)
-		// 										return 1;
-		// 									else if(offer1.numOfReferrals == offer2.numOfReferrals)
-		//
-		// 										if(offer1.numOfSuggested > offer2.numOfSuggested)
-		// 											return -1;
-		// 										else if(offer1.numOfSuggested < offer2.numOfSuggested)
-		// 											return 1;
-		// 		});
-		// 	}
-		// }
 
 		get ContractStatus() {
 			return ContractStatus;

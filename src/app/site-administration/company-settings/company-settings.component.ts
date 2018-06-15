@@ -526,7 +526,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				editable: false,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			},
 			{
 				index: 4,
@@ -536,7 +537,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				editable: false,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			},
 			{
 				index: 5,
@@ -546,7 +548,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				editable: false,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			},
 			{
 				index: 6,
@@ -556,7 +559,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				editable: false,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			},
 			{
 				index: 7,
@@ -566,7 +570,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				editable: false,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			},
 			{
 				index: 8,
@@ -576,7 +581,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				editable: false,
 				settingsOpened: false,
 				rejectedLogic: true,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			},
 			{
 				index: 9,
@@ -586,7 +592,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				editable: false,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: true
+				withdrawnLogic: true,
+				candidates: []
 			}
 		];
 
@@ -605,7 +612,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			console.log(result);
 			data['_id'] = result.id;
 			this.workflowArray.push(data);
-
 		});
 
 	}
@@ -662,7 +668,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				type: null,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			};
 			this.workflowArray[i].hiringStages.push(newStage)
 			this.workflowArray[i].workflowSaveChanges = true;
@@ -680,7 +687,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				type: null,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			};
 			this.workflowArray[0].hiringStages.push(newStage)
 			this.workflowArray[0].workflowSaveChanges = true;

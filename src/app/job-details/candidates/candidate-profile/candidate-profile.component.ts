@@ -39,10 +39,13 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 	};
 
 	private _socketSubscription;
+	public customHiringStagesListShown = false;
 
 	// userId = this._route.snapshot.params['id'];
 
 	private availabilityDate: string;
+	customHiringStages = [];
+	activeStage;
 
 	sendingEmail: { status: string };
 
@@ -79,7 +82,6 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 				} else if (listId == 6) {
 					this.allert(1, 'Rejected');
 				} else if (listId == 7) {
-					console.log(listId, 'list id');
 					this.allert(1, 'Withdrawn');
 				}
 			});
@@ -88,10 +90,24 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			this.allert(1, 'Rejected');
 			this._jobDetailsService.activeStage = 6;
 		});
+		this._jobDetailsService._customHiringWorkFlowStages.subscribe(stages => {
+			console.log(stages);
+			stages.forEach(stage => {
+				if (stage.type === 'applied') return;
+				if (stage.type === 'suggested') return;
+				if (stage.type === 'refferals') return;
+				if (stage.type === 'rejected') return;
+				this.customHiringStages.push(stage);
+			})
+		});
+		this._jobDetailsService.activeStage.subscribe(stage => {
+			this.activeStage = stage;
+		});
 	}
 
 
 	ngOnChanges(changes: any) {
+
 		this.verdicts = {
 			definitely: 0,
 			yes: 0,
@@ -115,28 +131,18 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			}, error => {
 				console.error(error);
 			}).then(scorecardWeightedScores => {
-				console.log(scorecardWeightedScores, 'IN RESULT OF GET WEIGHTED SCORE');
 				let scoreSum = 0;
 
 				this._candidateProfileService.verdicts.definitely = scorecardWeightedScores.filter(score => {
 					return score.get('FinalVerdict') === FinalVerdict.definitely;
 				}).length;
-				// 			AF CHANGE
-				// this._candidateProfileService.verdicts.definitely = this.verdicts.definitely;
 
 				this._candidateProfileService.verdicts.yes = scorecardWeightedScores.filter(score => {
 					return score.get('FinalVerdict') === FinalVerdict.yes;
 				}).length;
-				// 			AF CHANGE
-				// this._candidateProfileService.verdicts.yes = this.verdicts.yes;
-
 				this._candidateProfileService.verdicts.notSure = scorecardWeightedScores.filter(score => {
 					return score.get('FinalVerdict') === FinalVerdict.notSure;
 				}).length;
-				// 			AF CHANGE
-				// this._candidateProfileService.verdicts.notSure = this.verdicts.notSure;
-
-				// console.log()
 
 				scorecardWeightedScores.forEach(scoreObject => {
 					scoreSum += scoreObject.get('WeightedScore');
@@ -145,7 +151,6 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 					this.averageRating = scoreSum / scorecardWeightedScores.length;
 					this._candidateProfileService.scoreSum = scoreSum;
 					this._candidateProfileService.scoreCount = scorecardWeightedScores.length;
-					console.log(this._candidateProfileService);
 				}
 			}, error => {
 				console.error(error);
@@ -166,7 +171,6 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 		email.attachments = [];
 		const onSendSubscription = email.onSend.subscribe(e => {
 			this._router.navigate(['/', 'jobs', this.contractId, 'candidates', 'chat'], {skipLocationChange: true});
-			console.log('onSend works');
 			onSendSubscription.unsubscribe();
 		});
 	}	
@@ -174,6 +178,35 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 	showMoveMenu() {
 		this._renderer.addClass(this.moveCandidateMenu.nativeElement, 'opened');
 	}
+
+	moveCandidateToCustomWorkFlowStage(stage, index) {
+		const activeStage = this._jobDetailsService.activeStage._value;
+		let previousStageCandidates;
+		// if (activeStage === 'applied' || activeStage === 'suggested' || activeStage === 'refferals') {
+		// 	this.customHiringStages.forEach(item => {
+		// 		if (item.type === activeStage) {
+		// 			previousStageCandidates = item.candidates;
+		// 		};
+		// 	});
+		// } else {
+			this.customHiringStages.forEach(item => {
+				if (item.type === activeStage) {
+					const candidateIndex = item.candidates.indexOf(this.candidate.get('developer').id);
+					item.candidates.splice(candidateIndex, 1);
+					previousStageCandidates = item.candidates;
+				};
+			});
+		// }
+		this.customHiringStages[index].candidates.push(this.candidate.get('developer').id);
+		this._parse.execCloud('moveCandidateToCustomWorkFlowStage', { contractId: localStorage.getItem('contractId'), hiringStages: this.customHiringStages.slice(3, this.customHiringStages.length) })
+			.then(result => {
+				this._jobDetailsService.activeStage = stage.type;
+				this._jobDetailsService.setCandidatesCustomHiringWorkflow(this.customHiringStages[index].candidates);
+				this._jobDetailsService.setCandidatesAfterMovingCandidate(stage.type, this.candidate.get('developer').id, activeStage, previousStageCandidates);
+				this.openMovingCandidateSuccessModal(stage.title);
+			});
+	}
+		
 
 	closeMoveMenu() {
 		this._renderer.removeClass(this.moveCandidateMenu.nativeElement, 'opened');
@@ -251,6 +284,21 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 		const rejectionModal = this._root_vcr.createComponent(WithdrawnModalComponent);
 		rejectionModal.setCandidate = candidate;
 		rejectionModal.contractId = this.contractId;
+	}
+
+	openMovingCandidateSuccessModal(stage) {
+		this._root_vcr.clear();
+		const alert = this._root_vcr.createComponent(AlertComponent);
+		alert.title = 'Congrats!';
+		alert.icon = 'thumbs-o-up';
+		alert.type = 'congrats';
+		alert.contentAlign = 'left';
+		alert.content = `<a style = "white-space:nowrap">Candidate successfully moved to ` + stage + ` stage</a>`;
+		alert.addButton({
+			title: 'Close',
+			type: 'primary',
+			onClick: () => this._root_vcr.clear()
+		});
 	}
 
 }

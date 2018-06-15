@@ -11,6 +11,8 @@ import { AlertComponent } from '../../shared/alert/alert.component';
 import { Socket } from 'ng-socket-io';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { PreloaderComponent } from '../../shared/preloader/preloader.component';
+import { CandidateChatService } from '../../job-details/candidates/candidates-info-tabs/candidate-chat/candidate-chat.service';
+import { CandidatesService } from '../../job-details/candidates/candidates.service';
 
 
 @Component({
@@ -89,6 +91,12 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 			type: DeveloperListType.rejected,
 			value: 0,
 			title: 'Rejected'
+		},
+		{
+			index: 9,
+			type: DeveloperListType.withdrawn,
+			value: 0,
+			title: 'Withdrawn'
 		}
 	];
 
@@ -100,6 +108,7 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		private _parse: Parse,
 		private _router: Router,
 		private _jobDetailsService: JobDetailsService,
+		private _candidatesService: CandidatesService,
 		private _renderer: Renderer2,
 		private _route: ActivatedRoute,
 		private _root_vcr: RootVCRService,
@@ -142,108 +151,168 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 
 	private initJobBox() {
 		const promises = [];
-
-		this._jobBoxService.getIntegratedJobBoards(this.contract).then(res => {
-			this.jobBoardPushes = res;
-			res.forEach((jobBoard, index) => {
-				if (index === 0) {
-					this.jobBoardPushesString += jobBoard.get('Name');
-				} else {
-					this.jobBoardPushesString += ', ' + jobBoard.get('Name');
+		if (this.contract.get('hiringStages')) {
+			this._jobBoxService.getIntegratedJobBoards(this.contract).then(res => {
+				this.jobBoardPushes = res;
+				res.forEach((jobBoard, index) => {
+					if (index === 0) {
+						this.jobBoardPushesString += jobBoard.get('Name');
+					} else {
+						this.jobBoardPushesString += ', ' + jobBoard.get('Name');
+					}
+				});
+			});
+			this._stages.push(
+				{
+					index: 0,
+					type: 'suggested',
+					value: 0,
+					title: 'Suggested',
+					candidates: []
+				},
+				{
+					index: 1,
+					type: 'applied',
+					value: 0,
+					title: 'Applied',
+					candidates: []
+				},
+				{
+					index: 2,
+					type: 'refferals',
+					value: 0,
+					title: 'Employee Referrals',
+					candidates: []
 				}
+			);
+			this._candidatesService.getSuggestedCandidatesWeb(this.contract.id).then(result => {
+				let candidates = [];
+				result.results.forEach(candidate => {
+					candidates.push(candidate.get('developer').id);
+				});
+				this._stages[0].candidates = candidates;
 			});
-		});
-
-		this._stages.push({
-			index: 1,
-			type: DeveloperListType.applied,
-			value: this.contract.get('applies') ? this.contract.get('applies').length : 0,
-			title: 'Applied'
-		});
-
-		const suggestionsPromise = this._jobBoxService.getSuggestedCandidatesCount(this.contract.id);
-		promises.push(suggestionsPromise);
-		suggestionsPromise.then(suggestionsCount => {
-			console.log('getSuggestedCandidatesCount: ', suggestionsCount);
-			this._stages.push({
-				index: 0,
-				type: DeveloperListType.suggested,
-				value: suggestionsCount,
-				title: 'Suggested'
+			
+			this._candidatesService.getAppliedCandidates(this.contract.id).then(result => {
+				let candidates = [];
+				result.results.forEach(candidate => {
+					candidates.push(candidate.get('developer').id);
+				});
+				this._stages[1].candidates = candidates;
 			});
-		});
-
-		const userListPromise = this._jobBoxService.getUserList(this.contract);
-		promises.push(userListPromise);
-		userListPromise.then(userList => {
-			const groupedUsers = _.groupBy(userList, userListObj => {
-				return userListObj.get('listType');
+			this._candidatesService.getReferrals(this.contract.id).then(result => {
+				let candidates = [];
+				result.results.forEach(candidate => {
+					candidates.push(candidate.get('developer').id);
+				});
+				this._stages[2].candidates = candidates;
 			});
-			this._stages.push({
-				index: 3,
-				type: DeveloperListType.shortlist,
-				value: groupedUsers[DeveloperListType.shortlist] ? groupedUsers[DeveloperListType.shortlist].length : 0,
-				title: 'Shortlist'
+			this.contract.get('hiringStages').forEach(stage => {
+				this._stages.push(stage);
 			});
-
-			this._stages.push({
-				index: 4,
-				type: DeveloperListType.phoneInterview,
-				value: groupedUsers[DeveloperListType.phoneInterview] ? groupedUsers[DeveloperListType.phoneInterview].length : 0,
-				title: 'Phone Interview'
+			this.stages = this._stages;
+		} else if (this.contract.get('hiringStages') === null || this.contract.get('hiringStages') === undefined || this.contract.get('hiringStages') === '') {
+			this._jobBoxService.getIntegratedJobBoards(this.contract).then(res => {
+				this.jobBoardPushes = res;
+				res.forEach((jobBoard, index) => {
+					if (index === 0) {
+						this.jobBoardPushesString += jobBoard.get('Name');
+					} else {
+						this.jobBoardPushesString += ', ' + jobBoard.get('Name');
+					}
+				});
 			});
 
 			this._stages.push({
-				index: 5,
-				type: DeveloperListType.f2fInterview,
-				value: groupedUsers[DeveloperListType.f2fInterview] ? groupedUsers[DeveloperListType.f2fInterview].length : 0,
-				title: 'F2F Interview'
+				index: 1,
+				type: DeveloperListType.applied,
+				value: this.contract.get('applies') ? this.contract.get('applies').length : 0,
+				title: 'Applied'
 			});
 
-			this._stages.push({
-				index: 6,
-				type: DeveloperListType.jobOffered,
-				value: groupedUsers[DeveloperListType.jobOffered] ? groupedUsers[DeveloperListType.jobOffered].length : 0,
-				title: 'Job Offered'
+			const suggestionsPromise = this._jobBoxService.getSuggestedCandidatesCount(this.contract.id);
+			promises.push(suggestionsPromise);
+			suggestionsPromise.then(suggestionsCount => {
+				this._stages.push({
+					index: 0,
+					type: DeveloperListType.suggested,
+					value: suggestionsCount,
+					title: 'Suggested'
+				});
 			});
 
-			this._stages.push({
-				index: 7,
-				type: DeveloperListType.hired,
-				value: groupedUsers[DeveloperListType.hired] ? groupedUsers[DeveloperListType.hired].length : 0,
-				title: 'Hired'
+			const userListPromise = this._jobBoxService.getUserList(this.contract);
+			promises.push(userListPromise);
+			userListPromise.then(userList => {
+				const groupedUsers = _.groupBy(userList, userListObj => {
+					return userListObj.get('listType');
+				});
+				this._stages.push({
+					index: 3,
+					type: DeveloperListType.shortlist,
+					value: groupedUsers[DeveloperListType.shortlist] ? groupedUsers[DeveloperListType.shortlist].length : 0,
+					title: 'Shortlist'
+				});
+
+				this._stages.push({
+					index: 4,
+					type: DeveloperListType.phoneInterview,
+					value: groupedUsers[DeveloperListType.phoneInterview] ? groupedUsers[DeveloperListType.phoneInterview].length : 0,
+					title: 'Phone Interview'
+				});
+
+				this._stages.push({
+					index: 5,
+					type: DeveloperListType.f2fInterview,
+					value: groupedUsers[DeveloperListType.f2fInterview] ? groupedUsers[DeveloperListType.f2fInterview].length : 0,
+					title: 'F2F Interview'
+				});
+
+				this._stages.push({
+					index: 6,
+					type: DeveloperListType.jobOffered,
+					value: groupedUsers[DeveloperListType.jobOffered] ? groupedUsers[DeveloperListType.jobOffered].length : 0,
+					title: 'Job Offered'
+				});
+
+				this._stages.push({
+					index: 7,
+					type: DeveloperListType.hired,
+					value: groupedUsers[DeveloperListType.hired] ? groupedUsers[DeveloperListType.hired].length : 0,
+					title: 'Hired'
+				});
+
+				this._stages.push({
+					index: 8,
+					type: DeveloperListType.rejected,
+					value: groupedUsers[DeveloperListType.rejected] ? groupedUsers[DeveloperListType.rejected].length : 0,
+					title: 'Rejected'
+				});
 			});
 
-			this._stages.push({
-				index: 8,
-				type: DeveloperListType.rejected,
-				value: groupedUsers[DeveloperListType.rejected] ? groupedUsers[DeveloperListType.rejected].length : 0,
-				title: 'Rejected'
+			const referralsPromise = this._jobBoxService.getReferralsCount(this.contract);
+			promises.push(referralsPromise);
+			referralsPromise.then(referralsCount => {
+				this._stages.push({
+					index: 2,
+					type: DeveloperListType.employeeReferrals,
+					value: referralsCount,
+					title: 'Employee Referrals'
+				});
 			});
-		});
 
-		const referralsPromise = this._jobBoxService.getReferralsCount(this.contract);
-		promises.push(referralsPromise);
-		referralsPromise.then(referralsCount => {
-			this._stages.push({
-				index: 2,
-				type: DeveloperListType.employeeReferrals,
-				value: referralsCount,
-				title: 'Employee Referrals'
+			this._parse.Parse.Promise.when(promises).then(() => {
+				this.stages = this._stages.sort((stage1, stage2) => {
+					if (stage1.index > stage2.index) {
+						return 1;
+					} else if (stage1.index === stage2.index) {
+						return 0;
+					} else {
+						return -1;
+					}
+				});
 			});
-		});
-
-		this._parse.Parse.Promise.when(promises).then(() => {
-			this.stages = this._stages.sort((stage1, stage2) => {
-				if (stage1.index > stage2.index) {
-					return 1;
-				} else if (stage1.index === stage2.index) {
-					return 0;
-				} else {
-					return -1;
-				}
-			});
-		});
+		}
 	}
 
 	get JobType() {
@@ -258,7 +327,8 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		return ContractStatus;
 	}
 
-	goToJobDetails(contractId: string, stage: number) {
+	goToJobDetails(contractId: string, stage: number, candidates?: Array<any>) {
+	
 		this._jobBoxService.activeContract = this.contract;
 		if (this.contract.get('status') == ContractStatus.draft) {
 			this._router.navigate(['/jobs', contractId]);
@@ -268,8 +338,20 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		} else {
 			this._router.navigate(['/', 'jobs', contractId]);
 		}
-		this._jobDetailsService.activeStage = stage;
-		localStorage.setItem('activeStage', stage.toString());
+		if (this.contract.get('hiringStages')) {
+			if (stage === -2) {
+				this._jobDetailsService.activeStage = 'suggested';
+				this._jobDetailsService.setCandidatesCustomHiringWorkflow(this._stages[0].candidates);
+				this.setCustomHiringWorkflowStages(this.stages);
+			} else {
+				this._jobDetailsService.activeStage = stage;
+				this._jobDetailsService.setCandidatesCustomHiringWorkflow(candidates);
+			}
+			this._jobDetailsService.setHasCustomHiringWorkflow(true);
+		} else {
+			this._jobDetailsService.activeStage = stage;
+			localStorage.setItem('activeStage', stage.toString());
+		}
 	}
 
 	openMenu() {
@@ -390,6 +472,10 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		contract.set('likelihoodToFill', value);
 		this._jobBoxService.setLikelihoodToFill(contract.id, value);
 		this.showLikelihood = false;
+	}
+
+	setCustomHiringWorkflowStages(stages) {
+		this._jobDetailsService.setCustomHiringWorkflowStages(stages);
 	}
 
 	ngOnDestroy() {

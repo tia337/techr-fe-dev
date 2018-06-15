@@ -55,7 +55,7 @@
                     <!-- <img class="move-to" src="../../../assets/img/move-forvard.svg"> -->
                     <p>Move to <span class="triangle-wrap"><span class="triangle"></span></span></p>
                     <!-- <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> -->
-                    <div class="move-candidate-dropdown" #moveCandidateMenu (mouseleave)="closeMoveMenu()">
+                    <div *ngIf="customHiringStages.length === 0" class="move-candidate-dropdown" #moveCandidateMenu (mouseleave)="closeMoveMenu()">
                         <div class="header">Move candidate to</div>
                         <div class="inteview-stage" (click)="moveCandidate(0)">Shortlist</div>
                         <div class="inteview-stage" (click)="moveCandidate(1)">Phone Interview</div>
@@ -63,6 +63,14 @@
                         <div class="inteview-stage" (click)="moveCandidate(3)">Job Offered</div>
                         <div class="inteview-stage" (click)="moveCandidate(4)">Hired</div>
                         <div class="inteview-stage" (click)="openWithdrawn(candidate)">Withdrawn</div>
+                    </div>
+                    <div class="move-candidate-dropdown" #moveCandidateMenu (mouseleave)="closeMoveMenu()">
+                        <div class="header">Move candidate to</div>
+                        <span *ngFor="let stage of customHiringStages; let i = index;">
+                            <div [ngClass]="{'dn': stage.type === activeStage}" class="interview-stage" (click)="moveCandidateToCustomWorkFlowStage(stage, i)" >
+                                {{stage.title}}
+                            </div>
+                        </span>
                     </div>
                 </div>
                 <div class="reject-candidate-button button" (click)="openRejection(candidate)">
