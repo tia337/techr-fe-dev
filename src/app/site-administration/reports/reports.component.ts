@@ -90,6 +90,19 @@ removeFromCheckedTeamMembers(member) {
     }
   }
 
+  generateReport() {
+    const clientId = this._parse.getClientId();
+
+    this._parse.execCloud('generateReport', { clientId: clientId })
+    .then(report => {
+      console.log(report);
+      window.open(report, "_blank");
+    })
+    .catch(err => {
+      console.error(err);
+    })
+  }
+
   generateSchedule() {
     const reportName = this.reportName.nativeElement.value;
     const delivery = this.scheduleInput.nativeElement.value;
