@@ -92,13 +92,8 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 			.then(data => {
 				this.clientProbabilitiesToCloseJob = data;
 			});
-		if (localStorage.getItem('initiationsCount') === '1') {
-			localStorage.setItem('initiationsCount', '2');
-			return;
-		} else if (!localStorage.getItem('initiationsCount')) {
-			localStorage.setItem('initiationsCount', '1');
-			return;
-		} 
+		
+		console.log('on init job details');
 	}
 
 	ngOnChanges() {
@@ -109,29 +104,33 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 		this._jobDetailsService.getContract().then(contract => {
 			this.contract = contract;
 			if (this.contract.get('hiringStages')) {
-					this._stages.push(
-						{
-							index: 0,
-							type: 'suggested',
-							value: 0,
-							title: 'Suggested',
-							candidates: []
-						},
-						{
-							index: 1,
-							type: 'applied',
-							value: 0,
-							title: 'Applied',
-							candidates: []
-						},
-						{
-							index: 2,
-							type: 'refferals',
-							value: 0,
-							title: 'Employee Referrals',
-							candidates: []
-						}
-					);
+				console.log(this.contract.get('hiringStages'));
+				this._stages.push(
+					{
+						index: 0,
+						type: 'suggested',
+						value: 0,
+						title: 'Suggested',
+						candidates: []
+					},
+					{
+						index: 1,
+						type: 'applied',
+						value: 0,
+						title: 'Applied',
+						candidates: []
+					},
+					{
+						index: 2,
+						type: 'refferals',
+						value: 0,
+						title: 'Employee Referrals',
+						candidates: []
+					}
+				);
+				this.contract.get('hiringStages').forEach(stage => {
+					this._stages.push(stage);
+				});
 				this._candidatesService.getSuggestedCandidatesWeb(this.contract.id).then(result => {
 					let candidates = [];
 					result.results.forEach(candidate => {
@@ -154,7 +153,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 					});
 					this._stages[2].candidates = candidates;
 				});
-				
 			} else if (this.contract.get('hiringStages') === null || this.contract.get('hiringStages') === undefined || this.contract.get('hiringStages') === '') {
 				this._stages.push({
 					index: 1,
@@ -171,9 +169,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 				return userListObj.get('listType');
 			});
 			if (this.contract.get('hiringStages')) {
-				this.contract.get('hiringStages').forEach(stage => {
-					this._stages.push(stage);
-				});
+				console.log('1');
 			} else {
 				this._stages.push({
 					index: 3,
@@ -296,8 +292,11 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 		this.pipelineLoader = Loading.success;
 	}
 
+	goBack() {
+		
+	} 
+
 	setCandidatesCustomHiringWorkFlowStage(candidates) {
-		console.log(candidates);
 		if (candidates) this._jobDetailsService.setCandidatesCustomHiringWorkflow(candidates);
 	}
 
@@ -318,7 +317,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnDestroy() {
-		if (localStorage.getItem('initiationsCount') === '2') {
+		// if (localStorage.getItem('initiationsCount') === '2') {
 			this._socket.emit('leavingPipeLineGroup', this.contractId);
 			this._jobDetailsService.contractId = null;
 			this._jobDetailsService.suggestionsCount = null;
@@ -334,7 +333,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 			localStorage.removeItem('queryParams');
 			localStorage.removeItem('initiationsCount');
 			localStorage.removeItem('contractId');
-		} 
+		// } 
 	}
 
 }

@@ -466,7 +466,9 @@
                         <div class="settings-item__select-holder">
                             <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
                                 *ngIf="currentcustomHiringWorkFlow.workflowName === undefined"
-                                (click)="customHiringWorkFlowsListShown = true">Select workflow</p>
+                                (click)="customHiringWorkFlowsListShown = true">
+                                Select workflow
+                            </p>
                             <p [ngClass]="{'no-events': editable === false }" class="settings-item__button" 
                                 *ngIf="currentcustomHiringWorkFlow.workflowName !== undefined"
                                 (click)="customHiringWorkFlowsListShown = true">{{currentcustomHiringWorkFlow.workflowName}}</p> 
@@ -474,6 +476,8 @@
                                 *ngIf="customHiringWorkFlowsListShown" 
                                 (clickOutside)="customHiringWorkFlowsListShown = false"
                                 [delayClickOutsideInit]="true">
+                                <li *ngIf="!customStandartWorkflow" (click)="chooseStandartWorkFlow(); detectChange(); customHiringWorkFlowsListShown = false;">Standart workflow</li>
+                                <!-- <li *ngIf="customStandartWorkflow" (click)="currentcustomHiringWorkFlow = customStandartWorkflow ; detectChange(); customHiringWorkFlowsListShown = false; log('1');">Standart workflow</li> -->
                                 <li *ngFor="let workflow of customHiringWorkFlowsList" 
                                     (click)="currentcustomHiringWorkFlow = workflow; detectChange(); customHiringWorkFlowsListShown = false;">
                                     {{workflow.workflowName}}

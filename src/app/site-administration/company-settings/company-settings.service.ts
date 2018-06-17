@@ -50,7 +50,8 @@ export class CompanySettingsService {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 4,
@@ -60,7 +61,8 @@ export class CompanySettingsService {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 5,
@@ -70,7 +72,8 @@ export class CompanySettingsService {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 6,
@@ -80,7 +83,8 @@ export class CompanySettingsService {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 7,
@@ -90,7 +94,8 @@ export class CompanySettingsService {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 8,
@@ -100,7 +105,8 @@ export class CompanySettingsService {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 9,
@@ -110,7 +116,8 @@ export class CompanySettingsService {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		}
 	];
 

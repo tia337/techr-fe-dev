@@ -98,14 +98,15 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit() {
-		this.hasCustomHiringWorkflow = this._jobDetailsService._hasCustomHiringWorkflow.skipWhile(val => val === null).subscribe(hasCustomHiringWorkflow => {
+		console.log('on init candidates');
+		
+		this.hasCustomHiringWorkflow = this._jobDetailsService._hasCustomHiringWorkflow.subscribe(hasCustomHiringWorkflow => {
 			if (hasCustomHiringWorkflow === false) {
 				this._candidatesService.contractId = this._jobDetailsService.contractId;
 				this.contractId = this._jobDetailsService.contractId;
 				this._parse.getPartner(this._parse.Parse.User.current()).then( partner => {
 					this.unitPreference = partner.get('candidateDistanceUnitPreferrences');
 				});
-		
 				this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe(candidatesCount => {
 					if (candidatesCount) {
 						this._candidatesCountObject = candidatesCount;
@@ -121,7 +122,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 				this._stageSubscription = this._jobDetailsService.activeStage.subscribe(activeStage => {
 					this._activeStage = activeStage;
 					if (this._candidatesCountObject) {
-						this._candidatesCount = this._candidatesCountObject.find( count => {
+						this._candidatesCount = this._candidatesCountObject.find(count => {
 							return count.type === activeStage;
 						}).value;
 						console.log('Subscribed for stage. CandidatesCount: ', this._candidatesCount);
@@ -187,7 +188,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 									this.candidates = suggestions;
 									const firstUser = suggestions.results[0];
 									this._candidatesService.userId = firstUser.id;
-									// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 									if (localStorage.getItem('queryParams') != null) {
 										let data = JSON.parse(localStorage.getItem('queryParams'));
 										this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
@@ -211,7 +211,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 									this.candidates = referrals;
 									const firstUser = referrals.results[0];
 									this._candidatesService.userId = firstUser.id;
-									// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 									if (localStorage.getItem('queryParams') != null) {
 										let data = JSON.parse(localStorage.getItem('queryParams'));
 										this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
@@ -266,7 +265,10 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 				});
 
 			} else {
+				console.log('in has cust work flow in candidates');
+
 				this.candidatesCustomHiringWorkflow = this._jobDetailsService._candidatesCustomHiringWorkflow.subscribe(candidates => {
+					console.log(candidates);
 					this.hasCandidates = Loading.loading;
 					this._candidatesService.getSuggestedCandidatesWeb(localStorage.getItem('contractId')).then(SuggestedCandidates => {
 						if (Object.keys(SuggestedCandidates.weights).length > 0) {
@@ -277,8 +279,40 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 						this.getDevelopersCustomHiringWorkFlowStage(candidates);
 					});
 				});
+
+				// this._candidatesService.getSuggestedCandidatesWeb(localStorage.getItem('contractId')).then(SuggestedCandidates => {
+				// 	if (Object.keys(SuggestedCandidates.weights).length > 0) {
+				// 		this.candidates.weights = SuggestedCandidates.weights;
+				// 	} else {
+				// 		this.candidates.weights = undefined;
+				// 	};
+				// 	this.getDevelopersCustomHiringWorkFlowStage(localStorage.getItem('candidatesCustomHiringWorkflow'));
+				// });
 			}
-		});
+		}); 
+
+		if (localStorage.getItem('setHasCustomHiringWorkflow') === 'true') {
+			console.log('has cust w loc st');
+			this._candidatesService.getSuggestedCandidatesWeb(localStorage.getItem('contractId')).then(SuggestedCandidates => {
+				if (Object.keys(SuggestedCandidates.weights).length > 0) {
+					this.candidates.weights = SuggestedCandidates.weights;
+				} else {
+					this.candidates.weights = undefined;
+				};
+				console.log()
+				this.getDevelopersCustomHiringWorkFlowStage(JSON.parse(localStorage.getItem('candidatesCustomHiringWorkflow')));
+			});
+		};
+
+		if (localStorage.getItem('initiationsCount') === '1') {
+			console.log(localStorage.getItem('initiationsCount'));
+			localStorage.setItem('initiationsCount', '2');
+			return;
+		} else if (!localStorage.getItem('initiationsCount')) {
+			localStorage.setItem('initiationsCount', '1');
+			console.log(localStorage.getItem('initiationsCount'));
+			return;
+		} 
 	};
 
 	
@@ -495,7 +529,8 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
             });
         }
         return 'success';
-    }
+	}
+	
     addCountries(){
         const addCount = this._root_vcr.createComponent(Modal1Component);
         this.loadCountries();
@@ -524,8 +559,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	getPercentageMatchQueryParams(user): number {
-		if (this.candidates.weights) return this.candidates.weights[user] ? this.candidates.weights[user] : 0;
-		
+		if (this.candidates.weights) return this.candidates.weights[user] ? this.candidates.weights[user] : 0;	
 	}
 
 	getLocationMatchQueryParams(user): number {
@@ -613,8 +647,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	get Loading() {
 		return Loading;
 	}
-
-	
 
 	changeSortMethod(value) {
 		this.postLoader = true;
@@ -865,11 +897,11 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 
 	ngOnDestroy() {
 		if (this._stageSubscription !== undefined) this._stageSubscription.unsubscribe();
-		// this._stageSubscription.unsubscribe();
 		if (this._candidatesCountSubscription !== undefined) this._candidatesCountSubscription.unsubscribe();
-		// this._candidatesCountSubscription.unsubscribe();
 		this._jobDetailsService = null;
-		if (this.candidatesCustomHiringWorkflow !== undefined) this.candidatesCustomHiringWorkflow.unsubscribe();
-		if (this.hasCustomHiringWorkflow !== undefined) this.hasCustomHiringWorkflow.unsubscribe();
+		if (localStorage.getItem('initiationsCount') === '2') {
+			if (this.candidatesCustomHiringWorkflow !== undefined) this.candidatesCustomHiringWorkflow.unsubscribe();
+			if (this.hasCustomHiringWorkflow !== undefined) this.hasCustomHiringWorkflow.unsubscribe();
+		}
 	}
 }

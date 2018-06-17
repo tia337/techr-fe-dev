@@ -100,7 +100,9 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   }
 
   getTalentDBCandidates() {
-    this._talentBaseService.getTalentDBCandidates(this.clientId).then(data => {
+    const clientId = this._parse.getClientId()
+    this._talentBaseService.getTalentDBCandidates(clientId).then(data => {
+      console.log(data);
       if (data.length === 0) return this.noCandidatesInDB = true;
       this.candidatesArray = data.slice(this.paginationLimits.from, this.paginationLimits.to);
       this.candidatesStorage = data;

@@ -117,7 +117,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 4,
@@ -127,7 +128,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 5,
@@ -137,7 +139,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 6,
@@ -147,7 +150,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 7,
@@ -157,7 +161,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 8,
@@ -167,7 +172,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: true,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 9,
@@ -177,7 +183,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: true
+			withdrawnLogic: true,
+			candidates: []
 		}
 	];
 	public stages: StagesArray = [
@@ -189,7 +196,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 4,
@@ -199,7 +207,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 5,
@@ -209,7 +218,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 6,
@@ -219,7 +229,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 7,
@@ -229,7 +240,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 8,
@@ -239,7 +251,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: true,
-			withdrawnLogic: false
+			withdrawnLogic: false,
+			candidates: []
 		},
 		{
 			index: 9,
@@ -249,7 +262,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			editable: false,
 			settingsOpened: false,
 			rejectedLogic: false,
-			withdrawnLogic: true
+			withdrawnLogic: true,
+			candidates: []
 		}
 	];
 	public stagesTempInitial = this.stagesTemp.slice();
@@ -319,6 +333,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		this._CompanySettingsService.getDepartments()
 			.then(data => {
 				this.departments = data;
+				console.log(data);
 			});
 		this._CompanySettingsService.getOffices()
 			.then(data => {
@@ -382,6 +397,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	saveStandartHiringWorkflow() {
 		if (!this.enableSaveStandartWorkFlow) return;
 		const clientId = this._parse.getClientId();
+		console.log(this.stages);
 		this._parse.execCloud('saveStandartHiringWorkflow', { clientId: clientId, hiringStages: this.stages }).then(result => {
 			this._snackbar.open('Workflow successfully updated', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});
 		});
@@ -418,7 +434,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		} else {
 			array[index].title = newValue;
 			array[index].type = this.toCamelCase(newValue);
-			console.log(array[index]);
 			array[index].editable = false;
 			this.enableSaveStandartWorkFlow = true;
 		}
@@ -432,7 +447,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			array[index].title = newValue;
 			array[index].type = this.toCamelCase(newValue);
 			array[index].editable = false;
-			console.log(array[index]);
 			editable.workflowSaveChanges = true;
 		}
 	}
@@ -471,7 +485,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				type: null,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			};
 			console.log(this.stages);
 			this.stages.push(newStage);
@@ -489,7 +504,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				type: null,
 				settingsOpened: false,
 				rejectedLogic: false,
-				withdrawnLogic: false
+				withdrawnLogic: false,
+				candidates: []
 			};
 			this.stages.push(newStage);
 			setTimeout(() => {
@@ -948,8 +964,10 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	}
 
 	removeDepartment(id) {
+		console.log(id);
 		this.departments.forEach(department => {
 			if (department.id === id) {
+				console.log(id);
 				const index = this.departments.indexOf(department);
 				this.departments.splice(index, 1);
 			}
@@ -1139,8 +1157,17 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 
 	saveNewProject() {
 		const projectName = this.projectsFormGroup.value.projectName !== null ? this.projectsFormGroup.value.projectName.toString().trim() : '';
-		const clientOfClientId = this.projectsFormGroup.value.projectEndClientName;
-		if (projectName !== '' && clientOfClientId !== '') {
+		let clientOfClientId = this.projectsFormGroup.value.projectEndClientName;
+		if (clientOfClientId === '') {
+			clientOfClientId = null;
+		} 
+		console.log(clientOfClientId);
+		console.log(projectName);
+		if (projectName !== '' && (clientOfClientId === '' || clientOfClientId === null)) { 
+			this.projectEndClientNameEmpty = true;
+			return;
+		};
+		if (projectName !== '' && (clientOfClientId !== '' || clientOfClientId !== null)) {
 			this._CompanySettingsService.createClientRecruitmentProject(clientOfClientId, projectName)
 				.then(newProject => {
 					this.projectsOfClient.push({
@@ -1153,9 +1180,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 					this.projectEndClientNameEmpty = false;			
 					this._snackbar.open('Project Added', '', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'bottom'});
 				});
-		} else if (projectName !== '' && clientOfClientId === '') { 
-			this.projectEndClientNameEmpty = true;
-		} 
+		}
 	}
 
 	editProjectOfClient(projectOfClient) {

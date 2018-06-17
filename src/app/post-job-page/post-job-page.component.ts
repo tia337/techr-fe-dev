@@ -196,6 +196,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 	thirdLocationOpened = false;
 	
 	approversSubscription;
+	customStandartWorkflow;
 
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
 	@ViewChild('categoriesDropdown') categoriesDropdown: ElementRef;
@@ -342,6 +343,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 			this.jobVal = this.contractObj.get('jobType');
 			this.asap = asapLocal.toString();
 
+			
+
 			this.contractObj.get('jobType');
 			this.initSalaryRange(this.contractObj.get('jobType'));
 			if (this.contractObj.get('minRate') && this.contractObj.get('maxRate') && !this.contractForm.value.isRatedHourly) {
@@ -408,6 +411,17 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				hiringWorkflow: undefined,
 				hiringWorkflowName: undefined,
 			});
+
+			this._parse.execCloud('getStandartHiringWorkFlow', { clientId: this._parse.getClientId() }).then(result => {
+				console.log(result);
+				if (result.length > 0) {
+					result[0]['workflowName'] = 'Standart Workflow';
+					this.customStandartWorkflow = result;
+					this.customHiringWorkFlowsList.splice(1, 0, result[0]);
+					this.contractForm.value.hiringStages = result[0].hiringStages;
+					console.log(this.contractForm.value.hiringStages);
+				}
+			});
 		}
 		this._postJobService.getCurrencies().then(currencies => {
 			this.salaryCurrencies = currencies;
@@ -431,8 +445,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				res => {
 					if (this.contractForm.dirty) {
 						if (!this.currentContract) {
+							console.log(this.contractForm.value);
 							this.createContract(this.contractForm.value);
 						} else if (this.currentContract) {
+							console.log(this.contractForm.value);
 							this.initContract();
 							this.updateContract(this.contractForm.value);
 						}
@@ -487,6 +503,12 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 		return newArray;
 	}
 
+	chooseStandartWorkFlow() {
+		this.contractForm.value.hiringStages = undefined;
+		this.contractForm.value.hiringWorkflow = undefined;
+		this.contractForm.value.hiringWorkflowName = undefined;
+	}
+
 	detectChange() {
 		this.currentOfficeSubject.next(this.currentOffice);
 		this.customHiringWorkFlowSubject.next(this.currentcustomHiringWorkFlow);
@@ -494,8 +516,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	saveDraft() {
 		if (!this.currentContract) {
+			console.log(this.contractForm.value);
 			this.createContract(this.contractForm.value);
 		} else if (this.currentContract) {
+			console.log(this.contractForm.value);
 			this.initContract();
 			this.updateContract(this.contractForm.value);
 		}
@@ -732,6 +756,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				callback();
 			}
 		}
+	}
+
+	log(a) {
+		console.log(a);
 	}
 
 	suggestionsSet(value?) {

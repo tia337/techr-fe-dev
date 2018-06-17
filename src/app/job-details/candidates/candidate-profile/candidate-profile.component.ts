@@ -64,7 +64,6 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 	) {}
 
 	ngOnInit() {
-		console.log(this._socket);
 		this._socketSubscription = this._socket.on('pipelineUpdate', data => {
 			this._candidateProfileService.getUserList(data.userListId).then(userList => {
 				this._jobDetailsService.activeStage = userList.get('listType');
@@ -103,11 +102,12 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 		this._jobDetailsService.activeStage.subscribe(stage => {
 			this.activeStage = stage;
 		});
+		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
 	}
 
 
 	ngOnChanges(changes: any) {
-
+		console.log(changes);
 		this.verdicts = {
 			definitely: 0,
 			yes: 0,
@@ -182,23 +182,16 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 	moveCandidateToCustomWorkFlowStage(stage, index) {
 		const activeStage = this._jobDetailsService.activeStage._value;
 		let previousStageCandidates;
-		// if (activeStage === 'applied' || activeStage === 'suggested' || activeStage === 'refferals') {
-		// 	this.customHiringStages.forEach(item => {
-		// 		if (item.type === activeStage) {
-		// 			previousStageCandidates = item.candidates;
-		// 		};
-		// 	});
-		// } else {
-			this.customHiringStages.forEach(item => {
-				if (item.type === activeStage) {
-					const candidateIndex = item.candidates.indexOf(this.candidate.get('developer').id);
-					item.candidates.splice(candidateIndex, 1);
-					previousStageCandidates = item.candidates;
-				};
-			});
-		// }
+		this.customHiringStages.forEach(item => {
+			if (item.type === activeStage) {
+				const candidateIndex = item.candidates.indexOf(this.candidate.get('developer').id);
+				item.candidates.splice(candidateIndex, 1);
+				previousStageCandidates = item.candidates;
+			};
+		});
+		console.log(this.customHiringStages[index]);
 		this.customHiringStages[index].candidates.push(this.candidate.get('developer').id);
-		this._parse.execCloud('moveCandidateToCustomWorkFlowStage', { contractId: localStorage.getItem('contractId'), hiringStages: this.customHiringStages.slice(3, this.customHiringStages.length) })
+		this._parse.execCloud('moveCandidateToCustomWorkFlowStage', { contractId: localStorage.getItem('contractId'), hiringStages: this.customHiringStages })
 			.then(result => {
 				this._jobDetailsService.activeStage = stage.type;
 				this._jobDetailsService.setCandidatesCustomHiringWorkflow(this.customHiringStages[index].candidates);
@@ -213,16 +206,7 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	moveCandidate(listId: number) {
-		console.log('func started');
-		console.log('this.candidate.id: ', this.candidate.id);
-		console.log('this.contractId: ', this.contractId);
-		console.log('listId: ', listId);
-		console.log('this._parse.Parse.User.current(): ', this._parse.Parse.User.current());
-		console.log('this._jobDetailsService.movedUser', this._jobDetailsService.movedUser);
-		console.log(this.candidate.id);
 		this._jobDetailsService.movedUser = this.candidate.id;
-		console.log('this._jobDetailsService.movedUser', this._jobDetailsService.movedUser);
-
 		this._socket.emit('updateHiringPipeline', {
 			candidateId: this.candidate.id,
 			contractId: this.contractId,
