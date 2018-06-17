@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { TalentbaseService } from './talentbase.service';
 import { AnimationBuilder } from '@angular/animations';
 import { read } from 'fs';
@@ -14,6 +14,8 @@ import { Socket } from 'ng-socket-io';
 import { Observable } from 'rxjs/Observable';
 import { AddCandidateService } from './add-candidate/add-candidate.service';
 import { GmailComponent } from '../gmail/gmail.component';
+import { SiteAdministrationComponent } from '../site-administration/site-administration.component';
+import { Subscription } from 'rxjs';
 // tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -33,7 +35,8 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   public zipFileSizeExceed = false;
   public jsonForm: FormGroup;
   public zipForm: FormGroup;
-  public noCandidatesFound = false;
+  public noCandidatesFound: boolean = false;
+  public noCandidatesInDB: boolean = false;
   public filters: Array<FilterItem> = [];
   private filtersStorage: Array<FilterItem> = [];
   private latestFilterParam;
@@ -42,6 +45,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   public candidatesArray: Array<TalentDBCandidate> = [];
   private candidatesStorage: Array<TalentDBCandidate> = [];
   private filteredCandidatesStorage: Array<TalentDBCandidate> = [];
+  public temporaryFilteredCandidatesStorage: Array<TalentDBCandidate> = [];
   private paginationLimits: PaginationLimits = { from: 0, to: 15 };
   private enabledUserTalentDBFilters: Array<UserTalentDBFilter> = [];
   private currentUser;
@@ -52,6 +56,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   public pendingBulkUpload: BulkUploadItem | undefined;
   public fillPercentage = { width: '0%' };
   public bulkUploadStarted: boolean = false;
+  public estimatedTimeLeft: number | string;
+  public confirmCandidatesFromAddCandidateSubscription: Subscription;
+
+  @ViewChild('filterSearchInput') filterSearchInput: HTMLInputElement;
 
   constructor(
     private _talentBaseService: TalentbaseService,
@@ -68,11 +76,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     this.currentUser = this._parse.getCurrentUser();
     this.clientId = this._parse.getClientId();
 
-    this._talentBaseService.getTalentDBCandidates(this.clientId).then(data => {
-      this.candidatesArray = data.slice(this.paginationLimits.from, this.paginationLimits.to);
-      this.candidatesStorage = data;
-      this.updatePaginationLimits();
-    }).catch(error => console.log('error while getting talentDB candidates: ', error));
+    this.getTalentDBCandidates();
 
     this._talentBaseService.getEnabledUserTalentDBFilters(this.currentUser.id).then(result => {
       this.enabledUserTalentDBFilters = result;
@@ -88,6 +92,20 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       this._root_vcr.clear();
     });
 
+    this.confirmCandidatesFromAddCandidateSubscription = this._talentBaseService._confirmCandidatesFromAddCandidate.subscribe(value => {
+      console.log(value);
+      this.getTalentDBCandidates();
+    });
+
+  }
+
+  getTalentDBCandidates() {
+    this._talentBaseService.getTalentDBCandidates(this.clientId).then(data => {
+      if (data.length === 0) return this.noCandidatesInDB = true;
+      this.candidatesArray = data.slice(this.paginationLimits.from, this.paginationLimits.to);
+      this.candidatesStorage = data;
+      this.updatePaginationLimits();
+    }).catch(error => console.log('error while getting talentDB candidates: ', error));
   }
 
   getFilters(userTalentDBFilters: Array<UserTalentDBFilter>): void {
@@ -96,6 +114,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
+            console.log(this.filters);
           }).catch(error => console.log(error));
         }
       });
@@ -123,12 +142,21 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   uploadMoreCandidates(event): void {
     if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
       if (this.filteredCandidatesStorage.length > 0) {
+        console.log('first check');
         this.candidatesArray = this.candidatesArray
           .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.filteredCandidatesStorage));
-      } else if (this.filteredCandidatesStorage.length === 0) {
+      };
+      if (this.temporaryFilteredCandidatesStorage.length > 0) {
+        console.log('third check');
+        if (this.candidatesArray.length < this.paginationLimits.from) return;
+        this.candidatesArray = this.candidatesArray
+          .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.temporaryFilteredCandidatesStorage));
+      };
+      if (this.filteredCandidatesStorage.length === 0 && this.temporaryFilteredCandidatesStorage.length === 0) {
+        console.log('second check');
         this.candidatesArray = this.candidatesArray
           .concat(this._talentBaseService.uploadMoreCandidates(this.paginationLimits, this.candidatesStorage));
-      }
+      };
       this.updatePaginationLimits();
     }
   }
@@ -177,8 +205,16 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       jsonFile: ['', Validators.required]
     });
     this.zipForm = this._fb.group({
-      zipFile: ['', Validators.required]
+      zipFile: undefined
     });
+  }
+
+  resetZipForm() {
+    if (this.zipForm.value) {
+      this.zipForm.reset();
+      this.zipFileName = null;
+      this.zipFileSizeExceed = false;
+    }
   }
 
   sendZip(event, value?): void {
@@ -196,11 +232,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
       const options = new RequestOptions({ headers });
       const url = 'https://cv-bulk-upload.herokuapp.com/upload';
       this._http.post(url, formData).subscribe(res => {
-        console.log(res);
-        // if (res.status === 200) {
+          console.log(res);
           this.activePanel = 'bulkUpload';
+          this.resetZipForm();
           this.getBulkUploads();
-        // }
       });
     }
   }
@@ -246,7 +281,12 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
             this.filterParamsStorage.push(item);
             const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);
             this.recountFilterTypeItemsCount(params);
-            this.filterCandidates(this.candidatesStorage, params);
+            if (this.filterSearchInput.value !== '') {
+              this.filterCandidates(this.filteredCandidatesStorage, params);
+            } else {
+              this.filterCandidates(this.candidatesStorage, params);
+            };
+            // this.filterCandidates(this.candidatesStorage, params);
             item.checked = true;
             this.disableEnableFilterItems(filter, item);
             return;
@@ -254,7 +294,12 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
             this.filterParamsStorage.push(item);
             const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);
             this.recountFilterTypeItemsCount(params);
-            this.filterCandidates(this.candidatesStorage, params);
+            if (this.filterSearchInput.value !== '') {
+              this.filterCandidates(this.temporaryFilteredCandidatesStorage, params);
+            } else {
+              this.filterCandidates(this.candidatesStorage, params);
+            };
+            // this.filterCandidates(this.candidatesStorage, params);
             item.checked = true;
             this.disableEnableFilterItems(filter, item);
           }
@@ -412,6 +457,11 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
 
   searchCandidates(event): void {
     const value = event.target.value.toLowerCase();
+    if (value === '') {
+      if (this.filterParamsStorage.length === 0) this.candidatesArray = this.candidatesStorage.slice(0, 15);
+      if (this.filterParamsStorage.length > 0) this.candidatesArray = this.filteredCandidatesStorage.slice(0, 15);
+      return;
+    };
     if (this.filterParamsStorage.length === 0) {
       this.noCandidatesFound = false;
       this.resetPaginationLimits();
@@ -425,10 +475,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     if (this.filterParamsStorage.length > 0) {
       this.noCandidatesFound = false;
       this.resetPaginationLimits();
-      this.filteredCandidatesStorage = this._talentBaseService.searchCandidates(value, this.filteredCandidatesStorage);
-      this.candidatesArray = this.filteredCandidatesStorage.slice(0, 15);
+      this.temporaryFilteredCandidatesStorage = this._talentBaseService.searchCandidates(value, this.filteredCandidatesStorage);
+      this.candidatesArray = this.temporaryFilteredCandidatesStorage.slice(0, 15);
       this.updatePaginationLimits();
-      if (this.filteredCandidatesStorage.length === 0) {
+      if (this.temporaryFilteredCandidatesStorage.length === 0) {
         this.noCandidatesFound = true;
       }
     }
@@ -440,13 +490,19 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
 
   definePendingBulkUploads(pendingBulkUpload: BulkUploadItem | undefined): void {
     if (pendingBulkUpload === undefined) return;
+    this.estimateTimeLeft(pendingBulkUpload.filesTotal, pendingBulkUpload.filesSuccess + pendingBulkUpload.filesError);
     const filesProcessed = pendingBulkUpload.filesSuccess + pendingBulkUpload.filesError;
-    if (filesProcessed > 0) this.bulkUploadStarted = true;
-
+    if (filesProcessed > 0) {
+      this.bulkUploadStarted = true;
+      this.setFillPercentage(pendingBulkUpload.filesTotal, pendingBulkUpload.filesSuccess + pendingBulkUpload.filesError);
+    };
     this.subscribeToPendingBulkUploading().subscribe((data: { filesSuccess: number, filesError: number }) => {
       console.log('data from bulkUploadProgress: ', data);
       if (!this.bulkUploadStarted) this.bulkUploadStarted = true;
+      this.estimatedTimeLeft = (data.filesSuccess + data.filesError)/60;
+      this.estimatedTimeLeft = parseFloat(this.estimatedTimeLeft.toFixed(2));
       this.setFillPercentage(pendingBulkUpload.filesTotal, data.filesSuccess + data.filesError);
+      this.estimateTimeLeft(pendingBulkUpload.filesTotal, data.filesSuccess + data.filesError);
       this.pendingBulkUpload.filesError = data.filesError;
       this.pendingBulkUpload.filesSuccess = data.filesSuccess;
     });
@@ -465,6 +521,10 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   setFillPercentage(filesTotal: number, filesProcessed: number): void {
     const percentage = this._talentBaseService.calculatePercentageOfBulkUploading(filesTotal, filesProcessed);
     this.fillPercentage.width = `${percentage}%`;
+  }
+
+  estimateTimeLeft(filesTotal: number, filesProcessed: number): void {
+    this.estimatedTimeLeft = this._talentBaseService.calculateEstimatedNumberOfMinutes(filesTotal, filesProcessed);
   }
 
   getBulkUploads(): void {
@@ -492,9 +552,9 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
 		email.attachments = [];
   }
 
-
   ngOnDestroy(): void {
     this._parse.execCloud('setNewTalentDbFilters', { userId: this.currentUser.id, filtersArray: this.enabledUserTalentDBFilters });
+    this.confirmCandidatesFromAddCandidateSubscription.unsubscribe();
   }
 
 }

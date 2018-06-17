@@ -2,19 +2,19 @@
 
   <!-- IMPORT/EXPORT BUTTONS START -->
   <div class="talentbase__import-export-buttons" *ngIf="!importPanelOpened">
-    <div class="back-to-talent-pool" (click)="activePanel = 'main'">
+    <div class="back-to-talent-pool" (click)="activePanel = 'main'; resetZipForm(); getTalentDBCandidates();">
         <mat-icon  class="arrow-back">arrow_back</mat-icon>
         <span *ngIf="activePanel !== 'main'">Back to talent pool</span> 
     </div>
     <div>
-      <span style="position: relative;" [ngClass]="{'active': activePanel === 'bulkUpload'}" (click)="activePanel = 'bulkUpload'">
+      <span style="position: relative;" [ngClass]="{'active': activePanel === 'bulkUpload'}" (click)="activePanel = 'bulkUpload'; resetZipForm();">
         <mat-icon class="pulsing icon-pending" *ngIf="pendingBulkUpload !== undefined && activePanel !== 'bulkUpload'">cloud_circle</mat-icon>
         Bulk upload history
       </span>
       <span> / </span>
       <span [ngClass]="{'active': activePanel === 'import'}" (click)="activePanel = 'import'">Import candidate data</span>
-      <span> / </span>
-      <span [ngClass]="{'active': activePanel === 'export'}" (click)="activePanel = 'export'">Export candidate data</span>
+      <!-- <span> / </span> -->
+      <!-- <span [ngClass]="{'active': activePanel === 'export'}" (click)="activePanel = 'export'">Export candidate data</span> -->
     </div>
   </div>
   <!-- IMPORT/EXPORT BUTTONS END -->  
@@ -70,9 +70,9 @@
                   [delayClickOutsideInit]="true"
                   [exclude]="'.action-button'">
                 <li (click)="actionsOpened = false; openEmailModal();">Email</li>
-                <li (click)="actionsOpened = false;">Reject</li>
-                <li (click)="actionsOpened = false;">Copy to job</li>
-                <li (click)="actionsOpened = false;">Delete</li>
+                <!-- <li (click)="actionsOpened = false;">Reject</li> -->
+                <!-- <li (click)="actionsOpened = false;">Copy to job</li> -->
+                <!-- <li (click)="actionsOpened = false;">Delete</li> -->
               </ul>
             </span>
             <span (click)="openAddCandidateModal()">Add Candidate</span>
@@ -95,11 +95,12 @@
                 <input type="text" placeholder="{{filter.type}}"
                     (input)="filterTypeSearch($event, filter)"
                     [ngClass]="{none: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">
-                <mat-icon [ngClass]="{hidden: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}" 
+                <mat-icon 
+                        [ngClass]="{hidden: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}" 
                         class="search-icon">search</mat-icon>
               </div>
               <div class="talentbase__filter-main-filter--item-types">
-                <ul>
+                <ul *ngIf="filter.items.length > 0">
                   <li 
                     *ngFor="let item of filter.items"
                     [ngClass]="{'disabled': item.disabled, 'none': item.hidden === true}" 
@@ -111,6 +112,11 @@
                       <span>{{item.title}}</span>
                     </span>
                     <span>({{item.count}})</span>
+                  </li>
+                </ul>
+                <ul *ngIf="filter.items.length === 0">
+                  <li>
+                      No data for this filter.
                   </li>
                 </ul>
               </div>
@@ -130,8 +136,11 @@
                  </div>
                  <div class="stripe"></div>
                  <span class="showing-count">Showing {{candidatesArray.length}} of 
-                   <span *ngIf="filteredCandidatesStorage.length === 0">{{candidatesStorage.length}}</span>
-                   <span *ngIf="filteredCandidatesStorage.length > 0">{{filteredCandidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value === '' && filterParamsStorage.length === 0">{{candidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value !== '' && filterParamsStorage.length === 0">{{filteredCandidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value === '' && filterParamsStorage.length > 0 && filteredCandidatesStorage.length > 0">{{filteredCandidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value === '' && filterParamsStorage.length > 0 && filteredCandidatesStorage.length === 0">{{candidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value !== '' && filterParamsStorage.length > 0">{{temporaryFilteredCandidatesStorage.length}}</span>
                   </span>
                  <!-- <div class="sorting">
                   <span class="sorting-title">Sort</span>
@@ -140,6 +149,9 @@
               </div>
               <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0 && noCandidatesFound">
                 <p>No candidates found.</p>
+              </div>
+              <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0 && noCandidatesInDB">
+                <p>You don't have any candidates in your Talent Data Base.</p>
               </div>
               <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0">
                 <mat-progress-spinner class="progress-spinner" color="#305497" mode="indeterminate"></mat-progress-spinner>
@@ -196,7 +208,7 @@
             from Legacy systems into SwipeIn
         </span> 
       </div>
-      <div class="talentbase__import-panel-item">
+    <!-- <div class="talentbase__import-panel-item">
           <div class="talentbase__import-panel-item-info-wrap">
             <span class="talentbase__import-panel-item-title">
               JSON, CVS or XML file
@@ -220,7 +232,7 @@
               <input #jsonInput formControlName="jsonFile" (change)="setFileName(jsonFileName, jsonInput, $event)"  style="display: none;" type="file" id="json" accept=".json, application/json, .csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx, .xls">
             </form>
           </label>
-      </div>
+       </div> -->
       <div class="talentbase__import-panel-item">
           <div class="talentbase__import-panel-item-info-wrap">
             <span class="talentbase__import-panel-item-title">
@@ -233,10 +245,11 @@
           <div class="filename" *ngIf="zipFileName !== null">
               <span><span class="bold">File name: </span>{{zipFileName.name}}; &nbsp;</span>
               <span><span class="bold">File size: </span>{{zipFileName.size | fileSize}} mb;</span>
-              <mat-icon class="icon-clear" (click)="zipInput.value = null; zipFileName = null;  zipFileSizeExceed = false;">clear</mat-icon>           
+              <mat-icon class="icon-clear" (click)="zipInput.value = ''; zipFileName = null;  zipFileSizeExceed = false;">clear</mat-icon>           
             </div>
           <label (click)="sendZip($event, zipInput.value); $event.stopPropagation();" class="talentbase__import-panel-item-input">
             <form action="" enctype="multipart/form-data" [formGroup]="zipForm">
+              <!-- <span for="zip">Select file</span> -->
               <span *ngIf="zipInput.value === ''" for="zip">Select file</span>
               <button style="cursor: pointer;"  *ngIf="zipInput.value !== ''" type="button">Send file</button>
               <input #zipInput formControlName="zipFile" 
@@ -265,7 +278,6 @@
   <!-- IMPORT PANEL END -->
 
   <!-- EXPORT PANEL START -->
-
   <div class="talentbase__import-panel" *ngIf="activePanel === 'export'">
       <img class="GDPR" src="../../assets/img/GDPR-logo.png" alt="">
       <div class="talentbase__import-panel container">
@@ -345,8 +357,7 @@
             </div>
         </div>
       </div>
-    </div>
-
+  </div>
   <!-- EXPORT PANEL END -->
 
   <!-- BULK UPLOADS HISTORY START -->
@@ -372,16 +383,17 @@
                 </tr>
                 <tr>
                   <td>Estimated time left</td>
-                  <td>15 minutes</td>
+                  <td>{{estimatedTimeLeft}} min</td>
                 </tr>
               </table>
             </div>
             <div class="bulk-upload-pending__info--magic" [ngClass]="{'flb': bulkUploadStarted }">
-              <div *ngIf="!bulkUploadStarted" style="display: flex; align-items: center; justify-content: center;">
-                <span style="margin-bottom: 20px;">Waiting for bulk upload start...</span>
+              <div *ngIf="!bulkUploadStarted" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                <span style="margin-bottom: 20px;">Bulk upload in process...</span>
                 <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
               </div>
               <div *ngIf="bulkUploadStarted" style="width: 100%;">
+                <span style="margin-bottom: 20px;">Bulk upload in process...</span>
                 <div class="bulk-upload-pending__bar">
                   <div class="bulk-upload-pending__bar-fill" [ngStyle]="fillPercentage">
                     <div class="bulk-upload-pending__bar-fill--percentage"><span>{{fillPercentage.width}}</span></div>
@@ -396,10 +408,8 @@
                   </div>
                 </div>
               </div>
-              
             </div>
         </div>
-       
     </div>
     <div class="bulk-upload-pending__history">
       <p class="bulk-upload-pending__history--title">Upload History</p>

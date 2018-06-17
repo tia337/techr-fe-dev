@@ -13,6 +13,7 @@ import { Parse } from '../../parse.service';
 import { PostJobService } from '../../post-job-page/post-job.service';
 import * as _ from 'underscore';
 import { SearchJobPipe } from './search-job.pipe';
+import { TalentbaseService } from '../talentbase.service';
 
 @Component({
   selector: 'app-add-candidate',
@@ -138,10 +139,11 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		private _uploadCVService: UploadCvService,
 		private _formBuilder: FormBuilder,
 		private _ng4FilesService: Ng4FilesService,
-			private _parse: Parse,
-			private _postJobService: PostJobService,
-			private _renderer: Renderer2,
-			private _elementRef: ElementRef,
+		private _parse: Parse,
+		private _postJobService: PostJobService,
+		private _renderer: Renderer2,
+		private _elementRef: ElementRef,
+		private _talentBaseService: TalentbaseService
 	) { }
 
 	ngOnInit() {
@@ -392,6 +394,8 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	}
 
 	closeModal(): void {
+		if (this.candidateForm.value) this.candidateForm.reset();
+		delete this.candidatesUploaded;
 		this._root_vcr.clear();
 	}
 
@@ -441,7 +445,6 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			const filename = cvFile.name;
 			const base64 = result;
 			this.sendCV(base64, filename).then(candidate => {
-				console.log('response',  candidate);
 				if (this.uploadedCandidates.length === 0) {
 					this.uploadedCandidates.push('');
 					this.buildForm(candidate);
@@ -457,9 +460,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 					this.loading = false;
 					this.cvUploaded = true;
 				}
-				console.log(this.uploadedCandidates, 'UPLOADED CANDIDATES');
 			}).catch(error => {
-				console.log(error);
 				this.candidatesUploaded++;
 				if (this.files.length + 1 === this.candidatesUploaded) {
 					this.loading = false;
@@ -470,7 +471,7 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	
 	  sendCV(base64: any, filename: string) {
 		  return new Promise ((resolve, reject) => {
-			this._parse.execCloud('parsingCV', { base64: base64, filename: filename })
+			this._parse.execCloud('parsingCV', { base64: base64, filename: filename, clientId: this.clientId })
 				.then(response => {
 					resolve(this.concatCandidateResult(response));
 					reject(response);
@@ -1232,10 +1233,12 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		formData['attachment'] = this.attachment;
 		formData['cv'] = this.CV;
 		delete formData.job;
-		if (formData['jobBoard'].source === null && formData['source'] === undefined) {
-			formData['source'] = null;
-			formData['jobBoard'] = null;
-		};
+		if (formData['jobBoard'] !== null) {
+			if (formData['jobBoard'].source === null && formData['source'] === undefined) {
+				formData['source'] = null;
+				formData['jobBoard'] = null;
+			};
+		}
 		this.disabledCandidateSaveChanges = true;
 		for (let x in formData) {
 			if (formData[x] !== this.uploadedCandidates[index][x] && this.uploadedCandidates[index][x] !== undefined && !Array.isArray(formData[x])) {
@@ -1457,10 +1460,6 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 		this._parse.execCloud('saveCandidateForm', formData);
 	}
 
-	confirmCandidates() {
-		
-	}
-
 	disableDateTo(form: FormGroup, input) {
 		if (input === true) {
 			form.controls['monthDateTo'].reset();
@@ -1469,15 +1468,19 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	}
 
 	removeCandidate() {
+		this.currentCandidateIndex--;
 		this.uploadedCandidates.splice(this.currentCandidateIndex, 1);
+	}
+
+	confirmCandidates() {
+		this.closeModal();
+		this._talentBaseService.confirmCandidatesFromAddCandidate(true);
 	}
 	
 	ngOnDestroy(): void {
 		if (this._candidatesRchilliSubscription !== undefined) {
 			this.uploadedCandidates = [];
-			console.log(this._candidatesRchilliSubscription)
 			this._candidatesRchilliSubscription.unsubscribe();
-			console.log(this._candidatesRchilliSubscription)
 		} 
 		if (this.candidateForm !== undefined) this.candidateForm.reset();
 	}

@@ -619,7 +619,7 @@
               <button type="button" class="cancel-add-candidate-form" (click)="removeCandidate(); $event.stopPropagation();">Remove Candidate</button>
             </span>
             <span>
-              <button type="button" [disabled]="!disabledCandidateSaveChanges" [ngClass]="{'disabled': !disabledCandidateSaveChanges}" class="send-add-candidate-form" (click)="saveCandidate(); $event.stopPropagation();">Confirm Candidates </button>
+              <button type="button" [disabled]="!disabledCandidateSaveChanges" [ngClass]="{'disabled': !disabledCandidateSaveChanges}" class="send-add-candidate-form" (click)="confirmCandidates(); $event.stopPropagation();">Confirm Candidates </button>
             </span>
           </div>
         </form>

@@ -41,6 +41,8 @@ import { CheckoutPageService } from '../checkout-page/checkout-page.service';
 export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	places: any;
+	places1: any;
+	places2: any;
 
 	sourcingTalentInfo: IInfoOptions = {
 		header: 'Tackle talent shortage straight on! Source multi-country',
@@ -104,6 +106,9 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 	placeSuggestions = false;
 
 	matSpinnerActive = false;
+	matSpinnerActive1 = false;
+	matSpinnerActive2 = false;
+
 
 	postLocation;
 
@@ -189,7 +194,6 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	secondLocationOpened = false;
 	thirdLocationOpened = false;
-	fourthLocationOpened = false;
 	
 	approversSubscription;
 
@@ -327,9 +331,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				hiringWorkflowName: this.contractObj.get('hiringWorkflowName'),
 			});
 			this.contractForm.value.hiringStages = this.contractObj.get('hiringStages');
-			this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.contractObj.get('hiringWorkflow').id);
+			if (this.contractObj.get('hiringWorkflow')) {
+				this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.contractObj.get('hiringWorkflow').id);
+			}
 			Object.defineProperty(this.currentcustomHiringWorkFlow, 'workflowName', { value: this.contractObj.get('hiringWorkflowName'), writable: true});
-			console.log(this.currentcustomHiringWorkFlow);
 			this.selectedIndustries = this.contractObj.get('industryTags');
 			this.selected = this.contractObj.get('programingSkills');
 			this.selectedRoles = this.contractObj.get('roles');
@@ -347,6 +352,14 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				this.range = [this.contractObj.get('Min_hourly'), this.contractObj.get('Max_hourly')];
 			}
 			this.optionToSelect = this.contractObj.get('durationMax');
+			if (this.contractObj.get('JobLocationFEinput2') !== undefined) {
+				this.contractForm.addControl('JobLocationFEinput2', new FormControl(this.contractObj.get('JobLocationFEinput2')));
+				this.secondLocationOpened = true;
+			};
+			if (this.contractObj.get('JobLocationFEinput3') !== undefined) {
+				this.contractForm.addControl('JobLocationFEinput3', new FormControl(this.contractObj.get('JobLocationFEinput2')));
+				this.thirdLocationOpened = true;
+			};
 		} else {
 			this.contractForm = this._formBuilder.group({
 				logo: null,
@@ -490,14 +503,20 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	addLocation() {
 		if (this.secondLocationOpened === false ) {
+			this.contractForm.addControl('JobLocationFEinput2', new FormControl(''));
 			this.secondLocationOpened = true;
 			return;
 		} else if (this.secondLocationOpened === true && this.thirdLocationOpened === false) {
+			this.contractForm.addControl('JobLocationFEinput3', new FormControl(''));
 			this.thirdLocationOpened = true;
 			return;
-		} else if (this.thirdLocationOpened === true) {
-			this.fourthLocationOpened = true;
 		}
+	}
+
+	removeLocation(inputName) {
+		this.contractForm.removeControl(inputName);
+		if (inputName === 'JobLocationFEinput2') this.secondLocationOpened = false;
+		if (inputName === 'JobLocationFEinput3') this.thirdLocationOpened = false;
 	}
 
 	loadCountries() {
@@ -725,6 +744,36 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 					.then(suggestions => {
 						this.places = suggestions;
 						this.matSpinnerActive = false;
+					});
+			}
+		}, 500);
+	}
+
+	suggestionsSet1(value?) {
+		setTimeout(() => {
+			if (this.contractForm.value.JobLocationFEinput2.length != 0) {
+				this.matSpinnerActive1 = true;
+				this._parse.execCloud('getSuggestedPlaces', {
+					address: this.contractForm.value.JobLocationFEinput2
+				})
+					.then(suggestions => {
+						this.places1 = suggestions;
+						this.matSpinnerActive1 = false;
+					});
+			}
+		}, 500);
+	}
+
+	suggestionsSet2(value?) {
+		setTimeout(() => {
+			if (this.contractForm.value.JobLocationFEinput3.length != 0) {
+				this.matSpinnerActive2 = true;
+				this._parse.execCloud('getSuggestedPlaces', {
+					address: this.contractForm.value.JobLocationFEinput3
+				})
+					.then(suggestions => {
+						this.places2 = suggestions;
+						this.matSpinnerActive2 = false;
 					});
 			}
 		}, 500);

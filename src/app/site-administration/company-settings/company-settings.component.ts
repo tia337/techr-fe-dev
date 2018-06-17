@@ -369,9 +369,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		});
 		const clientId = this._parse.getClientId();
 		this._parse.execCloud('getStandartHiringWorkFlow', { clientId: clientId }).then(result => {
-			if (result.length === 0) {
-				console.log('getStandartHiringWorkFlow: ', result);
-			};
 			if (result.length > 0) {
 				this.stages = result[0].hiringStages;
 				this.clientHasStandartHiringWorkFlow = true;

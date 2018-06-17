@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../parse.service';
 import * as _ from "underscore";
+import { Subject } from 'rxjs';
 
 //tslint:disable:indent
 @Injectable()
 export class TalentbaseService {
 
+  public _confirmCandidatesFromAddCandidate: Subject<any> = new Subject();
 
   constructor(
     private _parse: Parse
@@ -211,6 +213,13 @@ export class TalentbaseService {
     return parseFloat(percentage.toFixed(1));
   }
 
+  calculateEstimatedNumberOfMinutes(filesTotal: number, filesProcessed: number): number | string {
+    const totalNumberOfSeconds: number = 6 * filesTotal;
+    const secondsNumberOfFilesProcessed: number = 6 * filesProcessed;
+    const estimatedTimeLeft: number = (totalNumberOfSeconds - secondsNumberOfFilesProcessed)/60;
+    return parseFloat(estimatedTimeLeft.toFixed(2));
+  }
+
   sortBulkUploadHistory(param, array: Array<BulkUploadItem>): Array<BulkUploadItem> {
     array = _.sortBy(array, function (i) {
       return i[param];
@@ -219,6 +228,8 @@ export class TalentbaseService {
   }
 
   
-
+  confirmCandidatesFromAddCandidate(value: any): void {
+    this._confirmCandidatesFromAddCandidate.next(value);
+  }
 
 }
