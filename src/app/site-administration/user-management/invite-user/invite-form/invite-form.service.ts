@@ -48,11 +48,11 @@ export class InviteFormService {
 		//   });
 		// });
 
-		console.log('email: ', email);
-		console.log('full name: ', fullName);
-		console.log('access level: ', accessLevel);
-		console.log('message: ', message);
-		console.log('userRoles: ', userRoles);
+		// console.log('email: ', email);
+		// console.log('full name: ', fullName);
+		// console.log('access level: ', accessLevel);
+		// console.log('message: ', message);
+		// console.log('userRoles: ', userRoles);
 		this._parse.Parse.Cloud.run('inviteUser', {
 			email: email,
 			fullName: fullName,
@@ -60,7 +60,7 @@ export class InviteFormService {
 			message: message,
 			userRoles: userRoles
 		}).then(res => {
-			console.log(res);
+			// console.log(res);
 		}, error => {
 			console.error(error);
 		});

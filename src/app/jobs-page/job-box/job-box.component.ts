@@ -347,22 +347,21 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		} else {
 			this._router.navigate(['/', 'jobs', contractId]);
 		}
-		if (this.contract.get('hiringStages')) {
+		if (this.contract.get('hiringStages') !== undefined) {
 			if (stage === -2) {
 				this._jobDetailsService.activeStage = 'suggested';
-				console.log('stage -2');
 				this._jobDetailsService.setCandidatesCustomHiringWorkflow(this._stages[0].candidates);
-				this.setCustomHiringWorkflowStages(this.stages);
+				this.setCustomHiringWorkflowStages(this.stages, 'job-box');
 				this._jobDetailsService.setHasCustomHiringWorkflow(true);
 			} else {
 				this._jobDetailsService.activeStage = stage;
 				this._jobDetailsService.setCandidatesCustomHiringWorkflow(candidates);
 				this._jobDetailsService.setHasCustomHiringWorkflow(true);
-				console.log('in candidates');
 			}
 		} else {
 			this._jobDetailsService.activeStage = stage;
 			localStorage.setItem('activeStage', stage.toString());
+			this._jobDetailsService.setHasCustomHiringWorkflow(false);
 		}
 	}
 
@@ -486,8 +485,10 @@ export class JobBoxComponent implements OnInit, OnDestroy {
 		this.showLikelihood = false;
 	}
 
-	setCustomHiringWorkflowStages(stages) {
-		this._jobDetailsService.setCustomHiringWorkflowStages(stages);
+	setCustomHiringWorkflowStages(stages, value?) {
+		if (this.contract.get('hiringStages')) {
+			this._jobDetailsService.setCustomHiringWorkflowStages(stages);
+		};
 	}
 
 	ngOnDestroy() {

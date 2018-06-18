@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WithdrawnModalComponent } from './withdrawn-modal.component';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule, MatProgressSpinnerModule } from '@angular/material';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { FormsModule, FormControlDirective } from '@angular/forms';
 
@@ -9,6 +9,7 @@ import { FormsModule, FormControlDirective } from '@angular/forms';
   imports: [
     CommonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     ClickOutsideModule,
     FormsModule,
   ],

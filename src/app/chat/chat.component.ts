@@ -88,7 +88,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.userId = this._parse.getCurrentUser().id;
 
     this.listenToDialogIdUpdated().subscribe(data => {
-      console.log('DATA DIALOG ID IN CHAT', data);
       this.updateDialogId(data)
     });
    
@@ -101,14 +100,12 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.recieveColleagueMessage().subscribe(data => {
-      console.log('MESSAGE RECIEVED IN CHAT', data);
       clearTimeout(this.timer);
       this.typing = false;
       this.addMessageToChat(data);
     });
 
     this.listenToRecruiterColleagueTypes().subscribe(data => {
-      console.log(data);
       this.checkIfTyping(data);
     });
 

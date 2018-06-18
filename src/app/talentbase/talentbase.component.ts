@@ -16,6 +16,7 @@ import { AddCandidateService } from './add-candidate/add-candidate.service';
 import { GmailComponent } from '../gmail/gmail.component';
 import { SiteAdministrationComponent } from '../site-administration/site-administration.component';
 import { Subscription } from 'rxjs';
+import { AlertComponent } from '../shared/alert/alert.component';
 // tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -283,12 +284,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
             this.filterParamsStorage.push(item);
             const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);
             this.recountFilterTypeItemsCount(params);
-            if (this.filterSearchInput.value !== '') {
-              this.filterCandidates(this.filteredCandidatesStorage, params);
-            } else {
-              this.filterCandidates(this.candidatesStorage, params);
-            };
-            // this.filterCandidates(this.candidatesStorage, params);
+            this.filterCandidates(this.candidatesStorage, params);
             item.checked = true;
             this.disableEnableFilterItems(filter, item);
             return;
@@ -296,12 +292,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
             this.filterParamsStorage.push(item);
             const params = this._talentBaseService.createFilterParamsForCompoundFilter(this.filterParamsStorage);
             this.recountFilterTypeItemsCount(params);
-            if (this.filterSearchInput.value !== '') {
-              this.filterCandidates(this.temporaryFilteredCandidatesStorage, params);
-            } else {
-              this.filterCandidates(this.candidatesStorage, params);
-            };
-            // this.filterCandidates(this.candidatesStorage, params);
+            this.filterCandidates(this.candidatesStorage, params);
             item.checked = true;
             this.disableEnableFilterItems(filter, item);
           }
@@ -552,6 +543,19 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
 		email.emailBody = '';
 		email.emailSubj = '';
 		email.attachments = [];
+  }
+
+  openSingleViewAlert() {
+    const alert = this._root_vcr.createComponent(AlertComponent);
+    alert.content = 'Single view of the candidate is only available in the enterprise edition. Please contact your sales representative.';
+		alert.title = 'Restricted access';
+		alert.addButton({
+			type: 'warn',
+			title: 'Close',
+			onClick: () => {
+				this._root_vcr.clear();
+			}
+		});
   }
 
   ngOnDestroy(): void {

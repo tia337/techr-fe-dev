@@ -61,7 +61,6 @@ constructor(
           }
         })
         datesArray =  _.sortBy(datesArray, function (date) { return date }).reverse(); // sorting array by dates from descending to ascending
-        // console.log(datesArray);
         return datesArray;
       }
       
@@ -178,7 +177,6 @@ constructor(
 
     restore() {    
       if(this.toReset) {    
-      console.log("restore");   
         if (this.readyFor === 'up') {  
           this.node.scrollTop = this.node.scrollHeight                    - this.previousScrollHeightMinusTop;      
         }        

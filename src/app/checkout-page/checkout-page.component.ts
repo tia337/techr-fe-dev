@@ -206,10 +206,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 
 	testOne() {
 		this.getCards();
-		console.log("test use new card");
-		console.log(this.useNewCard );
 		if(this.useNewCard === true){
-			console.log("use new card");
 		}
 
 	}
@@ -267,9 +264,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 		let self = this;
 		setTimeout(() => {
 			this._CheckoutPageService.getErrorPushes(this.errorPushData, this.errorFreePushData).then(errorLogRes=>{
-				console.log(errorLogRes);
 				if(errorLogRes[1] == false){
-					console.log("errors works");
 					this._root_vcr.clear();
 					const alert = this._root_vcr.createComponent(AlertComponent);
 					alert.title = 'Job publishing information';
@@ -321,7 +316,6 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 				let paidContracts = this._CartAdding.contracts;
 				for(let contr of paidContracts){
 					this._CheckoutPageService.doPaidJobBoardPushes(contr.JobBoardPrice.get("JobBoard"), contr.contract, contr.JobBoardPrice).then(jBPush=>{
-					console.log(contr.JobBoardPrice.get("JobBoard").get("Name"));
 					this.errorPushData.push({
 						"jBPId" : jBPush.id,
 						"jBName" : contr.JobBoardPrice.get("JobBoard").get("Name")
@@ -331,7 +325,6 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 					}
 				});
 			}
-				console.log(this.errorLog);
 				return "";
 			}, error=>{
 				if(!this.error)
@@ -419,7 +412,6 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 					}else{
 						
 					}
-					console.log(this.errorFreePushData);
 					this.errorPush(JobBoardsNames, freeJBNames);
 				});
 			}else if(!this.selectedCard){

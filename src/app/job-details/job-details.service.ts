@@ -128,13 +128,11 @@ export class JobDetailsService {
 	}
 
 	setHasCustomHiringWorkflow(value) {
-		console.log('setHasCustomHiringWorkflow', value);
 		localStorage.setItem('setHasCustomHiringWorkflow', JSON.stringify(value));
 		this._hasCustomHiringWorkflow.next(value);
 	}
 
 	setCandidatesCustomHiringWorkflow(value) {
-		console.log('in setCandidatesCustomHiringWorkflow: ', value);
 		localStorage.setItem('candidatesCustomHiringWorkflow', JSON.stringify(value));
 		this._candidatesCustomHiringWorkflow.next(value);
 	}

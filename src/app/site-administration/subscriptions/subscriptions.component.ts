@@ -50,16 +50,16 @@ export class SubscriptionsComponent implements OnInit {
 			this.client = client;
 			if (client.get('IsTrialActive')) {
 				this.trialPeople = client.get('TeamMembers').length;
-				console.log(this.trialPeople);
+				// console.log(this.trialPeople);
 			}
 		}).then(
 			this._parse.getCurrentUser().get('Client_Pointer').fetch().then(Client => {
 				return Client.get('ActiveSubscription').fetch();
 			}).then(Subscription => {
 				this.activeSubscription = Subscription;
-				console.log(this.activeSubscription);
+				// console.log(this.activeSubscription);
 				this._SubscriptionService.getActivePlan(this.activeSubscription).then(res => {
-					console.log(res);
+					// console.log(res);
 					this.activePlan = res;
 					if (this.activePlan == 'standard') {
 						this.standBackgroundPannel = '#e6f2ff';
@@ -74,7 +74,7 @@ export class SubscriptionsComponent implements OnInit {
 
 		this._SubscriptionService.getSubscriptions().then(result => {
 			this.Subscriptions = result;
-			console.log(this.Subscriptions);
+			// console.log(this.Subscriptions);
 			for (const sub of this.Subscriptions) {
 				if (sub.get('NameSwipeIn') == 'standard' && sub.get('IntervalString') == 'year') {
 					this.standardPrice.push(sub.get('Amount'));

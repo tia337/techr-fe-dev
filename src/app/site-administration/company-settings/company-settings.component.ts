@@ -398,6 +398,9 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (!this.enableSaveStandartWorkFlow) return;
 		const clientId = this._parse.getClientId();
 		console.log(this.stages);
+		this.stages.forEach(stage => {
+			if (stage.rejectedLogic === true || stage.withdrawnLogic === true) stage['candidateReasons'] = [];
+		});
 		this._parse.execCloud('saveStandartHiringWorkflow', { clientId: clientId, hiringStages: this.stages }).then(result => {
 			this._snackbar.open('Workflow successfully updated', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});
 		});
@@ -407,6 +410,9 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		console.log(workflow);
 		if (!workflow.workflowSaveChanges) return;
 		let clientId = this._parse.getClientId();
+		workflow.hiringStages.forEach(stage => {
+			if (stage.rejectedLogic === true || stage.withdrawnLogic === true) stage['candidateReasons'] = [];
+		});
 		this._parse.execCloud('saveCustomHiringWorkFlow', { clientId: clientId, data: workflow }).then(result => {
 			workflow.workflowSaveChanges = false;
 			if (workflow._id) {
@@ -1160,9 +1166,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		let clientOfClientId = this.projectsFormGroup.value.projectEndClientName;
 		if (clientOfClientId === '') {
 			clientOfClientId = null;
-		} 
-		console.log(clientOfClientId);
-		console.log(projectName);
+		};
 		if (projectName !== '' && (clientOfClientId === '' || clientOfClientId === null)) { 
 			this.projectEndClientNameEmpty = true;
 			return;

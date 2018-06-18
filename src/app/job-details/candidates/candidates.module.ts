@@ -61,7 +61,7 @@ import { WithdrawnModalModule } from './candidate-profile/withdrawn-modal/withdr
     RejectModalModule,
     BulkActionsModule,
     MatIconModule,
-    WithdrawnModalModule
+    WithdrawnModalModule,
   ],
   exports: [CandidatesComponent],
   providers: [Parse, CandidatesService, CandidateProfileService],

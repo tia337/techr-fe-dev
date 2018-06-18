@@ -11,13 +11,13 @@ export class SubscriptionService{
 
     }
     getActivePlan(subsctiption){
-        console.log("test1");
+        // console.log("test1");
         let query = this._parse.Query("Plans");
-        console.log(subsctiption.get("PlanName"));
+        // console.log(subsctiption.get("PlanName"));
         query.equalTo("Name", subsctiption.get("PlanName"));
         console.log(subsctiption.get("PlanName"));
          return query.first().then(results => {
-             console.log(results);
+            //  console.log(results);
             return results.get("NameSwipeIn");  
         });
     }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../../parse.service';
 import { ParseUser, ParsePromise, ParseObject } from 'parse';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class CandidateProfileService {
@@ -12,6 +13,8 @@ export class CandidateProfileService {
 		yes: 0,
 		notSure: 0
 	};
+
+	public _rejectedHiring: Subject<any> = new Subject();
 
 	constructor(private _parse: Parse) {}
 
@@ -47,5 +50,9 @@ export class CandidateProfileService {
 	getUserList(id: string) {
 		const userListQuery = new this._parse.Parse.Query('UserList');
 		return userListQuery.get(id);
+	}
+
+	rejectedHiring(value) {
+		this._rejectedHiring.next(value);
 	}
 }

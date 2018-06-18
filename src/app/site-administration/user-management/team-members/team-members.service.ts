@@ -45,7 +45,7 @@ export class TeamMembersService {
   }
 
   deleteInvitation(invitationId: string): any {
-    console.log(invitationId);
+    // console.log(invitationId);
     const invitations = this._parse.Query('Invitations');
     return invitations.get(invitationId).then(invitation => {
       invitation.set('Invitation_Status', 3);

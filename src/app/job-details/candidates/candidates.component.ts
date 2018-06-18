@@ -98,7 +98,6 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	}
 
 	ngOnInit() {
-		console.log('on init candidates');
 		
 		this.hasCustomHiringWorkflow = this._jobDetailsService._hasCustomHiringWorkflow.subscribe(hasCustomHiringWorkflow => {
 			if (hasCustomHiringWorkflow === false) {
@@ -152,7 +151,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 										this.copySuggestedCandidates = SuggestedCandidates.developersSorted;
 										this.SuggestedCandidates = Object.assign({},SuggestedCandidates);
 										this.candidates = Object.assign({},SuggestedCandidates);
-										this.candidates.results = [ ];
+										this.candidates.results = [];
 										this.candidates.weights = SuggestedCandidates.weights;
 										this.candidates.distances = SuggestedCandidates.distances;
 										SuggestedCandidates.developersSorted.slice(this._from,this._limit).forEach(dev => {
@@ -168,7 +167,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 											} else if (!localStorage.getItem('queryParams')) {
 												this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 											}
-										})
+										});
 										this.loadCountryList();
 										this._jobDetailsService.isStagesDisabled = Loading.success;
 										
@@ -181,11 +180,13 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 		
 						case DeveloperListType.applied:
 							this._candidatesService.getAppliedCandidates(this.contractId).then(suggestions => {
-								console.log(suggestions);
+								console.log("SUGGESTION!!!!!:", suggestions);
 								if (suggestions && suggestions.results.length > 0) {
+									console.log("SUGGESTION LENGTH!!!!!:");
 									this.hasCandidates = Loading.success;
-									this._jobDetailsService.isStagesDisabled = Loading.success;
 									this.candidates = suggestions;
+									this._jobDetailsService.isStagesDisabled = Loading.success;
+									console.log(this.candidates);
 									const firstUser = suggestions.results[0];
 									this._candidatesService.userId = firstUser.id;
 									if (localStorage.getItem('queryParams') != null) {
@@ -229,8 +230,8 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 							this._candidatesService.getUsersForList(this.contractId, activeStage).then(suggestions => {
 								if (suggestions && suggestions.results.length > 0) {
 									this.hasCandidates = Loading.success;
-									this._jobDetailsService.isStagesDisabled = Loading.success;
 									this.candidates = suggestions;
+									this._jobDetailsService.isStagesDisabled = Loading.success;
 									let res;
 									let id;
 									console.log('this._jobDetailsService.movedUser', this._jobDetailsService.movedUser);

@@ -67,7 +67,7 @@
                     <div class="move-candidate-dropdown" #moveCandidateMenu (mouseleave)="closeMoveMenu()">
                         <div class="header">Move candidate to</div>
                         <span *ngFor="let stage of customHiringStages; let i = index;">
-                            <div [ngClass]="{'dn': stage.type === activeStage}" class="interview-stage" (click)="moveCandidateToCustomWorkFlowStage(stage, i)" >
+                            <div [ngClass]="{'dn': stage.type === activeStage || stage.type === 'rejected'}" class="interview-stage" (click)="moveCandidateToCustomWorkFlowStage(stage, i)" >
                                 {{stage.title}}
                             </div>
                         </span>
@@ -77,6 +77,7 @@
                         <!-- <img style="width: 33px; height: 33px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAH3SURBVGhD7dpNSwJBHMdxoWtBr6VrB0+lkkQXL3Xq2KuoDtJqUScvdejSIYSK6AUYUesq9EDHHvRkdCyoyFC3ndhfLLLZzOzOf0fxC38wXXfnQ4rFGBs2LOIyxeJIfLk06v5IWnyrNO7eDBZDpPLWQXrdqszmzsfcu0lKrpmZlFF+ncqak+5dcgExt1n9mi9cNmfyVpUKwxAJo9xe2r3tpHLWhzTGi7iovdnXT5/2QuGKBAPE9mmjU3vp2Nnjh7YUphtRd07GhgLjReC6Upi/EBiVGD8ERhiTMMz99Eal5YfAqMD0QmAYZuXwrp10MImcOeE+1T+eE7IJE8N7zZtGU+yalBhlCESBUY5AKjFkCKQCQ45AYWIiQ6AwMCp+u1IFWYg2CCSzoGmjvKgVAolinGNt7RBIBLNnPfs+hokMgXgxvSZyBAqC0QaBZDDaIZAIRlsEayAgA/HSGog3exAEJnIML4ItVNsPRBEEW6BzrL1z1vA9BkOOEUWwheGPRm0wMggsCM+NHBMEgSLHhIFAvBit/19H5BgVCESG4UUEuZByDAUCKcNQIpASDM+2QpgIxINh2wqrR/d82wr/bfSoQKBemJ+NnpPHlvyuVf3992QqEcgPI4VA3RgKBPJiAiGQF9O329MImL7+wgBimL7/CsewYaLFYt8QgbNOaL335QAAAABJRU5ErkJggg=="> -->
                         <p>Reject Candidate</p>
                 </div>
+
             </div>
             <!-- <div class="candidate-info-bottom-block"> -->
             <!-- <div class="candidate-location">

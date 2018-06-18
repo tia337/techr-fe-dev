@@ -56,7 +56,7 @@ export class TarifsComponent implements OnInit {
           this._TarifsService.getAnuallyPrice();
           this._TarifsService.getMonthlyPrice();
           this._TarifsService.getAmountOfUsers().then(results=>{
-            console.log(results);
+            // console.log(results);
             this.teamMembers = results.get("TeamMembers").length;
           });
           this.tarif = this.curTarif;
@@ -64,7 +64,7 @@ export class TarifsComponent implements OnInit {
       }else{
         this._TarifsService.getMonthlyPrice();
         this._TarifsService.getAmountOfUsers().then(results=>{
-          console.log(results);
+          // console.log(results);
           this.teamMembers = results.get("TeamMembers").length;
         });
         this.tarif = this.curTarif;

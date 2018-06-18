@@ -23,7 +23,7 @@ export class UserManagementComponent implements OnInit, OnDestroy {
 
 
 	ngOnInit() {
-		console.log(this._activatedRoute);
+		// console.log(this._activatedRoute);
 		this.urlSubscription = this._router.events.subscribe(event => {
 			if (event instanceof NavigationStart) {
 				let urlArray = event.url.split(/[\(|\)|\/|\:]+/);

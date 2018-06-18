@@ -48,7 +48,6 @@ async ngOnInit() {
     this.distanceUnitsInit = (this.settingsInit.candidateDistanceUnitPreferrences == 2);
     this.clicked = this.settingsInit.emailNotificatoinsFrequency;
     this.changeTheme();
-    console.log(this.settings);
   }
   getCurrentPartner() {
       return this._parse.getPartner(this._parse.Parse.User.current());

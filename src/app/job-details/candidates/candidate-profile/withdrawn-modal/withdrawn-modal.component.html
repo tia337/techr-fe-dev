@@ -1,4 +1,4 @@
-<div class="reject-modal-overlay" >
+<div class="reject-modal-overlay withdrawn-rejection">
   <div class="reject-modal" 
         [ngClass]="{'opened': rejectionList === true }" 
         (clickOutside)="close()" 
@@ -57,7 +57,9 @@
                 (click)="rejectionNoteOpened = !rejectionNoteOpened; clearNote(); $event.stopImmediatePropagation();">
                 Clear Note
             </button>          
-          <button class="reject-modal-buttons__reject-candidate" (click)="rejectCandidate()">Move to withdrawn</button>
+          <button class="reject-modal-buttons__reject-candidate" (click)="rejectCandidate()">
+              Move to withdrawn
+            </button>
       </div>      
   </div>
   <div class="reject-modal success" *ngIf="response === 'success'">
