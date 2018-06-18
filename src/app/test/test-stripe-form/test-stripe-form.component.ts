@@ -25,7 +25,7 @@ export class TestStripeFormComponent implements OnInit {
   message: string;
 
   getToken() {
-    console.log(this.nameCard);
+    // console.log(this.nameCard);
     this.message = 'Loading...';
 
     (<any>window).Stripe.card.createToken({

@@ -110,21 +110,32 @@
 
   <div class="buttons-wrap">
     <mat-button-toggle-group [(ngModel)]="contractStatus" (change)="updateContracts()" [disabled]="isDataLoaded == Loading.loading">
-      <mat-button-toggle [value]="ContractStatus.active">
+      <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.active" (click)="statusContract = 'none'">
         Published
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">20</span> -->
       </mat-button-toggle>
-      <mat-button-toggle [value]="ContractStatus.archived">
+      <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.approved" (click)="statusContract = 'none'">
+        Approved
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">4</span> -->
+      </mat-button-toggle>
+      <mat-button-toggle  class="buttons-wrap__mat-btn" [value]="ContractStatus.pending" (click)="statusContract = 'pending'">
+        Pending Approval
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">7</span> -->
+      </mat-button-toggle>
+      <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.archived" (click)="statusContract = 'none'">
         Archived
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">3</span> -->
       </mat-button-toggle>
-      <mat-button-toggle [value]="ContractStatus.draft">
+      <mat-button-toggle class="buttons-wrap__mat-btn"  [value]="ContractStatus.draft" (click)="statusContract = 'none'">
         Drafts
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">10</span> -->
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>
   <div *ngIf="isDataLoaded == Loading.success" style="min-height: 50vh;">
     <div *ngIf="separatedOffers.length > 11" class="pagination_block">
       <button mat-raised-button (click)="decreaseIndex()">
-        <</button>
+        </button>
       <button mat-raised-button [disabled]="ind == 0" (click)="changePage(0)">1</button>
       <button mat-raised-button [disabled]="ind == first || first != 1" (click)="changePage(first)">{{ first != 1 ? '...' : (first + 1) }}</button>
       <button mat-raised-button [disabled]="ind == second" (click)="changePage(second)">{{ second + 1 }}</button>
@@ -144,11 +155,13 @@
       <button *ngFor="let count of separatedOffers" mat-raised-button (click)="changePage(separatedOffers.indexOf(count))" [disabled]="ind == separatedOffers.indexOf(count)">{{ separatedOffers.indexOf(count) + 1 }}</button>
       <button mat-raised-button (click)="increaseIndex()">></button>
     </div>
+   
     <div class="jobs-wrap" *ngFor="let offer of separatedOffers[ind]">
       <div class="job-box-wrap">
-        <job-box [contract]="offer" (statusChange)="removeContractFromList($event)"></job-box>
+        <job-box [status]="statusContract" [contract]="offer" (statusChange)="removeContractFromList($event)"></job-box>
       </div>
     </div>
+   
     <div *ngIf="separatedOffers.length > 11 && separatedOffers[ind].length > 2" class="pagination_block">
       <button mat-raised-button (click)="decreaseIndex()">
         <</button>

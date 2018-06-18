@@ -5,8 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { PostJobPageComponent } from './post-job-page.component';
 import { PostJobService } from './post-job.service';
-import { SearchPipe, sortSkillsPipe, SearchCountryPipe } from './post-job-page.pipes';
-// import { NouisliderComponent } from 'ng2-nouislider';
+import { SearchPipe, sortSkillsPipe, SearchCountryPipe, FilterProjects } from './post-job-page.pipes';
 import { NouisliderModule } from 'ng2-nouislider';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -33,18 +32,19 @@ import { AlertComponentPost } from './alert/alert.component';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { DashboardService } from 'app/dashboard/dashboard.service';
 import { Modal1Component } from './modal1/modal1.component';
+import { ApprovalComponent } from './approval/approval.component';
 
 @NgModule({
 	declarations: [
 		PostJobPageComponent,
-		// NouisliderComponent,
 		ModalComponent,
 		SearchPipe,
 		sortSkillsPipe,
 		AlertComponentPost,
-		// NouisliderComponent,
 		SearchCountryPipe,
-		Modal1Component
+		Modal1Component,
+		ApprovalComponent,
+		FilterProjects
 	],
 	imports: [
 		BrowserModule,
@@ -66,8 +66,8 @@ import { Modal1Component } from './modal1/modal1.component';
 		NouisliderModule,
 		MatSnackBarModule
 	],
-	entryComponents: [ AlertComponentPost, Modal1Component ],
-	providers: [ Login, Parse, PostJobService, DashboardService ],
+	entryComponents: [ AlertComponentPost, Modal1Component, ApprovalComponent ],
+	providers: [ Login, Parse, PostJobService, DashboardService, FilterProjects ],
 	exports: [PostJobPageComponent, AlertComponentPost]
 })
 export class PostJobPageModule {}

@@ -25,7 +25,7 @@ export class SanitizePipe implements PipeTransform {
               this._router.navigate(['/jobs', id])
             })
         }
-      },1)
+      }, 1);
     };
     return this.sanitizer.bypassSecurityTrustHtml(content);
   }

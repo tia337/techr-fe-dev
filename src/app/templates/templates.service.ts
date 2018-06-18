@@ -73,7 +73,7 @@ export class TemplatesService {
 				type = this.createPointer('TemplatesType', template.typeId);
 			}
 			const newTemplate = this._parse.Object('TemplatesCustomized');
-			console.log(newTemplate);
+			// console.log(newTemplate);
 			newTemplate.set('Author', firstAuthor);
 			newTemplate.set('Client', this.createPointer('Clients', clientId));
 			newTemplate.set('Type', type);

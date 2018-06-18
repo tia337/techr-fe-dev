@@ -36,7 +36,11 @@ export class LoginComponent implements OnInit {
 		}
 	];
 
-	constructor(private _router: Router, private _root_vcr: RootVCRService, private _login: Login) {
+	constructor(
+		private _router: Router,
+		private _root_vcr: RootVCRService,
+		private _login: Login
+	) {
 		this._router.navigate(['/', 'login', {outlets: {'login-slider': ['reach-and-manage-candidates']}}], {skipLocationChange: true});
 	}
 
@@ -72,16 +76,12 @@ export class LoginComponent implements OnInit {
         if (/iPad|iPhone|iPod/.test(userAgent)) {
             return "iOS";
 		}
-		
+
         return "unknown";
     }
 
-	signIn() {
-		this._login.signIn().then(user => {
-			if (!user.get('Client_Pointer')) {
-				this._root_vcr.createComponent(ConfirmationAlertComponent);
-			}
-		});
+	signInWithLinkedin() {
+		this._login.getAuthUrl('linkedin');
 	}
 
 }

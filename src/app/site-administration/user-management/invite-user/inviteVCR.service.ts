@@ -24,8 +24,8 @@ export class InviteVCR {
 		this.vcr.remove(index);
 		this._forms.splice(this._forms.indexOf(instance));
 		instance = null;
-		console.log(this._forms);
-		console.log(instance);
+		// console.log(this._forms);
+		// console.log(instance);
 	}
 
 	getIndex(viewRef: ViewRef): number {

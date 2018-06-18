@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef, OnDestroy} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { RootVCRService } from '../../../root_vcr.service';
 import { Router } from '@angular/router';
 import { JobDetailsService } from '../../../job-details/job-details.service';

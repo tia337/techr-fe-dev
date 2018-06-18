@@ -82,7 +82,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-
 		if (localStorage.getItem('theme')) {
 			const theme = localStorage.getItem('theme');
 			if (theme === 'old') {
@@ -91,7 +90,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			if (theme === 'new') {
 				this._theme = 'new';
 			};
-			this.changeTheme(theme);
+			// this.changeTheme(theme);
 		}
 
 		this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
@@ -106,10 +105,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}
 
 		this._headerService.currentNotificationsCount.subscribe(data => {
-			console.log(data);
 			this.notificationsCount = parseFloat(data);
 		});
-
 
 		this.loadLogoSubsc = this._companySettingsService.logoUpdate.subscribe(() => {
 			this.getLogo();
@@ -133,6 +130,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 				// });
 			}
 		});
+
 	}
 
 	closeAdminMenu(event?) {
@@ -157,7 +155,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}
 	}
 
-    closeUserMenu(event?) {
+  closeUserMenu(event?) {
         if (event) {
             if (event.clientY < 55) {
                 this._closeUserAnim= true;
@@ -186,13 +184,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	signIn() {
-		this._login.signIn().then(user => {
-			if (!user.has('Client_Pointer')) {
-				this._root_vcr.clear();
-				this._root_vcr.createComponent(ConfirmationAlertComponent);
-			}
-		});
+	signInWithLinkedin() {
+		this._login.getAuthUrl('linkedin');
+	}
+
+	signInWithMicrosoft() {
+		this._login.getAuthUrl('microsoft');
 	}
 
 	signOut() {
@@ -208,7 +205,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this._menuOpened = true;
 	}
 
-    openUserMenu() {
+  openUserMenu() {
         this._closeUserAnim = false;
         this._userMenuOpened = true;
     }
@@ -275,8 +272,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	get menuOpened() {
 		return this._menuOpened;
 	}
-    get userMenuOpened() {
-        return this._userMenuOpened;
+  get userMenuOpened() {
+    return this._userMenuOpened;
 	}
 	changeNotifications (notifications: boolean): void {
 		this._notificationsOpened = notifications;
@@ -291,19 +288,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		return observable;
 	}
 
-	changeTheme(theme?: string) {
-		if (this._theme === 'old' || theme === 'old') {
-			this._theme = 'new';
-			const body = document.getElementById('body');
-			body.classList.add('new');
-			localStorage.setItem('theme', 'new');
-		} else if (this._theme === 'new' || theme === 'new') {
-			this._theme = 'old';
-			const body = document.getElementById('body');
-			body.classList.remove('new');
-			localStorage.setItem('theme', 'old');
-		}
-	}
+	// changeTheme(theme?: string) {
+	// 	if (this._theme === 'old' || theme === 'old') {
+	// 		this._theme = 'new';
+	// 		const body = document.getElementById('body');
+	// 		body.classList.add('new');
+	// 		localStorage.setItem('theme', 'new');
+	// 	} else if (this._theme === 'new' || theme === 'new') {
+	// 		this._theme = 'old';
+	// 		const body = document.getElementById('body');
+	// 		body.classList.remove('new');
+	// 		localStorage.setItem('theme', 'old');
+	// 	}
+	// }
 
 
 }

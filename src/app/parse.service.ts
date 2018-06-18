@@ -13,12 +13,7 @@ import { Subject } from 'rxjs/Subject';
 import * as md5 from 'crypto-js/md5';
 import { environment } from './../environments/environment';
 
-// import * as env2 from 'env2';
-
 import { IUser } from '../../imports/interfaces';
-
-// import { ConfirmationAlertComponent } from './confirmation-alert/confirmation-alert.component';
-
 
 @Injectable()
 export class Parse {
@@ -32,14 +27,10 @@ export class Parse {
 	public confirmEmail = new EventEmitter();
 
 	constructor(private _router: Router) {
-		// const env = new env2('../../env.json');
-		// console.log(env);
 		this._Parse = parse;
-		// this._Parse.initialize(process.env.APP_ID);
-		// this._Parse.serverURL = process.env.SERVER_URL;
-
 		this._Parse.initialize(environment.APP_ID);
 		this._Parse.serverURL = environment.SERVER_URL;
+		
 
 	}
 
@@ -95,6 +86,10 @@ export class Parse {
 		return this._Parse.User.current();
 	}
 
+	toJSON() {
+		return this._Parse.Object.toJSON();
+	}
+
 	getPartner(user: any) {
 		if (user) {
 			return user.get('partner').fetch();
@@ -135,6 +130,10 @@ export class Parse {
 		const pointerToFoo = new Foo();
 		pointerToFoo.id = objectID;
 		return pointerToFoo;
+	}
+
+	getClientId () {
+		return this.getCurrentUser().get('Client_Pointer').id;
 	}
 
 }

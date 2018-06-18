@@ -52,6 +52,8 @@ import { GraphicsService } from 'app/graphics/graphics.service';
 	styleUrls: ['./jobs-page.component.scss']
 })
 export class JobsPageComponent implements OnInit, OnDestroy {
+	
+	statusContract = 'none';
 	// selectedContract: {
 	// 	name: string,
 	// 	id: string
@@ -98,7 +100,6 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		private _jobsPageService: JobsPageService,
 		private _jobDetailsService: JobDetailsService,
 		private _parse: Parse,
-		// private _login: Login,
 		private _filters: FiltersService,
 		private _graphicService: GraphicsService
 	) {
@@ -115,7 +116,10 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.filters = this._filters.getFilters();
-
+		if (localStorage.getItem('pending')) {
+			this.contractStatus = ContractStatus.pending;
+			this.statusContract = 'pending';
+		}
 		this.filteredJobsOptions = this.jobSearchControl.valueChanges
 			.startWith(null)
 			.map(job => {
@@ -146,6 +150,7 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 				}
 			});
 		this.updateContracts();
+		
 	}
 
 	private clearButton(val) {
@@ -238,51 +243,54 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		if (this.filters.length === 1 && this.filters.indexOf(JobsToShow.myJobs) === 0) {
 			this.recruiterSearchControl.reset();
 		}
-		console.log(this.contractStatus);
-		this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
-			console.log(contracts);
-			this.separatedOffers = new Array();
-			this._allOffers = contracts;
-			this.offers = contracts;
-			this.filterOffers();
-			this.applySearchFilters(isTitle, isSkill, isRole, isRecruiter);
-			let compareValue = '';
-			switch (this.contractStatus) {
-				case ContractStatus.active:
-				compareValue = 'postedAt';
-				break;
-				case ContractStatus.archived:
-				compareValue = 'updatedAt';
-				break;
-				case ContractStatus.draft:
-				compareValue = 'createdAt';
-				break;
-				default:
-				compareValue = 'createdAt';
-				break;
-			}
-			this.offers.sort((a, b) => {
-				return (a.get('createdAt').getTime() - b.get('createdAt').getTime());
-			});
-			const copy = this.offers.slice(0);
-			while (copy.length > 0) {
-				let count = 0;
-				const onePageArray = new Array();
-				while (count < 5 && copy.length > 0) {
-					onePageArray.push(copy.pop());
-					count++;
+		if (this.contractStatus ) {
+			this._jobsPageService.getContracts(this.contractStatus).then(contracts => {
+				this.separatedOffers = new Array();
+				this._allOffers = contracts;
+				this.offers = contracts;
+				this.filterOffers();
+				this.applySearchFilters(isTitle, isSkill, isRole, isRecruiter);
+				let compareValue = '';
+				switch (this.contractStatus) {
+					case ContractStatus.active:
+					compareValue = 'postedAt';
+					break;
+					case ContractStatus.archived:
+					compareValue = 'updatedAt';
+					break;
+					case ContractStatus.draft:
+					compareValue = 'createdAt';
+					break;
+					default:
+					compareValue = 'createdAt';
+					break;
 				}
-				this.separatedOffers.push(onePageArray);
-			}
-			if (this.offers && this.offers.length > 0) {
-				this.isDataLoaded = Loading.success;
-			} else {
+				this.offers.sort((a, b) => {
+					return (a.get('createdAt').getTime() - b.get('createdAt').getTime());
+				});
+				const copy = this.offers.slice(0);
+				while (copy.length > 0) {
+					let count = 0;
+					const onePageArray = new Array();
+					while (count < 5 && copy.length > 0) {
+						onePageArray.push(copy.pop());
+						count++;
+					}
+					this.separatedOffers.push(onePageArray);
+				}
+				if (this.offers && this.offers.length > 0) {
+					this.isDataLoaded = Loading.success;
+				} else {
+					this.isDataLoaded = Loading.error;
+				}
+			}, error => {
+				console.error(error);
 				this.isDataLoaded = Loading.error;
-			}
-		}, error => {
-			console.error(error);
-			this.isDataLoaded = Loading.error;
-		});
+			});
+		};
+		if (this.contractStatus === 4) {
+			localStorage.removeItem('pending');
+		}
 	}
 	applySearchFilters(isTitle ? , isSkill ? , isRole ? , isRecruiter ? ) {
 		if (isTitle && isTitle.length > 0) {
@@ -394,65 +402,6 @@ export class JobsPageComponent implements OnInit, OnDestroy {
 		this.roleSearchControl.reset();
 		this.updateContracts();
 	}
-		// sortOffers() {
-		// 	if(this.sortBy == 1)
-		// 	{
-		// 		this._allOffers = _.sortBy(this._allOffers, offer => {
-		// 			return -offer.createdAt;
-		// 		});
-		// 	}
-		// 	else
-		// 	{
-		// 		this._allOffers = this._allOffers.sort((offer1, offer2) => {
-		// 			if(offer1.numOfHired > offer2.numOfHired)
-		// 				return -1;
-		// 			else if(offer1.numOfHired < offer2.numOfHired)
-		// 				return 1;
-		// 			else if(offer1.numOfHired == offer2.numOfHired)
-		//
-		// 				if(offer1.numOfJobOffered > offer2.numOfJobOffered)
-		// 					return -1;
-		// 				else if(offer1.numOfJobOffered < offer2.numOfJobOffered)
-		// 					return 1;
-		// 				else if(offer1.numOfJobOffered == offer2.numOfJobOffered)
-		//
-		// 					if(offer1.numOfF2FInterview > offer2.numOfF2FInterview)
-		// 						return -1;
-		// 					else if(offer1.numOfF2FInterview < offer2.numOfF2FInterview)
-		// 						return 1;
-		// 					else if(offer1.numOfF2FInterview == offer2.numOfF2FInterview)
-		//
-		// 						if(offer1.numOfPhomeInterview > offer2.numOfPhomeInterview)
-		// 							return -1;
-		// 						else if(offer1.numOfPhomeInterview < offer2.numOfPhomeInterview)
-		// 							return 1;
-		// 						else if(offer1.numOfPhomeInterview == offer2.numOfPhomeInterview)
-		//
-		// 							if(offer1.numOfShortlist > offer2.numOfShortlist)
-		// 								return -1;
-		// 							else if(offer1.numOfShortlist < offer2.numOfShortlist)
-		// 								return 1;
-		// 							else if(offer1.numOfShortlist == offer2.numOfShortlist)
-		//
-		// 								if(offer1.numOfApplied > offer2.numOfApplied)
-		// 									return -1;
-		// 								else if(offer1.numOfApplied < offer2.numOfApplied)
-		// 									return 1;
-		// 							else if(offer1.numOfApplied == offer2.numOfApplied)
-		//
-		// 									if(offer1.numOfReferrals > offer2.numOfReferrals)
-		// 										return -1;
-		// 									else if(offer1.numOfReferrals < offer2.numOfReferrals)
-		// 										return 1;
-		// 									else if(offer1.numOfReferrals == offer2.numOfReferrals)
-		//
-		// 										if(offer1.numOfSuggested > offer2.numOfSuggested)
-		// 											return -1;
-		// 										else if(offer1.numOfSuggested < offer2.numOfSuggested)
-		// 											return 1;
-		// 		});
-		// 	}
-		// }
 
 		get ContractStatus() {
 			return ContractStatus;

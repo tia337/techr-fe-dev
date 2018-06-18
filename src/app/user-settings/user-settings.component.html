@@ -17,6 +17,11 @@
             <li> <h3 class="bold">Display candidate distance :</h3>  <div class="km-mile-switch"> Kilometers  <mat-slide-toggle [(ngModel)]="distanceUnits"></mat-slide-toggle>  Miles</div></li>
           </ul>
         </div>
+        <div class="panel-container">
+          <ul>
+            <li> <h3 class="bold">Change platform theme:</h3>  <div class="km-mile-switch"> Old & Classic  <mat-slide-toggle (change)="changeTheme()" [(ngModel)]="settings.themeStyle"></mat-slide-toggle>  Modern</div></li>
+          </ul>
+        </div>
       </mat-expansion-panel>
       <mat-expansion-panel>
         <mat-expansion-panel-header>

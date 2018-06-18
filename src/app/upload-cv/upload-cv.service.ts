@@ -120,8 +120,8 @@ export class UploadCvService {
 					return null;
 				}
 				const r = resz.ResumeParserData;
-				console.log('RCHILLI LOG:');
-				console.log(r);
+				// console.log('RCHILLI LOG:');
+				// console.log(r);
 				const skills: {
 					name: string,
 					id: string
@@ -523,9 +523,6 @@ export class UploadCvService {
 		// 		});
 		// 	});
 		// } else {
-			console.log(enemy.skills);
-			console.log(enemy.newSkills);
-			console.log(clearSkills);
 			clearSkills.forEach(element => {
 				const skill = this._parse.Object('SkillComponent');
 				skill.set('skill', this.createPointer('ProgrammingSkill', element.id));
@@ -548,7 +545,7 @@ export class UploadCvService {
 		user.set('summary', enemy.summary);
 		user.set('email', enemy.email);
 		user.set('username', enemy.email);
-		user.set('Languages', [enemy.languages]);
+		user.set('Languages', enemy.languages);
 		user.set('WebSites', enemy.websites);
 		user.set('Phone', enemy.phone);
 		return this.createD(enemy).then(dev => {
@@ -592,7 +589,6 @@ export class UploadCvService {
 		}
 		let skills;
 		if (enemy.skills.length >= 1) {
-			console.log(enemy);
 			skills = this.createSA(enemy);
 		}
 		const developer = dev.save();
@@ -757,4 +753,3 @@ export class UserFromCV {
 		expr: number
 	}[];
 }
-

@@ -2,7 +2,7 @@
 	<div class="tabs_buttons">
 		<button class="tabs" [disabled]="unlockButtons" [class.activeTab]="graphicType == 1" (click)="loadAndReloadGraphic(1)">Lead Time Metrics</button>
 		<button class="tabs" [disabled]="unlockButtons" [class.activeTab]="graphicType == 3" (click)="loadAndReloadGraphic(3)">Recruitment Channels</button>
-		<button class="tabs" [disabled]="unlockButtons" [class.activeTab]="graphicType == 2" (click)="loadAndReloadGraphic(2)">Source JobBoards</button>
+		<!-- <button class="tabs" [disabled]="unlockButtons" [class.activeTab]="graphicType == 2" (click)="loadAndReloadGraphic(2)">Source JobBoards</button> -->
 	</div>
 	<div id="tab_one">
 		<button class="timeButton" [disabled]="unlockButtons" [class.active2]="isSelected === 7" (click)="searchAndUpdate(7)">1 week</button>

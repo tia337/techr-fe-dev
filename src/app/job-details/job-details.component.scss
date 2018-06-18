@@ -5,16 +5,62 @@
   padding: 0 12px;
   // height: 100vh;
   .job-details-title {
-    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
     font-weight: 100;
     font-size: 20px;
     // margin: 5px 10px 0 10px;
     margin: 15px 0;
     mat-icon {
       vertical-align: middle;
+      // cursor: pointer;
+    }
+    span {
       cursor: pointer;
     }
   }
+
+  .likelihood-to-achieve {
+    display: flex;
+    margin-left: 20px;
+    font-size: 15px;
+  }
+
+  .likelihood-to-achieve__hiring-target {
+    margin-right: 10px;
+    span {
+      font-weight: bold;
+    }
+  }
+
+  .likelihood-to-achieve__likelihood-percentage {
+    display: flex;
+    mat-icon {
+      cursor: pointer;
+    }
+    animation: widthTransition 1s  fill-mode;
+    span {
+      margin: 0px 3px;
+    }
+    p {
+      cursor: pointer;
+    }
+    
+  }
+
+  .low {
+    color:rgb(250, 126, 55); 
+  }
+
+  .mid {
+    color:rgb(195, 181, 47);
+  }
+
+  .high {
+    color:rgb(61, 156, 24); 
+  }
+
   .job-dashboards-wrap {
     display: flex;
     flex-direction: row;
@@ -137,4 +183,13 @@
   ///deep/ .mat-ink-bar {
   //  display: none;
   //}
+}
+
+@keyframes widthTransition {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
 }

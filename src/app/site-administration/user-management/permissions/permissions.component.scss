@@ -38,7 +38,18 @@
           width: 105px;
         }
       }
+      .user-role-options {
+        width: 100px;
+        span{
+          margin: 0px 7px;
+        }
+      } 
     }
   }
   
+}
+
+.permissions-header {
+  display: flex;
+  justify-content: space-between;
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../../parse.service';
-
+//tslint:disable:indent
 @Injectable()
 export class AccessLevelPageService {
 
@@ -19,8 +19,31 @@ export class AccessLevelPageService {
       return user.find().then( userObject => {
         return userObject;
       });
-
     });
   }
+
   
+
+  getUserRoles(): Promise<any> {
+    const promise = new Promise ((resolve, reject) => {
+      const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+      this._parse.execCloud('getUserRoles', {clientId: clientId}).then(data => {
+        resolve(data);
+        reject(data);
+      });
+    });
+    return promise;
+  }
+
+  getTeamMembersUserRoles(roleName: string) {
+    const promise = new Promise ((resolve, reject) => {
+      const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+      this._parse.execCloud('getTeamMembersUserRoles', {clientId: clientId, roleName: roleName }).then(data => {
+        resolve(data);
+        reject(data);
+      });
+    });
+    return promise;
+  }
+
 }

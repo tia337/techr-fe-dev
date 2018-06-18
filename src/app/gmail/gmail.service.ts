@@ -51,7 +51,7 @@ export class GmailService {
 		});
 	};
 
-	getFillers(contractId: string, candidateId?: string): ParsePromise {
+	getFillers(contractId: string, candidateId?: string | Array<any>): ParsePromise {
 		const data = {
 			fCompanyName: <string>'',
 			fCandidateName: <string>'',

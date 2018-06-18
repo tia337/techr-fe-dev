@@ -1,3 +1,4 @@
+import { RecruitmentTeamsComponent } from './site-administration/user-management/recruitment-teams/recruitment-teams.component';
 
 import { TemplateDetailsCustomComponent } from './templates/template-details-custom/template-details-custom.component';
 import { TemplateDetailsComponent } from './templates/template-details/template-details.component';
@@ -72,14 +73,20 @@ import { PrivacyPolicyComponent } from './info-pages/privacy-policy/privacy-poli
 import { InvitationPageComponent } from './invitation-page/invitation-page.component';
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
 import { UserSettingsComponent } from './user-settings/user-settings.component';
-
+import { ReportsComponent } from './site-administration/reports/reports.component';
 import { NotificationComponent } from './header/notifications/notification/notification.component';
 import { CandidatesComponent } from './job-details/candidates/candidates.component';
 import { CandidateNotesComponent } from './job-details/candidates/candidates-info-tabs/candidate-notes/candidate-notes.component';
 import { JobDetailsGuard } from './guards/job-details.guard';
+import { TalentbaseComponent } from './talentbase/talentbase.component';
+import { AuthMicrosoftComponent } from './auth/auth-microsoft/auth-microsoft.component';
+import { AuthLinkedinComponent } from './auth/auth-linkedin/auth-linkedin.component';
+
 
 const routes: Routes = [
 	// { path: 'logout', component: LogoutComponent },
+	{ path: 'auth-ms', component: AuthMicrosoftComponent },
+	{ path: 'auth-li', component: AuthLinkedinComponent },
 	{ path: 'invitation', component: InvitationPageComponent },
 	{ path: 'terms-conditions', component: TermsConditionsComponent },
 	{ path: 'privacy-policy', component: PrivacyPolicyComponent },
@@ -126,6 +133,7 @@ const routes: Routes = [
 		component: CoreComponent,
 		children: [
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+			{ path: 'talentbase', component: TalentbaseComponent },
 			{ path: 'chat/:id', component: ChatComponent, canActivate: [LoginGuard] },
 			{ path: 'chat/:id', component: NotificationComponent },
 			{ path: 'timeline', component: TimelineComponent },
@@ -194,6 +202,11 @@ const routes: Routes = [
 							{
 								path: 'permissions',
 								component: PermissionsComponent,
+								outlet: 'user-management-sections'
+							},
+							{
+								path: 'recruitment-teams',
+								component: RecruitmentTeamsComponent,
 								outlet: 'user-management-sections'
 							},
 							{
@@ -272,6 +285,10 @@ const routes: Routes = [
 						path: 'app-integrations',
 						component: AppIntegrationsComponent,
 						canActivate: [ActiveSubscriptionGuard]
+					},
+					{
+						path: 'reports',
+						component: ReportsComponent
 					}
 				]
 			},

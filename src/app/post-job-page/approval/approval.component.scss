@@ -1,0 +1,209 @@
+.request-approval-modal-overlay {
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    overflow-y: auto;
+    z-index: 999;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    * {
+        transition: .3s all ease-in-out;
+    }
+}   
+
+.request-approval-modal {
+    background: #fff;
+    border-radius: 3px;
+    padding: 15px 25px;
+    z-index: 999999;
+    position: relative;
+    &__title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    &__title-image {
+        width: 100px;
+        margin: 0 15px;
+    }
+    &__title-text {
+        font-size: 18px;
+        color: #000;
+        margin-left: 20px;
+    }
+    &__content-inputs {
+        display: flex;
+        width: 100%;
+        &-team {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+        &-team-approver {
+            text-align: left;
+            cursor: pointer;
+            padding: 2px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            &:hover {
+                background: rgba(255,255,255, .3);
+            }
+            .checked-box {
+                background: white;
+                width: 15px;
+                height: 15px;
+                display: inline-block;
+                margin-left: 10px;
+                border-radius: 2px;
+            }
+            .icon {
+                font-size: 15px;
+                width: 15px;
+                height: 15px;
+            }
+            .remove-icon {
+                font-size: 16px;
+                height: 16px;
+                width: 16px;
+                color: #000;
+            }
+        }
+        &-team-approver.added {
+            background: #4fa9ef;
+            color: white; 
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding: 3px;
+            border-radius: 2px;
+        }
+        &-team-list {
+            background: rgba(0, 0, 0, 0.2);
+        }    
+        &-team-approver-btn {
+            display: flex;
+            align-items: center;
+            background: #4fa9ef;
+            color: #fff;
+            padding: 5px 5px;
+            border-radius: 3px;
+            font-size: 16px;
+            width: 250px;
+            justify-content: center;
+            cursor: pointer;
+            .icon-down, 
+            .icon-up {
+                font-size: 20px;
+                color: #fff;
+            }
+            .icon-down {
+                transform: rotate(90deg);
+            }
+            .icon-up {
+                transform: rotate(-90deg);
+            }
+        }
+        &-team-approver-btn.opened {
+            border-radius: 3px 3px 0 0;
+        }
+    }
+    &-email {
+        width: 250px;
+        height: 34px;
+        padding: 0 5px;
+        border-radius: 4px;
+        outline: none;
+        border: 1px solid;
+    }
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.request-approval {
+    background: #c35a29;
+    width: 100px;
+    color: #fff;
+    font-size: 15px;
+    border: none;
+    border-radius: 3px;
+    padding: 5px;
+    cursor: pointer;
+    transition: .3s all ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.request-approval-modal.success {
+    background: #5ad45a;
+    color: #fff;
+    padding: 30px;
+    text-align: center;
+    p:first-child {
+        font-size: 34px;
+        margin-bottom: 40px;
+    }
+    p:last-child {
+        font-size: 21px;
+    }
+}
+
+.approvers-wrap {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.request-error {
+    display: flex;
+    align-items: center;
+    background: #ef4f4f;
+    color: #fff;
+    padding: 5px 5px;
+    border-radius: 3px;
+    font-size: 16px;
+    width: 250px;
+    justify-content: center;
+    cursor: pointer;
+    margin-top: 30px;
+    // animation-name: error-blink;
+    // animation-delay: .2s;
+    // animation-iteration-count: 3;
+    // animation-duration: .4s;
+    // animation-timing-function: ease-in-out;
+}
+
+@keyframes error-blink {
+    0% {
+        background: #ef4f4f;
+        color: #fff;
+    }
+    50% {
+        background: #fff;
+        color: #ef4f4f;
+    }
+    100% {
+        background: #ef4f4f;
+        color: #fff;
+    }
+}

@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, Input, OnChanges} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges } from '@angular/core';
 import { CandidatesService } from './candidates.service';
 import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { JobDetailsService } from '../job-details.service';
@@ -16,6 +16,7 @@ import { LoaderDirective } from '../../shared/loader/loader.directive';
 import * as _ from 'underscore';
 import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
 import { element } from 'protractor';
+import { BulkActionsComponent } from './candidate-profile/bulk-actions/bulk-actions.component';
 
 import { Observable, } from 'rxjs/Rx';
 // tslint:disable
@@ -35,7 +36,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 	selectedAll:false;
 	candidateWeight: number;
 	candidateDistance: number;
-	candidates;
+	candidates: {results?: Array<any>, weights?: any, distances?: any} = { results: [], weights: undefined };
 	unitPreference;
 	viewCandidates;
 	SuggestedCandidates;
@@ -69,6 +70,8 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 
 	private _candidatesCountObject;
 	private _candidatesCountSubscription;
+	candidatesCustomHiringWorkflow;
+	hasCustomHiringWorkflow;
 
 	constructor(
 		private _candidatesService: CandidatesService,
@@ -96,77 +99,95 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 
 	ngOnInit() {
 		
-		console.log('ON INIT');
-
-		this._candidatesService.contractId = this._jobDetailsService.contractId;
-		this.contractId = this._jobDetailsService.contractId;
-		this._parse.getPartner(this._parse.Parse.User.current()).then( partner => {
-			this.unitPreference = partner.get('candidateDistanceUnitPreferrences');
-		});
-
-		this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe(candidatesCount => {
-			if (candidatesCount) {
-				this._candidatesCountObject = candidatesCount;
-				if (this._activeStage) {
-					this._candidatesCount = this._candidatesCountObject.find(count => {
-						return count.type === this._activeStage;
-					}).value;
-					console.log('Subsribed for candidatesCount: ', this._candidatesCount);
-				}
-			}
-		});
-
-		this._stageSubscription = this._jobDetailsService.activeStage.subscribe(activeStage => {
-			this._activeStage = activeStage;
-			if (this._candidatesCountObject) {
-				this._candidatesCount = this._candidatesCountObject.find( count => {
-					return count.type === activeStage;
-				}).value;
-				console.log('Subscribed for stage. CandidatesCount: ', this._candidatesCount);
-			}
-			console.log('Active Stage: ', activeStage);
-			localStorage.setItem('activeStage', activeStage);
-			delete this.candidates;
-			delete this.userId;
-			delete this.candidateWeight;
-			delete this.candidateDistance;
-
-			this._from = 0;
-			this._limit = 10;
-
-			this.hasCandidates = Loading.loading;
-			this._jobDetailsService.isStagesDisabled = Loading.loading;
-
-			switch (activeStage) {
-
-				case DeveloperListType.suggested:
-
-					this._candidatesService.getSuggestedCandidatesWeb(this.contractId).then( SuggestedCandidates => {
-						console.log('SuggestedCandidates: ', SuggestedCandidates);
-						if (SuggestedCandidates && SuggestedCandidates.developersSorted.length > 0) {
-								console.log('here');
-								this.hasCandidates = Loading.success;
-								console.log(this.hasCandidates, 'HAS CANDIDATES');
-								console.log(SuggestedCandidates.developersSorted, 'SuggestedCandidates.developersSorted');
-								SuggestedCandidates.developersSorted = _.sortBy(SuggestedCandidates.developersSorted, 'weight').reverse();
-								console.log('111');
-                            	let tempArray = [];
-								console.log('Developers sorted: ', SuggestedCandidates.developersSorted);
-								this.copySuggestedCandidates = SuggestedCandidates.developersSorted;
-								this.SuggestedCandidates = Object.assign({},SuggestedCandidates);
-                            	this.candidates = Object.assign({},SuggestedCandidates);
-                            	this.candidates.results = [ ];
-                            	this.candidates.weights = SuggestedCandidates.weights;
-								this.candidates.distances = SuggestedCandidates.distances;
-								console.log(this.candidates);
-                            	SuggestedCandidates.developersSorted.slice(this._from,this._limit).forEach(dev => {
-									tempArray.push(dev.id);
+		this.hasCustomHiringWorkflow = this._jobDetailsService._hasCustomHiringWorkflow.subscribe(hasCustomHiringWorkflow => {
+			if (hasCustomHiringWorkflow === false) {
+				this._candidatesService.contractId = this._jobDetailsService.contractId;
+				this.contractId = this._jobDetailsService.contractId;
+				this._parse.getPartner(this._parse.Parse.User.current()).then( partner => {
+					this.unitPreference = partner.get('candidateDistanceUnitPreferrences');
+				});
+				this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe(candidatesCount => {
+					if (candidatesCount) {
+						this._candidatesCountObject = candidatesCount;
+						if (this._activeStage) {
+							this._candidatesCount = this._candidatesCountObject.find(count => {
+								return count.type === this._activeStage;
+							}).value;
+							console.log('Subsribed for candidatesCount: ', this._candidatesCount);
+						}
+					}
+				});
+		
+				this._stageSubscription = this._jobDetailsService.activeStage.subscribe(activeStage => {
+					this._activeStage = activeStage;
+					if (this._candidatesCountObject) {
+						this._candidatesCount = this._candidatesCountObject.find(count => {
+							return count.type === activeStage;
+						}).value;
+						console.log('Subscribed for stage. CandidatesCount: ', this._candidatesCount);
+					}
+					localStorage.setItem('activeStage', activeStage);
+					delete this.candidates;
+					delete this.userId;
+					delete this.candidateWeight;
+					delete this.candidateDistance;
+		
+					this._from = 0;
+					this._limit = 10;
+		
+					this.hasCandidates = Loading.loading;
+					this._jobDetailsService.isStagesDisabled = Loading.loading;
+		
+					switch (activeStage) {
+		
+						case DeveloperListType.suggested:
+		
+							this._candidatesService.getSuggestedCandidatesWeb(this.contractId).then( SuggestedCandidates => {
+								console.log('SuggestedCandidates: ', SuggestedCandidates);
+								if (SuggestedCandidates && SuggestedCandidates.developersSorted.length > 0) {
+										this.hasCandidates = Loading.success;
+										SuggestedCandidates.developersSorted = _.sortBy(SuggestedCandidates.developersSorted, 'weight').reverse();
+										let tempArray = [];
+										this.copySuggestedCandidates = SuggestedCandidates.developersSorted;
+										this.SuggestedCandidates = Object.assign({},SuggestedCandidates);
+										this.candidates = Object.assign({},SuggestedCandidates);
+										this.candidates.results = [];
+										this.candidates.weights = SuggestedCandidates.weights;
+										this.candidates.distances = SuggestedCandidates.distances;
+										SuggestedCandidates.developersSorted.slice(this._from,this._limit).forEach(dev => {
+											tempArray.push(dev.id);
+										});
+										this._candidatesService.getDevelopersById(tempArray).then(response => {
+											this.candidates.results = this.candidates.results.concat(response.results);
+											const firstUser = this.candidates.results[0];
+											this._candidatesService.userId = firstUser.id;
+											if (localStorage.getItem('queryParams') != null) {
+												let data = JSON.parse(localStorage.getItem('queryParams'));
+												this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
+											} else if (!localStorage.getItem('queryParams')) {
+												this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+											}
+										});
+										this.loadCountryList();
+										this._jobDetailsService.isStagesDisabled = Loading.success;
+										
+									} else {
+										this.hasCandidates = Loading.error;
+										this._jobDetailsService.isStagesDisabled = Loading.error;
+									}
 								});
-								this._candidatesService.getDevelopersById(tempArray).then(response => {
-									console.log('Response from server Get Developers', response);
-                            		this.candidates.results = this.candidates.results.concat(response.results);
-									console.log('This.candidate.results', this.candidates.results);
-									const firstUser = this.candidates.results[0];
+							break;
+		
+						case DeveloperListType.applied:
+							this._candidatesService.getAppliedCandidates(this.contractId).then(suggestions => {
+								console.log("SUGGESTION!!!!!:", suggestions);
+								if (suggestions && suggestions.results.length > 0) {
+									console.log("SUGGESTION LENGTH!!!!!:");
+									this.hasCandidates = Loading.success;
+									this.candidates = suggestions;
+									this._jobDetailsService.isStagesDisabled = Loading.success;
+									console.log(this.candidates);
+									const firstUser = suggestions.results[0];
 									this._candidatesService.userId = firstUser.id;
 									if (localStorage.getItem('queryParams') != null) {
 										let data = JSON.parse(localStorage.getItem('queryParams'));
@@ -174,108 +195,149 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 									} else if (!localStorage.getItem('queryParams')) {
 										this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
 									}
-								})
-								this.loadCountryList();
-								this._jobDetailsService.isStagesDisabled = Loading.success;
-								
-							} else {
-								this.hasCandidates = Loading.error;
-								this._jobDetailsService.isStagesDisabled = Loading.error;
-							}
-						});
-					break;
-
-				case DeveloperListType.applied:
-					this._candidatesService.getAppliedCandidates(this.contractId).then(suggestions => {
-						console.log(suggestions);
-						if (suggestions && suggestions.results.length > 0) {
-							this.hasCandidates = Loading.success;
-							this._jobDetailsService.isStagesDisabled = Loading.success;
-							this.candidates = suggestions;
-							const firstUser = suggestions.results[0];
-							this._candidatesService.userId = firstUser.id;
-							// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
-							if (localStorage.getItem('queryParams') != null) {
-								console.log('in queryparams');
-								let data = JSON.parse(localStorage.getItem('queryParams'));
-								this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
-							} else if (!localStorage.getItem('queryParams')) {
-								console.log('NO PARAMS');
-								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
-							}
-						} else {
-							this.hasCandidates = Loading.error;
-							this._jobDetailsService.isStagesDisabled = Loading.error;
-						}
-					}, error => {
-						console.error(error);
-					});
-					break;
-
-				case DeveloperListType.employeeReferrals:
-					this._candidatesService.getReferrals(this.contractId).then(referrals => {
-						if (referrals && referrals.results.length > 0) {
-							this.hasCandidates = Loading.success;
-							this._jobDetailsService.isStagesDisabled = Loading.success;
-							this.candidates = referrals;
-							const firstUser = referrals.results[0];
-							this._candidatesService.userId = firstUser.id;
-							// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
-							if (localStorage.getItem('queryParams') != null) {
-								let data = JSON.parse(localStorage.getItem('queryParams'));
-								this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
-							} else if (!localStorage.getItem('queryParams')) {
-								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
-							}
-							console.log('employeeReferrals Users: ', this.getPercentageMatch(firstUser));
-							this.postLoader = false;							
-						} else {
-							this.hasCandidates = Loading.error;
-							this._jobDetailsService.isStagesDisabled = Loading.error;
-						}
-					});
-					break;
-
-				default:
-					this._candidatesService.getUsersForList(this.contractId, activeStage).then(suggestions => {
-						if (suggestions && suggestions.results.length > 0) {
-							this.hasCandidates = Loading.success;
-							this._jobDetailsService.isStagesDisabled = Loading.success;
-							this.candidates = suggestions;
-							let res;
-							let id;
-							console.log('this._jobDetailsService.movedUser', this._jobDetailsService.movedUser);
-							if (this._jobDetailsService.movedUser) {
-								id = this._jobDetailsService.movedUser;
-								this._jobDetailsService.movedUser = null;
-							} else {
-								id = suggestions.results[0].id;
-							}
-							suggestions.results.forEach(el => {
-								if (el.id === id) {
-									res = el;
+								} else {
+									this.hasCandidates = Loading.error;
+									this._jobDetailsService.isStagesDisabled = Loading.error;
+								}
+							}, error => {
+								console.error(error);
+							});
+							break;
+		
+						case DeveloperListType.employeeReferrals:
+							this._candidatesService.getReferrals(this.contractId).then(referrals => {
+								if (referrals && referrals.results.length > 0) {
+									this.hasCandidates = Loading.success;
+									this._jobDetailsService.isStagesDisabled = Loading.success;
+									this.candidates = referrals;
+									const firstUser = referrals.results[0];
+									this._candidatesService.userId = firstUser.id;
+									if (localStorage.getItem('queryParams') != null) {
+										let data = JSON.parse(localStorage.getItem('queryParams'));
+										this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
+									} else if (!localStorage.getItem('queryParams')) {
+										this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+									}
+									this.postLoader = false;							
+								} else {
+									this.hasCandidates = Loading.error;
+									this._jobDetailsService.isStagesDisabled = Loading.error;
 								}
 							});
-							const firstUser = res;
-							this._candidatesService.userId = firstUser.id;
-							// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
-							if (localStorage.getItem('queryParams') != null) {
-								let data = JSON.parse(localStorage.getItem('queryParams'));
-								this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
-							} else if (!localStorage.getItem('queryParams')) {
-								this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
-							}
-							this.postLoader = false;							
-						} else {
-							this.hasCandidates = Loading.error;
-							this._jobDetailsService.isStagesDisabled = Loading.error;
-						}
-					});
-					break;
-			}
+							break;
+		
+						default:
+							this._candidatesService.getUsersForList(this.contractId, activeStage).then(suggestions => {
+								if (suggestions && suggestions.results.length > 0) {
+									this.hasCandidates = Loading.success;
+									this.candidates = suggestions;
+									this._jobDetailsService.isStagesDisabled = Loading.success;
+									let res;
+									let id;
+									console.log('this._jobDetailsService.movedUser', this._jobDetailsService.movedUser);
+									if (this._jobDetailsService.movedUser) {
+										id = this._jobDetailsService.movedUser;
+										this._jobDetailsService.movedUser = null;
+									} else {
+										id = suggestions.results[0].id;
+									}
+									suggestions.results.forEach(el => {
+										if (el.id === id) {
+											res = el;
+										}
+									});
+									const firstUser = res;
+									this._candidatesService.userId = firstUser.id;
+									// this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+									if (localStorage.getItem('queryParams') != null) {
+										let data = JSON.parse(localStorage.getItem('queryParams'));
+										this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
+									} else if (!localStorage.getItem('queryParams')) {
+										this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+									}
+									this.postLoader = false;							
+								} else {
+									this.hasCandidates = Loading.error;
+									this._jobDetailsService.isStagesDisabled = Loading.error;
+								}
+							});
+							break;
+					}
+				});
 
-		});
+			} else {
+				console.log('in has cust work flow in candidates');
+
+				this.candidatesCustomHiringWorkflow = this._jobDetailsService._candidatesCustomHiringWorkflow.subscribe(candidates => {
+					console.log(candidates);
+					this.hasCandidates = Loading.loading;
+					this._candidatesService.getSuggestedCandidatesWeb(localStorage.getItem('contractId')).then(SuggestedCandidates => {
+						if (Object.keys(SuggestedCandidates.weights).length > 0) {
+							this.candidates.weights = SuggestedCandidates.weights;
+						} else {
+							this.candidates.weights = undefined;
+						}
+						this.getDevelopersCustomHiringWorkFlowStage(candidates);
+					});
+				});
+
+				// this._candidatesService.getSuggestedCandidatesWeb(localStorage.getItem('contractId')).then(SuggestedCandidates => {
+				// 	if (Object.keys(SuggestedCandidates.weights).length > 0) {
+				// 		this.candidates.weights = SuggestedCandidates.weights;
+				// 	} else {
+				// 		this.candidates.weights = undefined;
+				// 	};
+				// 	this.getDevelopersCustomHiringWorkFlowStage(localStorage.getItem('candidatesCustomHiringWorkflow'));
+				// });
+			}
+		}); 
+
+		if (localStorage.getItem('setHasCustomHiringWorkflow') === 'true') {
+			console.log('has cust w loc st');
+			this._candidatesService.getSuggestedCandidatesWeb(localStorage.getItem('contractId')).then(SuggestedCandidates => {
+				if (Object.keys(SuggestedCandidates.weights).length > 0) {
+					this.candidates.weights = SuggestedCandidates.weights;
+				} else {
+					this.candidates.weights = undefined;
+				};
+				console.log()
+				this.getDevelopersCustomHiringWorkFlowStage(JSON.parse(localStorage.getItem('candidatesCustomHiringWorkflow')));
+			});
+		};
+
+		if (localStorage.getItem('initiationsCount') === '1') {
+			console.log(localStorage.getItem('initiationsCount'));
+			localStorage.setItem('initiationsCount', '2');
+			return;
+		} else if (!localStorage.getItem('initiationsCount')) {
+			localStorage.setItem('initiationsCount', '1');
+			console.log(localStorage.getItem('initiationsCount'));
+			return;
+		} 
 	};
+
+	
+	getDevelopersCustomHiringWorkFlowStage(candidates) {
+		this._candidatesService.getDevelopersById(candidates).then(response => {
+			if (response.results.length > 0) {
+				this.candidates.results = [];
+				this.candidates.results = this.candidates.results.concat(response.results);
+				const firstUser = this.candidates.results[0];
+				this._candidatesService.userId = firstUser.id;
+				this.hasCandidates = Loading.success;
+				if (localStorage.getItem('queryParams') != null) {
+					let data = JSON.parse(localStorage.getItem('queryParams'));
+					this.userProfile(data.candidateId, this.getPercentageMatchQueryParams(data.candidateId), this.getLocationMatchQueryParams(data.canidateId));
+				};
+				if (!localStorage.getItem('queryParams')) {
+					this.userProfile(firstUser.id, this.getPercentageMatch(firstUser), this.getLocationMatch(firstUser));
+				};
+			} else {
+				this.hasCandidates = Loading.error;
+				this._jobDetailsService.isStagesDisabled = Loading.error;
+			}
+		});
+	}
 
 	loadCandidatesAtTheEnd(event) {
 		if (event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight === 0) {
@@ -468,7 +530,8 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
             });
         }
         return 'success';
-    }
+	}
+	
     addCountries(){
         const addCount = this._root_vcr.createComponent(Modal1Component);
         this.loadCountries();
@@ -482,23 +545,29 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
     }
 
 	getPercentageMatch(user: ParseUser): number {
-		const developerId = user.get('developer').id;
-		return this.candidates.weights[developerId] ? this.candidates.weights[developerId] : 0;
+		if (this.candidates.weights) {
+			const developerId = user.get('developer').id;
+			return this.candidates.weights[developerId] ? this.candidates.weights[developerId] : 0;
+		}
 	}
 
 	getLocationMatch(user: ParseUser): number {
-		const developerId = user.get('developer').id;
-		let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;
-		return this.candidates.distances[developerId] ? Math.round(this.candidates.distances[developerId] * unitCoefficient) : 0;
+		if (this.candidates.distances) {
+			const developerId = user.get('developer').id;
+			let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;
+			return this.candidates.distances[developerId] ? Math.round(this.candidates.distances[developerId] * unitCoefficient) : 0;
+		}
 	}
 
 	getPercentageMatchQueryParams(user): number {
-		return this.candidates.weights[user] ? this.candidates.weights[user] : 0;
+		if (this.candidates.weights) return this.candidates.weights[user] ? this.candidates.weights[user] : 0;	
 	}
 
 	getLocationMatchQueryParams(user): number {
-		let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;
-		return this.candidates.distances[user] ? Math.round(this.candidates.distances[user] * unitCoefficient) : 0;
+		if (this.candidates.distances) {
+			let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;
+			return this.candidates.distances[user] ? Math.round(this.candidates.distances[user] * unitCoefficient) : 0;
+		}
 	}
 
 	userProfile(userId: string, candidateWeight: number, candidateDistance: number) {
@@ -527,14 +596,12 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
         if (e.checked) {
         console.log('Id of dev', value);
         this.arrayOfDevs.push(value);
-        console.log('Array if true', this.arrayOfDevs);
         }
         else {
             let index = this.arrayOfDevs.indexOf(value);
             if (index !== -1) {
                 this.arrayOfDevs.splice(index,1);
             }
-            console.log('Array if false', this.arrayOfDevs);
         }
     }
     sendEmail(){
@@ -553,7 +620,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
             console.log('onSend works');
             onSendSubscription.unsubscribe();
         });
-    }
+	}
 
 	sortBySkillFunc(){
         this._candidatesService.getSuggestedCandidates(this.contractId, 0, 1000).then(suggestions => {
@@ -569,17 +636,18 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 
     selectionFunc(selectedAllValue) {
     	this.selectedAll = selectedAllValue;
-    	if(!selectedAllValue) {
+    	if (!selectedAllValue) {
     		this.arrayOfDevs = [];
-    		console.log('ArraYOFDEVSS', this.arrayOfDevs);
+		} else {
+			this.candidates.results.forEach(candidate => {
+				this.arrayOfDevs.push(candidate.id);
+			})
 		}
 	}
 
 	get Loading() {
 		return Loading;
 	}
-
-	
 
 	changeSortMethod(value) {
 		this.postLoader = true;
@@ -808,10 +876,33 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 		});
 	}
 
+	openRejectionModal() {
+		if (this.arrayOfDevs.length === 0) {
+			return;
+		} 
+		if (this.arrayOfDevs.length > 0) {
+			let checkedCandidates = [];
+			this.arrayOfDevs.forEach(id => {
+				this.candidates.results.forEach(candidate => {
+					if (candidate.id === id) {
+						checkedCandidates.push(candidate);
+					}
+				})
+			});
+			const bulkActions = this._root_vcr.createComponent(BulkActionsComponent);
+			bulkActions.contractId = this.contractId;
+			bulkActions.candidates = checkedCandidates;
+		}
+		
+	}
+
 	ngOnDestroy() {
-		console.log('DESTROYED');
-		this._stageSubscription.unsubscribe();
-		this._candidatesCountSubscription.unsubscribe();
+		if (this._stageSubscription !== undefined) this._stageSubscription.unsubscribe();
+		if (this._candidatesCountSubscription !== undefined) this._candidatesCountSubscription.unsubscribe();
 		this._jobDetailsService = null;
+		if (localStorage.getItem('initiationsCount') === '2') {
+			if (this.candidatesCustomHiringWorkflow !== undefined) this.candidatesCustomHiringWorkflow.unsubscribe();
+			if (this.hasCustomHiringWorkflow !== undefined) this.hasCustomHiringWorkflow.unsubscribe();
+		}
 	}
 }

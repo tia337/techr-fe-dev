@@ -1,0 +1,175 @@
+.reports {
+    &-title {
+        padding: 50px;
+        border-bottom: 1px dashed #ccc;
+        font-size: 20px;
+    }
+    &-report-block {
+        padding: 15px;
+        &__title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        &__info-line {
+            font-size: 14px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        &__info-line.info-line_no-schedule {
+            padding-left: 15px;
+            font-size: 20px;
+        }
+        &__info-line.info-line_shedule {
+            .report-name-input {
+                padding: 3px 4px;
+                border-radius: 3px;
+                border: 1px solid #797b7c;
+                font-size: 14px;
+                outline: none;
+            }
+            span {
+                opacity: .7;
+                cursor: pointer;
+            }
+            span.active {
+                font-weight: bold;
+                color: #000;
+                opacity: 1;
+                text-decoration: underline;
+            }
+        }
+        &__info-line.info-line_select-users {
+            display: flex;
+            align-items: center;
+            position: relative;
+            .user-email-input {
+                padding: 3px 4px;
+                border-radius: 3px;
+                border: 1px solid #797b7c;
+                font-size: 14px;
+                outline: none;
+            }
+            .users-list {
+                position: absolute;
+                background: #fafafa;
+                left: 106px;
+                bottom: -160px;
+                width: 130px;
+                z-index: 9;
+            }
+            .users-list p {
+                height: 20px;
+                cursor: pointer;
+            }
+            .users-list p .checked-box {
+                width: 15px;
+                height: 15px;
+                display: inline-block;
+                text-align: center;
+            }
+            .users-list p .icon {
+                color: #000;
+                width: 13px;
+                height: 13px;
+                font-size: 13px;
+            }
+            .users-checked-list {
+                position: absolute;
+                left: 420px;
+                display: flex;
+                align-items: center;
+                overflow: auto;
+                top: -5px;
+                flex-wrap: wrap;
+                flex-direction: row;
+                p {
+                    background: #2b7ab6;
+                    color: #fff;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 3px;
+                    border-radius: 3px;
+                    margin: 5px 5px;
+                }
+                .icon {
+                    background: white;
+                    color: #000;
+                    font-size: 14px;
+                    height: 14px;
+                    width: 14px;
+                    margin-left: 5px;
+                    padding: 2px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            }
+            .delivery-type {
+                margin: 0 10px;
+                opacity: 1;
+                width: 130px;
+                text-align: center;
+                cursor: pointer;
+            }
+        }
+        &__button {
+            background: #2b7ab6;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: .3s all ease-in-out;
+            &:hover {
+                opacity: .7;
+            }
+        }
+        .delivery-type {
+            background: rgba(0,0,0,.1);
+            padding: 3px;
+            border-radius: 3px;
+        }
+    }
+}
+
+.table-schedule table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+.table-schedule {
+    padding-bottom: 20px;
+    padding-left: 15px;
+    th, td {
+        border: 1px solid;
+    }
+    td.button {
+        background: transparent!important; 
+        border: 1px solid transparent!important; 
+        cursor: pointer;
+    }
+}
+
+.table-schedule td,
+.table-schedule th {
+    border: 1px solid #dddddd;
+    padding: 7px;
+}
+
+.table-schedule tr:nth-child(odd) {
+    background-color: #bec1c7;
+}
+
+.table-schedule tr:nth-child(even) {
+    background-color: #e8ebf1;
+}
+
+.table-schedule th {
+    background-color: #6a82ad;
+    color: white;
+    text-align: left;
+}

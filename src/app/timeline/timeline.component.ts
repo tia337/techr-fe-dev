@@ -22,7 +22,7 @@ export class TimelineComponent implements OnInit, OnDestroy {
   private timelineTempStorage: Array<any> = [];
   private _startFrom = 0;
   public loader = false;
-  private _timelineArrayLimits = { from: 0, to: 5 };
+  private _timelineArrayLimits = { from: 0, to: 50 };
   private _timelineSubscription;
   constructor(
     private _socket: Socket,
@@ -41,18 +41,16 @@ export class TimelineComponent implements OnInit, OnDestroy {
     };
     this._timelineService.getTimeline(data).then(timeline => {
       this.timelineStorage = timeline;
-      // this.sortTimeline(timeline);
       this.timelineTempStorage = this.timelineStorage.slice(this._timelineArrayLimits.from, this._timelineArrayLimits.to);
       this.sortTimeline(this.timelineTempStorage);
-      this._timelineArrayLimits.from += 5;
-      this._timelineArrayLimits.to += 5;
+      this._timelineArrayLimits.from += 50;
+      this._timelineArrayLimits.to += 50;
       this._startFrom += 100;
     });
   }
 
   sortTimeline (data) {
     this.timelineArray = this._timelineService.sortTimeline(data);
-    console.log(this.timelineArray);
   }
 
   uploadMoreTimeline (event) {
@@ -63,8 +61,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
           .slice(this._timelineArrayLimits.from, this._timelineArrayLimits.to);
         this.timelineTempStorage = this.timelineTempStorage.concat(slicedArray);
         this.timelineArray = this._timelineService.sortTimeline(this.timelineTempStorage);
-        this._timelineArrayLimits.from += 5;
-        this._timelineArrayLimits.to += 5;
+        this._timelineArrayLimits.from += 50;
+        this._timelineArrayLimits.to += 50;
       } else if (this._startFrom === this._timelineArrayLimits.from) {
         this.loadTimeline();
       };
@@ -83,14 +81,14 @@ export class TimelineComponent implements OnInit, OnDestroy {
         .slice(this._timelineArrayLimits.from, this._timelineArrayLimits.to);
       this.timelineTempStorage = this.timelineTempStorage.concat(slicedArray);
       this.timelineArray = this._timelineService.sortTimeline(this.timelineTempStorage);
-      this._timelineArrayLimits.from += 5;
-      this._timelineArrayLimits.to += 5;
+      this._timelineArrayLimits.from += 50;
+      this._timelineArrayLimits.to += 50;
     });
   }
 
   route(contractId: string, stage: number, candidateId?: string, infoTab?: string) {
-    console.log(contractId, stage, candidateId, infoTab);
-    console.log('routeed');
+    // console.log(contractId, stage, candidateId, infoTab);
+    // console.log('routeed');
     let contract;
     const contractQuery = this._parse.Query('Contract');
     contractQuery.equalTo('objectId', contractId);

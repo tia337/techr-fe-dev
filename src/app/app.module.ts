@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { Gapi } from './gmail-auth2.service';
 import { TextInputHighlightModule } from 'angular-text-input-highlight';
 import { TemplatesModule } from './templates/templates.module';
@@ -9,7 +10,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatIconModule, MatMenuModule, MatSidenavModule } from '@angular/material';
+import { MatIconModule, MatMenuModule, MatSidenavModule, MatProgressBarModule, MatProgressSpinnerModule } from '@angular/material';
 import {MatGridListModule} from '@angular/material/grid-list';
 
 import 'hammerjs';
@@ -52,14 +53,18 @@ import { PrivacyPolicyModule } from './info-pages/privacy-policy/privacy-policy.
 import { InvitationPageModule } from './invitation-page/invitation-page.module';
 import { ContactUsModule } from "app/contact-us/contact-us.module";
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
-// import { UserSettingsComponent } from './user-settings/user-settings.component';
-// import { GoogleAuthComponent } from './google-auth/google-auth.component';
 import { environment } from './../environments/environment';
 import { ChatModule } from './chat/chat.module';
 import { TimelineComponent } from './timeline/timeline.component';
 import { TimelineModule } from './timeline/timeline.module';
 import { ClearStringPipe } from './clear-string.pipe';
 import { TimelineService } from './timeline/timeline.service';
+import { NgxDnDModule } from '@swimlane/ngx-dnd';
+import { EditUserRoleComponent } from './site-administration/user-management/access-level-page/edit-user-role/edit-user-role.component';
+import { ClickOutsideModule } from 'ng-click-outside';
+import { TalentbaseModule } from './talentbase/talentbase.module';
+import { AuthMicrosoftComponent } from './auth/auth-microsoft/auth-microsoft.component';
+import { AuthLinkedinComponent } from './auth/auth-linkedin/auth-linkedin.component';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -75,10 +80,11 @@ const config: SocketIoConfig = {
 	declarations: [
 		AppComponent,
 		ClearStringPipe,
+		AuthMicrosoftComponent,
+		AuthLinkedinComponent,
 	],
 	imports: [
 		BrowserModule,
-		MatGridListModule,
 		HttpModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
@@ -103,6 +109,9 @@ const config: SocketIoConfig = {
 		AlertModule,
 		CheckoutPageModule,
 		MatIconModule,
+		MatGridListModule,
+		MatProgressBarModule,
+		MatProgressSpinnerModule,
 		InviteUserPageModule,
 		LoginModule,
 		TermsConditionsModule,
@@ -112,7 +121,11 @@ const config: SocketIoConfig = {
 		TextInputHighlightModule,
 		InvitationPageModule,
 		ContactUsModule,
-		TimelineModule
+		TimelineModule,
+		ReactiveFormsModule,
+		NgxDnDModule,
+		ClickOutsideModule,
+		TalentbaseModule
 	],
 	providers: [
 		SidenavService,

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input, Renderer2, ElementRef, ViewContainerRef, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, Renderer2, ElementRef, ViewContainerRef, ComponentFactoryResolver, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup} from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -25,17 +25,24 @@ import { DashboardService } from 'app/dashboard/dashboard.service';
 import { ContractStatus } from 'app/shared/utils';
 import { MatSnackBar } from '@angular/material';
 
-import { Modal1Component } from './modal1/modal1.component'
+import { Modal1Component } from './modal1/modal1.component';
+import { ApprovalComponent } from './approval/approval.component';
+import { NULL_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Subject } from 'rxjs';
+import { FilterProjects } from './post-job-page.pipes';
+import { CheckoutPageService } from '../checkout-page/checkout-page.service';
 
 @Component({
 	selector: 'app-post-job-page',
 	templateUrl: './post-job-page1.component.html',
 	styleUrls: ['./post-job-page1.component.scss'],
-	providers: [CurrencyPipe]
+	providers: [CurrencyPipe, FilterProjects]
 })
-export class PostJobPageComponent implements OnInit, AfterViewInit {
+export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	places: any;
+	places1: any;
+	places2: any;
 
 	sourcingTalentInfo: IInfoOptions = {
 		header: 'Tackle talent shortage straight on! Source multi-country',
@@ -61,7 +68,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	@Input() contractObj;
 
 
-	adminLevel:number;
+	adminLevel: number;
+	requestApprovalOpened = false;
 
 	contractForm: FormGroup;
 
@@ -98,6 +106,9 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	placeSuggestions = false;
 
 	matSpinnerActive = false;
+	matSpinnerActive1 = false;
+	matSpinnerActive2 = false;
+
 
 	postLocation;
 
@@ -160,6 +171,33 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	toShowInfoPermit = false;
 	isJobPostShowAlert = true;
 
+	currentOfficeSubject: Subject<string> = new Subject;
+	currentOffice;
+	officeList: Array<{name: string}> = [];
+	customHiringWorkFlowsList = [];
+	customHiringWorkFlowsListShown = false;
+	currentcustomHiringWorkFlow = new Object();
+	customHiringWorkFlowSubject: Subject<any> = new Subject();
+	officeListShown = false;
+	currentDepartmentSubject: Subject<string> = new Subject();
+	currentDepartment;
+	departmentsList: Array<{name: string}> = [];
+	departmentListShown = false;
+	currentClientSubject: Subject<string> = new Subject;
+	currentClient;
+	clientsList: Array<any> = [];
+	clientListShown = false;
+	currentProjectSubject: Subject<string> = new Subject;
+	currentProject;
+	projectsList: Array<any> = [];
+	projectsListShown = false;
+
+	secondLocationOpened = false;
+	thirdLocationOpened = false;
+	
+	approversSubscription;
+	customStandartWorkflow;
+
 	@ViewChildren('categoryTitles') categoryTitles: QueryList<ElementRef>;
 	@ViewChild('categoriesDropdown') categoriesDropdown: ElementRef;
 	@ViewChild('scrollpanel', {
@@ -179,15 +217,43 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		private _postJobService: PostJobService,
 		private _root_vcr: RootVCRService,
 		private _dashboard: DashboardService,
-		public snackBar: MatSnackBar
+		public snackBar: MatSnackBar,
+		private _fp: FilterProjects,
+		private _chpS: CheckoutPageService
 	) {
 		_postJobService.checkIsPostJobShowAlert().then(isShowAlert => this.isJobPostShowAlert = isShowAlert);
 	}
 
 	ngOnInit() {
-		// FOR SKILLS ROLES AND INDUSTRIES
+
+		this.approversSubscription = this._postJobService.currentApproversArray.subscribe(data => {
+			if (data !== null) {
+				if (this.contractForm) {
+					this.contractForm.value.approvers = data;
+					this.contractForm.value.status = 4;
+					this.updateContract(this.contractForm.value);
+					this._router.navigateByUrl('/jobs');
+				}
+			}
+		});
+
+		this._postJobService.getClientDepartments().then(departments => {
+			this.departmentsList = departments;
+		});
+
+		this._postJobService.getClientOffices().then(offices => {
+			this.officeList = offices;
+		});
+
+		this._postJobService.getClientsOfClient().then(clients => {
+			this.clientsList = clients;
+		});
+
+		this._postJobService.getClientRecruitmentProjects().then(projects => {
+			this.projectsList = projects;
+		});
+
 		this.adminLevel = this._postJobService.checkAdmin();
-		console.log(this.adminLevel);
 
 		this._postJobService.getSkills().then(skills => {
 			this.skills = skills;
@@ -208,16 +274,22 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			this.industries = _.sortBy(this.industries, function(industries){ return industries.get("title"); });
 		});
 
-		this.editable = this.contractObj ? false : true;
+		const clientId = this._parse.getClientId();
+		this._parse.execCloud('getCustomHiringWorkFlow', { clientId: clientId }).then(result => {
+			if (result.length > 0) this.customHiringWorkFlowsList = result;
+		});
 
+		this.editable = this.contractObj ? false : true;
 		this.currentContract = this.contractObj;
 		if (this.contractObj) {
-			// console.log('LOGO: ', this.contractObj.get('logo'));
+			this.currentDepartment = this.contractObj.get('jobDepartment');
+			this.currentOffice = this.contractObj.get('jobOffice');
+			this.currentClient = this.contractObj.get('jobClientOfClient');
+			this.currentProject = this.contractObj.get('jobRecruitmentProject');
 			const asapLocal = this.contractObj.get('status') === ContractStatus.draft ? true : this.contractObj.get('isASAP');
 			this.contractForm = this._formBuilder.group({
 				postedAt: this.contractObj.get('postedAt'),
 				logo: null,
-				// logo: this.contractObj.get('logo').url,
 				companyName: this.contractObj.get('companyName'),
 				companyDescription: this.contractObj.get('companyDescription'),
 				title: this.contractObj.get('title'),
@@ -240,25 +312,38 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				owner: this.contractObj.get('owner'),
 				countriesSourcing: [],
 				isRatedHourly: this.contractObj.get('isRatedHourly'),
-
 				isTR: this.contractObj.get('isTR'),
 				SalaryCurrency: this.contractObj.get('SalaryCurrency'),
-
 				Client: this.contractObj.get('Client'),
-
 				postLocation: this.contractObj.get('postLocation'),
 				Min_hourly: this.contractObj.get('Min_hourly'),
 				Max_hourly: this.contractObj.get('Max_hourly'),
 				durationMin: this.contractObj.get('durationMin'),
 				durationMax: this.contractObj.get('durationMax'),
+				jobDepartment: this.contractObj.get('jobDepartment'),
+				jobOffice: this.contractObj.get('jobOffice'),
+				jobClientOfClient: this.contractObj.get('jobClientOfClient'),
+				jobHiringTarget: this.contractObj.get('jobHiringTarget'),
+				purchaseOrderReference: this.contractObj.get('purchaseOrderReference'),
+				approvers: undefined,
+				jobRecruitmentProject: this.contractObj.get('jobRecruitmentProject'),
+				hiringStages: '',
+				hiringWorkflow: '',
+				hiringWorkflowName: this.contractObj.get('hiringWorkflowName'),
 			});
+			this.contractForm.value.hiringStages = this.contractObj.get('hiringStages');
+			if (this.contractObj.get('hiringWorkflow')) {
+				this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.contractObj.get('hiringWorkflow').id);
+			}
+			Object.defineProperty(this.currentcustomHiringWorkFlow, 'workflowName', { value: this.contractObj.get('hiringWorkflowName'), writable: true});
 			this.selectedIndustries = this.contractObj.get('industryTags');
 			this.selected = this.contractObj.get('programingSkills');
 			this.selectedRoles = this.contractObj.get('roles');
-
 			this.loadCountries();
 			this.jobVal = this.contractObj.get('jobType');
 			this.asap = asapLocal.toString();
+
+			
 
 			this.contractObj.get('jobType');
 			this.initSalaryRange(this.contractObj.get('jobType'));
@@ -270,6 +355,14 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				this.range = [this.contractObj.get('Min_hourly'), this.contractObj.get('Max_hourly')];
 			}
 			this.optionToSelect = this.contractObj.get('durationMax');
+			if (this.contractObj.get('JobLocationFEinput2') !== undefined) {
+				this.contractForm.addControl('JobLocationFEinput2', new FormControl(this.contractObj.get('JobLocationFEinput2')));
+				this.secondLocationOpened = true;
+			};
+			if (this.contractObj.get('JobLocationFEinput3') !== undefined) {
+				this.contractForm.addControl('JobLocationFEinput3', new FormControl(this.contractObj.get('JobLocationFEinput2')));
+				this.thirdLocationOpened = true;
+			};
 		} else {
 			this.contractForm = this._formBuilder.group({
 				logo: null,
@@ -306,9 +399,29 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				durationMin: undefined,
 				durationMax: undefined,
 				postedAt: undefined,
-				isRatedHourly: false
+				isRatedHourly: false,
+				jobDepartment: undefined,
+				jobOffice: undefined,
+				jobClientOfClient: undefined,
+				jobHiringTarget: undefined,
+				purchaseOrderReference: undefined,
+				approvers: undefined,
+				jobRecruitmentProject: undefined,
+				hiringStages: undefined,
+				hiringWorkflow: undefined,
+				hiringWorkflowName: undefined,
 			});
 
+			this._parse.execCloud('getStandartHiringWorkFlow', { clientId: this._parse.getClientId() }).then(result => {
+				console.log(result);
+				if (result.length > 0) {
+					result[0]['workflowName'] = 'Standart Workflow';
+					this.customStandartWorkflow = result;
+					this.customHiringWorkFlowsList.splice(1, 0, result[0]);
+					this.contractForm.value.hiringStages = result[0].hiringStages;
+					console.log(this.contractForm.value.hiringStages);
+				}
+			});
 		}
 		this._postJobService.getCurrencies().then(currencies => {
 			this.salaryCurrencies = currencies;
@@ -320,10 +433,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		if (!this.editable && this.contractForm) {
 			this.contractForm.disable();
 		}
-		if(!this.editable){
+		if (!this.editable) {
 			this.formSkillsSubscription = this.contractForm.valueChanges.debounceTime(500).subscribe(
-				res=>{
-					console.log();
+				res => {
+					// console.log();
 				}
 			);
 		}
@@ -332,8 +445,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				res => {
 					if (this.contractForm.dirty) {
 						if (!this.currentContract) {
+							console.log(this.contractForm.value);
 							this.createContract(this.contractForm.value);
 						} else if (this.currentContract) {
+							console.log(this.contractForm.value);
 							this.initContract();
 							this.updateContract(this.contractForm.value);
 						}
@@ -341,7 +456,93 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				}
 			);
 		}
+
+
+		this.currentOfficeSubject.debounceTime(3000).subscribe(res => {
+			this.contractForm.value.jobOffice = res;
+			if (this.editable === true) {
+				this.saveDraft();
+			}
+		});
+
+		this.currentDepartmentSubject.debounceTime(3000).subscribe(res => {
+			this.contractForm.value.jobDepartment = res;
+			if (this.editable === true) {
+				this.saveDraft();
+			}
+		});
+
+		this.currentClientSubject.debounceTime(3000).subscribe(res => {
+			this.contractForm.value.jobClientOfClient = res;
+			if (this.editable === true) {
+				this.saveDraft();
+			}
+		});
+
+		this.customHiringWorkFlowSubject.debounceTime(3000).subscribe(res => {
+			this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', res._id);
+			this.contractForm.value.hiringStages = res.hiringStages;
+			this.contractForm.value.hiringWorkflowName = res.workflowName;
+			if (this.editable === true) {
+				this.saveDraft();
+			}
+		});
+
 	}
+
+	createCandidatesPerStageCustomWorkflow(stages) {
+		let newArray = [];
+		for (let i = 0; i < stages.length; i++) {
+			const data = {
+				index: stages[i].index,
+				type: stages[i].type,
+				candidates: []
+			}
+			newArray.push(data);
+		};
+		return newArray;
+	}
+
+	chooseStandartWorkFlow() {
+		this.contractForm.value.hiringStages = undefined;
+		this.contractForm.value.hiringWorkflow = undefined;
+		this.contractForm.value.hiringWorkflowName = undefined;
+	}
+
+	detectChange() {
+		this.currentOfficeSubject.next(this.currentOffice);
+		this.customHiringWorkFlowSubject.next(this.currentcustomHiringWorkFlow);
+	}
+
+	saveDraft() {
+		if (!this.currentContract) {
+			console.log(this.contractForm.value);
+			this.createContract(this.contractForm.value);
+		} else if (this.currentContract) {
+			console.log(this.contractForm.value);
+			this.initContract();
+			this.updateContract(this.contractForm.value);
+		}
+	}
+
+	addLocation() {
+		if (this.secondLocationOpened === false ) {
+			this.contractForm.addControl('JobLocationFEinput2', new FormControl(''));
+			this.secondLocationOpened = true;
+			return;
+		} else if (this.secondLocationOpened === true && this.thirdLocationOpened === false) {
+			this.contractForm.addControl('JobLocationFEinput3', new FormControl(''));
+			this.thirdLocationOpened = true;
+			return;
+		}
+	}
+
+	removeLocation(inputName) {
+		this.contractForm.removeControl(inputName);
+		if (inputName === 'JobLocationFEinput2') this.secondLocationOpened = false;
+		if (inputName === 'JobLocationFEinput3') this.thirdLocationOpened = false;
+	}
+
 	loadCountries() {
 		if (this.countriesSourcing.length == 0) {
 			const query = this._parse.Query('Country');
@@ -435,7 +636,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 
 	getLogo(event): any {
 		if (event.target.files) {
-			console.log('files exists');
+			// console.log('files exists');
 			const logo = event.target.files[0];
 			this.logo = this._parse.File(logo.name, logo);
 			this.initLogo(window.URL.createObjectURL(logo));
@@ -455,17 +656,58 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		this.contractForm.value.startContractDate = new Date(this.contractForm.value.startContractDate);
 		this.contractForm.value.isASAP = this.asap === 'true' ? true : false;
 		this.contractForm.value.logo = this.logo;
-		console.log(this.logo);
+		this.contractForm.value.jobClientOfClient = this.currentClient;
+		this.contractForm.value.jobOffice = this.currentOffice;
+		this.contractForm.value.jobDepartment = this.currentDepartment;
 		this.contractForm.value.Client = this.currentUser.get('Client_Pointer');
 		this.contractForm.value.jobCountry = this.jobCountry;
 		this.contractForm.value.JobState = this.JobState;
 		if (this.postCode) {
 			this.contractForm.value.postCode = this.postCode;
 		}
+
+		if (this.contractObj) {
+			if (this.contractObj.get('hiringWorkflow')) {
+				this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.contractObj.get('hiringWorkflow').id);
+				this.contractForm.value.hiringStages = this.contractObj.get('hiringStages');
+				this.contractForm.value.hiringWorkflowName = this.contractObj.get('hiringWorkflowName');
+				if (this.currentcustomHiringWorkFlow['workflowName'] && !this.currentcustomHiringWorkFlow['hiringStages']) {
+					this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.contractObj.get('hiringWorkflow').id);
+					this.contractForm.value.hiringStages = this.contractObj.get('hiringStages');
+					this.contractForm.value.hiringWorkflowName = this.contractObj.get('hiringWorkflowName');
+				} else if (this.currentcustomHiringWorkFlow['workflowName'] && this.currentcustomHiringWorkFlow['hiringStages']) {
+					this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.currentcustomHiringWorkFlow['_id']);
+					this.contractForm.value.hiringStages = this.currentcustomHiringWorkFlow['hiringStages'];
+					this.contractForm.value.hiringWorkflowName = this.currentcustomHiringWorkFlow['workflowName'];
+				}
+			} else {
+				if (this.currentcustomHiringWorkFlow['workflowName']) {
+					this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.currentcustomHiringWorkFlow['_id']);
+					this.contractForm.value.hiringStages = this.currentcustomHiringWorkFlow['hiringStages'];
+					this.contractForm.value.hiringWorkflowName = this.currentcustomHiringWorkFlow['workflowName'];
+				} else {
+					this.contractForm.value.hiringWorkflow = undefined;
+					this.contractForm.value.hiringStages = undefined;
+					this.contractForm.value.hiringWorkflowName = undefined;
+				}
+			}
+		} else {
+			if (this.currentcustomHiringWorkFlow['workflowName'] && this.currentcustomHiringWorkFlow['hiringStages']) {
+				this.contractForm.value.hiringWorkflow = this._chpS.createPointer('CustomHiringWorkflows', this.currentcustomHiringWorkFlow['_id']);
+				this.contractForm.value.hiringStages = this.currentcustomHiringWorkFlow['hiringStages'];
+				this.contractForm.value.hiringWorkflowName = this.currentcustomHiringWorkFlow['workflowName'];
+			} else {
+				this.contractForm.value.hiringWorkflow = undefined;
+				this.contractForm.value.hiringStages = undefined;
+				this.contractForm.value.hiringWorkflowName = undefined;
+			}
+		}
+
 		this.contractForm.value.jobType = this.jobVal;
 		this.contractForm.value.programingSkills = this.selected;
 		this.contractForm.value.roles = this.selectedRoles;
 		this.contractForm.value.industryTags = this.selectedIndustries;
+		
 		if (!this.contractForm.value.durationMin && this.contractForm.value.durationMax) {
 			this.contractForm.value.durationMin = this.contractForm.value.durationMax;
 		} else if (this.contractForm.value.durationMin && !this.contractForm.value.durationMax) {
@@ -516,6 +758,10 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+	log(a) {
+		console.log(a);
+	}
+
 	suggestionsSet(value?) {
 		setTimeout(() => {
 			if (this.contractForm.value.JobLocationFEinput.length != 0) {
@@ -526,6 +772,36 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 					.then(suggestions => {
 						this.places = suggestions;
 						this.matSpinnerActive = false;
+					});
+			}
+		}, 500);
+	}
+
+	suggestionsSet1(value?) {
+		setTimeout(() => {
+			if (this.contractForm.value.JobLocationFEinput2.length != 0) {
+				this.matSpinnerActive1 = true;
+				this._parse.execCloud('getSuggestedPlaces', {
+					address: this.contractForm.value.JobLocationFEinput2
+				})
+					.then(suggestions => {
+						this.places1 = suggestions;
+						this.matSpinnerActive1 = false;
+					});
+			}
+		}, 500);
+	}
+
+	suggestionsSet2(value?) {
+		setTimeout(() => {
+			if (this.contractForm.value.JobLocationFEinput3.length != 0) {
+				this.matSpinnerActive2 = true;
+				this._parse.execCloud('getSuggestedPlaces', {
+					address: this.contractForm.value.JobLocationFEinput3
+				})
+					.then(suggestions => {
+						this.places2 = suggestions;
+						this.matSpinnerActive2 = false;
 					});
 			}
 		}, 500);
@@ -583,13 +859,11 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				res.save(options).then(saveResult => {
 					this.showAlert();
 					this.closeSnackBar();
-					console.log(saveResult, 'Save Result in UpdateContract for DRAFTS');
 					this._router.navigateByUrl('/jobs');
 				});
 			} else {
 				res.save(options).then(saveResult => {
 					this.closeSnackBar();
-					console.log(saveResult, 'Save Result in UpdateContract for Active');
 					callback();
 				});
 			}
@@ -622,7 +896,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 					this.updateContract(this.contractForm.value, () => {
 						this.setActiveStatus()
 							.then(() => {
-								console.log(this.currentContract, 'IF currentContract');
+								// console.log(this.currentContract, 'IF currentContract');
 								this._router.navigateByUrl('/jobs');
 							});
 					});
@@ -635,7 +909,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 					this.createContract(this.contractForm.value)
 						.then(() => this.setActiveStatus())
 						.then(() => {
-							console.log(this.currentContract, 'IF ELSE currentContract');
+							// console.log(this.currentContract, 'IF ELSE currentContract');
 							this._router.navigateByUrl('/jobs');
 						});
 				}
@@ -646,7 +920,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 					this.updateClient();
 					this.showEditAlert();
 					this.updateContract(this.contractForm.value, () => {
-						console.log(this.currentContract, 'ELSE in PostJob()');
+						// console.log(this.currentContract, 'ELSE in PostJob()');
 						this.editable = false;
 						this.contractForm.disable();
 					});
@@ -853,8 +1127,8 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 				this._renderer.addClass(skillElement, '_' + skill.id);
 				this._renderer.addClass(skillElement, 'skill-row');
 				skillElement.addEventListener('click', event => {
-					console.log(event.target);
-					console.log(event.target.children.length);
+					// console.log(event.target);
+					// console.log(event.target.children.length);
 					if (event.target.classList.contains("experience-button")) {
 
 					} else {
@@ -996,7 +1270,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	}
 
 	filter() {
-		console.log(this.query);
+		// console.log(this.query);
 		if (this.query.length == 1) {
 			let char = '\\b' + this.query.toUpperCase();
 			let exp = new RegExp(char, 'g');
@@ -1120,7 +1394,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			}
 			this.dropdownVisible = false;
 			this.dropdownRolesVisible = false;
-			this.dropdownIndustriesVisible = false
+			this.dropdownIndustriesVisible = false;
 		}
 	}
 
@@ -1131,7 +1405,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			}else{
 				event.returnValue = false;
 			}
-			console.log("Arrow down");
+			// console.log("Arrow down");
 			if (this.selectionCounter < (this.filteredList.length - 1)) {
 				this.selectionCounter += 1;
 				this.expPosition = 1;
@@ -1151,7 +1425,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 			}
 		}
 		if (value.code == 'Enter') {
-			console.log("Enter prevdef");
+			// console.log("Enter prevdef");
 			if(value.preventDefault){
 				value.preventDefault();
 			}else{
@@ -1450,17 +1724,15 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 	}
 
 	closeSnackBar() {
-		this.snackBar.open('Draft Saved', '', { duration: 1000, horizontalPosition: 'right', verticalPosition: 'bottom'}
-		);
+		this.snackBar.open('Draft Saved', '', { duration: 1000, horizontalPosition: 'right', verticalPosition: 'bottom'});
 	};
 	errorSnackBar() {
-		this.snackBar.open('Error occured', '', { duration: 1000, horizontalPosition: 'right', verticalPosition: 'bottom'}
-		);
+		this.snackBar.open('Error occured', '', { duration: 1000, horizontalPosition: 'right', verticalPosition: 'bottom'});
 	};
 	addCountries(){
 		const addCount = this._root_vcr.createComponent(Modal1Component);
 		this.loadCountries();
-		console.log(this.countriesSourcing);
+		// console.log(this.countriesSourcing);
 		setTimeout(() => {
 			addCount.countries = this.countriesSourcing;
 		}, 0);
@@ -1472,7 +1744,19 @@ export class PostJobPageComponent implements OnInit, AfterViewInit {
 		let changedValueArray = [this.range[0],this.range[1]];
 		changedValueArray[index] = value;
 		if (changedValueArray[0] <= changedValueArray[1] && this.rangeSlider) {
-            this.range = changedValueArray;
+			this.range = changedValueArray;
 		}
+	}
+	openRequestApproval () {
+		this.initContract();
+		if (this.accessCheck() === true) {
+			const approval = this._root_vcr.createComponent(ApprovalComponent);
+		}
+	}
+
+	ngOnDestroy() {
+		// this.formSubscription.unsubscribe();
+		this.approversSubscription.unsubscribe();
+		console.log('Destroyed');
 	}
 }

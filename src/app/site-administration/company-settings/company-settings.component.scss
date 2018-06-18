@@ -8,6 +8,364 @@ $dashed-border: 1px dashed #ccc;
     color: white;
 }
 
+.carrers-website-page {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    height: 50px;
+    margin-bottom: 20px;
+}
+
+.carrers-website-page-status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgb(22, 163, 22);
+    margin-right: 12px;
+    
+}
+
+.departments-offices-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+.carrers-departments {
+    width: 60%;
+    padding: 13px;
+    background-color: #ddd;
+    line-height: 3;
+}
+
+.carrers-departments-form__header {
+    display: flex;
+    justify-content: space-between;
+}
+.carrers-departments-form__header__save-department-btn {
+    background-color: rgb(23, 197, 7);
+    color:white;
+} 
+
+
+.carrers-departments-form__body {
+    display: flex;
+    justify-content: space-between;
+}
+.carrers-departments-form__body span:first-child {
+    justify-content: left;
+}
+.carrers-departments-form__body__department {
+    display: flex;
+    flex-direction: column;
+}
+
+.carrers-departments-form__body__edit-department-input {
+    width: 85%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-departments-form__new-department__new-department-input {
+    width: 35%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-departments-form__body__department__subdepartment {
+    display: flex;
+    justify-content: space-around;
+    width: 100px;
+    margin-left: 30px;
+    position: relative;
+}
+
+.carrers-departments-form__body__department__subdepartment__edit-subdepartment-input{
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-departments-form__body__department__subdepartment_options {
+    margin-left: 30px;
+    position: absolute;
+    right: -278px;
+}
+
+.carrers-departments-form__body__department__subdepartment_options span{
+    margin: 0px 4px;
+    cursor: pointer;
+}
+
+.carrers-departments-form__body__subdepartment-input {
+    margin-left: 30px;
+    width: 71%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-departments-form__body_options{
+    text-align: right;
+    margin: 0px 4px;
+    cursor: pointer;
+}
+
+.careers-offices {
+    width: 35%;
+    padding: 13px;
+    background-color: #ddd;
+    line-height: 3;
+    margin-right: 30px;
+}
+.carrers-offices-form__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.carrers-offices-form__body {
+    display: flex;
+    justify-content: space-between;
+}
+.carrers-offices-form__body span:first-child {
+    justify-content: left;
+}
+.carrers-offices-form__body__office {
+    display: flex;
+    flex-direction: column;
+}
+
+.carrers-offices-form__body__edit-office-input {
+    width: 80%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-offices-form__new-office__new-office-input {
+    width: 36%;
+    margin-top: 9px;
+    margin-bottom: 5px;
+    padding: 3px 12px;
+}
+
+.carrers-offices-form__body_options{
+    text-align: right;
+    margin: 0px 4px;
+    cursor: pointer;
+}
+
+.table-wrapper {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.pipeline-stage-table_edit-stage-percentage-box{
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.pipeline-stage-table_edit-stage-percentage-box input{
+    margin-right: 5px;
+    width:45px;
+    text-align: center;
+    padding: 3px 5px; 
+}
+
+.pipeline-stage-table_set-value {
+    display: flex;
+    flex-direction: column;
+}
+
+.set-value {
+    padding: 2px;
+    margin: 1px;
+    cursor: pointer;
+    background-color: #ddd;
+    font-weight: bold;
+    text-align: center;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.pipeline-stage-table_set-description {
+    width:336px;
+}
+.pipeline-stage-table_set-description input {
+    padding: 3px 5px;
+    width:100%;
+}
+
+.pipeline-stage-table_add-likelihood-stage > td {
+    text-align: center;
+}
+
+.add-likelihood-stage_new-value{
+    width:45px;
+    text-align: center;
+    padding: 3px 5px;
+}
+
+.add-likelihood-stage_new-description {
+    padding: 3px 5px;
+    width:100%;
+}
+
+.pipeline-stage-table_func-buttons {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    margin-left: 10px;
+}
+
+.pipeline-stage-table_func-buttons button {
+    margin-bottom: 10px;
+}
+
+.pipeline-stage-table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+.pipeline-stage-table td,
+.pipeline-stage-table th {
+    border: 1px solid #dddddd;
+    padding: 7px;
+}
+
+.pipeline-stage-table tr:nth-child(odd) {
+    background-color: #bec1c7;
+}
+
+.pipeline-stage-table tr:nth-child(even) {
+    background-color: #e8ebf1;
+}
+
+.pipeline-stage-table th {
+    background-color: #6a82ad;
+    color: white;
+    text-align: left;
+}
+
+.stage-percentage {
+    text-align: center;
+}
+
+.stage-description {
+    text-align: left;
+}
+
+.clients-projects-wrapper {
+    display: flex;
+    margin-top: 10px;
+
+    .clients-form {
+        background-color: #ddd;
+        width: 50%;
+        margin-right:5px;
+
+        .clients-form-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            span {
+                align-self: center;
+                font-weight: bold;
+            }
+            #saveNewClientBtn {
+                background-color: #21b721;
+                color: white;
+            }
+        }
+
+        .clients-form-body {
+            padding: 10px;
+        }
+
+        .clients {
+            display: flex;
+            justify-content: space-between;
+            line-height: 2;
+        }
+        .clients {
+            input {
+                width: 30%;
+                margin: 0;
+                padding: 3px 7px;
+            }
+        }
+        
+        .clients-options {
+            margin: 0px 5px;
+            span {
+                margin: 0px 5px;
+                cursor: pointer;
+            }
+        }
+
+        .new-client-input {
+            width: 30%;
+            margin: 0;
+            padding: 3px 7px;
+        }
+    }
+
+    .projects-form {
+        background-color: #ddd;
+        width: 50%;
+
+        .projects-form-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            span {
+                align-self: center;
+                font-weight: bold;
+            }
+            #saveNewProjectBtn {
+                background-color: #21b721;
+                color: white;
+            }
+        }
+        .projects-form-body {
+            padding: 10px;
+
+            .projects {
+                display: flex;
+                justify-content: space-between;
+                line-height: 2;
+            }
+            .edit-project-input {
+                width: 30%;
+                margin: 0;
+                padding: 3px 7px;
+            }
+            
+        }
+        .projects-options {
+            margin: 0px 5px;
+            span {
+                margin: 0px 5px;
+                cursor: pointer;
+            }
+        }
+
+        .new-project-input{
+            width: 30%;
+            margin: 0;
+            padding: 3px 7px;
+        }
+    }
+}
+
+
+
 input {
     width: 100%;
     border: 1px solid #eeeeee;
@@ -231,8 +589,7 @@ input {
     width: 15%;
     display: block;
     position: sticky;
-    top: 20px;
-    // margin-top: -90px;
+    top: 20px; // margin-top: -90px;
     margin-bottom: 20px;
     margin-left: 75%;
 }
@@ -301,16 +658,173 @@ input {
     width: 20px;
     transform: rotate(-45deg);
 }
-.classic-img{
+
+.classic-img {
     border: 1px solid black;
 }
-.access-check-div{
-    position:absolute; 
-    left:0; 
-    right:0; 
-    top:0; 
-    bottom:0;
+
+.access-check-div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
 }
-.relative{
-    position:  relative !important;
+
+.relative {
+    position: relative !important;
 }
+
+.job-offer-stages {
+    @include displayFlex;
+    @include flex-direction(row);
+    @include flex-align-items(stretch);
+    text-align: center;
+    background-color: #F2F2F2;
+    margin-bottom: 10px;
+    .job-stage {
+        position: relative;
+        &.disabled {
+            .job-stage-inner {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding-top: 24px;
+            }
+        }
+      @include flex(1, 1, 120px);
+      .job-stage-inner {
+        height: 100%;
+        border: 1px solid rgb(201, 201, 201);
+        font-size: 15px;
+        padding-bottom: 35px;
+        background-color: #F2F2F2;
+        position: relative;
+        &:hover .delete-stage {
+            visibility: visible;
+        }
+        .delete-stage {
+            width: auto!important;
+            text-align: right;
+            visibility: hidden;
+            z-index: 99;
+            font-size: 19px;
+            height: 19px;
+            width: 19px;
+            margin-top: 0px;
+            position: absolute;
+            bottom: 20px;
+            right: 0;
+        }
+    }
+      .job-stage-inner:hover {
+        background-color: rgb(238, 236, 236) !important;
+      }
+    }
+    .job-stage.add-new-stage {
+        .job-stage-inner {
+            padding: 0!important;
+            display: flex;
+            align-items: center;
+            background: #21b721;
+            color: #fafafa;
+            &:hover {
+                color: #000;
+            }
+        }
+    }
+  }
+
+  .job-offer-stages .job-stage.delete-stage .job-stage-inner {
+    font-size: 50px;
+    height: 50px;
+    width: 50px;
+    margin-bottom: 50px;
+}
+
+.pipeline-title {
+    font-size: 24px;
+    margin-bottom: 40px;
+    padding-right: 15px;
+}
+
+.standart-note {
+    margin-bottom: 40px;
+}
+
+
+.create-new-workflow {
+    background: #007ab6;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 10px;
+    transition: .3s all ease-in-out;
+    cursor: pointer;
+    &:hover {
+        opacity: .7;
+    }
+}
+
+.workflow-title {
+    margin: 20px 0;
+    margin-bottom: 10px;
+}
+
+.move-disabled {
+    cursor: default!important;
+}
+
+.settings-stage {
+    font-size: 19px;
+    text-align: right;
+    padding-top: 2px;
+    cursor: pointer;
+}
+
+  .icon-fz16 {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+  }
+  
+  .drag-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      cursor: drag;
+      cursor: move;
+      background: orange;
+  }
+
+  .job-stage-settings {
+      position: absolute;
+      background: #fafafa;
+      border: 1px solid #424242;
+      color: #424242;
+      text-align: left;
+      font-size: 11px;
+        width: 110%;
+        left: -5%;
+        padding: 0 2px;
+      span {
+          margin-bottom: 5px;
+      }
+      p {
+          cursor: pointer;
+      }
+      p:first-child {
+          border-bottom: 1px solid;
+      }
+  }
+
+  .disabled {
+      opacity: .5;
+      background: grey!important;
+      cursor: not-allowed!important;
+  }

@@ -36,6 +36,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 	showInactiveMembers = true;
 	dialog = [];
 	private sessionId: string;
+	private clientSettings;
 	constructor(
 		private _sidenav: SidenavService,
 		private _coreService: CoreService,
@@ -63,6 +64,12 @@ export class CoreComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+
+		this.getCurrentPartner().then(result => {
+			const partner = result;
+			this.clientSettings = partner.toJSON();
+			this.changeTheme();
+		});
 		this._sidenav.setSidenav(this.sidenav);
 		this.listenToDialogIdUpdated().subscribe(data => {
 			this.updateDialogId(data);
@@ -72,7 +79,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 		});
 		this.recruterTyping().subscribe(data => {
 			this.addAnimationToTyping(data);
-			console.log(data);
 		});
 		this._coreService.currentTypingStatus.subscribe(data => {
 			this.teamMembers.forEach(member => {
@@ -132,7 +138,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				this.currentUser = profile;
-				console.log(this.currentUser);
 				this._coreService.getTeamMembers().then(members => {
 					this.teamMembers = members;
 					this.teamMembers = this.teamMembers.filter(member => {
@@ -156,18 +161,40 @@ export class CoreComponent implements OnInit, OnDestroy {
 				this.invitedMembers = null;
 			}
 		});
-		console.log(this._parse.Session());
-		console.log('First time', this._socket);
+		// console.log(this._parse.Session());
+		// console.log('First time', this._socket);
 
 		this.sessionId =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		sessionStorage.setItem('sessionId', this.sessionId);
 		if (this._parse.getCurrentUser()) {
 			this._socket.connect();
 			this._socket.emit('subscribe', {userId: this._parse.getCurrentUser().id, sessionId: this.sessionId});
-			console.log('Second time', this._socket);
+			// console.log('Second time', this._socket);
 		}
 		this._cartAdding.cartLoad();
 	}
+
+	getCurrentPartner(): Promise<any> {
+		return new Promise ((resolve, reject) => {
+			const partner = this._parse.getPartner(this._parse.Parse.User.current());
+			// console.log(partner);
+			resolve(partner);
+		});
+	}
+
+	changeTheme() {
+		if (this.clientSettings.themeStyle === true) {
+			  const body = document.getElementById('body');
+			  body.classList.add('new');
+			  localStorage.setItem('theme', 'new');
+		};
+		if (this.clientSettings.themeStyle === false) {
+			  const body = document.getElementById('body');
+			  body.classList.remove('new');
+			  localStorage.setItem('theme', 'old');
+		}
+	}
+
 	test(event) {
 		// console.log('open ', event);
 	}
@@ -251,7 +278,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 				member.dialogActive = false;
 			});
 		});
-		console.log(members);
 		this.getSessionStatus(members);
 	};
 
@@ -358,5 +384,3 @@ export class CoreComponent implements OnInit, OnDestroy {
 		});
 	}
 }
-
-

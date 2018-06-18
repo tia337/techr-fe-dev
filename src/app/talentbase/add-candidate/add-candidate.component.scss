@@ -1,0 +1,1143 @@
+@import '../../../styles/buttons.scss';
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins';
+
+
+.modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: #000;
+    background: rgba(0,0,0,0.5);
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.modal--clean {
+    background: transparent!important;
+}
+
+.alignment--vertical:after, .modal:after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.ngdialog-overlay {
+    background: rgba(0,0,0,0.4);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    -webkit-backface-visibility: hidden;
+}
+
+.ngdialog--noClose>.ngdialog-content {
+    width: 100%;
+}
+
+.ngdialog-content {
+    display: inline-block;
+    position: relative;
+    z-index: 21;
+}
+
+.modal-dialog {
+    background: #fafafa;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 30px 0;
+    outline: 0;
+    position: relative;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.modal--wide {
+    max-width: 900px;
+    width: 84%;
+    background: #fafafa;
+    margin: 40px auto;
+    position: relative;
+}
+
+.icon-close-modal {
+    position: absolute;
+    right: 2px;
+    color: #fafafa;
+    top: 2px;
+    cursor: pointer;
+    transition: .3s all ease-in-out;
+    &:hover {
+        transform: rotate(180deg);
+    }
+}
+
+.modal-overlay {
+    // position: fixed;
+    // display: flex;
+    // flex-direction: row;
+    // align-items: flex-start;
+    // justify-content: center;
+    // width: 100vw;
+    // height: 100%;
+    // top: 0;
+    // bottom: 0;
+    // left: 0;
+    // right: 0;
+    // background-color: rgba(0, 0, 0, 0.6);
+    // overflow-y: auto;
+    // z-index: 999;
+    // -webkit-box-align: center;
+    // -ms-flex-align: center;
+    // align-items: center;
+    // * {
+    //     transition: .3s all ease-in-out;
+    // }
+}   
+
+.modal {
+    // background: #fafafa;
+    // padding: 0 0 25px;
+    // z-index: 999999;
+    // position: relative;
+    // border: 1px solid #fafafa;
+    // min-width: 50%;
+    // max-width: 75%;
+    &__title {
+        font-size: 20px;
+        padding: 10px 10px;
+        padding-top: 25px;
+        text-transform: uppercase;
+        text-align: center;
+        width: 100%;
+        background: #616161;
+        color: #ECEFF1;
+    }
+}
+
+.max-warning-wrap {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #e64a19;
+    width: 40vh;
+    padding: 5px;
+    color: #fff;
+    margin-top: 5px;
+    .icon-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        &:hover {
+            transform: rotate(180deg);
+        }
+    }
+    span:first-child {
+        margin-bottom: 5px;
+    }
+    &[hidden] {
+        display: none;
+    }
+}
+
+.drop-box {
+    width: 90%;
+    margin: 30px auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border: 2px dotted;
+    padding: 35px 10px;
+    font-size: 24px;
+    color: #616161;
+    &.files-choosen {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .icon-cloud-upload {
+        font-size: 60px;
+        height: 60px;
+        width: 60px;
+        color: #616161;
+        cursor: default;
+        margin-top: 20px;
+    }
+    &__files-list {
+        ol {
+            font-size: 14px;
+            li {
+                margin-bottom: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .icon-clear {
+                    margin-left: 7px;
+                    font-size: 16px;
+                    width: 16px;
+                    height: 16px;
+                    cursor: pointer;
+                    &:hover {
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+            li:last-child {
+                margin-bottom: 0;
+            }
+        }
+       
+    }
+}
+
+mat-icon {
+    cursor: pointer;
+}
+
+.upload-cvs-btn {
+    padding: 5px 10px;
+    font-size: 16px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    background: #616161;
+    color: #ECEFF1;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    cursor: pointer;
+    &:hover {
+        color: #616161;
+        border: 1px solid #616161;
+        background: #FAFAFA;
+    }
+    &-icon {
+        margin-left: 10px;
+        font-size: 22px;
+        height: 24px;
+    }
+}
+
+.assets-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &__formats {
+        margin-bottom: 10px;
+        color: #424242;
+        font-size: 16px;
+    }
+    &__upload-file-btn {
+        background: #50a047;
+        padding: 5px 20px;
+        font-size: 16px;
+        color: #fafafa;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: .3s all ease-in-out;
+        margin-bottom: 10px;
+        min-width: 122px;
+        &:hover {
+            color: #50a047;
+            border: 1px solid #50a047;
+            background: #fafafa;
+        }
+    }
+    &__fill-manually {
+        background: #000;
+        padding: 5px 20px;
+        font-size: 16px;
+        color: #fff;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: .3s all ease-in-out;
+        &:hover {
+            color: #000;
+            border: 1px solid #000;
+            background: #fff;
+        }
+    }
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.spinner-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    flex-direction: column;
+    .mat-progress-spinner circle,
+    .mat-spinner circle {
+        stroke: #13579a!important;
+    }
+}
+
+.row {
+    display: flex;
+    padding: 5px 20px;
+    justify-content: space-between;
+    .title-holder {
+        display: flex;
+        align-items: center;
+    }
+    &.form-row {
+        flex-direction: column;
+    }
+    .add-property {
+        display: flex;
+        align-items: center;
+        color: #13579a;
+        cursor: pointer;
+        &.cv-input {
+            display: flex;
+            align-items: center;
+        }
+        .icon-add {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
+    }
+    .double-inputs-holder {
+        display: flex;
+    }
+    .big-title {
+        font-size: 20px;
+        font-weight: bold;
+        width: 120px;
+        margin-right: 15px;
+    }
+    .input-holder {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 50%;
+        &.dates {
+            flex-basis: 100%;
+            flex-direction: row;
+            p {
+                width: 50%;
+            }
+            .form-field-holder {
+                display: flex;
+                margin-top: 10px;
+            }
+            .year-select {
+                margin-right: 10px;
+            }
+            ::ng-deep .mat-form-field-flex {
+                border: 1px solid;
+            }
+            ::ng-deep .mat-form-field-infix {
+                border-top: none!important;
+                background: #fafafa;
+            }
+            ::ng-deep .mat-form-field-type-mat-select .mat-form-field-placeholder {
+                margin-left: 10px;
+            }
+        }
+    }
+    .input-name {
+        margin-bottom: 10px;
+    }
+    input {
+        max-width: 300px;
+        width: 200px;
+        min-width: 120px;
+        padding: 5px 9px;
+        border: 1px solid #616161;
+        font-size: 13px;
+    }
+}
+
+.candidate-form {
+    position: relative;
+    padding-right: 60px;
+    padding-bottom: 15px;
+    .avatar {
+        position: absolute;
+        margin-right: 20px;
+        right: 45px;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        label,
+        span {
+            cursor: pointer;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.add-experience-btn {
+    border: none;
+    border-radius: 0;
+    padding: 5px 10px;
+    outline: 0;
+    background: #50a047;
+    border: 1px solid transparent;
+    color: #fafafa;
+    font-size: 14px;
+    margin-right: 10px;
+    cursor: pointer;
+    &:hover {
+        color: #50a047;
+        border: 1px solid #50a047;
+        background: #fafafa;
+    }
+}
+
+.cancel-experience-btn {
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    background: #fff;
+    outline: none;
+    color: #424242;
+    border: 1px solid transparent;
+    cursor: pointer;
+    &:hover {
+        color: #fff;
+        border: 1px solid #424242;
+        background: #424242;
+    }
+}
+
+.experience {
+    &-item {
+        display: flex;
+        margin-top: 20px;
+        margin: 20px 0 15px;
+        .holder {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    &-location {
+        font-size: 14px;
+        opacity: .8;
+    }
+    &-date {
+        font-size: 16px;
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: column;
+    }
+    &-job-title {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    &-company-name {
+        font-size: 14px;
+        opacity: .8;
+    }
+    &-description {
+        margin-top: 5px;
+    }
+}
+
+
+::ng-deep .mat-form-field-underline {
+    display: none!important;
+}
+
+.container {
+    ::ng-deep .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder, 
+    ::ng-deep .mat-form-field-empty.mat-form-field-placeholder {
+        margin-left: 10px;
+        margin-top: 5px;
+    }
+}
+
+.edit-experience,
+.delete-experience {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+        background: #000;
+        color: #fff;
+    }
+}
+
+.tags-holder {
+    display: flex;
+    align-items: center;
+    flex-basis: 50%;
+    flex-flow: row wrap;
+}
+
+.tag {
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    background: #dadada;
+    border-radius: 2px;
+    margin-right: 10px;
+    margin-bottom: 2px;
+    .icon-remove {
+        cursor: pointer;
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        margin-left: 10px;
+    }
+} 
+
+.source-add-candidate-talentdb {
+    ::ng-deep .mat-form-field-infix {
+        border: 1px solid #424242!important;
+        padding: 5.5px!important;
+        width: -webkit-fill-available!important;
+    }
+     ::ng-deep  .mat-form-field-wrapper {
+        padding-bottom: 0!important;
+    }
+    ::ng-deep  .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder {
+        display: none;
+    }
+    ::ng-deep .mat-form-field-underline {
+        display: none;
+    }
+    ::ng-deep .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+        color: #424242;
+    }
+    ::ng-deep .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+        color: #424242;
+    }
+    ::ng-deep .mat-select-panel {
+        box-shadow: initial!important;
+        border: 1px solid #424242;
+    }
+    ::ng-deep .mat-form-field-type-mat-select .mat-form-field-placeholder {
+        color: #424242!important;
+        opacity: .8;
+        padding-left: 8px;
+    }
+ }
+
+
+
+ .property-form {
+    margin-top: 15px;
+    background: #d6d6d6;
+    padding: 10px;
+    .input-holder {
+        margin-bottom: 10px;
+        &.title {
+            flex-basis: 90%;
+        }
+        .input-title {
+            margin-bottom: 5px;
+        }
+        
+    }
+ }
+
+
+//  SKILLS ROLES INDUSTRIES START
+
+ .edit-buttons-container {
+    z-index: 1000;
+    width: 15%;
+    margin-left: 80%;
+    display: block;
+    position: sticky;
+    top: 15px;
+    .create-button {
+        cursor: pointer;
+        border: none;
+        font-size: $font-size-14;
+        padding: 8px 20px;
+        background-color: #3688f7;
+        color: white;
+        border-radius: 3px;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 100px;
+        font-size: 18px;
+        height: 50px;
+    }
+    .create-button:hover {
+        background-color: #2264bd;
+    }
+}
+
+.arrow-button-group {
+    .arrow-checkbox {
+        display: none;
+    }
+    .arrow-checkbox+.arrow-button {
+        margin-left: -30px;
+        position: relative;
+        display: inline-block;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 100;
+        margin-top: 10px;
+    }
+    .arrow-checkbox:checked+.arrow-button {
+        background-color: rgb(194, 193, 193);
+    }
+}
+
+.dropdown-roles {
+    // margin-left: 230px;
+}
+
+.dropdown-industries {
+    .roles-wrap {
+        top: 28rem!important;
+        left: 29.2rem!important;
+    }
+}
+
+.no-selected-roles-skills-industries-title {
+    font-size: 12px;
+    opacity: .8;
+}
+
+
+
+.dropdown-wrap {
+    // position: relative;
+    // z-index: 100;
+    // min-width: 400px;
+    .roles-wrap {
+        max-height: 400px;
+        overflow-y: auto;
+        position: absolute;
+        border: 1px solid $dark-grey;
+        padding: 15px 10px;
+        background-color: $white;
+        z-index: 99;
+        top: 28rem;
+        left: 15.2rem;
+        .role-wrap {
+            cursor: pointer;
+            .item-title {
+                padding: 5px;
+                &:not(:last-child) {
+                    border-bottom: 1px solid $dark-grey;
+                }
+                &:hover {
+                    background-color: #dfdddd;
+                }
+            }
+        }
+    }
+    .categories-wrap {
+        position: absolute;
+        border: 1px solid $dark-grey;
+        padding: 15px 10px;
+        background-color: $white;
+        z-index: 101;
+        top: 28rem;
+        left: 1.2rem;
+        .category-wrap {
+            cursor: pointer;
+            .category-title {
+                padding: 5px;
+                &:not(:last-child) {
+                    border-bottom: 1px solid $dark-grey;
+                }
+            }
+            .skills-wrap {
+                padding-left: 20px;
+                overflow: hidden;
+                height: auto;
+                max-height: 0;
+                overflow-y: auto;
+                @include animation-transition(max-height,
+                .5s);
+                &.opened {
+                    max-height: 100vh !important;
+                    @include animation-transition(max-height,
+                    .5s);
+                }
+                .skill-row {
+                    @include displayFlex;
+                    @include flex-direction(row);
+                    @include flex-justify-content(space-between);
+                    @include flex-align-items(center);
+                    padding: 3px 0;
+                    .skill-title {
+                        @include flex(1,
+                        0,
+                        auto);
+                    }
+                    .experience-wrap {
+                        @include flex(0,
+                        0,
+                        auto);
+                        @include displayFlex;
+                        @include flex-direction(row);
+                        @include flex-justify-content(space-between);
+                        @include flex-align-items(center);
+                        .experience-button {
+                            @include displayFlex;
+                            @include flex-direction(row);
+                            @include flex-justify-content(center);
+                            @include flex-align-items(center);
+                            width: 30px;
+                            height: 30px;
+                            font-size: $font-size-10;
+                            margin: 0 5px;
+                            cursor: pointer;
+                            border-radius: 2px;
+                            color: white;
+                            background-color: rgb(59, 137, 240);
+                            @include animation-transition(background-color,
+                            .4s);
+                            &:hover {
+                                background-color: $blue;
+                                @include animation-transition(background-color,
+                                .4s);
+                            }
+                        }
+                        &:hover {
+                            .experience-button {
+                                background-color: rgb(177, 174, 174) !important;
+                            }
+                            .any-button:hover {
+                                background-color: $blue !important;
+                            }
+                            .three-button:hover {
+                                background-color: $blue !important;
+                            }
+                            .four-button:hover {
+                                background-color: $blue !important;
+                            }
+                        }
+                    }
+                    &:hover {
+                        background-color: rgb(223, 221, 221);
+                        .any-button {
+                            background-color: $blue !important;
+                        }
+                        .three-button {
+                            background-color: rgb(177, 174, 174) !important;
+                        }
+                        .four-button {
+                            background-color: rgb(177, 174, 174) !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+.selected a {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.suggestions {
+    // position: relative !important;
+    z-index: 10;
+    background: white;
+    // display: block;
+    width: 100%;
+    min-width: 600px;
+    .suggestions-skills-wrap {
+        background: white;
+        position: absolute;
+        border: 1px solid rgb(219, 217, 217);
+        top: 32em;        
+        left: 13.2rem;
+        z-index: 999;
+    }
+    .suggestions-roles-wrap {
+        background: white;
+        position: absolute;
+        z-index: 999;
+        border: 1px solid rgb(219, 217, 217);
+        top: 32em;        
+        left: 13.2rem;
+    }
+    .suggestions-industries-wrap {
+        background: white;
+        position: absolute;
+        z-index: 999;
+        border: 1px solid rgb(219, 217, 217);
+        top: 32rem;        
+        left: 13.2rem;
+    }
+    table {
+        table-layout: fixed;
+    }
+    table {
+        padding: 5px;
+        word-wrap: break-word;
+    }
+    .header {
+        position: sticky;
+    }
+    .skill-header {
+        width: 37.5%;
+        min-width: 225px;
+        padding: 10px;
+        background: rgb(170, 197, 231);
+        font-weight: normal;
+    }
+    .experience-header {
+        width: 25%;
+        min-width: 150px;
+        padding: 10px;
+        background: rgb(193, 212, 236);
+        font-weight: normal;
+    }
+    .category-header {
+        width: 37.5%;
+        min-width: 37.5%;
+        padding: 10px;
+        background: rgb(235, 235, 235);
+        font-weight: normal;
+    }
+    .name {
+        border-color: red;
+        padding: 10px 0px;
+        width: 305px;
+        max-width: 305px;
+    }
+    .experience {
+        text-align: center;
+        width: 205px;
+        max-width: 205px;
+    }
+    .category {
+        padding-left: 5px;
+        text-align: left;
+        font-size: 12px;
+        width: 290px;
+        max-width: 290px;
+    }
+    .inner-area {
+        max-height: 434px;
+        overflow-y: auto;
+    }
+    .items-container {
+        padding: 3px;
+        cursor: pointer;
+        .item {
+            padding-left: 10px;
+            width: 100%;
+            margin-top: 20px;
+            color: rgb(131, 130, 130);
+        }
+        .item-selected {
+            padding-left: 10px;
+            width: 100%;
+            color: black;
+            background-color: rgb(228, 226, 226);
+        }
+    }
+    .container-selected {
+        color: black;
+        background-color: rgb(228, 226, 226);
+    }
+}
+
+.selected-title {
+    font-weight: bold;
+}
+
+.see-less-more-btn {
+    color: #13579a;
+    cursor: pointer;
+    margin-left: 20px;
+    font-size: 18px;
+}
+
+.selected-items-container {
+    display: flex;
+    flex-direction: row;
+    flex: 1 0 auto;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    .selected-items {
+        .selected {
+            height: 100%;
+            width: 100%;
+            margin: 3px;
+            border: solid rgb(59, 137, 240) 1px;
+            position: relative;
+            .sel-skill-cont {
+                height: 100%;
+                width: 100%;
+                padding: 12px 15px;
+                color: rgb(131, 130, 130);
+                float: left;
+            }
+            
+        }
+    }
+    .editable {
+        .delete-title {
+            visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;    
+        }
+        .sel-skill-cont{
+            height: 100%;
+            width: 100%;
+        }
+        &:hover {
+            cursor: pointer;
+            color: black;
+            background: rgba(196, 193, 193, 0.596);
+            .sel-skill-cont {
+                span {
+                    visibility: hidden;
+                }
+            }
+            .delete-title {
+                visibility: visible;
+                color: rgb(83, 82, 82);
+            }
+        }
+    }
+}
+
+.exp {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    background-color: rgb(199, 196, 196);
+    border-radius: 2px;
+    color: white;
+    font-size: 12px;
+    padding: 4px;
+    margin-left: 3px;
+}
+
+.selected-exp {
+    background-color: rgb(59, 137, 240) !important;
+}
+
+.selected-skill {
+    height: 100%;
+    width: 100%;
+}
+
+.skills-adding-title {
+    vertical-align: text-top;
+}
+
+.skills-adding-title-container {
+    margin-top: 20px;
+}
+
+.selected-no-display {
+    display: none;
+}
+
+//  SKILLS ROLES INDUSTRIES END
+
+
+.CVName { 
+    display: flex;
+    align-items: center;
+    .icon {
+        font-size: 18px;
+        width: 18px;
+        cursor: pointer;
+        height: 18px;
+        margin-left: 5px;
+    }
+}
+
+.select-type {
+    background: #fff;
+    padding: 4px 10px;
+    border: 1px solid;
+    margin-left: -4px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    .types-list {
+        position: absolute;
+        top: 30px;
+        list-style: none;
+        background: #ffffff;
+        border: 1px solid;
+    }
+}
+
+
+
+.icon-fz14 {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+.icon-fz16 {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.icon-fz18 {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.display-flex {
+    display: flex;
+}
+
+.display-inline-flex {
+    display: inline-flex;
+}
+
+.align-items-c {
+    align-items: center;
+}
+
+.justify-content-c {
+    justify-content: center;
+}
+
+.justify-content-sa {
+    justify-content: space-around;
+}
+
+.justify-content-sb {
+    justify-content: space-between;
+}
+
+.justify-content-fs {
+    justify-content: flex-start;
+}
+
+.justify-content-fe {
+    justify-content: flex-end;
+}
+
+.form-buttons {
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    .send-add-candidate-form {
+        background: #4f9f48;
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        outline: none;
+        margin-right: 15px;
+        font-size: 15px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        &:hover {
+            color: #4f9f48;
+            border: 1px solid #4f9f48;
+            background: #fff;
+        }
+    }
+    .cancel-add-candidate-form {
+        background: red;
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        outline: none;
+        margin-right: 15px;
+        font-size: 15px;
+        border: 1px solid transparent;        
+        cursor: pointer;
+        &:hover {
+            color: red;
+            border: 1px solid red;
+            background: #fff;
+        }
+    }
+}
+
+.selected-skill {
+    width: 49%;
+    &:nth-child(odd) {
+        padding-right: 2px;
+    }
+}
+
+.disabled {
+    opacity: .5!important;
+    cursor: not-allowed!important;
+}
+
+.error {
+    color: red!important;
+}
+
+.delete-website {
+    position: absolute;
+    right: -20px;
+    top: 6px;
+}
+
+.jobs-list {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    background: #fff;
+    border: 1px solid;
+    margin-top: -1px;
+    padding: 5px 2px;
+    span {
+        margin-bottom: 5px;
+        cursor: pointer;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.source-select.stage {
+    ::ng-deep .mat-form-field-infix {
+        border: 1px solid;
+    }
+    
+    ::ng-deep .mat-form-field-empty.mat-form-field-placeholder {
+        margin-left: 5px!important;
+    }
+    ::ng-deep .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-placeholder.mat-input-placeholder {
+        display: none!important;
+    }
+}

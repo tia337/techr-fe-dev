@@ -19,7 +19,7 @@ export class InviteUserPageService {
 		}).then(parseClient => {
 			client = parseClient;
 			console.log('client: ', client);
-			return this._login.signIn();
+			return this._login.getAuthUrl('linkedin');
 		}).then(user => {
 			user.set('Work_email', branchData.work_email);
 			user.set('HR_Access_Level', branchData.access_level);

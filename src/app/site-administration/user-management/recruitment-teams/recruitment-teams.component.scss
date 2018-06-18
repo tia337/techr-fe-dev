@@ -1,0 +1,62 @@
+.recruitment-teams {
+    padding: 20px;
+    min-height: 100%;
+}
+
+.recruitment-teams-header {
+   display: flex;
+   justify-content: space-between;
+    
+   h3 {
+        font-weight: 100;
+        font-size: 1.5em;
+    }
+}
+
+.recruitment-teams-body {
+    width:100%;
+    background-color: #FFE082;
+    padding: 10px;
+    margin: 7px;
+    .recruitment-teams-body__info {
+        font-weight: bold;
+    }
+    p {
+        padding: 5px;
+    }
+}
+
+.recruitment-teams-body__options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+
+    span {
+        margin: 0px 5px;
+        cursor: pointer;
+    }
+
+    .team-description-tooltip {
+        cursor: pointer;
+    }
+
+    .edit {
+        padding: 5px;
+        transition: .3s all ease-in-out;
+    }
+
+    .edit:hover {
+        background-color: rgb(109, 109, 170);
+        color: white;
+    }
+
+    .delete {
+        transition: .4s all ease-in-out;
+        padding: 5px;
+    }
+
+    .delete:hover {
+        background-color: rgb(173, 74, 74);
+        color: white;
+    }
+}

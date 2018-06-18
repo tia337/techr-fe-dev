@@ -70,7 +70,7 @@
                 }
                 .candidate-name-position {
                     @include displayFlex();
-                    @include flex(0, 0, 60%);
+                    @include flex(0, 0, 53%);
                     @include flex-direction(column);
                     @include flex-align-items(flex-start);
                     @include flex-justify-content(center);
@@ -95,6 +95,7 @@
                     margin-left: auto;
                     padding: 0;
                     padding-right: 0 7px;
+                    align-items: center;
                     // @include flex(0, 0, 20%);
                     // @include flex-justify-content(flex-end);
                     // font-size: $font-size-24;
@@ -102,6 +103,19 @@
                         cursor: pointer;
                         padding: 0;
                         padding-left: 7px;
+                    }
+                    .reject-candidate-button {
+                        border-radius: 50%;
+                        height: 37px;
+                        width: 37px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-top: -3px;
+                        transition: .4s all ease-in-out;
+                        // &:hover {
+                        //     transform: rotate(180deg);
+                        // }
                     }
                     .move-candidate-button {
                         position: relative;
@@ -113,6 +127,8 @@
                             z-index: 100;
                             background-color: $white;
                             width: 150px;
+                            
+
                             .header {
                                 font-size: $font-size-14;
                                 border-bottom: 1px solid $black;
@@ -124,6 +140,10 @@
                                 cursor: pointer !important;
                                 font-weight: 100;
                                 padding: 4px;
+                                &:hover {
+                                    background: #000000;
+                                    color: #fff;
+                                }
                             }
                             &.opened {
                                 display: inline-block;
@@ -230,3 +250,95 @@
 }
 
 
+.buttons {
+    @include displayFlex;
+    padding: 0;
+    align-items: center;
+    margin-left: 0px;
+    padding: 10px;
+    .button {
+        cursor: pointer;
+        padding: 0;
+        // padding-left: 7px;
+    }
+    .mail-button {
+        background: #4371c4;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+    }
+    .reject-candidate-button {
+        text-align: center;
+        background: #ff5050;
+        color: #fff;
+        padding: 5px 0;
+    }
+    .move-candidate-button {
+        position: relative;
+        background: #43c456;
+        color: #fff;
+        text-align: center;
+        margin: 0 15px;
+        height: 29px;
+        padding: 0;
+        vertical-align: middle;
+        display: inline-block;
+        p {
+            padding-top: 5px;
+            padding-left: 5px;
+        }
+        .move-candidate-dropdown {
+            position: absolute;
+            display: none;
+            font-size: $font-size-12;
+            border: 1px solid $black;
+            z-index: 100;
+            background-color: $white;
+            width: 150px;
+            color: #000!important;
+            left: 0;
+            width: 100%;
+            top: 29px;
+            .header {
+                font-size: $font-size-14;
+                border-bottom: 1px solid $black;
+                padding: 6px;
+            }
+            .inteview-stage {
+                // border: 2px solid red;
+                z-index: 101;
+                cursor: pointer !important;
+                font-weight: 100;
+                padding: 4px;
+                &:hover {
+                    background: #000000;
+                    color: #ffffff;
+                }
+            }
+            &.opened {
+                display: inline-block;
+            }
+        }
+    }
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 5px 0 5px;
+    border-color: #ffffff transparent transparent transparent;
+    position: absolute;
+    right: 8px;
+    top: 12px;
+    &-wrap {
+        border-left: 1px solid;
+        margin-left: 25px;
+        padding-bottom: 5px;
+        padding-top: 5px;
+    }
+}
+
+.dn {
+    display: none;
+}

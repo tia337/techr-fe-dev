@@ -1,8 +1,11 @@
 <section class="permissions-inner">
-  <h3 class="">Permissions</h3>
+  <div class="permissions-header">
+    <h3 class="">User Roles</h3>
+    <button (click)="openUserRolesModal()" mat-raised-button color="primary">Add new role</button>
+  </div> 
   <table>
     <tr>
-      <th>Name</th>
+      <th>Role</th>
       <th></th>
       <th>Rights</th>
     </tr>
@@ -20,6 +23,19 @@
       <td>Contributor</td>
       <td><div class="permission-label">Contributor</div></td>
       <td>Swipe in application access. Can invite users.</td>
+    </tr>
+    <tr *ngFor= "let userRole of userRoles" (click)="goToAccessLevel(4, userRole.roleName)">
+      <td>{{userRole.roleName}}</td>
+      <td><div class="permission-label" [matTooltip]="userRole.roleDescription">{{userRole.roleName}}</div></td>
+      <td><span *ngFor= "let right of userRole.roleRights">{{right.description || right}}. </span></td>
+      <td class="user-role-options">
+        <span (click)="editUserRoles(userRole, userRoles); $event.stopPropagation()">
+          Edit
+        </span>
+        <span (click)="deleteUserRoles(userRole, userRoles); $event.stopPropagation()">
+          Delete
+        </span>
+      </td> 
     </tr>
   </table>
 </section>

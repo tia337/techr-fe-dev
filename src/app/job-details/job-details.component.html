@@ -1,6 +1,54 @@
 <section class="job-details-inner-page" *ngIf="contract">
-  <h2 class="job-details-title" routerLink="/jobs" *ngIf="pipelineLoader === Loading.success">
-    <mat-icon>keyboard_arrow_left</mat-icon>{{contract.get('title')}}
+  <h2 class="job-details-title"  *ngIf="pipelineLoader === Loading.success">
+    <span routerLink= "/jobs"><mat-icon>keyboard_arrow_left</mat-icon>{{contract.get('title')}}</span>
+    <div class= "likelihood-to-achieve">
+      <p class= "likelihood-to-achieve__hiring-target">
+        Hiring Target: 
+        <span>{{contract.get('jobHiringTarget') | date: 'MMM d, y'}}</span> 
+        <span *ngIf="!contract.get('jobHiringTarget')">No hiring target choosen.</span>
+      </p>
+      <div class="likelihood-to-achieve__likelihood-percentage">
+        <p 
+          title="Show" 
+          *ngIf="!likelihoodEnabled" 
+          (click)="likelihoodEnabled = true; selectedPercentage = false;"> 
+          Likelihood to achieve 
+          <mat-icon >keyboard_arrow_right</mat-icon>
+        </p> 
+        <p 
+          title="Hide" 
+          *ngIf="likelihoodEnabled" 
+          (click)="likelihoodEnabled = false;">
+          Likelihood to achieve 
+          <mat-icon >keyboard_arrow_left</mat-icon></p>
+        <div *ngIf="likelihoodEnabled">
+          <p>    
+            <span 
+              (click)="setLikelihoodPercentage(clientProbabilityToCloseJob.percentage, contract)"
+              *ngFor= "let clientProbabilityToCloseJob of clientProbabilitiesToCloseJob"
+              [ngClass]="
+                {
+                  'low': clientProbabilityToCloseJob.percentage < '50',
+                  'mid': clientProbabilityToCloseJob.percentage == '50',
+                  'high' : clientProbabilityToCloseJob.percentage > '50' 
+                }">
+              {{clientProbabilityToCloseJob.percentage}}%
+            </span>
+          </p>
+        </div> 
+        <p *ngIf="selectedPercentage || !likelihoodEnabled">
+            <span 
+            [ngClass]="
+              {
+                'low': contract.get('likelihoodToFill') < '50',
+                'mid': contract.get('likelihoodToFill') == '50',
+                'high' : contract.get('likelihoodToFill') > '50' 
+              }">
+              {{contract.get('likelihoodToFill')}}%
+            </span>
+          </p>
+      </div>
+    </div>
   </h2>
 
   <div class="job-dashboards-wrap">
@@ -24,13 +72,13 @@
       </div>
 
       <div class="job-offer-properties">
-
-
-        <label class="job-property" *ngFor="let stage of stages" (change)="setActiveStage()">
+        <label class="job-property" *ngFor="let stage of stages"  (change)="setActiveStage();">
           <input type="radio" [value]="stage.type" class="interview-stage" name="interview-stage" [disabled]="stagesDisabled == Loading.loading" [(ngModel)]="currentInterviewStage" />
-          <div class="job-property-inner">
+          <div class="job-property-inner" (click)="setCandidatesCustomHiringWorkFlowStage(stage.candidates)">
             <div *ngIf="stage.value !== 0" class="property-value">{{stage.value}}</div>
-            <div *ngIf="stage.value === 0" class="property-value">—</div>
+            <div *ngIf="stage.value === 0 && !stage.candidates" class="property-value">—</div>
+            <span *ngIf="stage.candidates"><div *ngIf="stage.candidates.length > 0" class="property-value">{{stage.candidates.length}}</div></span>
+            <span *ngIf="stage.candidates"><div *ngIf="stage.candidates.length === 0" class="property-value">-</div></span>
             <div class="property-title">{{stage.title}}</div>
           </div>
         </label>

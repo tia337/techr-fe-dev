@@ -1,0 +1,55 @@
+<div class="modal-overlay" (click)="closeModal()"> 
+  <div class="user-role-modal" (click)="$event.stopPropagation()">
+    <h2>Delete user role</h2>
+    <div>
+      <h3>Are you sure you want to delete this user role?</h3>
+      <div>
+        This user role is assigned to the following Users: 
+        <p>- Tarik Sarhan</p>
+        <p>- Julio Alvaro</p>
+        <p>- Edward Ridgway</p>
+      </div>
+      <p>By clicking Delete these users will lose the role privileges that were assigned to this User Role</p>
+    </div>
+    <div class="user-role-modal__delete-options">
+      <button mat-raised-button (click)="closeModal()">Cancel</button>
+      <button mat-raised-button color="warn" (click)="deleteUserRole()">Delete</button>
+    </div> 
+  </div>
+  <!-- <form 
+    class="user-role-modal" 
+    [formGroup]="userRolesFormGroup"
+    (ngSubmit)="deleteUserRole()"
+    (click)="$event.stopPropagation()"  >
+    
+    <h2>Delete user role</h2>
+    <mat-form-field>
+      <input 
+        type= "text" 
+        matInput 
+        placeholder= "Name" 
+        required
+        formControlName= "roleName"> 
+    </mat-form-field>
+    <mat-form-field>
+      <textarea  
+        matInput 
+        placeholder= "Description" 
+        required 
+        formControlName= "roleDescription">
+      </textarea>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select 
+        placeholder= "Rights" 
+        multiple 
+        required
+        formControlName= "roleRights">
+        <mat-option (click)="$event.stopPropagation()" *ngFor ="let userRolesRight of userRolesRights" [value]="userRolesRight">
+            {{userRolesRight}}
+        </mat-option>
+      </mat-select> 
+    </mat-form-field>
+    <button type="submit" mat-raised-button [disabled]="!userRolesFormGroup.valid">Save changes</button>
+  </form>   -->
+</div> 

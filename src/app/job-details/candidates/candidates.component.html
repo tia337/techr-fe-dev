@@ -22,28 +22,32 @@
     <mat-option (click)="addToFiltersParameters(country)" *ngFor="let country of countryArray" [value]="country">{{country}}</mat-option>
 </mat-select>
 </mat-form-field>
-<!-- <mat-form-field>
+<mat-form-field *ngIf="_activeStage != -2">
     <mat-select placeholder="Bulk actions">
         <mat-option (click)="sendEmail()">Send email/templates</mat-option>
-        <mat-option>Send nudge</mat-option>
+        <mat-option (click)="openRejectionModal()">Reject</mat-option>
     </mat-select>
-</mat-form-field> -->
+</mat-form-field>
 <div class="candidates-count-block" *ngIf="_activeStage == -2">
     <div *ngIf="candidatesCount > 0">    
     Candidates found: {{candidatesCount}}
     </div>
 </div>
-<!-- <button *ngIf="!selectedAll" mat-button (click)="selectionFunc(true)">Select all</button> -->
-<!-- <button *ngIf="selectedAll" mat-button (click)="selectionFunc(false)">Unselect all</button> -->
+<button *ngIf="!selectedAll && _activeStage != -2" mat-button (click)="selectionFunc(true)">Select all</button>
+<button *ngIf="selectedAll && _activeStage != -2" mat-button (click)="selectionFunc(false)">Unselect all</button>
+<div class="candidates-count-block" *ngIf="_activeStage != -2">
+    {{arrayOfDevs.length}} candidates selected
+</div>
 <section class="candidates-inner-section" *ngIf="hasCandidates === Loading.success">
     <div class="candidates-list-section-wrap">
         <div class="mat-progress-spinner-layout" *ngIf="postLoader === true">
-            <mat-progress-spinner class="candidates-loader"  color="primary" mode="indeterminate"></mat-progress-spinner>
+            <mat-progress-spinner class="candidates-loader" color="primary" mode="indeterminate"></mat-progress-spinner>
         </div>
-        <div class="candidates-list-section" *ngIf="candidates" (scroll)="loadCandidatesAtTheEnd($event)">
-            <div class="candidate-block" *ngFor="let candidate of candidates.results"
-                (click)="userProfile(candidate.id, getPercentageMatch(candidate), getLocationMatch(candidate))" [class.active]="userId == candidate.id">
-                <!-- (click)="userProfile(candidate.id, getPercentageMatch(candidate))" -->
+        <div class="candidates-list-section" *ngIf="candidates.results.length > 0" (scroll)="loadCandidatesAtTheEnd($event)">
+            <div class="candidate-block" 
+                *ngFor="let candidate of candidates.results"
+                (click)="userProfile(candidate.id, getPercentageMatch(candidate), getLocationMatch(candidate))" 
+                [class.active]="userId == candidate.id">
                 <div class="candidate-fit-status-wrap">
                         <span class="candidate-fit-relocate" *ngIf="candidate.get('developer').get('IsInternationalRelocate')"><img src="../../../../assets/icons/relocate-icon.png" alt=""></span>
                         <div class="candidate-fit-status">
@@ -63,9 +67,11 @@
                                 <span>Great fit</span>
                             </div>
                         </div>
-                        <div class="logo"><img style="width: auto; height: 30px;"
+                        <div class="logo">
+                            <img style="width: auto; height: 30px;"
                             src="{{candidate.source ? candidate.source : 'https://swipeinmlabtest.herokuapp.com/parse/files/dOEXXQD7cPjiKTAitzNLdzt5fJWXscFSFYOJmBIZ/90fc2f3d63b7192696b413b2d829b846_SwipeIn%20Logo%202.jpg'}}"
-                            alt="logo"></div>
+                            alt="logo">
+                        </div>
                     </div>
                 <div class="candidate-info-top-section">
                     <div class="avatar-wrap">
@@ -74,25 +80,13 @@
                     <div class="candidate-general-info">
                         <div class="candidate-name">{{candidate.get('firstName')}} {{candidate.get('lastName')}}</div>
                         <div class="candidate-position">{{candidate.get('headline')}}</div>
-                        <!-- <p>{{candidate.get('developer').get('homeCountry').get('Country')}}</p> -->
-                        <!--<div class="candidate-company-name"><span class="company-title"-->
-                            <!--*ngFor="let companyName of candidate.get('companyNames')">{{companyName}}</span>-->
-                        <!--</div>-->
                     </div>
-                
                 </div>
                 <div class="candidate-info-bottom-section">
                     <div class="candidate-location-match">
                         <div class="location">
                             {{candidate.get('location')}}
                         </div>
-                        <!-- <div class="match" *ngIf="getPercentageMatch(candidate) <= 30">Potential fit </div>
-                        <div class="match"
-                            *ngIf="getPercentageMatch(candidate) > 30 && getPercentageMatch(candidate) <= 70">Good fit
-                        </div>
-                        <div class="match"
-                            *ngIf="getPercentageMatch(candidate) > 70 && getPercentageMatch(candidate) <= 100">Great fit
-                        </div> -->
                         <div class="location-away"
                             *ngIf="getLocationMatch(candidate) !== -1">
                                 <span>{{ getLocationMatch(candidate) }}</span>
@@ -111,11 +105,17 @@
                             *ngIf="candidate.get('developer').get('skills') && candidate.get('developer').get('skills').length > 6">+{{candidate.get('developer').get('skills').length - limitArray(candidate.get('developer').get('skills')).length}}</span>
                     </div>
                 </div>
-                <mat-checkbox #candidateCheckbox class="bulk-checkbox" value="{{candidate.id}}" [ngModel]="selectedAll" (change)="checkIdOfDev(candidateCheckbox.value,$event)"></mat-checkbox>
+                <mat-checkbox 
+                    #candidateCheckbox 
+                    class="bulk-checkbox" 
+                    value="{{candidate.id}}" 
+                    [ngModel]="selectedAll" 
+                    (change)="checkIdOfDev(candidateCheckbox.value, $event)">
+                </mat-checkbox>
 
             </div>
         </div>
-        <div class="candidate-list-section" *ngIf="!candidates">
+        <div class="candidate-list-section" *ngIf="candidates.results.length === 0">
             No candidates found.
         </div>
     </div>

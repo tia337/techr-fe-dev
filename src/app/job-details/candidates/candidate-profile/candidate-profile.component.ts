@@ -14,6 +14,9 @@ import { Socket } from 'ng-socket-io';
 
 import { AlertComponent } from '../../../shared/alert/alert.component';
 import { JobDetailsService } from '../../job-details.service';
+import { RejectModalComponent } from './reject-modal/reject-modal.component';
+import { WithdrawnModalComponent } from './withdrawn-modal/withdrawn-modal.component';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-candidate-profile',
@@ -37,12 +40,17 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 	};
 
 	private _socketSubscription;
+	public customHiringStagesListShown = false;
 
 	// userId = this._route.snapshot.params['id'];
 
 	private availabilityDate: string;
+	customHiringStages = [];
+	customHiringStagesStorage = [];
+	activeStage;
 
 	sendingEmail: { status: string };
+	subscription: Subscription;
 
 	@ViewChild('moveCandidateMenu') moveCandidateMenu: ElementRef;
 
@@ -59,7 +67,6 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 	) {}
 
 	ngOnInit() {
-		console.log(this._socket);
 		this._socketSubscription = this._socket.on('pipelineUpdate', data => {
 			this._candidateProfileService.getUserList(data.userListId).then(userList => {
 				this._jobDetailsService.activeStage = userList.get('listType');
@@ -74,32 +81,42 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 					this.allert(1, 'Job Offered');
 				} else if (listId == 4) {
 					this.allert(1, 'Hired');
+				} else if (listId == 6) {
+					this.allert(1, 'Rejected');
+				} else if (listId == 7) {
+					this.allert(1, 'Withdrawn');
 				}
 			});
 		});
+		this._socket.on('pipelineUpdateBulk', data => {
+			this.allert(1, 'Rejected');
+			this._jobDetailsService.activeStage = 6;
+		});
+		this._jobDetailsService._customHiringWorkFlowStages.skipWhile(val => val == null).subscribe(stages => {
+			console.log(stages);
+			if (stages === false) return;
+			console.log(stages);
+			this.customHiringStagesStorage = stages;
+			stages.forEach(stage => {
+				if (stage.type === 'applied') return;
+				if (stage.type === 'suggested') return;
+				if (stage.type === 'refferals') return;
+				this.customHiringStages.push(stage);
+			});
+			console.log(this.customHiringStages);
+		});
+		this._jobDetailsService.activeStage.subscribe(stage => {
+			this.activeStage = stage;
+		});
+		this._router.navigate(['/', 'jobs', this._jobDetailsService.contractId, 'candidates'], { skipLocationChange: true });
+		this.subscription = this._candidateProfileService._rejectedHiring.subscribe(value => {
+			this.move(value.stage, value.stageTitle, value.hiringStages, value.newCandidates, value.previousStageCandidates);
+		});
 	}
 
-	// redirectToStage(data: any) {
-	// 	console.log(this._candidateProfileService);
-	// 	console.log(this);
-	// 	if(this._candidateProfileService)
-	// 	this._candidateProfileService.getUserList(data.userListId).then(userList => {
-	// 		this._jobDetailsService.activeStage = userList.get('listType');
-	// 		if (userList.get('listType') == 0) {
-	// 			this.allert(1, 'Shortlist');
-	// 		} else if (userList.get('listType') == 1) {
-	// 			this.allert(1, 'Phone Interview');
-	// 		} else if (userList.get('listType') == 2) {
-	// 			this.allert(1, 'F2F Interview');
-	// 		} else if (userList.get('listType') == 3) {
-	// 			this.allert(1, 'Job Offered');
-	// 		} else if (userList.get('listType') == 4) {
-	// 			this.allert(1, 'Hired');
-	// 		}
-	// 	});
-	// }
 
 	ngOnChanges(changes: any) {
+		console.log(changes);
 		this.verdicts = {
 			definitely: 0,
 			yes: 0,
@@ -123,28 +140,18 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 			}, error => {
 				console.error(error);
 			}).then(scorecardWeightedScores => {
-				console.log(scorecardWeightedScores, 'IN RESULT OF GET WEIGHTED SCORE');
 				let scoreSum = 0;
 
 				this._candidateProfileService.verdicts.definitely = scorecardWeightedScores.filter(score => {
 					return score.get('FinalVerdict') === FinalVerdict.definitely;
 				}).length;
-				// 			AF CHANGE
-				// this._candidateProfileService.verdicts.definitely = this.verdicts.definitely;
 
 				this._candidateProfileService.verdicts.yes = scorecardWeightedScores.filter(score => {
 					return score.get('FinalVerdict') === FinalVerdict.yes;
 				}).length;
-				// 			AF CHANGE
-				// this._candidateProfileService.verdicts.yes = this.verdicts.yes;
-
 				this._candidateProfileService.verdicts.notSure = scorecardWeightedScores.filter(score => {
 					return score.get('FinalVerdict') === FinalVerdict.notSure;
 				}).length;
-				// 			AF CHANGE
-				// this._candidateProfileService.verdicts.notSure = this.verdicts.notSure;
-
-				// console.log()
 
 				scorecardWeightedScores.forEach(scoreObject => {
 					scoreSum += scoreObject.get('WeightedScore');
@@ -153,13 +160,13 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 					this.averageRating = scoreSum / scorecardWeightedScores.length;
 					this._candidateProfileService.scoreSum = scoreSum;
 					this._candidateProfileService.scoreCount = scorecardWeightedScores.length;
-					console.log(this._candidateProfileService);
 				}
 			}, error => {
 				console.error(error);
 			});
 		}
 	}
+
 	sendEmail() {
 		const email = this._root_vcr.createComponent(GmailComponent);
 		email.userId = this.userId;
@@ -173,61 +180,87 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 		email.attachments = [];
 		const onSendSubscription = email.onSend.subscribe(e => {
 			this._router.navigate(['/', 'jobs', this.contractId, 'candidates', 'chat'], {skipLocationChange: true});
-			console.log('onSend works');
 			onSendSubscription.unsubscribe();
 		});
-	}
+	}	
 
 	showMoveMenu() {
 		this._renderer.addClass(this.moveCandidateMenu.nativeElement, 'opened');
 	}
+
+	moveCandidateToCustomWorkFlowStage(stage, index) {
+		if (stage.rejectedLogic === true) {
+			this.openRejectionCustom(this.candidate, stage.type);
+			return;
+		} else if (stage.withdrawnLogic === true) {
+			this.openWithdrawnCustom(this.candidate, stage.type);
+			return;
+		} else {
+			const activeStage = this._jobDetailsService.activeStage._value;
+			let previousStageCandidates;
+			this.customHiringStages.forEach(item => {
+				if (item.type === activeStage) {
+					if (activeStage === 'applied') {
+						previousStageCandidates = item.candidates;
+						console.log('stage current after splice: ', stage.candidates);
+						return;
+					};
+					if (this._jobDetailsService.activeStage._value === 'suggested') {
+						previousStageCandidates = item.candidates;
+						console.log('stage current after splice: ', stage.candidates);
+						return;
+					};
+					if (this._jobDetailsService.activeStage._value === 'refferals') {
+						previousStageCandidates = item.candidates;
+						console.log('stage current after splice: ', stage.candidates);
+						return;
+					};
+					const candidateIndex = item.candidates.indexOf(this.candidate.get('developer').id);
+					item.candidates.splice(candidateIndex, 1);
+					previousStageCandidates = item.candidates;
+				};
+			});
+			console.log(this.customHiringStages[index]);
+			this.customHiringStages[index].candidates.push(this.candidate.get('developer').id);
+			this._parse.execCloud('moveCandidateToCustomWorkFlowStage', { contractId: localStorage.getItem('contractId'), hiringStages: this.customHiringStages })
+				.then(result => {
+					this._jobDetailsService.activeStage = stage.type;
+					this._jobDetailsService.setCandidatesCustomHiringWorkflow(this.customHiringStages[index].candidates);
+					this._jobDetailsService.setCandidatesAfterMovingCandidate(stage.type, this.candidate.get('developer').id, activeStage, previousStageCandidates);
+					this.openMovingCandidateSuccessModal(stage.title);
+				});
+		}
+	}
+
+	move(stage, stageTitle, hiringStages, newCandidates, previousStageCandidates) {
+		const activeStage = this._jobDetailsService.activeStage._value;
+		this._parse.execCloud('moveCandidateToCustomWorkFlowStage', { contractId: localStorage.getItem('contractId'), hiringStages: hiringStages })
+			.then(result => {
+				this._jobDetailsService.activeStage = stage;
+				this._jobDetailsService.setCandidatesCustomHiringWorkflow(newCandidates);
+				this._jobDetailsService.setCandidatesAfterMovingCandidate(stage.type, this.candidate.get('developer').id, activeStage, previousStageCandidates);
+				this._root_vcr.clear();
+				this.openMovingCandidateSuccessModal(stageTitle);
+			});
+	}
+		
 
 	closeMoveMenu() {
 		this._renderer.removeClass(this.moveCandidateMenu.nativeElement, 'opened');
 	}
 
 	moveCandidate(listId: number) {
-		console.log('func started');
-		console.log('this.candidate.id: ', this.candidate.id);
-		console.log('this.contractId: ', this.contractId);
-		console.log('listId: ', listId);
-		console.log('this._parse.Parse.User.current(): ', this._parse.Parse.User.current());
-		console.log('this._jobDetailsService.movedUser', this._jobDetailsService.movedUser);
-		console.log(this.candidate.id);
 		this._jobDetailsService.movedUser = this.candidate.id;
-		console.log('this._jobDetailsService.movedUser', this._jobDetailsService.movedUser);
-
 		this._socket.emit('updateHiringPipeline', {
 			candidateId: this.candidate.id,
 			contractId: this.contractId,
 			listId: listId,
 			user: this._parse.Parse.User.current().toPointer()
 		});
-
-		// this._parse.Parse.Cloud.run("moveCandidateToList",{candidateId : this.candidate.id, contractId : this.contractId, listId : listId }).then(success => {
-
-		// !!!!
-		// 	this._jobDetailsService.activeStage = success.listInstance.get('listType');
-		// 	console.log(success);
-		// 	if (success.listInstance.get('listType') == 0) {
-		// 		this.allert(1, 'Shortlist');
-		// 	} else if (success.listInstance.get('listType') == 1) {
-		// 		this.allert(1, 'Phone Interview');
-		// 	} else if (success.listInstance.get('listType') == 2) {
-		// 		this.allert(1, 'F2F Interview');
-		// 	} else if (success.listInstance.get('listType') == 3) {
-		// 		this.allert(1, 'Job Offered');
-		// 	} else if (success.listInstance.get('listType') == 4) {
-		// 		this.allert(1, 'Hired');
-		// 	}
-		// }, error => {
-		// 	console.log(error);
-		// 	this.allert(0);
-		// });
-
 	}
 
 	allert(alertCode, stage?) {
+		this._root_vcr.clear();
 		if (alertCode === 1) {
 			const alert = this._root_vcr.createComponent(AlertComponent);
 			alert.title = 'Congrats!';
@@ -265,6 +298,55 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 
 	ngOnDestroy() {
 		this._socket.removeAllListeners('pipelineUpdate');
+	 	if (this.subscription !== undefined) this.subscription.unsubscribe();
 	}
+
+	openRejection(candidate) {
+		if (this.customHiringStages.length > 0) {
+			this.openRejectionCustom(this.candidate);
+			return;
+		}
+		const rejectionModal = this._root_vcr.createComponent(RejectModalComponent);
+		rejectionModal.setCandidate = candidate;
+		rejectionModal.contractId = this.contractId;
+	}
+
+	openWithdrawn(candidate) {
+		const rejectionModal = this._root_vcr.createComponent(WithdrawnModalComponent);
+		rejectionModal.setCandidate = candidate;
+		rejectionModal.contractId = this.contractId;
+	}
+
+	openRejectionCustom(candidate, stageType?) {
+		const rejectionModal = this._root_vcr.createComponent(RejectModalComponent);
+		rejectionModal.logic = 'new';
+		rejectionModal.hiringStages = this.customHiringStagesStorage;
+		rejectionModal.setCandidate = candidate;
+		rejectionModal.stageType = stageType ? stageType : 'rejected';
+	}
+
+	openWithdrawnCustom(candidate, stageType?) {
+		const rejectionModal = this._root_vcr.createComponent(WithdrawnModalComponent);
+		rejectionModal.logic = 'new';
+		rejectionModal.hiringStages = this.customHiringStagesStorage;
+		rejectionModal.setCandidate = candidate;
+		rejectionModal.stageType = stageType ? stageType : 'withdrawn';
+	}
+
+	openMovingCandidateSuccessModal(stage) {
+		this._root_vcr.clear();
+		const alert = this._root_vcr.createComponent(AlertComponent);
+		alert.title = 'Congrats!';
+		alert.icon = 'thumbs-o-up';
+		alert.type = 'congrats';
+		alert.contentAlign = 'left';
+		alert.content = `<a style = "white-space:nowrap">Candidate successfully moved to ` + stage + ` stage</a>`;
+		alert.addButton({
+			title: 'Close',
+			type: 'primary',
+			onClick: () => this._root_vcr.clear()
+		});
+	}
+
 
 }

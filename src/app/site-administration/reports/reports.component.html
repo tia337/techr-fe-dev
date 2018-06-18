@@ -1,0 +1,72 @@
+<section class="reports-wrap">
+  <p class="reports-title">Reports</p>
+  <div class="reports-report-block">
+    <p class="reports-report-block__title">
+      Generate Adhoc Report
+    </p>
+    <p class="reports-report-block__info-line">
+      Delivery channel: <span class="delivery-type">PDF</span>
+    </p>
+    <button class="reports-report-block__button" (click)="generateReport()">Generate report</button>
+  </div>
+  <div class="reports-report-block">
+      <p class="reports-report-block__title">
+        Shedule Report
+      </p>
+      <p class="reports-report-block__info-line">
+        Delivery channel: <span class="delivery-type">Email</span>
+      </p>
+      <p class="reports-report-block__info-line info-line_shedule">
+        Shedule: <span [ngClass]="{'active': schedule === 'Daily'}" (click)="schedule = 'Daily'">Daily/</span>
+                 <span [ngClass]="{'active': schedule === 'Weekly'}" (click)="schedule = 'Weekly'">Weekly/</span>
+                 <span [ngClass]="{'active': schedule === 'Monthly'}" (click)="schedule = 'Monthly'">Monthly</span>
+        <input #scheduleInput type="hidden" [value]="schedule">
+      </p>
+      <div class="reports-report-block__info-line info-line_select-users">
+        Delivery users: <span class="delivery-type" (click)="showUsers = !showUsers;">Select users</span> 
+        <div class="users-list" 
+             *ngIf="showUsers" 
+             (clickOutside)="showUsers = false;"
+             [exclude]="'.users-list-member, .reports-report-block__info-line'">
+          <p class="users-list-member" *ngFor="let member of teamMembers">
+            <span (click)="addToCheckedMembers(member);">
+              {{member.name}}
+              <span class="checked-box"><mat-icon class="icon" *ngIf="member.checked === true">check</mat-icon></span>
+            </span>
+          </p>
+        </div>
+        <input type="email" class="user-email-input" (click)="showUsers = false" #userEmail placeholder="Email adress"
+              (keydown.enter)="addEmailToCheckedMembers(userEmail.value); userEmail.value = null;">
+        <div class="users-checked-list" *ngIf="checkedTeamMembers.length > 0" class="users-checked-list">
+          <p *ngFor="let member of checkedTeamMembers">
+            {{member.name}}
+            <mat-icon class="icon" (click)="removeFromCheckedTeamMembers(member)">clear</mat-icon>
+          </p>
+        </div>
+      </div>
+      <p class="reports-report-block__info-line info-line_shedule">
+          Report Name: <input #reportName (keydown.enter)="generateSchedule()" class="report-name-input" type="text" placeholder="Report name">
+        </p>
+      <button (click)="generateSchedule()" class="reports-report-block__button">Schedule report</button>
+    </div>
+    <div class="reports-report-block__info-line info-line_no-schedule" *ngIf="scheduleArray.length === 0">There are no schedules yet.</div>
+    <div *ngIf="scheduleArray.length > 0" class="table-schedule">
+      <table>
+          <th>Report <br>Name</th>
+          <th>Delivery <br>Schedule</th>
+          <th>Delivered to users</th>
+          <th>Created by</th>
+          <th>Status</th>
+        <tr *ngFor="let schedule of scheduleArray">
+          <td>{{schedule.name}}</td>
+          <td>{{schedule.delivery}}</td>
+          <td><span *ngFor="let user of schedule.users">{{user.name}}<br></span></td>
+          <td>{{schedule.creator}}<br>{{schedule.date | date: 'dd/MM/yyyy'}}</td>
+          <td>{{schedule.status}}</td>
+          <td (click)="schedule.status = 'paused'" class="button" *ngIf="schedule.status === 'active'"><mat-icon>pause_circle_outline</mat-icon></td>
+          <td (click)="schedule.status = 'active'" class="button" *ngIf="schedule.status === 'paused'"><mat-icon>play_circle_outline</mat-icon></td>   
+          <td (click)="removeSchedule(schedule)" class="button"><mat-icon>clear</mat-icon></td>       
+        </tr>
+      </table>
+    </div>
+</section>

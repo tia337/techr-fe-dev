@@ -119,7 +119,7 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 		this.bodyField.nativeElement.value = this.emailBody;
 		this.subjectField.nativeElement.value = this.emailSubj;
 		this._gapi.getGapi().then(received_gapi => {
-			console.log('received_gapi', received_gapi);
+			// console.log('received_gapi', received_gapi);
 			this.gapi = received_gapi;
 			this._isSignedIn = this.gapi.auth2.getAuthInstance().isSignedIn.get();
 			this.gapi.auth2.getAuthInstance().isSignedIn.listen(status => {
@@ -199,6 +199,7 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 
 
 
+
 	filter(val: string): string[] {
 		return this.emailSuggestions.filter(option =>
 			option.toLowerCase().indexOf(val.toLowerCase()) === 0);
@@ -232,6 +233,33 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 			} else if (this.reply.message.payload.body.data) {
 				message.body = message.body + '\n>' + base64_url.decode(this.reply.message.payload.body.data).replace(/\n/g, '\n>');
 			}
+		}
+		if (localStorage.getItem('token-ms')) {
+			let token = localStorage.getItem('token-ms');
+			this._parse.execCloud('sendEmailOutlook', { token: token, message: message })
+			.then(res => {
+				this.emailSending = false;
+				this.closePopup();
+				this._onSend.emit();
+				const alert = this._rootVCR.createComponent(AlertComponent);
+				alert.title = 'Information';
+				alert.contentAlign = 'left';
+				alert.content = `Email successfully sent!`;
+				alert.addButton({
+					type: 'primary',
+					title: 'Ok',
+					onClick: () => {
+						this._rootVCR.clear();
+					}
+				});
+			})
+			.catch(err => {
+				console.error(err);
+				this.emailSending = false;
+				this.closePopup();
+			});
+
+			return;
 		}
 		if (this.isSignedIn) {
 			this._gapi.sendMessage(message, res => {
@@ -423,7 +451,7 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 			console.log('Error: ' + reason.result.error.message);
 		});
 	}
-	signInGapi() {
+	signInGapi(type) {
 		this._gapi.handleAuthClick().then(res => {
 			if (this.gapi.auth2 && ((this._isSignedIn = this.gapi.auth2.getAuthInstance().isSignedIn.get()))) {
 				// console.log(this.gapi.auth2.getAuthInstance().isSignedIn.get());
@@ -432,6 +460,9 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 				this.makeApiCall();
 			}
 		});
+	}
+
+	singInOutlook() {
 
 	}
 
@@ -487,6 +518,10 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 
 	fillEmail(gUser) {
 		this.userEmail = 'userservice@mg.swipein.co.uk';
+		if (localStorage.getItem("token-ms")) {
+			this.userEmail = this._parse.getCurrentUser().get('microsoftEmail');
+			return;
+		}
 		if (gUser.getBasicProfile()) {
 			this.userEmail = gUser.getBasicProfile().getEmail();
 		}

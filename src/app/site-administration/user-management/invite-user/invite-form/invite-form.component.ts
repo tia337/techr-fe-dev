@@ -13,6 +13,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { InviteVCR } from '../inviteVCR.service';
 import { InviteFormService } from './invite-form.service';
+import { Parse } from '../../../../parse.service';
+import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
 
 @Component({
 	selector: 'app-invite-form',
@@ -33,6 +35,7 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 
 	formIndex: number;
 
+
 	permissions = [
 		{ name: 'Site-admin', value: 1, tooltip: 'SwipeIn application access. Can invite and manage users, company settings and billing', disabled: false },
 		{ name: 'Admin', value: 2, tooltip: 'Swipe in application access. Can invite and manage users and company settings.', disabled: false  },
@@ -41,6 +44,8 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 
 	checkedPermission = this.permissions.find(al => {return al.value === 3});
 	private accessLevel: string = this.checkedPermission.value.toString();
+	userRoles: Array<UserRole> = [];
+	userRolesArray;
 
 	constructor(
 		private _vcr: ViewContainerRef,
@@ -48,12 +53,12 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 		private _inviteVCR: InviteVCR,
 		private _inviteFormService: InviteFormService,
 		private _elRef: ElementRef,
-		private _renderer: Renderer2
+		private _renderer: Renderer2,
+		private _parse: Parse
 	) {}
 
 	ngOnInit() {
-		console.log('Form was created');
-		// console.log(this.checkedPermission);
+
 		this._inviteFormService.getCurrentUser().then(user => {
 			this.currentUser = user;
 			this.inviteMessage = 'Hi,\n\n'+this.currentUser.get('firstName')+' '+this.currentUser.get('lastName')+' wants to collaborate with you on SwipeIn.hr. Join now to the '+user.get('Client_Pointer').get('ClientName')+' recruitment team on the following link.';
@@ -62,8 +67,6 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 		this.formIndex = this._inviteVCR.getIndex(this.viewRef);
 
 		this._inviteFormService.getCurrentUserAccessLevel().then( userAL => {
-			// this.accessLevel = userAL.toString();
-			// this.setCheckedPermission();
 			if(userAL > 0)
 				this.permissions.filter(al => {
 					return al.value < userAL;
@@ -74,16 +77,12 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 		});
 
 
-		// this.inviteForm = this._formBuilder.group({
-		//   email: '',
-		//   fullName: '',
-		//   inviteMessage: '',
-		//   accessLevel: 3
-		// });
+		this.getUserRoles().then(roles => {
+			this.userRoles = roles;
+		});
 	}
 
 	ngOnDestroy() {
-		console.log('destroy');
 		this.viewRef = null;
 		this.currentUser = null;
 	}
@@ -111,9 +110,14 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 	}
 
 	submitForm() {
-		// if(this.validateEmail())
-		this._inviteFormService.createInvitation(this.email, this.fullName, parseInt(this.accessLevel, 10), this.inviteMessage);
+		this._inviteFormService.
+			createInvitation(this.email, this.fullName, parseInt(this.accessLevel, 10), this.inviteMessage, this.userRolesArray);
 	}
+
+	log() {
+		console.log(this.userRolesArray);
+	}
+
 
 	validateEmail(): boolean {
 		if(!this.email || this.email.length == 0) {
@@ -134,6 +138,11 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 
 	getViewRefIndex() {
 		return this._inviteVCR.getIndex(this.viewRef);
+	}
+
+	getUserRoles() {
+		const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
+		return this._parse.execCloud('getUserRoles', {clientId: clientId});
 	}
 
 }

@@ -1,0 +1,447 @@
+<div class="talentbase-wrap">
+
+  <!-- IMPORT/EXPORT BUTTONS START -->
+  <div class="talentbase__import-export-buttons" *ngIf="!importPanelOpened">
+    <div class="back-to-talent-pool" (click)="activePanel = 'main'; resetZipForm(); getTalentDBCandidates();">
+        <mat-icon  class="arrow-back">arrow_back</mat-icon>
+        <span *ngIf="activePanel !== 'main'">Back to talent pool</span> 
+    </div>
+    <div>
+      <span style="position: relative;" [ngClass]="{'active': activePanel === 'bulkUpload'}" (click)="activePanel = 'bulkUpload'; resetZipForm();">
+        <mat-icon class="pulsing icon-pending" *ngIf="pendingBulkUpload !== undefined && activePanel !== 'bulkUpload'">cloud_circle</mat-icon>
+        Bulk upload history
+      </span>
+      <span> / </span>
+      <span [ngClass]="{'active': activePanel === 'import'}" (click)="activePanel = 'import'">Import candidate data</span>
+      <!-- <span> / </span> -->
+      <!-- <span [ngClass]="{'active': activePanel === 'export'}" (click)="activePanel = 'export'">Export candidate data</span> -->
+    </div>
+  </div>
+  <!-- IMPORT/EXPORT BUTTONS END -->  
+
+  <!-- MAIN CONTENT START -->
+  <div class="talentbase__filter-wrap" *ngIf="activePanel === 'main'">
+      <div class="talentbase__filter-icon">
+        <img src="../../assets/icons/talent_base.png" alt="">
+        <span>Talent pool</span>
+      </div>
+      <div class="talentbase__filter-content">
+
+        <!-- HEADER START -->
+        <div class="talentbase__filter-header">
+          <div class="talentbase__filter-header--filter-input">
+            <input type="text" (input)="searchCandidates($event)" placeholder="Search" #filterSearchInput id="filterSearchInput">
+            <mat-icon class="search-icon">search</mat-icon>
+            <span (click)="filtersOpened = !filtersOpened" class="blue-btn">
+              <span *ngIf="filtersOpened">Close</span> <span *ngIf="!filtersOpened">Open</span> Filters
+            </span>
+            <span *ngIf="filtersOpened" (click)="changeFilterMode()" [ngClass]="{'disabled': filterMode === 'or'}" class="blue-btn">
+              Filter mode: AND
+            </span>
+            <span *ngIf="filtersOpened" (click)="changeFilterMode()" [ngClass]="{'disabled': filterMode === 'and'}" class="blue-btn">
+              Filter mode: OR
+            </span>
+            <span class="blue-btn flex pos-r enable-disable"
+              (click)="enableDisableFiltersOpened = !enableDisableFiltersOpened" 
+              *ngIf="filtersOpened">
+              Enable/Disable 
+              <mat-icon [ngClass]="{'opened': enableDisableFiltersOpened, 'closed': !enableDisableFiltersOpened}" class="icon-arrow">play_arrow</mat-icon>
+            </span>
+            <ul class="talentbase__filter-header--filter-types"
+              (clickOutside)="enableDisableFiltersOpened = false"
+              [delayClickOutsideInit]="true"
+              [exclude]="'.enable-disable'" 
+              *ngIf="enableDisableFiltersOpened">
+                <li (click)="enableDisableFilterTypes(type)" *ngFor="let type of filterTypes">
+                  <span>
+                    {{type.title}}
+                  </span>
+                  <span class="filter-checkbox">
+                    <mat-icon *ngIf="type.checked" class="icon-check">check</mat-icon>
+                  </span>
+                </li>
+              </ul>
+          </div>
+          <div class="talentbase__filter-header--action-buttons">
+            <span class="action-button" (click)="actionsOpened = !actionsOpened">
+              Actions
+              <ul *ngIf="actionsOpened" class="actions-list" 
+                  (clickOutside)="actionsOpened = false" 
+                  [delayClickOutsideInit]="true"
+                  [exclude]="'.action-button'">
+                <li (click)="actionsOpened = false; openEmailModal();">Email</li>
+                <!-- <li (click)="actionsOpened = false;">Reject</li> -->
+                <!-- <li (click)="actionsOpened = false;">Copy to job</li> -->
+                <!-- <li (click)="actionsOpened = false;">Delete</li> -->
+              </ul>
+            </span>
+            <span (click)="openAddCandidateModal()">Add Candidate</span>
+          </div>
+        </div>
+        <!-- HEADER END -->
+        
+        <div class="talentbase__filter-main">
+          <div class="talentbase__filter-main-filters" 
+            [ngClass]="{'no-filters-enabled': enabledUserTalentDBFilters.length === 0 }" 
+            *ngIf="filtersOpened && filters.length === 0">
+              <mat-progress-spinner *ngIf="enabledUserTalentDBFilters.length !== 0" class="progress-spinner" color="#305497" mode="indeterminate"></mat-progress-spinner>
+              <p *ngIf="enabledUserTalentDBFilters.length === 0">Please, enable at least one filter.</p>
+          </div>
+          <!-- FILTER MAIN FILTERS START -->
+          <div *ngIf="filtersOpened && filters.length > 0"  class="talentbase__filter-main-filters">
+            <div class="talentbase__filter-main-filter--item" *ngFor="let filter of filters">
+              <div class="talentbase__filter-main-filter--item-title">
+                <span [ngClass]="{'visible': filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">{{filter.type}}</span>
+                <input type="text" placeholder="{{filter.type}}"
+                    (input)="filterTypeSearch($event, filter)"
+                    [ngClass]="{none: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}">
+                <mat-icon 
+                        [ngClass]="{hidden: filter.type === 'Job Type Preferences' || filter.type === 'Availability' || filter.type === 'Pipeline Status'}" 
+                        class="search-icon">search</mat-icon>
+              </div>
+              <div class="talentbase__filter-main-filter--item-types">
+                <ul *ngIf="filter.items.length > 0">
+                  <li 
+                    *ngFor="let item of filter.items"
+                    [ngClass]="{'disabled': item.disabled, 'none': item.hidden === true}" 
+                    (click)="enableFilterType(item, filter)">
+                    <span>
+                      <span class="filter-checkbox">
+                        <mat-icon *ngIf="item.checked" class="icon-check">done</mat-icon>
+                      </span>
+                      <span>{{item.title}}</span>
+                    </span>
+                    <span>({{item.count}})</span>
+                  </li>
+                </ul>
+                <ul *ngIf="filter.items.length === 0">
+                  <li>
+                      No data for this filter.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- <div class="talentbase__filter-main-filters--bottom"></div> -->
+          </div>
+        <!-- FILTER MAIN FILTERS END -->
+          
+          <!-- CANDIDATES CONTENT START -->
+          <div class="talentbase__filter-candidates-wrap">
+              <div class="talentbase__filter-candidates--buttons">
+                 <!-- <div class="select-all" (click)="selectAllCandidates()">
+                   <span class="filter-checkbox">
+                       <mat-icon *ngIf="allSelected" class="icon-check">done</mat-icon>
+                   </span>
+                   <span>Select All</span>
+                 </div> -->
+                 <div class="stripe"></div>
+                 <span class="showing-count">Showing {{candidatesArray.length}} of 
+                   <span *ngIf="filterSearchInput.value === '' && filterParamsStorage.length === 0">{{candidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value !== '' && filterParamsStorage.length === 0">{{filteredCandidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value === '' && filterParamsStorage.length > 0 && filteredCandidatesStorage.length > 0">{{filteredCandidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value === '' && filterParamsStorage.length > 0 && filteredCandidatesStorage.length === 0">{{candidatesStorage.length}}</span>
+                   <span *ngIf="filterSearchInput.value !== '' && filterParamsStorage.length > 0">{{temporaryFilteredCandidatesStorage.length}}</span>
+                  </span>
+                 <!-- <div class="sorting">
+                  <span class="sorting-title">Sort</span>
+                  <div class="sorting-type">Creation date</div>
+                 </div> -->
+              </div>
+              <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0 && noCandidatesFound">
+                <p>No candidates found.</p>
+              </div>
+              <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0 && noCandidatesInDB">
+                <p>You don't have any candidates in your Talent Data Base.</p>
+              </div>
+              <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length === 0 && !noCandidatesInDB">
+                <mat-progress-spinner class="progress-spinner" color="#305497" mode="indeterminate"></mat-progress-spinner>
+              </div>
+              <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length > 0" (scroll)="uploadMoreCandidates($event)">
+                  <div class="talentbase__filter-candidates-candidate" 
+                      *ngFor="let candidate of candidatesArray"
+                      (click)="openSingleViewAlert()">
+                      <span class="filter-checkbox">
+                          <mat-icon *ngIf="candidate.checked" class="icon-check">done</mat-icon>
+                      </span>
+                      <div class="candidate-info">
+                        <img *ngIf="candidate.avatarURL !== undefined" [src]="candidate.avatarURL" alt="">
+                        <img *ngIf="candidate.avatarURL === undefined" src="../../assets/img/default-userpic.png" alt="">
+                        <p>
+                          <span>
+                            <span style="color: #000;" [innerHTML]="candidate.firstName + ' ' + candidate.lastName | highlightSearch: filterSearchInput.value"></span>
+                          </span>
+                          <span>{{candidate.headline}}</span>
+                        </p>
+                      </div>
+                      <div class="candidate-info-applied">
+                        <!-- <span>{{candidate.appliedJob.job}}</span> -->
+                        <!-- <span>From {{candidate.appliedJob.source}} - {{candidate.appliedJob.date | date: 'MMMM d, y'}}</span> -->
+                      </div>
+                      <div class="candidate-info-location">
+                        <span *ngIf="candidate.location !== undefined">{{candidate.location}}</span>
+                        <span *ngIf="candidate.location === undefined">Location is not defined</span>
+                        <!-- <span>{{candidate.location.country}}</span> -->
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+          <!-- CANDIDATES CONTENT START -->          
+
+        </div>
+        
+      </div>
+  </div>
+  <!-- MAIN CONTENT END -->  
+
+  <!-- IMPORT PANEL START -->
+  <div class="talentbase__import-panel" *ngIf="activePanel === 'import'">
+    <img class="GDPR" src="../../assets/img/GDPR-logo.png" alt="">
+    <div class="talentbase__import-panel container">
+      <div class="talentbase__import-panel-header">
+        <mat-icon class="copy-icon">
+            file_copy
+        </mat-icon>
+        <span class="bold">
+          Easily import your talent pool &nbsp;
+        </span>
+        <span>
+            from Legacy systems into SwipeIn
+        </span> 
+      </div>
+    <!-- <div class="talentbase__import-panel-item">
+          <div class="talentbase__import-panel-item-info-wrap">
+            <span class="talentbase__import-panel-item-title">
+              JSON, CVS or XML file
+            </span>
+            <span class="talentbase__import-panel-item-info">
+              Import candidates from json, .cvs or xml files
+            </span>
+            <div class="talentbase__import-panel-item-inputs">
+             <span>Excel sample/</span>
+             <span>cvs sample/</span>
+             <span>json sample</span>
+            </div>
+          </div>
+          <div class="filename">
+            <span *ngIf="jsonFileName !== ''">{{jsonFileName}}</span> 
+            <mat-icon class="icon-clear" *ngIf="jsonFileName !== ''" (click)="jsonInput.value = null; jsonFileName = ''">clear</mat-icon>           
+          </div>
+          <label class="talentbase__import-panel-item-input">
+            <label for="json">Select file</label>
+            <form action="" enctype="multipart/form-data" [formGroup]="jsonForm">
+              <input #jsonInput formControlName="jsonFile" (change)="setFileName(jsonFileName, jsonInput, $event)"  style="display: none;" type="file" id="json" accept=".json, application/json, .csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx, .xls">
+            </form>
+          </label>
+       </div> -->
+      <div class="talentbase__import-panel-item">
+          <div class="talentbase__import-panel-item-info-wrap">
+            <span class="talentbase__import-panel-item-title">
+              CV files
+            </span>
+            <span class="talentbase__import-panel-item-info">
+              Import candidates via ZIP or folder files
+            </span>
+          </div>
+          <div class="filename" *ngIf="zipFileName !== null">
+              <span><span class="bold">File name: </span>{{zipFileName.name}}; &nbsp;</span>
+              <span><span class="bold">File size: </span>{{zipFileName.size | fileSize}} mb;</span>
+              <mat-icon class="icon-clear" (click)="zipInput.value = ''; zipFileName = null;  zipFileSizeExceed = false;">clear</mat-icon>           
+            </div>
+          <label (click)="sendZip($event, zipInput.value); $event.stopPropagation();" class="talentbase__import-panel-item-input">
+            <form action="" enctype="multipart/form-data" [formGroup]="zipForm">
+              <!-- <span for="zip">Select file</span> -->
+              <span *ngIf="zipInput.value === ''" for="zip">Select file</span>
+              <button style="cursor: pointer;"  *ngIf="zipInput.value !== ''" type="button">Send file</button>
+              <input #zipInput formControlName="zipFile" 
+                (change)="setZipFileName(zipFileName, zipInput, $event)"  style="display: none;" type="file" id="zip" accept=".zip, .rar">
+            </form>
+            <small *ngIf="!zipFileSizeExceed">Max file size 100mb</small>
+            <small class="error" *ngIf="zipFileSizeExceed">Max file size 100mb exceeded</small>
+          </label>
+
+      </div>
+      <div class="talentbase__import-panel-item">
+          <div class="talentbase__import-panel-item-info-wrap">
+            <span class="talentbase__import-panel-item-title">
+              Need help? Custom Import Service
+            </span>
+            <span class="talentbase__import-panel-item-info">
+              We can help you import your data into SwipeIn at no cost 
+            </span>
+          </div>
+          <div class="talentbase__import-panel-item-input contact-us">
+            <label>Contact Us</label>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- IMPORT PANEL END -->
+
+  <!-- EXPORT PANEL START -->
+  <div class="talentbase__import-panel" *ngIf="activePanel === 'export'">
+      <img class="GDPR" src="../../assets/img/GDPR-logo.png" alt="">
+      <div class="talentbase__import-panel container">
+        <div class="talentbase__import-panel-header">
+          <mat-icon class="copy-icon">
+              file_copy
+          </mat-icon>
+          <span class="bold">
+            Easily export your data &nbsp;
+          </span>
+          <span>
+              from SwipeIn
+          </span> 
+        </div>
+        <div class="talentbase__import-panel-item">
+            <div class="talentbase__import-panel-item-info-wrap">
+              <span class="talentbase__import-panel-item-title">
+                Export data in JSON format
+              </span>
+              <span class="talentbase__import-panel-item-info">
+                <!-- Export candidates from json, .cvs or xml files -->
+              </span>
+              <div class="talentbase__import-panel-item-inputs">
+               <!-- <span>Excel sample/</span> -->
+               <!-- <span>cvs sample/</span> -->
+               <!-- <span>json sample</span> -->
+              </div>
+            </div>
+            <div class="filename">
+              <span *ngIf="jsonFileName !== ''">{{jsonFileName}}</span> 
+              <mat-icon class="icon-clear" *ngIf="jsonFileName !== ''" (click)="jsonInput.value = null; jsonFileName = ''">clear</mat-icon>           
+            </div>
+            <label class="talentbase__import-panel-item-input">
+              <label for="json">Start export</label>
+              <form action="" enctype="multipart/form-data" [formGroup]="jsonForm">
+                <input #jsonInput formControlName="jsonFile" (change)="setFileName(jsonFileName, jsonInput, $event)"  style="display: none;" type="file" id="json" accept=".json, application/json, .csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xlsx, .xls">
+              </form>
+            </label>
+        </div>
+        <div class="talentbase__import-panel-item">
+            <div class="talentbase__import-panel-item-info-wrap">
+              <span class="talentbase__import-panel-item-title">
+                Export data in Excel format
+              </span>
+              <span class="talentbase__import-panel-item-info">
+                <!-- Export candidates via ZIP or folder files -->
+              </span>
+            </div>
+            <div class="filename" *ngIf="zipFileName !== null">
+                <span><span class="bold">File name: </span>{{zipFileName.name}}; &nbsp;</span>
+                <span><span class="bold">File size: </span>{{zipFileName.size | fileSize}} mb;</span>
+                <mat-icon class="icon-clear" (click)="zipInput.value = null; zipFileName = null;  zipFileSizeExceed = false;">clear</mat-icon>           
+              </div>
+            <label (click)="sendZip($event, zipInput.value);  $event.stopImmediatePropagation();" class="talentbase__import-panel-item-input">
+              <form action="" enctype="multipart/form-data" [formGroup]="zipForm">
+                <label *ngIf="zipInput.value === ''" for="zip">Start Export</label>
+                <button (click)="$event.stopImmediatePropagation()" *ngIf="zipInput.value !== ''" type="submit">Start export</button>
+                <input #zipInput formControlName="zipFile" 
+                  (change)="setZipFileName(zipFileName, zipInput, $event)"  style="display: none;" type="file" id="zip" accept=".zip, .rar">
+              </form>
+              <!-- <small *ngIf="!zipFileSizeExceed">Max file size 100mb</small> -->
+              <!-- <small class="error" *ngIf="zipFileSizeExceed">Max file size 100mb exceeded</small> -->
+            </label>
+  
+        </div>
+        <div class="talentbase__import-panel-item">
+            <div class="talentbase__import-panel-item-info-wrap">
+              <span class="talentbase__import-panel-item-title">
+                Need help? Custom Export Service
+              </span>
+              <span class="talentbase__import-panel-item-info">
+                We can help you export your data from SwipeIn at no cost 
+              </span>
+            </div>
+            <div class="talentbase__import-panel-item-input contact-us">
+              <label>Contact Us</label>
+            </div>
+        </div>
+      </div>
+  </div>
+  <!-- EXPORT PANEL END -->
+
+  <!-- BULK UPLOADS HISTORY START -->
+  <div class="talentbase__bulk-upload-history-panel" *ngIf="activePanel === 'bulkUpload'">
+
+    <!-- BULK UPLOAD PENDING START -->
+    <div class="bulk-upload-pending-wrap" *ngIf="pendingBulkUpload !== undefined">
+        <div class="bulk-upload-pending__info">
+            <div class="bulk-upload-pending__info--details">
+              <p class="bulk-upload-pending__info--details__title">Current upload details</p>
+              <table>
+                <tr>
+                  <td>Total file size</td>
+                  <td class="bold">{{pendingBulkUpload.uploadSize | fileSize}} MB</td>
+                </tr>
+                <tr>
+                  <td>Total CV files</td>
+                  <td>{{pendingBulkUpload.filesTotal}}</td>
+                </tr>
+                <tr>
+                  <td>Total CV processed</td>
+                  <td>{{pendingBulkUpload.filesSuccess + pendingBulkUpload.filesError}}</td>
+                </tr>
+                <tr>
+                  <td>Estimated time left</td>
+                  <td>{{estimatedTimeLeft}} min</td>
+                </tr>
+              </table>
+            </div>
+            <div class="bulk-upload-pending__info--magic" [ngClass]="{'flb': bulkUploadStarted }">
+              <div *ngIf="!bulkUploadStarted" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                <span style="margin-bottom: 20px;">Bulk upload in process...</span>
+                <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+              </div>
+              <div *ngIf="bulkUploadStarted" style="width: 100%;">
+                <span style="margin-bottom: 20px;">Bulk upload in process...</span>
+                <div class="bulk-upload-pending__bar">
+                  <div class="bulk-upload-pending__bar-fill" [ngStyle]="fillPercentage">
+                    <div class="bulk-upload-pending__bar-fill--percentage"><span>{{fillPercentage.width}}</span></div>
+                    <div class="bulk-upload-pending__bar-fill--processed">
+                      <p>Total processed</p>
+                      <p>{{pendingBulkUpload.filesSuccess + pendingBulkUpload.filesError}}</p>
+                    </div>
+                  </div>
+                  <div class="bulk-upload-pending__bar-total">
+                      <p>Total CV files</p>
+                      <p>{{pendingBulkUpload.filesTotal}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="bulk-upload-pending__history">
+      <p class="bulk-upload-pending__history--title">Upload History</p>
+      <p *ngIf="bulkUploads.length === 0">Your bulk upload history is empty.</p>
+      <table *ngIf="bulkUploads.length > 0">
+        <tr>
+          <th (click)="sortBulkUploadsHistory('date')">Upload Date</th>
+          <th (click)="sortBulkUploadsHistory('uploadUserFilename')">File Name</th>
+          <th (click)="sortBulkUploadsHistory('author')">Upload User</th>
+          <th (click)="sortBulkUploadsHistory('uploadSize')">File Size</th>
+          <th (click)="sortBulkUploadsHistory('filesTotal')">Total CVs</th>
+          <th (click)="sortBulkUploadsHistory('filesSuccess')">Success</th>
+          <th (click)="sortBulkUploadsHistory('filesError')">Errors</th>
+        </tr>
+        <tr *ngFor="let bulk of bulkUploads">
+          <td>{{bulk.date | date: 'dd/MM/yyyy hh:mm a'}}</td>
+          <td>{{bulk.uploadUserFilename}}</td>
+          <td>{{bulk.author}}</td>
+          <td *ngIf="bulk.uploadSize !== 0">{{bulk.uploadSize | fileSize}} mb</td>
+          <td *ngIf="bulk.uploadSize === 0">-</td>              
+          <td>{{bulk.filesTotal}}</td>
+          <td>{{bulk.filesSuccess}}</td>
+          <td *ngIf="bulk.filesError !== 0">{{bulk.filesError}}</td>
+          <td *ngIf="bulk.filesError === 0">-</td>
+        </tr>
+      </table>
+    </div>
+    <!-- BULK UPLOAD PENDING END -->    
+
+  </div>
+  <!-- BULK UPLOADS HISTORY END -->
+  
+
+</div>

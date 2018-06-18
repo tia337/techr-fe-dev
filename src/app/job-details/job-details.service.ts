@@ -4,6 +4,7 @@ import { ParseObject, ParsePromise } from 'parse';
 import { CandidatesService } from './candidates/candidates.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DeveloperListType, Loading } from '../shared/utils';
+import { BoundElementPropertyAst } from '@angular/compiler';
 
 @Injectable()
 export class JobDetailsService {
@@ -13,10 +14,14 @@ export class JobDetailsService {
 	private _suggestionsCount: number;
 
 	private _candidatesCount: BehaviorSubject<any> = new BehaviorSubject(null);
+	public _candidatesCustomHiringWorkflow: BehaviorSubject<any[]> = new BehaviorSubject(null);
 
 	public movedUser: string;
 	private _activeStage: BehaviorSubject<number> = new BehaviorSubject(DeveloperListType.suggested);
 	private _isStagesDisabled: BehaviorSubject<number> = new BehaviorSubject(Loading.success);
+	public _hasCustomHiringWorkflow: BehaviorSubject<boolean> = new BehaviorSubject(null);
+	public _customHiringWorkFlowStages: BehaviorSubject<any> = new BehaviorSubject(null);
+	public _setCandidatesAfterMovingCandidate: BehaviorSubject<any> = new BehaviorSubject(null);
 
 	constructor(private _parse: Parse) { }
 
@@ -26,6 +31,7 @@ export class JobDetailsService {
 
 	set contractId(value: string) {
 		this._contractId = value;
+		localStorage.setItem('contractId', value);
 	}
 
 	get contractId() {
@@ -121,4 +127,31 @@ export class JobDetailsService {
 		this._candidatesCount.next(value);
 	}
 
+	setHasCustomHiringWorkflow(value) {
+		localStorage.setItem('setHasCustomHiringWorkflow', JSON.stringify(value));
+		this._hasCustomHiringWorkflow.next(value);
+	}
+
+	setCandidatesCustomHiringWorkflow(value) {
+		localStorage.setItem('candidatesCustomHiringWorkflow', JSON.stringify(value));
+		this._candidatesCustomHiringWorkflow.next(value);
+	}
+
+	setCustomHiringWorkflowStages(value) {
+		this._customHiringWorkFlowStages.next(value);
+	}
+
+	setCandidatesAfterMovingCandidate(stageType, candidate, previousStage, previousStageCandidates) {
+		const data = {
+			stageType: stageType,
+			candidate: candidate,
+			previousStage: previousStage,
+			previousStageCandidates: previousStageCandidates
+		};
+		this._setCandidatesAfterMovingCandidate.next(data);
+	}
+
+	setLikelihoodToFill(contractId: string, likelihoodToFill: number ) {
+		this._parse.execCloud('setLikelihoodToFill', {contractId: contractId , likelihoodToFill: likelihoodToFill});
+	}
 }

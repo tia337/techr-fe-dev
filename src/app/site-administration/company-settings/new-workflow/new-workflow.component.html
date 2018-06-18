@@ -1,0 +1,50 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+  <div class="modal-section">
+    <button class="blue-btn" 
+      [ngClass]="{'active': currentArray === clientsArray }" 
+      (click)="currentArray = clientsArray; currentClient = null; currentProject = null;currentRole = null;">for client <mat-icon class="icon">play</mat-icon> 
+    </button>
+    <button class="blue-btn" 
+      [ngClass]="{'active': currentArray === projectsArray }" 
+      (click)="currentArray = projectsArray; currentClient = null; currentProject = null;currentRole = null;">for project <mat-icon class="icon">play</mat-icon> 
+    </button>
+    <button class="blue-btn" (click)="currentArray = userRoles; currentClient = null; currentProject = null; currentRole = null;">for job role <mat-icon class="icon">play</mat-icon> </button>
+  </div>
+  <div class="modal-section" *ngIf="currentArray === clientsArray">
+      <button class="blue-btn dark" 
+        [ngClass]="{'active': currentClient === item}"
+        *ngFor="let item of currentArray" 
+        (click)="currentClient = item">
+        {{item.get('clientOfClientName')}}
+      </button>
+  </div>
+  <div class="modal-section" *ngIf="currentArray === projectsArray">
+    <button class="blue-btn dark"
+      [ngClass]="{'active': activeLink === item.get('projectName') }" 
+      *ngFor="let item of currentArray" 
+      (click)="activeLink = item.get('projectName'); currentProject = item">
+      {{item.get('projectName')}} <small> of client: {{item.get('projectEndClientName')}}</small>
+    </button>
+  </div>
+  <div class="modal-section" *ngIf="currentArray === userRoles">
+      <button class="blue-btn dark"
+        [ngClass]="{'active': activeLink === item.get('title') }" 
+        *ngFor="let item of currentArray" 
+        (click)="activeLink = item.get('title'); currentRole = item">
+        {{item.get('title')}}
+      </button>
+  </div>
+  <div class="modal-section">
+    <input type="text" style="width: 100%;"  placeholder="Enter Workflow Name" #workflowNameInput (input)="setWorkFlowName($event)" id="workflowName" *ngIf="currentClient !== null || currentProject !== null || currentRole !== null">
+  </div>
+  <div class="modal-section" *ngIf="(currentClient !== null || currentProject !== null || currentRole !== null) && workflowName !== ''">
+    <button class="add-custom-workflow" (click)="addCustomWorkFlow()">
+      add custom workflow <br>
+    </button>
+    <span *ngIf="currentClient" style="text-transform: initial;">For client: {{currentClient.get('clientOfClientName')}} <br> Workflow Name: {{workflowName}}</span> 
+    <span *ngIf="currentProject" style="text-transform: initial;">For project: {{currentProject.get('projectName')}} <br> Workflow Name: {{workflowName}}</span> 
+    <span *ngIf="currentRole" style="text-transform: initial;">For role: {{currentRole.get('title')}} <br> Workflow Name: {{workflowName}}</span> 
+  </div>
+  </div>
+</div>

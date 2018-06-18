@@ -143,7 +143,7 @@ export class TestSkillsComponent implements OnInit {
 		this.selected.push(skillComponent);
 		
 		const skillRows = this._elementRef.nativeElement.querySelectorAll('._' + skill.id);
-		console.log(skillRows);
+		// console.log(skillRows);
 		skillRows.forEach(element => {
 			this._renderer.setStyle(element, 'display', 'none');
 		});
@@ -156,10 +156,10 @@ export class TestSkillsComponent implements OnInit {
 	selectRole(role) {
 		const roleComponent = this._testSkillsService.createRoleComponent(role);
 		this.selectedRoles.push(roleComponent);
-		console.log(this.selectedRoles);
-		console.log(role);
+		// console.log(this.selectedRoles);
+		// console.log(role);
 		const roleRows = this._elementRef.nativeElement.querySelectorAll('._' + role.id);
-		console.log(roleRows);
+		// console.log(roleRows);
 		roleRows.forEach(element => {
 			this._renderer.setStyle(element, 'display', 'none');
 		});
@@ -176,9 +176,9 @@ export class TestSkillsComponent implements OnInit {
 		industriesRows.forEach(element => {
 			this._renderer.setStyle(element, 'display', 'none');
 		});
-		console.log(industry);
+		// console.log(industry);
 		this.industries = _.without(this.industries, industry);
-		console.log(this.industries);
+		// console.log(this.industries);
 		this.queryIndustries = '';
 		this.filteredRnIList = [];
 	}
@@ -219,14 +219,14 @@ export class TestSkillsComponent implements OnInit {
 	
 	
 	filter() {
-		console.log(this.query);
+		// console.log(this.query);
 		if(this.query.length  === 1){
 			let char = '\\b' + this.query.toUpperCase();
 			let exp = new RegExp(char, 'g');
-			console.log(this.skills);
+			// console.log(this.skills);
 			this.filteredList = this.skills.filter(el=>{
 				if(el.get('title')){
-					console.log(el.get('title').toUpperCase());
+					// console.log(el.get('title').toUpperCase());
 				}
 				if(el.get('title') && el.get('title').toUpperCase().match(exp)){
 					return el.get('title');
@@ -234,7 +234,7 @@ export class TestSkillsComponent implements OnInit {
 			}).slice(0,50);
 		}
 		else if (this.query !== '') {
-			console.log('filter_test');
+			// console.log('filter_test');
 			this.filteredList = this.skills.filter(el => {
 				if(el.get('title')){
 					return el.get('title').toLowerCase().indexOf(this.query.toLowerCase()) > -1;
@@ -249,7 +249,7 @@ export class TestSkillsComponent implements OnInit {
 	}
 	
 	keyPressing(value: any) {
-		console.log(value.code);
+		// console.log(value.code);
 		
 		
 		if (value.code === 'Enter') {
@@ -261,12 +261,12 @@ export class TestSkillsComponent implements OnInit {
 		if (value.code === 'ArrowRight') {
 			if(this.expPosition > 0 && this.expPosition < 3){
 				this.expPosition +=1;
-				console.log(this.expPosition);
+				// console.log(this.expPosition);
 			}
 		}
 
 		if (value.code === 'ArrowLeft') {
-			console.log('leftTest');
+			// console.log('leftTest');
 			if (this.expPosition > 1 && this.expPosition <= 3){
 				this.expPosition -= 1;
 				console.log(this.expPosition);
@@ -277,7 +277,7 @@ export class TestSkillsComponent implements OnInit {
 	}
 
 	keyRnIPressing(value: any, name: string) {
-		console.log(value.code);
+		// console.log(value.code);
 
 		if (value.code === 'Enter') {
 			if(name === 'role'){
@@ -326,7 +326,7 @@ export class TestSkillsComponent implements OnInit {
 			value.preventDefault();
 			if(this.selectionRnICounter < (this.filteredRnIList.length - 1)) {
 				this.selectionRnICounter += 1;
-				console.log(this.selectionRnICounter);
+				// console.log(this.selectionRnICounter);
 				// this.panel.nativeElement.scrollTop += 36.36;
 			}    
 		}
@@ -334,12 +334,12 @@ export class TestSkillsComponent implements OnInit {
 	
 	prevDef(value) {
 		if(value.code != 'Click'){
-			console.log('active_change');
+			// console.log('active_change');
 			this.active = true;
 			this.dropdownVisible = false;
 			this.dropdownRolesVisible = false;
 		}
-		console.log(value);
+		// console.log(value);
 		if (value.code === 'ArrowRight') {
 			value.preventDefault();
 		}
@@ -385,7 +385,7 @@ export class TestSkillsComponent implements OnInit {
 	}
 	
 	remove(skill) {
-		console.log(skill);
+		// console.log(skill);
 		this.skills.push(skill.get('skill'));
 		this.selected.splice(this.selected.indexOf(skill), 1);
 		
@@ -426,8 +426,8 @@ export class TestSkillsComponent implements OnInit {
 	}
 	
 	test() {
-		console.log(this.dropdownRolesVisible);
-		console.log(this.activeForRoles);
+		// console.log(this.dropdownRolesVisible);
+		// console.log(this.activeForRoles);
 	}
 	
 	

@@ -1,11 +1,11 @@
 <div class="company-settings-title">
-    <h1> Company Settings </h1>
+    <h1 style="color: #424242;"> Company Settings </h1>
 </div>
 <div class="first" (click)="accessCheck()">
-        <button (click)="setChanges()" [ngClass]="{'grey': website == websiteDef && careers == careersDef && picUrlDef === picUrl && 
-       companyBenefits == companyBenefitsDef && companyDescription == companyDescriptionDef &&
-       isSafeDef === isSafe && erpPageStyleDef === erpPageStyle && erpPageGreetingDef === erpPageGreeting
-      }" class="primary-button save-changes nowrap" *ngIf="!disabled">Save changes</button>
+    <button (click)="setChanges()" [ngClass]="{'grey': website == websiteDef && careers == careersDef && picUrlDef === picUrl &&
+    companyBenefits == companyBenefitsDef && companyDescription == companyDescriptionDef &&
+    isSafeDef === isSafe && erpPageStyleDef === erpPageStyle && erpPageGreetingDef === erpPageGreeting
+    }" class="primary-button save-changes nowrap" *ngIf="!disabled">Save changes</button>
 </div>
 <h1 *ngIf="!isInCompany"> You are not in company </h1>
 <div *ngIf="isInCompany" class="main-wrap">
@@ -15,7 +15,7 @@
                 <mat-panel-title>
                     Company Settings
                 </mat-panel-title>
-            </mat-expansion-panel-header>
+            </mat-expansion-panel-header> 
             <!-- <div class="title-line"><a><i>Company Settings</i></a></div> -->
 
             <div class="file-input">
@@ -27,44 +27,46 @@
                     <div class="company-name-block relative">
                         <h4>Company name</h4>
                         <input *ngIf="company" value="{{company.get('ClientName')}}" class="" (click)="accessCheck()" disabled>
-                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="website-block relative">
                         <h4>Website</h4>
                         <input [(ngModel)]="website" placeholder="your website" [disabled]="disabled === true">
-                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="careers-page relative" (click)="accessCheck()">
                         <h4>Careers page</h4>
                         <input [(ngModel)]="careers" placeholder="your careers page" [disabled]="disabled === true">
-                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="logo-input-wrap relative">
                         <span class="nowrap">
-                            <label class = "upload" for="logo">Upload a new logo</label>
-                            <label class = "upload-name">{{filename}}</label>
+                            <label class="upload" for="logo">Upload a new logo</label>
+                            <label class="upload-name">{{filename}}</label>
                         </span>
                         <input #logo id="logo" (change)="getNewLogo(logo)" type="file" [disabled]="disabled === true">
-                        <div *ngIf = "disabled"  class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                     </div>
-                    <div class="remove_logo" *ngIf="picUrl"><button (click)="removeLogo()">Remove logo</button></div>
+                    <div class="remove_logo" *ngIf="picUrl">
+                        <button (click)="removeLogo()">Remove logo</button>
+                    </div>
                 </div>
             </div>
             <!-- k  -->
             <h3 class="title-text">Company description</h3>
             <div>
-                <div class = "relative" (click)="accessCheck()">
+                <div class="relative" (click)="accessCheck()">
                     <textarea [(ngModel)]="companyDescription" (click)="accessCheck()" class="textpannel" [disabled]="disabled === true">
                     </textarea>
-                    <div *ngIf = "disabled"  class = "access-check-div" (click)="accessCheck()"></div>
+                    <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                 </div>
             </div>
             <h3 class="title-text">Company benefits</h3>
             <div>
-                <div class = "relative" (click)="accessCheck()">
+                <div class="relative" (click)="accessCheck()">
                     <textarea [(ngModel)]="companyBenefits" (click)="accessCheck()" class="textpannel" [disabled]="disabled === true">
                     </textarea>
-                    <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                    <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                 </div>
             </div>
 
@@ -80,8 +82,12 @@
             <div class="company-name">
                 <div class="passwordChange">
                     <div class="changeButton" *ngIf="company" (click)="accessCheck()">
-                        <a class="go-to" *ngIf="disabled!==true" href="{{erpBaseLink + company.get('employeeReferralURL')}}">Go to {{company.get('ClientName')}} Referral Page <i class="fa fa-external-link" aria-hidden="true"></i></a>
-                        <a class="go-to" *ngIf="disabled">Go to {{company.get('ClientName')}} Referral Page <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                        <a class="go-to" *ngIf="disabled!==true" href="{{erpBaseLink + company.get('employeeReferralURL')}}">Go to {{company.get('ClientName')}} Referral Page
+                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                        </a>
+                        <a class="go-to" *ngIf="disabled">Go to {{company.get('ClientName')}} Referral Page
+                            <i class="fa fa-external-link" aria-hidden="true"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="headerrrz">
@@ -90,21 +96,21 @@
                 </div>
                 <div class="headerrrz relative">
                     <input *ngIf="company" value="{{ erpBaseLink + company.get('employeeReferralURL')}}" disabled>
-                    <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                    <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                     <section class="toggled-section relative">
                         <mat-slide-toggle [(ngModel)]="isSafe" (click)="savePasswordState()" [disabled]="disabled === true">
                         </mat-slide-toggle>
-                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                     </section>
                 </div>
                 <div class="passwordChange">
                     <div class="pwdInput relative">
                         <input *ngIf="company" value="{{company.get('erpPagePwd')}}" disabled>
-                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                     </div>
                     <div class="changeButton relative">
                         <button (click)="changePassword(this)">Change ERP page password</button>
-                        <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                        <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                     </div>
                 </div>
                 <div class="style_block">
@@ -120,11 +126,11 @@
                             <mat-radio-button [value]="3" (change)="saveErpPageStyle(3)">
                                 <span>Option 3</span>
                             </mat-radio-button>
-                            <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                            <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                         </mat-radio-group>
                     </div>
                     <div *ngIf="erpPageStyle && erpPageStyle == 1" class="view_img">
-                        <img class = "classic-img" src="./../../../assets/images/EmployeeReferralsProgram/classic-white.png" alt="no image" #image_source>
+                        <img class="classic-img" src="./../../../assets/images/EmployeeReferralsProgram/classic-white.png" alt="no image" #image_source>
                     </div>
                     <div *ngIf="erpPageStyle && erpPageStyle == 2" class="view_img">
                         <img src="./../../../assets/images/EmployeeReferralsProgram/second.jpg" alt="no image" #image_source>
@@ -136,10 +142,579 @@
                 <div class="erp_page_greetings relative">
                     <h3 style="margin-bottom: 10px;">ERP Page Header Greeting</h3>
                     <textarea cols="*" rows="*" class="textpannel textpannel-referal" [(ngModel)]="erpPageGreeting" [disabled]="disabled === true"></textarea>
-                    <div *ngIf = "disabled" class = "access-check-div" (click)="accessCheck()"></div>
+                    <div *ngIf="disabled" class="access-check-div" (click)="accessCheck()"></div>
                 </div>
             </div>
         </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Careers Website Page
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="carrers-website-page">
+                <!-- <div class="carrers-website-page-status"></div>
+                <div class="carrers-website-page-info">
+                    <p> All jobs (default)</p>
+                    <p> <a href="javascript:void(0)">https://careers.swipein.hr/Miratech</a></p>
+                </div> -->
+            </div>
+            <div class="departments-offices-wrapper">
+                <div class="carrers-departments">
+                    <form class="carrers-departments-form" [formGroup]="departmentFormGroup">
+                        <p class="carrers-departments-form__header">
+                            <span>Departments</span>
+                            <button *ngIf="!newDepartment" 
+                                (click)="addNewDepartment()" 
+                                mat-raised-button 
+                                color="primary">Add new department
+                            </button>
+                            <button 
+                                class= "carrers-departments-form__header__save-department-btn" 
+                                *ngIf="newDepartment"
+                                (click)="saveNewDepartment()" 
+                                mat-raised-button>
+                                Save
+                            </button>
+                        </p>
+                        <div class="carrers-departments-form__body" *ngFor="let department of departments"> 
+                            <div class="carrers-departments-form__body__department"> 
+                                <span *ngIf="!department.edit">{{department.name}}</span>
+                                <input 
+                                    id="editDepartmentInput" 
+                                    *ngIf="department.edit" 
+                                    class="carrers-departments-form__body__edit-department-input" 
+                                    type="text" 
+                                    [value]="department.name"
+                                    formControlName="departmentName"
+                                    (keydown.enter)="editDepartment(department)"
+                                    (clickOutside)="department.edit = false"
+                                    [delayClickOutsideInit]="true"
+                                    >
+                                <div
+                                    class="carrers-departments-form__body__department__subdepartment"
+                                    *ngFor="let subdepartment of department.subDepartments">
+                                    <span *ngIf="!subdepartment.edit">{{subdepartment.name}}</span>
+                                    <input
+                                        id="editSubdepartmentInput" 
+                                        class="carrers-departments-form__body__department__subdepartment__edit-subdepartment-input"
+                                        *ngIf="subdepartment.edit" 
+                                        type="text" 
+                                        [value]="subdepartment.name"
+                                        formControlName="subdepartmentName"
+                                        (keydown.enter)="editSubdepartment(subdepartment)"
+                                        (clickOutside)="subdepartment.edit = false"
+                                        [delayClickOutsideInit]="true">
+                                    <div class="carrers-departments-form__body__department__subdepartment_options"> 
+                                        <span (click)="editSubdepartment(subdepartment)">Edit</span>
+                                        <span (click)="removeSubdepartment(department,subdepartment)">Remove</span>
+                                    </div>
+                                </div>   
+                                <input 
+                                    id="newSubdepartmentInput"
+                                    *ngIf="department.newSubdepartment" 
+                                    type="text" 
+                                    class="carrers-departments-form__body__subdepartment-input"
+                                    formControlName="newSubdepartmentName"
+                                    placeholder="New Subdepartment"
+                                    (keydown.enter)="addSubdepartments(department)"
+                                    (clickOutside)="department.newSubdepartment = false"
+                                    [delayClickOutsideInit]="true"> 
+                            </div>    
+                            <p>
+                                <span *ngIf="!department.edit"
+                                    class="carrers-departments-form__body_options" 
+                                    (click)="editDepartment(department)">
+                                    Edit
+                                </span>
+                                <span *ngIf="department.edit"
+                                    class="carrers-departments-form__body_options" 
+                                    (click)="editDepartment(department)">
+                                   Save
+                                </span>
+                                <span class="carrers-departments-form__body_options" (click)="removeDepartment(department.id)">Remove</span>
+                                <span class="carrers-departments-form__body_options" (click)="addSubdepartments(department)">Add subdepartments</span>
+                            </p>
+                        </div>
+                        <div class="carrers-departments-form__new-department">
+                            <input 
+                                id="newDepartmentInput"
+                                type="text" 
+                                *ngIf="newDepartment"
+                                class="carrers-departments-form__new-department__new-department-input"
+                                formControlName="newDepartmentName"
+                                (keydown.enter)="saveNewDepartment()"
+                                placeholder="New Department"
+                                (clickOutside)="newDepartment = false"
+                                [delayClickOutsideInit]="true">
+                        </div>
+                    </form>
+                </div>
+                <div class="careers-offices">
+                    <form class="carrers-offices-form" [formGroup]="officesFormGroup">
+                        <p class="carrers-offices-form__header"><span>Offices</span><button (click)="addNewOffice()" mat-raised-button color="primary">Add new office</button></p>
+                        <div class="carrers-offices-form__body" *ngFor = "let office of offices">
+                            <div class="carrers-offices-form__body__office">
+                                <span *ngIf="!office.edit">{{office.name}}</span>
+                                <input 
+                                    id= "editOfficeInput"
+                                    *ngIf="office.edit" 
+                                    class="carrers-offices-form__body__edit-office-input" 
+                                    type="text" 
+                                    [value]="office.name"
+                                    formControlName="officeName"
+                                    (keydown.enter)="editOffice(office)"
+                                    (clickOutside)="office.edit = false"
+                                    [delayClickOutsideInit] = "true" >
+                            </div>    
+                            <p>
+                                <span class="carrers-offices-form__body_options" (click)="editOffice(office)">Edit</span>
+                                <span class="carrers-offices-form__body_options" (click)="removeOffice(office)">Remove</span>
+                            </p>
+                        </div>
+                        <div class="carrers-offices-form__new-office">
+                            <input 
+                                id= "newOfficeInput"
+                                type="text" 
+                                *ngIf="newOffice"
+                                class="carrers-offices-form__new-office__new-office-input"
+                                formControlName="newOfficeName"
+                                (keydown.enter)="addNewOffice()"
+                                placeholder="New Office"
+                                (clickOutside) = "newOffice = false"
+                                [delayClickOutsideInit]="true">
+                        </div>
+                    </form>
+                </div>
+           </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Probability to fill job vacancy
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="table-wrapper">
+                <table class="pipeline-stage-table">
+                    <tr>
+                        <th>Likely to fill %</th>
+                        <th>Description of stage</th>
+                    </tr>
+                    <tr *ngFor="let clientProbabilityToCloseJob of clientProbabilitiesToCloseJob" [formGroup]="likelihoodFormGroup"> 
+                        <td *ngIf="!editStageEnabled" class="stage-percentage">{{clientProbabilityToCloseJob.percentage}}%</td>
+                        <td *ngIf="editStageEnabled">
+                            <div class="pipeline-stage-table_edit-stage-percentage-box">
+                                <input type="text" [value]="clientProbabilityToCloseJob.percentage"  formControlName="stagePercentage">
+                                <div class="pipeline-stage-table_set-value">
+                                    <p class="set-value" (click)="increaseClientProbability(clientProbabilityToCloseJob)">+</p>
+                                    <p class="set-value" (click)="decreaseClientProbability(clientProbabilityToCloseJob)">-</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td *ngIf="!editStageEnabled" class="stage-description">
+                            {{clientProbabilityToCloseJob.description}}
+                        </td>
+                        <td
+                            *ngIf="editStageEnabled" class="pipeline-stage-table_set-description">
+                            <input type="text" #inputDescription [value]="clientProbabilityToCloseJob.description" (keydown)="clientProbabilityToCloseJob.description = inputDescription.value">
+                        </td>
+                    </tr>
+                    <tr class="pipeline-stage-table_add-likelihood-stage" *ngIf="newLikelihood">
+                        <td>
+                            <input #newPercentageValue type="text" class="add-likelihood-stage_new-value" placeholder="50%">
+                        </td>
+                        <td>
+                            <input #newDescriptionValue type="text" class="add-likelihood-stage_new-description" placeholder="Description of stage">
+                        </td>
+                    </tr>
+                </table>
+                <div class="pipeline-stage-table_func-buttons">
+                    <button mat-raised-button color="primary" *ngIf="editStageEnabled === false"
+                        (click)="onEditStageClick()">Edit</button>
+                    <button mat-raised-button color="primary" *ngIf="editStageEnabled === true"
+                        (click)="onEditStageClick()">Save</button>
+                    <button mat-raised-button color="primary"
+                        (click)="onAddLikelihoodStage()">
+                        Add likelihood stage
+                    </button>
+                </div>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                   Hiring workflow
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+                <div class="pipeline-wrapper">
+                   <p class="pipeline-title">
+                       Standart Hiring Workflow
+                   </p>
+                    <div class="job-stage add-new-stage" style="display: flex; justify-content: flex-end;">
+                        <div class="job-stage-inner"
+                            [ngClass]="{'disabled': !enableSaveStandartWorkFlow }"
+                            (click)="saveStandartHiringWorkflow(); enableSaveStandartWorkFlow = false;"
+                            style="padding: 10px; background: green; color: #fff; cursor: pointer; margin-right: 10px;">
+                            <div class="property-title">
+                                Save Changes
+                            </div>
+                        </div>
+                        <div class="job-stage-inner"
+                            (click)="addNewStage()"
+                            style="padding: 10px; background: green; color: #fff; cursor: pointer;">
+                            <div class="property-title">
+                                +Add new stage
+                            </div>
+                        </div>
+                    </div>
+                    <div class="job-offer-stages" style="margin: 10px 0;">
+                        <div class="job-stage disabled move-disabled">
+                            <div class="job-stage-inner">
+                                <div class="property-value">—</div>
+                                <div class="property-title">Suggested</div>
+                            </div>
+                        </div>
+                        <div class="job-stage disabled move-disabled">
+                            <div class="job-stage-inner">
+                                <div class="property-value">—</div>
+                                <div class="property-title">Applied</div>
+                            </div>
+                        </div>
+                        <div class="job-stage disabled move-disabled">
+                            <div class="job-stage-inner">
+                                <div class="property-value">—</div>
+                                <div class="property-title">Employee Referrals</div>
+                            </div>
+                        </div>
+                        <div ngxDroppable style="display: flex; flex-basis: 85%;" (drop)="dropDnD($event, stages)" [model]="stages">
+                            <div class="job-stage has-handle" 
+                                    *ngFor="let stage of stages; let i = index;" 
+                                    ngxDraggable 
+                                    [model]="stage">
+                                <div class="job-stage-inner" >
+                                    <span style="display: flex; justify-content: space-between;">
+                                        <mat-icon class="settings-stage" (click)="openStageEdit(stage)">edit</mat-icon>
+                                        <mat-icon style="cursor: default;" matTooltip="Rejected stage logic" class="settings-stage" *ngIf="stage.rejectedLogic === true;">thumb_down</mat-icon>
+                                        <mat-icon style="cursor: default;" matTooltip="Withdrawn stage logic" class="settings-stage" *ngIf="stage.withdrawnLogic === true;">exit_to_app</mat-icon>
+                                        <mat-icon class="settings-stage" (click)="stage.settingsOpened = !stage.settingsOpened">settings</mat-icon>
+                                    </span>
+                                    <div class="property-value">—</div>
+                                    <div class="property-title" *ngIf="!stage.editable">{{stage.title}}</div>
+                                    <input
+                                        id="editStageTitleInput"
+                                        type="text"
+                                        #editStageTitleInput
+                                        (keydown.enter)="editStageTitle(editStageTitleInput.value, stage.title, i, stages)"
+                                        *ngIf="stage.editable"
+                                        [placeholder]="stage.title"
+                                        (clickOutside)="stage.editable = false"
+                                        [exclude]="'.job-stage-inner'"
+                                        [delayClickOutsideInit]="true"
+                                        [excludeBeforeClick]="true">
+                                    <mat-icon *ngIf="!stage.editable" (click)="stages.splice(i, 1); detectHiringWorkFlowChanges()" style="cursor: pointer;" class="delete-stage">delete_forever</mat-icon>
+                                    <p class="drag-line" ngxDragHandle>
+                                        <mat-icon class="icon-fz16" style="transform: rotate(-180deg)">play_arrow</mat-icon>
+                                        <mat-icon class="icon-fz16">dehaze</mat-icon>
+                                        <mat-icon class="icon-fz16">play_arrow</mat-icon>
+                                    </p>
+                                </div>
+                                <div (clickOutside)="stage.settingsOpened = false" [delayClickOutsideInit]="true" *ngIf="stage.settingsOpened" class="job-stage-settings">
+                                    <span>Add logic as:</span>
+                                    <p (click)="stage.rejectedLogic = true; stage.withdrawnLogic = false; stage.settingsOpened = false; detectHiringWorkFlowChanges()">Rejected candidate stage</p>
+                                    <p (click)="stage.rejectedLogic = false; stage.withdrawnLogic = true; stage.settingsOpened = false; detectHiringWorkFlowChanges()">Candidate Withdraw stage</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="standart-note">
+                        Note: This workflow will appear on all your job vacancies except for those <br>
+                        have a custom workflow specified
+                    </p>
+                    <p class="pipeline-title">
+                        Custom hiring workflows
+                    </p>
+                    <button class="create-new-workflow" (click)="openNewWorkFlowModal()">
+                        Create New
+                    </button>
+                    <div *ngIf="workflowArray.length > 0">
+                            <div *ngFor="let workflow of workflowArray; let i = index;">
+                                <h1 class="workflow-title">
+                                    <span *ngIf="workflow.clientName">Client: {{workflow.clientName}}</span>
+                                    <span *ngIf="workflow.projectName">/</span> 
+                                    <span *ngIf="workflow.projectName">Project: {{workflow.projectName}} /</span>
+                                    <span *ngIf="workflow.userRoleName">User Role: {{workflow.userRoleName}}</span>
+                                    &nbsp;&nbsp;Workflow Name: {{workflow.workflowName}}
+                                </h1>
+                                <div class="job-stage add-new-stage" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <div class="job-stage-inner"
+                                        (click)="openStageRemoveAlert(workflow, workflowArray)"
+                                        style="padding: 10px; background: red; color: #fff; cursor: pointer; margin-right: 10px;">
+                                        <div class="property-title">
+                                            Remove workflow
+                                        </div>
+                                    </div>
+                                    <span style="display: flex;">
+                                        <div class="job-stage-inner"
+                                            [ngClass]="{'disabled': !workflow.workflowSaveChanges }"
+                                            (click)="saveCustomWorkFlow(workflow)"
+                                            style="padding: 10px; background: green; color: #fff; cursor: pointer; margin-right: 10px;">
+                                            <div class="property-title">
+                                                Save Changes
+                                            </div>
+                                        </div>
+                                        <div class="job-stage-inner"
+                                            (click)="addNewStageInCustomWorkFlow(i)"
+                                            style="padding: 10px; background: green; color: #fff; cursor: pointer;">
+                                            <div class="property-title">
+                                                +Add new stage
+                                            </div>
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="job-offer-stages">
+                                    <div class="job-stage disabled move-disabled" style="cursor: not-allowed;">
+                                        <div class="job-stage-inner">
+                                            <div class="property-value">—</div>
+                                            <div class="property-title">Suggested</div>
+                                        </div>
+                                    </div>
+                                    <div class="job-stage disabled move-disabled" style="cursor: not-allowed;">
+                                        <div class="job-stage-inner">
+                                            <div class="property-value">—</div>
+                                            <div class="property-title">Applied</div>
+                                        </div>
+                                    </div>
+                                    <div class="job-stage disabled move-disabled" style="cursor: not-allowed;">
+                                        <div class="job-stage-inner">
+                                            <div class="property-value">—</div>
+                                            <div class="property-title">Employee Referrals</div>
+                                        </div>
+                                    </div>
+                                    <div ngxDroppable style="display: flex; flex-basis: 85%;"
+                                                (drag)="saveOnDragstartItemToCompare(workflow.hiringStages)"
+                                                (cancel)="workflow.workflowSaveChanges = false; tempCustomWorkFlowStages = [];"
+                                                (drop)="dropDnDCustom($event, workflow.hiringStages, workflow)" 
+                                                [model]="workflow.hiringStages">
+                                        <div class="job-stage has-handle" 
+                                                *ngFor="let flow of workflow.hiringStages; let i = index;"
+                                                ngxDraggable 
+                                                [model]="flow">
+                                            <div class="job-stage-inner">
+                                                <span style="display: flex; justify-content: space-between;">
+                                                    <mat-icon class="settings-stage" (click)="openStageEdit(flow, workflow)">edit</mat-icon>
+                                                    <mat-icon style="cursor: default;" matTooltip="Rejected stage logic" class="settings-stage" *ngIf="flow.rejectedLogic === true;">thumb_down</mat-icon>
+                                                    <mat-icon style="cursor: default;" matTooltip="Withdrawn stage logic" class="settings-stage" *ngIf="flow.withdrawnLogic === true;">exit_to_app</mat-icon>
+                                                    <mat-icon class="settings-stage" (click)="flow.settingsOpened = !flow.settingsOpened">settings</mat-icon>
+                                                </span>
+                                                <div class="property-value">—</div>
+                                                <div class="property-title" *ngIf="!flow.editable">{{flow.title}}</div>
+                                                <input
+                                                    id="editStageTitleInput"
+                                                    type="text"
+                                                    #editStageTitleInput
+                                                    (keydown.enter)="editCustomWorkFlowTitle(editStageTitleInput.value, flow.title, i, workflow.hiringStages, workflow)"
+                                                    *ngIf="flow.editable"
+                                                    [placeholder]="flow.title"
+                                                    (clickOutside)="flow.editable = false"
+                                                    [delayClickOutsideInit]="true"
+                                                    [excludeBeforeClick]="true">
+                                                    <mat-icon  *ngIf="!flow.editable" (click)="workflow.workflowSaveChanges = true; workflow.hiringStages.splice(i, 1);" style="cursor: pointer;" class="delete-stage">delete_forever</mat-icon>
+                                                    <p class="drag-line" ngxDragHandle>
+                                                        <mat-icon class="icon-fz16" style="transform: rotate(-180deg)">play_arrow</mat-icon>
+                                                        <mat-icon class="icon-fz16">dehaze</mat-icon>
+                                                        <mat-icon class="icon-fz16">play_arrow</mat-icon>
+                                                    </p>
+                                            </div>
+                                            <div (clickOutside)="stage.settingsOpened = false" [delayClickOutsideInit]="true" *ngIf="flow.settingsOpened" class="job-stage-settings">
+                                                <span>Add logic as:</span>
+                                                <p (click)="flow.rejectedLogic = true; flow.withdrawnLogic = false; flow.settingsOpened = false; workflow.workflowSaveChanges = true;">Rejected candidate stage</p>
+                                                <p (click)="flow.rejectedLogic = false; flow.withdrawnLogic = true; flow.settingsOpened = false; workflow.workflowSaveChanges = true;">Candidate Withdraw stage</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Clients and Projects
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <h3>Use client &amp; project based recruitment to configure the clients and projects that you are hiring for</h3>
+            
+            <div class="clients-projects-wrapper"> 
+                <form 
+                    class="clients-form" 
+                    [formGroup]="clientsFormGroup">
+                    <div class="clients-form-header">
+                        <span>Clients</span>
+                        <button 
+                            *ngIf="!newClient"
+                            mat-raised-button
+                            type="button" 
+                            color='primary' 
+                            (click)="addNewClient()">
+                            Add new client
+                        </button>
+                        <button 
+                            id="saveNewClientBtn"
+                            *ngIf="newClient"
+                            mat-raised-button 
+                            color='primary' 
+                            (click)="saveNewClient()">
+                            Save
+                        </button>
+                    </div>
+                    <div class="clients-form-body">
+                        <div 
+                            *ngFor="let clientOfClient of clientsofClientArr" 
+                            class="clients">
+                            <span *ngIf="!clientOfClient.editClient">{{clientOfClient.clientOfClientName}}</span>
+                            <input
+                                class="edit-client-input"
+                                id="editClientInput"
+                                formControlName="editClientOfClientName"
+                                *ngIf="clientOfClient.editClient" 
+                                type="text" 
+                                (keydown.enter)="saveEditedClient(clientOfClient); clientOfClient.editClient = false;"
+                                (clickOutside)="clientOfClient.editClient = false"
+                                [delayClickOutsideInit]="true"
+                                [exclude]="'.edit-client-input'"
+                                >
+                            <div class="clients-options">
+                                <span 
+                                    *ngIf="!clientOfClient.editClient"
+                                    (click)="editClientOfClient(clientOfClient)">
+                                    Edit
+                                </span>    
+                                <span 
+                                    *ngIf="clientOfClient.editClient"
+                                    (click)="saveEditedClient(clientOfClient)">
+                                    Save
+                                </span>    
+                                <span (click)="deleteClientOfClient(clientOfClient)">Remove</span> 
+                            </div> 
+                        </div>
+                        <input 
+                            *ngIf="newClient"
+                            formControlName="clientOfClientName"
+                            type="text" 
+                            placeholder="New Client"
+                            id="newClientInput"
+                            class="new-client-input"
+                            (keydown.enter)="saveNewClient()"
+                            (clickOutside)="newClient = false"
+                            [exclude]="'.new-client-input'"
+                            [delayClickOutsideInit]="true"
+                        >
+                    </div>
+                </form>
+                <form class="projects-form" [formGroup]="projectsFormGroup">
+                    <div class="projects-form-header">
+                        <span style="flex-basis: 30%">Projects</span>
+                        <span style="flex-basis: 30%">Client</span>    
+                        <button style="flex-basis: 30%"
+                            *ngIf="!newProject"
+                            mat-raised-button 
+                            color='primary'
+                            type="button"
+                            (click)="addNewProject()"
+                            >Add new project
+                        </button>
+                        <button style="flex-basis: 30%; margin-right: 10px;"
+                            id="saveNewProjectBtn"
+                            *ngIf="newProject"
+                            mat-raised-button 
+                            color='primary'
+                            type="button"                            
+                            (click)="saveNewProject()">
+                            Save
+                        </button>
+                        <button style="flex-basis: 30%"
+                            id="cancelNewProjectBtn"
+                            *ngIf="newProject"
+                            mat-raised-button 
+                            color='primary'
+                            type="button"                            
+                            (click)="saveNewProject()">
+                            Cancel
+                        </button>
+                    </div>
+                    <div class="projects-form-body">
+                        <div 
+                            *ngFor="let projectOfClient of projectsOfClient"
+                            class="projects">
+                            <span style="flex-basis: 30%;" *ngIf="!projectOfClient.editClient">{{projectOfClient.projectName}}</span>
+                            <input style="flex-basis: 30%;"
+                                *ngIf="projectOfClient.editClient" 
+                                class="edit-project-input"
+                                id="editProjectInput"
+                                formControlName="editProjectName"
+                                type="text" 
+                                (clickOutside)="editProjectOfClient(projectOfClient)"
+                                [delayClickOutsideInit]="true"
+                                [exclude]="'.edit-project-input, .edit-project-select'"
+                                >
+                            <span style="flex-basis: 30%;" *ngIf="!projectOfClient.editClient">{{projectOfClient.projectEndClientName}}</span>
+                            <select style="flex-basis: 30%;"
+                                *ngIf="projectOfClient.editClient"
+                                class="edit-project-select"
+                                formControlName="projectEndClientName"
+                                (clickOutside)="editProjectOfClient(projectOfClient)"
+                                [exclude]="'.edit-project-input, .edit-project-select'"
+                                [delayClickOutsideInit]="true">
+                                <option *ngFor="let clientOfClient of clientsofClientArr" [value]="clientOfClient.id">
+                                    {{clientOfClient.clientOfClientName}}
+                                </option>
+                            </select>
+                            <div style="flex-basis: 30%; text-align: center;" class="projects-options">
+                                <span 
+                                    *ngIf="!projectOfClient.editClient"
+                                    (click)="editProjectOfClient(projectOfClient)">
+                                    Edit
+                                </span>    
+                                <span 
+                                    *ngIf="projectOfClient.editClient"
+                                    (click)="saveEditedProject(projectOfClient)">
+                                    Save
+                                </span>     
+                                <span (click)="deleteProject(projectOfClient)">Remove</span> 
+                            </div> 
+                        </div>
+                        <div class="projects">
+                            <input style="flex-basis: 30%;"
+                                *ngIf="newProject"
+                                formControlName="projectName"
+                                type="text" 
+                                placeholder="New Project"
+                                id="newProjectInput"
+                                class="new-project-input"
+                                (keydown.enter)="saveNewProject()"
+                                (clickOutside)="addNewProject()"
+                                [exclude]="'.new-project-input, .new-project-select-client'"
+                                [delayClickOutsideInit]="true"
+                            >
+                            <select style="flex-basis: 30%;"
+                                class="new-project-select-client"
+                                *ngIf="newProject" 
+                                formControlName="projectEndClientName"
+                                (clickOutside)="addNewProject()"
+                                [exclude]="'.new-project-input, .new-project-select-client'"
+                                [delayClickOutsideInit]="true">
+                                    <option *ngFor="let clientOfClient of clientsofClientArr" [value]="clientOfClient.id">
+                                        {{clientOfClient.clientOfClientName}}
+                                    </option>
+                            </select>
+                            <small style="flex-basis: 30%; color: #ff3d3d;" *ngIf="newProject && projectEndClientNameEmpty">Please, select project</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </mat-expansion-panel>
+
     </mat-accordion>
 </div>
 <div class="triangle-wrap">

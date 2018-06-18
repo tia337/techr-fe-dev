@@ -20,7 +20,7 @@ export class InviteFormService {
 		});
 	}
 
-	createInvitation(email: string, fullName: string, accessLevel: number, message: string) {
+	createInvitation(email: string, fullName: string, accessLevel: number, message: string, userRoles: Array<UserRole>) {
 		// const user = this._parse.Query('User');
 		// user.equalTo('objectId', this._parse.getCurrentUser().id);
 		// user.first().then(currentUser => {
@@ -48,17 +48,19 @@ export class InviteFormService {
 		//   });
 		// });
 
-		console.log('email: ', email);
-		console.log('full name: ', fullName);
-		console.log('access level: ', accessLevel);
-		console.log('message: ', message);
+		// console.log('email: ', email);
+		// console.log('full name: ', fullName);
+		// console.log('access level: ', accessLevel);
+		// console.log('message: ', message);
+		// console.log('userRoles: ', userRoles);
 		this._parse.Parse.Cloud.run('inviteUser', {
 			email: email,
 			fullName: fullName,
 			accessLevel: accessLevel,
-			message: message
+			message: message,
+			userRoles: userRoles
 		}).then(res => {
-			console.log(res);
+			// console.log(res);
 		}, error => {
 			console.error(error);
 		});

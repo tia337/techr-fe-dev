@@ -79,4 +79,17 @@ export class JobBoxService {
 		});
 	}
 
+	getClientProbabilitiesToCloseJob() {
+		const clientId = this.getClientId();
+		return this._parse.execCloud('getClientProbabilitiesToCloseJob', {clientId});
+	}
+
+	setLikelihoodToFill(contractId: string, likelihoodToFill: string ) {
+		this._parse.execCloud('setLikelihoodToFill', {contractId: contractId , likelihoodToFill: parseFloat(likelihoodToFill)});
+	}
+
+	private getClientId() {
+		return this._parse.getCurrentUser().get('Client_Pointer').id;
+
+	}
 }

@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="wrap gmail">
     <button class="area" (click)="closePopup()"></button>
     <div class="template-details">
         <section class="template">
@@ -245,13 +245,26 @@
                 <div>
                     <label class="switch"> 
 					<div>
-						<input *ngIf = 'isSignedIn' type = "checkbox"  checked disabled>
-						<input *ngIf = '!isSignedIn' type = "checkbox" (click)="signInGapi()">
-						<span class = "slider round"></span>  
+						<input *ngIf='isSignedIn' type="checkbox"  checked disabled>
+						<input *ngIf='!isSignedIn' type="checkbox" (click)="signInGapi()">
+						<span class="slider round"></span>  
 					</div>
 				</label>
                 </div>
             </div>
+            <div class="mail-provider">
+                    <div><img src="../../assets/icons/outlook-icon.png" alt="Outlook"></div>
+                    <div>Outlook</div>
+                    <div>
+                        <label class="switch"> 
+                        <div>
+                            <input *ngIf='isSignedIn' type="checkbox"  checked disabled>
+                            <input *ngIf='!isSignedIn' type="checkbox" (click)="singInOutlook()">
+                            <span class="slider round"></span>  
+                        </div>
+                    </label>
+                    </div>
+                </div>
             <!-- <div class="mail-provider">
                 <div><img src="../../assets/img/outlook-logo.ico" alt="Outlook"></div>
                 <div>Outlook</div>

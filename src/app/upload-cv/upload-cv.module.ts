@@ -13,7 +13,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     Ng4FilesModule,
     FormsModule,
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     BrowserModule,
     FormsModule,

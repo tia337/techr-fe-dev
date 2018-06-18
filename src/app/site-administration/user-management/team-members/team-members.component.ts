@@ -34,8 +34,7 @@ export class TeamMembersComponent implements OnInit, OnDestroy {
 	loadInvitations(first?) {
 		this._teamMembersService.getInvitations().then(invitations => {
 			this.invitations = invitations;
-			if (first)
-			{
+			if (first) {
 				this.allMembers = this.allMembers.concat(invitations);
 			}
 		});
@@ -71,7 +70,7 @@ export class TeamMembersComponent implements OnInit, OnDestroy {
 	}
 
 	goToUser(userId: string, inactive?) {
-		console.log(userId);
+		// console.log(userId);
 		if (inactive)
 		{
 			this._router.navigate(['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['user', userId] } }], {skipLocationChange: true});
@@ -81,7 +80,7 @@ export class TeamMembersComponent implements OnInit, OnDestroy {
 
 	deleteInvitation(invitiation) {
 		this._teamMembersService.deleteInvitation(invitiation.id).then(() => {
-			console.log(this.allMembers);
+			// console.log(this.allMembers);
 			const index = this.allMembers.indexOf(invitiation);
 			this.allMembers.splice(index, 1);
 			// this.allMembers.forEach(element => {
@@ -114,7 +113,6 @@ export class TeamMembersComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this._root_vcr = null;
-		console.log('Test');
 	}
 
 }

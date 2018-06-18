@@ -12,6 +12,24 @@
     <!-- <link rel="apple-touch-icon" href="./apple-touch-icon.png" type="image/png"> -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <!-- FAVICON -->
+    <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="manifest" href="favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="favicons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <!-- FONTS -->
     <link href="https://fonts.googleapis.com/css?family=ABeeZee" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
@@ -21,10 +39,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Roboto+Mono|Roboto+Slab|Source+Sans+Pro" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
-    <script type="text/javascript" src="//platform.linkedin.com/in.js">
-        api_key: 77nkibz74seedy
-        authorize: false
-    </script>
 
     <!-- Google auth -->
     <script src="https://apis.google.com/js/platform.js"></script>
@@ -32,9 +46,10 @@
 
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
-
+    <!-- Facebook login
     <script type="text/javascript" src="https://connect.facebook.net/en_US/sdk.js"></script>
-
+    -->
+    <!-- Twitter login
     <script>
         window.twttr = (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0],
@@ -53,12 +68,17 @@
             return t;
         }(document, "script", "twitter-wjs"));
     </script>
+    -->
+
 
 </head>
 
 <body id="body">
 
-    <app-root>Loading...</app-root>
+    <app-root>
+        <span id="common-loading">Loading...</span>
+    </app-root>
+
 </body>
 
 </html>

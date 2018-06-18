@@ -1,3 +1,4 @@
+import { EditRecruitmentTeamModule } from './user-management/recruitment-teams/edit-recruitment-team/edit-recruitment-team.module';
 import {
 	BrowserModule
 } from '@angular/platform-browser';
@@ -14,6 +15,7 @@ import {
 	ReactiveFormsModule,
 	FormsModule
 } from '@angular/forms';
+import { UserRolesModule } from './user-management/permissions/user-roles/user-roles.module';
 import {
 	MatIconModule,
 	MatTooltipModule,
@@ -21,7 +23,8 @@ import {
 	MatSelectModule,
 	MatSlideToggleModule,
 	MatExpansionModule,
-	MatButtonModule
+	MatButtonModule,
+	MatSnackBarModule,
 } from '@angular/material';
 import {
 	MatRadioModule
@@ -71,21 +74,12 @@ import {
 import {
 	PermissionsComponent
 } from './user-management/permissions/permissions.component';
-// import { UserComponent } from './user-management/user/user.component';
-// import { TeamMembersComponent } from './user-management/team-members/team-members.component';
-// import { TeamMembersService } from './user-management/team-members/team-members.service';
-
-// import { UserService } from './user-management/user/user.service';
-
-// import { AccessLevelModalComponent } from './user-management/user/access-level-modal/access-level-modal.component';
-// import { AccessLevelModalService } from './user-management/user/access-level-modal/access-level-modal.service';
 import {
 	AccessLevelPageComponent
 } from './user-management/access-level-page/access-level-page.component';
 import {
 	AccessLevelPageService
 } from './user-management/access-level-page/access-level-page.service';
-// import { InviteService } from './user-management/invite-user/invite-user.service';
 import {
 	InviteFormComponent
 } from './user-management/invite-user/invite-form/invite-form.component';
@@ -119,6 +113,7 @@ import {
 	InviteUserModule
 } from './user-management/invite-user/invite-user.module';
 
+import { ClickOutsideModule } from 'ng-click-outside';
 
 // WYSIWYG pannel
 
@@ -128,30 +123,46 @@ import {
 import {
 	UserModule
 } from "./user-management/user/user.module";
+import { UserRolesEditModule } from './user-management/permissions/user-roles-edit/user-roles-edit.module';
+import { UserRolesDeleteModule } from './user-management/permissions/user-roles-delete/user-roles-delete.module';
+import { NewWorkflowModule } from './company-settings/new-workflow/new-workflow.module';
+import { NgxDnDModule } from '@swimlane/ngx-dnd';
 import {
 	ChangePasswordComponent
 } from './company-settings/change-password/change-password.component';
 import {UserSettingsComponent} from "../user-settings/user-settings.component";
+import { ReportsComponent } from './reports/reports.component';
+import { UserRolesComponent } from './user-management/permissions/user-roles/user-roles.component';
+import { UserRolesEditComponent } from './user-management/permissions/user-roles-edit/user-roles-edit.component';
+import { UserRolesDeleteComponent } from './user-management/permissions/user-roles-delete/user-roles-delete.component';
+import { NewRecruitmentTeamModule } from './user-management/recruitment-teams/new-recruitment-team/new-recruitment-team.module';
+import { NewWorkflowComponent } from './company-settings/new-workflow/new-workflow.component';
+import { RecruitmentTeamsComponent } from './user-management/recruitment-teams/recruitment-teams.component';
+import { NewRecruitmentTeamComponent } from './user-management/recruitment-teams/new-recruitment-team/new-recruitment-team.component';
+import { EditRecruitmentTeamComponent } from './user-management/recruitment-teams/edit-recruitment-team/edit-recruitment-team.component';
+import { EditUserRoleComponent } from './user-management/access-level-page/edit-user-role/edit-user-role.component';
 
 
 @NgModule({
 	declarations: [
+		EditUserRoleComponent,
 		SiteAdministrationComponent,
 		CompanySettingsComponent,
 		UserManagementComponent,
-        UserSettingsComponent,
+		UserSettingsComponent,
 		JobsSettingsComponent,
 		SubscriptionsComponent,
 		AppIntegrationsComponent,
-		// InviteUserComponent,
 		PermissionsComponent,
-		// UserComponent,
-		// TeamMembersComponent,
-		// AccessLevelModalComponent,
 		AccessLevelPageComponent,
 		ChangePasswordComponent,
-		// InviteFormComponent,
-		// InvitationConfirmAlertComponent,
+		ReportsComponent,
+		UserRolesComponent,
+		UserRolesEditComponent,
+		UserRolesDeleteComponent,
+		RecruitmentTeamsComponent,
+		NewRecruitmentTeamComponent,
+		EditRecruitmentTeamComponent
 	],
 	imports: [
 		BrowserModule,
@@ -159,7 +170,6 @@ import {UserSettingsComponent} from "../user-settings/user-settings.component";
 		RouterModule,
 		FormsModule,
 		ReactiveFormsModule,
-		// MaterialModule,
 		MatSelectModule,
 		MatTooltipModule,
 		SubscriptionsCheckoutModule,
@@ -172,37 +182,43 @@ import {UserSettingsComponent} from "../user-settings/user-settings.component";
 		UserModule,
 		MatInputModule,
 		MatRadioModule,
+		MatIconModule,
 		MatExpansionModule,
-		MatButtonModule
+		MatButtonModule,
+		ClickOutsideModule,
+		UserRolesModule,
+		UserRolesEditModule,
+		UserRolesDeleteModule,
+		NewWorkflowModule,
+		NgxDnDModule,
+		NewRecruitmentTeamModule,
+		EditRecruitmentTeamModule,
+		MatSnackBarModule
 	],
 	providers: [
-
-		// TeamMembersService,
-		// UserService,
 		AccessLevelPageService,
-		// AccessLevelModalService,
-		// InviteVCR,
-		// InviteService,
-		// InviteFormService,
 		IntegrationService,
 		SubscriptionService,
 		CheckoutServService,
 		CompanySettingsService,
 		UpgradeDataService,
 		SiteAdministrationService,
-		RootVCRService,
+		RootVCRService
 	],
 	entryComponents: [
-		// AccessLevelModalComponent,
-		// InviteFormComponent,
-		// InvitationConfirmAlertComponent,
 		ChangePasswordComponent,
-		AlertComponent
+		AlertComponent,
+		UserRolesComponent,
+		UserRolesEditComponent,
+		UserRolesDeleteComponent,
+		NewWorkflowComponent,
+		NewRecruitmentTeamComponent,
+		EditRecruitmentTeamComponent,
+		EditUserRoleComponent
 	],
 	exports: [
-		SiteAdministrationComponent,
-	],
-
+		SiteAdministrationComponent
+	]
 })
 export class SiteAdministrationModule {}
 
