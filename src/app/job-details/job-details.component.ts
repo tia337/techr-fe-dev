@@ -254,6 +254,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy, OnChanges {
 			console.error(error);
 		});
 		this._jobDetailsService._setCandidatesAfterMovingCandidate.distinct().skipWhile(val => val === null).subscribe(value => {
+			console.log(value);
 			this._stages.forEach(stage => {
 				if (stage.type === value.stageType) {
 					stage.candidates.push(value.candidate);

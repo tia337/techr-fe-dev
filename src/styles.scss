@@ -1007,3 +1007,21 @@ app-chat .dropdown-menu {
 .justify-content-fe {
     justify-content: flex-end;
 }
+
+
+.withdrawn-rejection {
+    ::ng-deep .mat-progress-spinner {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+    
+    ::ng-deep .mat-progress-spinner svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+        color: #fff!important;
+    }
+}

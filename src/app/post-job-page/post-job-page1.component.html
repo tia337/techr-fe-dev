@@ -476,7 +476,7 @@
                                 *ngIf="customHiringWorkFlowsListShown" 
                                 (clickOutside)="customHiringWorkFlowsListShown = false"
                                 [delayClickOutsideInit]="true">
-                                <li *ngIf="!customStandartWorkflow" (click)="chooseStandartWorkFlow(); detectChange(); customHiringWorkFlowsListShown = false;">Standart workflow</li>
+                                <li *ngIf="!customStandartWorkflow && customHiringWorkFlowsList.length > 0" (click)="chooseStandartWorkFlow(); detectChange(); customHiringWorkFlowsListShown = false;">Standart workflow</li>
                                 <!-- <li *ngIf="customStandartWorkflow" (click)="currentcustomHiringWorkFlow = customStandartWorkflow ; detectChange(); customHiringWorkFlowsListShown = false; log('1');">Standart workflow</li> -->
                                 <li *ngFor="let workflow of customHiringWorkFlowsList" 
                                     (click)="currentcustomHiringWorkFlow = workflow; detectChange(); customHiringWorkFlowsListShown = false;">

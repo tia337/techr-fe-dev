@@ -39,7 +39,7 @@ export class AddCandidateService {
 		request.map(res => {
 			return res.json();
 		}).subscribe(response => {
-			console.log(response);
+			// console.log(response);
 			this.candidatesUploaded.next(response.ResumeParserData);
 		});
 	});

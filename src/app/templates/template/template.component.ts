@@ -48,7 +48,7 @@ export class TemplateComponent implements OnInit {
   deleteTemlate(templateCId, el) {
     this._TemplatesService.removeTemplate(templateCId).then(res => {
       this.isDeleted = true;
-      console.log(res);
+      // console.log(res);
     });
   }
 }

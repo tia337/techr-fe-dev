@@ -59,7 +59,7 @@ export class TemplateDetailsCustomComponent implements OnInit {
       (this.template.subject.trim() !== this.template.get('EmailSubject').trim()) ||
       (this.template.body.trim() !== this.template.get('EmailBody').trim())) {
       this._TemplatesService.updateCustomTemplate(this.template).then(res => {
-        console.log(res);
+        // console.log(res);
       });
     }
 	this.isEditable = !this.isEditable;

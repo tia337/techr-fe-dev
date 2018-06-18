@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		console.log(this._activatedRoute.snapshot);
+		// console.log(this._activatedRoute.snapshot);
 		this._userService.getUser(this.userId).then(user => {
 			this.user = user;
 			if (user.get('HR_Access_Level') === 1) {
@@ -52,7 +52,7 @@ export class UserComponent implements OnInit {
 	}
 
 	deactivateUser() {
-		console.log(this._parse.getCurrentUser().get('HR_Access_Level'));
+		// console.log(this._parse.getCurrentUser().get('HR_Access_Level'));
 
 		if (this._parse.getCurrentUser().get('HR_Access_Level') === 1) {
 

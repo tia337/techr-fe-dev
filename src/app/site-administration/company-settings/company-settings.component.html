@@ -153,11 +153,11 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div class="carrers-website-page">
-                <div class="carrers-website-page-status"></div>
+                <!-- <div class="carrers-website-page-status"></div>
                 <div class="carrers-website-page-info">
                     <p> All jobs (default)</p>
                     <p> <a href="javascript:void(0)">https://careers.swipein.hr/Miratech</a></p>
-                </div>
+                </div> -->
             </div>
             <div class="departments-offices-wrapper">
                 <div class="carrers-departments">
@@ -177,7 +177,7 @@
                                 Save
                             </button>
                         </p>
-                        <div class="carrers-departments-form__body" *ngFor = "let department of departments"> 
+                        <div class="carrers-departments-form__body" *ngFor="let department of departments"> 
                             <div class="carrers-departments-form__body__department"> 
                                 <span *ngIf="!department.edit">{{department.name}}</span>
                                 <input 
@@ -192,8 +192,8 @@
                                     [delayClickOutsideInit]="true"
                                     >
                                 <div
-                                    class= "carrers-departments-form__body__department__subdepartment"
-                                    *ngFor = "let subdepartment of department.subDepartments">
+                                    class="carrers-departments-form__body__department__subdepartment"
+                                    *ngFor="let subdepartment of department.subDepartments">
                                     <span *ngIf="!subdepartment.edit">{{subdepartment.name}}</span>
                                     <input
                                         id="editSubdepartmentInput" 
@@ -201,8 +201,8 @@
                                         *ngIf="subdepartment.edit" 
                                         type="text" 
                                         [value]="subdepartment.name"
-                                        formControlName= "subdepartmentName"
-                                        (keydown.enter)= "editSubdepartment(subdepartment)"
+                                        formControlName="subdepartmentName"
+                                        (keydown.enter)="editSubdepartment(subdepartment)"
                                         (clickOutside)="subdepartment.edit = false"
                                         [delayClickOutsideInit]="true">
                                     <div class="carrers-departments-form__body__department__subdepartment_options"> 
@@ -211,7 +211,7 @@
                                     </div>
                                 </div>   
                                 <input 
-                                    id= "newSubdepartmentInput"
+                                    id="newSubdepartmentInput"
                                     *ngIf="department.newSubdepartment" 
                                     type="text" 
                                     class="carrers-departments-form__body__subdepartment-input"

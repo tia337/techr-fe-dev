@@ -38,7 +38,7 @@ export class SubscriptionsUpgradeComponent implements OnInit {
 		this._UpgradeDataService.getSC().then(subCart=>{
 			this.subCart = subCart;
 			this.newTarifName = subCart.tarif;
-			console.log(this.newTarifName);
+			// console.log(this.newTarifName);
 			this.client = this._SubscriptionsUpgradeService.getClient();
 			return this._SubscriptionsUpgradeService.currentPlan;
 		}).then(res=>{
@@ -64,7 +64,7 @@ export class SubscriptionsUpgradeComponent implements OnInit {
 			return this._SubscriptionsUpgradeService.getNewOpositPayingPlan(this.newTarif.get("IntervalString"), this.newTarifName, this.newTarif.get("Currency"))
 		}).then(res=>{
 			this.opositPayingPlan = res;
-			console.log(res);
+			// console.log(res);
 			if(this.newTarifName === 'month' || this.newTarifName === 'year'){
 				this.curSubscription = res;
 				this._SubscriptionsUpgradeService.getNewPayingPlan(this.newTarifName, this.curSubscription.get("NameSwipeIn"), this.curSubscription.get("Currency")).then(res=>{
@@ -116,7 +116,7 @@ export class SubscriptionsUpgradeComponent implements OnInit {
 			});
 			this.upgradingInProgress = false;
 		},error =>{
-			console.log(error);
+			// console.log(error);
 			this.upgradingInProgress = false;
 			const alert = this._root_vcr.createComponent(AlertComponent);
 			alert.title = 'Error';

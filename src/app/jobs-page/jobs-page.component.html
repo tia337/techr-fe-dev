@@ -112,23 +112,23 @@
     <mat-button-toggle-group [(ngModel)]="contractStatus" (change)="updateContracts()" [disabled]="isDataLoaded == Loading.loading">
       <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.active" (click)="statusContract = 'none'">
         Published
-        <span class="buttons-wrap__mat-btn__jobs-number">20</span>
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">20</span> -->
       </mat-button-toggle>
       <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.approved" (click)="statusContract = 'none'">
         Approved
-        <span class="buttons-wrap__mat-btn__jobs-number">4</span>
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">4</span> -->
       </mat-button-toggle>
       <mat-button-toggle  class="buttons-wrap__mat-btn" [value]="ContractStatus.pending" (click)="statusContract = 'pending'">
         Pending Approval
-        <span class="buttons-wrap__mat-btn__jobs-number">7</span>
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">7</span> -->
       </mat-button-toggle>
       <mat-button-toggle class="buttons-wrap__mat-btn" [value]="ContractStatus.archived" (click)="statusContract = 'none'">
         Archived
-        <span class="buttons-wrap__mat-btn__jobs-number">3</span>
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">3</span> -->
       </mat-button-toggle>
       <mat-button-toggle class="buttons-wrap__mat-btn"  [value]="ContractStatus.draft" (click)="statusContract = 'none'">
         Drafts
-        <span class="buttons-wrap__mat-btn__jobs-number">10</span>
+        <!-- <span class="buttons-wrap__mat-btn__jobs-number">10</span> -->
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>

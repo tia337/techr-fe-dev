@@ -87,8 +87,8 @@ export class TimelineComponent implements OnInit, OnDestroy {
   }
 
   route(contractId: string, stage: number, candidateId?: string, infoTab?: string) {
-    console.log(contractId, stage, candidateId, infoTab);
-    console.log('routeed');
+    // console.log(contractId, stage, candidateId, infoTab);
+    // console.log('routeed');
     let contract;
     const contractQuery = this._parse.Query('Contract');
     contractQuery.equalTo('objectId', contractId);

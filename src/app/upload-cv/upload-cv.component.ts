@@ -106,11 +106,11 @@ export class UploadCvComponent implements OnInit {
 		}
 	}
 	public fileOver(event) {
-		console.log(event);
+		// console.log(event);
 	}
 
 	public fileLeave(event) {
-		console.log(event);
+		// console.log(event);
 	}
 	ngOnInit() {}
 	public filesSelect(selectedFiles: Ng4FilesSelected): void {
@@ -209,7 +209,7 @@ export class UploadCvComponent implements OnInit {
 			};
 			this.files.forEach(file => {
 				src.last = this.files.indexOf(file) === (this.files.length - 1) ? true : false;
-				console.log(src);
+				// console.log(src);
 				if (this.sourceJobBoard === 'Choice JobBoard') {
 					this._upload.parseCvService2(file, src, this);
 				} else {
