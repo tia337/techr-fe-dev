@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as branch from 'branch-sdk';
+import { environment } from './../../../environments/environment';
+
 
 @Injectable()
 export class Branch {
@@ -11,7 +13,7 @@ export class Branch {
 		this._branch = branch;
 
 		this._data = new Promise((resolve, reject) => {
-			this._branch.init('key_test_cfsBaSN7mn0ntAfhZq2A4nkivFjzYZKu', (error, data) => {
+			this._branch.init(environment.BRANCHIO_KEY, (error, data) => {
 				if (data) {
 					resolve(data.data_parsed);
 				}
