@@ -46,7 +46,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	newDepartment = false;
 	newSubdepartment = false;
 
-	offices;
+	offices = [];
 	officesFormGroup: FormGroup;
 	newOffice = false;
 
@@ -873,12 +873,12 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (department.edit) {
 			if (this.departmentFormGroup.value.departmentName !== null && this.departmentFormGroup.value.departmentName.trim() !== '') {
 				department.name = this.departmentFormGroup.value.departmentName;
+				this._parse.execCloud('saveNewDepartment', { clientId: this._parse.getClientId(), departments: this.departments });
 				department.edit = false;
 			} else {
 				this.departmentFormGroupInit(department);
 				department.edit = false;
 			}
-
 		} else {
 			this.departmentFormGroupInit(department);
 			department.edit = true;
@@ -898,6 +898,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		}, 4);
 
 	}
+
 	saveNewDepartment() {
 		if (this.departmentFormGroup.value.newDepartmentName !== null && this.departmentFormGroup.value.newDepartmentName.trim() !== '') {
 			const newDepartment = {
@@ -908,6 +909,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				subDepartments: []
 			};
 			this.departments.push(newDepartment);
+			this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments })
 			this.departmentFormGroup.reset();
 			this.newDepartment = false;
 		} else {
@@ -936,7 +938,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				edit: false
 			};
 			const index = this.departments.indexOf(department);
-			this.departments[index].subDepartments.push(newSubdepartment);
+			this.departments[index]['subDepartments'].push(newSubdepartment);
+			this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments });
 			department.newSubdepartment = false;
 			this.departmentFormGroup.reset();
 		} else {
@@ -949,6 +952,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (subdepartment.edit) {
 			if (this.departmentFormGroup.value.subdepartmentName !== null && this.departmentFormGroup.value.subdepartmentName.trim() !== '') {
 				subdepartment.name = this.departmentFormGroup.value.subdepartmentName;
+				this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments });
 				subdepartment.edit = false;
 			} else {
 				subdepartment.edit = false;
@@ -965,19 +969,19 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	}
 	removeSubdepartment(department, subdepartment) {
 		const depIndex = this.departments.indexOf(department);
-		const subdepIndex = this.departments[depIndex].subDepartments.indexOf[subdepartment];
-		this.departments[depIndex].subDepartments.splice(subdepIndex, 1);
+		const subdepIndex = this.departments[depIndex]['subDepartments'].indexOf[subdepartment];
+		this.departments[depIndex]['subDepartments'].splice(subdepIndex, 1);
+		this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments });
 	}
 
 	removeDepartment(id) {
-		console.log(id);
 		this.departments.forEach(department => {
 			if (department.id === id) {
-				console.log(id);
 				const index = this.departments.indexOf(department);
 				this.departments.splice(index, 1);
 			}
 		});
+		this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments });
 	}
 
 	officesFormGroupInit(office = null) {
@@ -996,6 +1000,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 					edit: false
 				};
 				this.offices.push(newOffice);
+				this._parse.execCloud('saveOffices', { clientId: this._parse.getClientId(), offices: this.offices });
 				this.officesFormGroup.reset();
 				this.newOffice = false;
 			} else {
@@ -1016,6 +1021,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (office.edit) {
 			if (this.officesFormGroup.value.officeName !== null && this.officesFormGroup.value.officeName.trim() !== '') {
 				office.name = this.officesFormGroup.value.officeName;
+				this._parse.execCloud('saveOffices', { clientId: this._parse.getClientId(), offices: this.offices });
 				office.edit = false;
 			} else {
 				office.edit = false;
@@ -1031,6 +1037,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	removeOffice(office) {
 		const officeIndex = this.offices.indexOf(office);
 		this.offices.splice(officeIndex, 1);
+		this._parse.execCloud('saveOffices', { clientId: this._parse.getClientId(), offices: this.offices });
 	}
 
 	onEditStageClick() {

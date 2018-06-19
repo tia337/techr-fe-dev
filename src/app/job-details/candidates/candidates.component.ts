@@ -107,6 +107,7 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 					this.unitPreference = partner.get('candidateDistanceUnitPreferrences');
 				});
 				this._candidatesCountSubscription = this._jobDetailsService.candidatesCount.subscribe(candidatesCount => {
+					console.log(candidatesCount);
 					if (candidatesCount) {
 						this._candidatesCountObject = candidatesCount;
 						if (this._activeStage) {
@@ -120,12 +121,13 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
 		
 				this._stageSubscription = this._jobDetailsService.activeStage.subscribe(activeStage => {
 					this._activeStage = activeStage;
-					if (this._candidatesCountObject) {
-						this._candidatesCount = this._candidatesCountObject.find(count => {
-							return count.type === activeStage;
-						}).value;
-						console.log('Subscribed for stage. CandidatesCount: ', this._candidatesCount);
-					}
+					// if (this._candidatesCountObject) {
+					// 	this._candidatesCount = this._candidatesCountObject.find(count => {
+					// 		console.log(count);
+					// 		return count.type === activeStage;
+					// 	}).value;
+					// 	console.log('Subscribed for stage. CandidatesCount: ', this._candidatesCount);
+					// }
 					localStorage.setItem('activeStage', activeStage);
 					delete this.candidates;
 					delete this.userId;

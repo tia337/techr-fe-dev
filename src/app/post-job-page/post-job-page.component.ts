@@ -669,6 +669,9 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 	initContract(callback?: Function) {
 		this.contractForm.value.postLocation = this.postLocation;
 		this.contractForm.value.jobCity = this.jobCity;
+		this.contractForm.value.jobCity2 = this.jobCity2;
+		this.contractForm.value.jobCity3 = this.jobCity3;
+
 		this.contractForm.value.startContractDate = new Date(this.contractForm.value.startContractDate);
 		this.contractForm.value.isASAP = this.asap === 'true' ? true : false;
 		this.contractForm.value.logo = this.logo;
@@ -677,9 +680,16 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.contractForm.value.jobDepartment = this.currentDepartment;
 		this.contractForm.value.Client = this.currentUser.get('Client_Pointer');
 		this.contractForm.value.jobCountry = this.jobCountry;
+		this.contractForm.value.jobCountry2 = this.jobCountry2;
+		this.contractForm.value.jobCountry3 = this.jobCountry3;
 		this.contractForm.value.JobState = this.JobState;
+		this.contractForm.value.JobState2 = this.JobState2;
+		this.contractForm.value.JobState3 = this.JobState3;
+
 		if (this.postCode) {
 			this.contractForm.value.postCode = this.postCode;
+			this.contractForm.value.postCode2 = this.postCode2;
+			this.contractForm.value.postCode3 = this.postCode3;
 		}
 
 		if (this.contractObj) {
