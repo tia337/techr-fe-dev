@@ -186,6 +186,9 @@ export class UploadCvService {
 						country = el;
 					}
 				});
+
+				let location = this.getLocation(r);
+
 				const result = {
 					firstName: r.FirstName,
 					lastName: r.LastName,
@@ -196,12 +199,13 @@ export class UploadCvService {
 					languages: r.LanguageKnown.split(','),
 					websites: r.WebSites.WebSite,
 					phone: r.Phone,
-					homeCity: r.State,
+					homeCity: location,
 					homeCountry: country,
 					skills: skills,
 					newSkills: newSkills,
 					CV: reader.result.split(',')[1],
-					CVName: cvFile.name
+					CVName: cvFile.name,
+					candidateImage: (r.CandidateImage.CandidateImageData.length > 0) ? r.CandidateImage : undefined,
 				};
 				if (result.email === '' || result.email.length === 0) {
 					cmp.resultsArray.push({
@@ -367,6 +371,19 @@ export class UploadCvService {
 		var pointerToFoo = this._parse.Object(objectClass);
 		pointerToFoo.id = objectID;
 		return pointerToFoo;
+	}
+	getLocation(parsedCv) {
+	let r = parsedCv; // shortname
+
+	if (r.City) return r.City;
+	if (r.CurrentLocation) return r.CurrentLocation;
+	if (r.State) return r.State;
+	if (r.PermanentCity) return r.PermanentCity;
+	if (r.PermanentCountry) return r.PermanentCountry;
+	if (r.PermanentState) return r.PermanentState;
+	if (r.Country) return r.Country;
+
+	return undefined;
 	}
 	setLeadTimeIf(src: {
 		listChoice: number,
@@ -548,6 +565,15 @@ export class UploadCvService {
 		user.set('Languages', enemy.languages);
 		user.set('WebSites', enemy.websites);
 		user.set('Phone', enemy.phone);
+
+		if (enemy.candidateImage) {
+			let cvImage = new this._parse.Parse.File(`cvImage-${enemy.firstName}-${enemy.lastName}.jpg`, { base64: enemy.candidateImage.CandidateImageData });
+			cvImage.save().then(obj => {
+				console.log(cvImage.url()); // debug
+				user.set('cvImage', cvImage.url());
+			});
+		}
+
 		return this.createD(enemy).then(dev => {
 			user.set('developer', this.createPointer('Developer', dev.id));
 			if (enemy.homeCountry !== undefined && enemy.homeCountry.id !== undefined) {
