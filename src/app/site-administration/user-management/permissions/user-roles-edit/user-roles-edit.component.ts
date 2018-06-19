@@ -54,9 +54,11 @@ export class UserRolesEditComponent implements OnInit {
   
   editUserRole() {
     const userRoleRights = [];
+
     this.userRolesRights.forEach(roleRight => {
       this.userRolesFormGroup.value.roleRights.forEach(formRoleRight => {
-        if (roleRight.get('rightDesc') === formRoleRight ) {
+        if (roleRight.get('rightDesc') === formRoleRight) {
+          console.log(roleRight.get('rightDesc'), formRoleRight);
           const newRoleRight = {
             id: roleRight.get('rightId'),
             description: formRoleRight
@@ -71,11 +73,16 @@ export class UserRolesEditComponent implements OnInit {
       roleDescription: this.userRolesFormGroup.value.roleDescription,
       roleRights: userRoleRights
     };
+
+    console.log('newUserRole', newUserRole);
     
     const index = this.currentUserRoles.indexOf(this.currentUserRole);
+    console.log('index', index);
     this.currentUserRoles[index] = newUserRole;
-    
-    this._siteAdministrationService.editUserRole(this.currentUserRole, newUserRole);
+    console.log('this.currentUserRoles[index]',  this.currentUserRoles[index]);
+    console.log('this.currentUserRoles', this.currentUserRoles);
+    // this._siteAdministrationService.editUserRole(this.currentUserRole, newUserRole);
+    this._siteAdministrationService.editUserRole(this.currentUserRoles);
     this.userRolesFormGroup.reset();
 		this._snackbar.open('User Role Edited', '', { duration: 2000, horizontalPosition: 'center', verticalPosition: 'bottom'});            
     this.closeModal();

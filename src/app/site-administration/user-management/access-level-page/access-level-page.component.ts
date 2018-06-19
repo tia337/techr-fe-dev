@@ -6,6 +6,7 @@ import { Parse } from '../../../parse.service';
 import { RootVCRService } from '../../../root_vcr.service';
 import { AccessLevelModalComponent } from '../user/access-level-modal/access-level-modal.component';
 import { EditUserRoleComponent } from './edit-user-role/edit-user-role.component';
+import { SiteAdministrationService } from '../../site-administration.service';
 
 @Component({
 	selector: 'app-access-level-page',
@@ -35,7 +36,8 @@ export class AccessLevelPageComponent implements OnInit {
 		private _activatedRoute: ActivatedRoute,
 		private _alService: AccessLevelPageService,
 		private root_vcr: RootVCRService,
-		private _parse: Parse
+		private _parse: Parse,
+		private _siteAdministrationService: SiteAdministrationService
 	) { }
 
 	ngOnInit() {
@@ -50,12 +52,10 @@ export class AccessLevelPageComponent implements OnInit {
 		if (this.permissionType === 4) {
 			this._activatedRoute.queryParams.subscribe(params => {
 				this.currentCustomAccessLevel.roleName = params.role;
-				this._alService.getUserRoles().then(data => {
-					this.currentCustomAccessLevel = data.find(role => {
-						return role.roleName = this.currentCustomAccessLevel.roleName;
+				this._siteAdministrationService.getUserRoles().then(data => {
+					data.forEach(role => {
+						if (role.roleName === params.role) this.currentCustomAccessLevel = role;
 					});
-				}).catch(error => {
-					console.log(error);
 				});
 				this._alService.getTeamMembersUserRoles(params.role).then(data => {
 					this.users = data;

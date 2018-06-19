@@ -26,8 +26,8 @@ export class AccessLevelPageService {
 
   getUserRoles(): Promise<any> {
     const promise = new Promise ((resolve, reject) => {
-      const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
-      this._parse.execCloud('getUserRoles', {clientId: clientId}).then(data => {
+      const clientId = this._parse.getClientId();
+      this._parse.execCloud('getUserRoles', { clientId }).then(data => {
         resolve(data);
         reject(data);
       });

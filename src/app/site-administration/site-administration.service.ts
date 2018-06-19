@@ -66,20 +66,29 @@ import { Subject } from 'rxjs/Subject';
 
   getUserRoles() {
     const clientId = this.getClientId();
-    return this._parse.execCloud('getUserRoles', {clientId});
+    return this._parse.execCloud('getUserRoles', { clientId });
   }
   
   addUserRole(userRole) {
     const clientId = this.getClientId();
 
-    this._parse.execCloud('addUserRole', {clientId : clientId, userRole: userRole});
+    this._parse.execCloud('addUserRole', { clientId : clientId, userRole: userRole });
     this.userRoles.push(userRole);
     this.newUserRoleSubject.next(userRole);
   }
 
-  editUserRole(userRole, newUserRole) {
+  // editUserRole(userRole, newUserRole) {
+  //   const clientId = this.getClientId();
+  //   console.log('userRole', userRole);
+  //   console.log('newUserRole', newUserRole);
+  //   this._parse.execCloud('editUserRole', { clientId: clientId, userRole: userRole, newUserRole: newUserRole });
+  // }
+
+  editUserRole(userRoles) {
     const clientId = this.getClientId();
-    this._parse.execCloud('editUserRole', {clientId: clientId, userRole: userRole, newUserRole: newUserRole});
+    console.log('userRoles', userRoles);
+    // console.log('newUserRole', newUserRole);
+    this._parse.execCloud('editUserRole', { clientId: clientId, userRoles: userRoles });
   }
 
   deleteUserRole(userRole) {

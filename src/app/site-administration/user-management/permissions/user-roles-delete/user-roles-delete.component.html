@@ -4,12 +4,13 @@
     <div>
       <h3>Are you sure you want to delete this user role?</h3>
       <div>
-        This user role is assigned to the following Users: 
-        <p>- Tarik Sarhan</p>
-        <p>- Julio Alvaro</p>
-        <p>- Edward Ridgway</p>
+        <span *ngIf="users.length > 0">
+          This user role is assigned to the following Users: 
+          <p *ngFor="let user of users">-&nbsp;{{user.get('firstName')}} {{user.get('lastName')}}</p>
+        </span>
+        <p *ngIf="users.length === 0">There are no users assigned to this user role.</p>
       </div>
-      <p>By clicking Delete these users will lose the role privileges that were assigned to this User Role</p>
+      <p>By clicking Delete these users will lose the role privileges that were assigned to this User Role.</p>
     </div>
     <div class="user-role-modal__delete-options">
       <button mat-raised-button (click)="closeModal()">Cancel</button>

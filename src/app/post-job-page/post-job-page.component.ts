@@ -101,7 +101,11 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	freelance: boolean;
 
+	
 	JobLocationFEInput: string;
+	JobLocationFEInput2: string;
+	JobLocationFEInput3: string;
+
 
 	placeSuggestions = false;
 
@@ -111,11 +115,23 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
 	postLocation;
+	postLocation2;
+	postLocation3;
+
 
 	jobCity;
+	jobCity2;
+	jobCity3;
 	JobState;
+	JobState2;
+	JobState3;
 	jobCountry;
+	jobCountry2;
+	jobCountry3;
 	postCode;
+	postCode2;
+	postCode3;
+
 
 	companyDescriptionMaxLength = 900;
 
@@ -820,6 +836,40 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 				this.JobState = placeObj.state;
 				if (placeObj.postcode) {
 					this.postCode = placeObj.postcode;
+				}
+			});
+	}
+
+	showPlace2(place) {
+		this.placeSuggestions = false;
+		this.JobLocationFEInput2 = place.description;
+		this._parse.execCloud('getPlaceDetails', {
+			placeId: place.place_id
+		})
+			.then(placeObj => {
+				this.postLocation2 = this._parse.GeoPoint(placeObj.location.lat, placeObj.location.lng);
+				this.jobCity2 = placeObj.city;
+				this.jobCountry2 = placeObj.country;
+				this.JobState2 = placeObj.state;
+				if (placeObj.postcode) {
+					this.postCode2 = placeObj.postcode;
+				}
+			});
+	}
+
+	showPlace3(place) {
+		this.placeSuggestions = false;
+		this.JobLocationFEInput3 = place.description;
+		this._parse.execCloud('getPlaceDetails', {
+			placeId: place.place_id
+		})
+			.then(placeObj => {
+				this.postLocation3 = this._parse.GeoPoint(placeObj.location.lat, placeObj.location.lng);
+				this.jobCity3 = placeObj.city;
+				this.jobCountry3 = placeObj.country;
+				this.JobState3 = placeObj.state;
+				if (placeObj.postcode) {
+					this.postCode3 = placeObj.postcode;
 				}
 			});
 	}
