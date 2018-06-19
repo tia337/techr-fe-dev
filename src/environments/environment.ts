@@ -10,5 +10,6 @@ export const environment = {
   SOCKET_IO: 'http://localhost:5000',
   REFERRAL_URL: 'http://localhost:5000/erp/',
   STRIPE_KEY: 'pk_test_DOxsBoIZIbzfu3y6EafzMDNU',
+  BRANCHIO_KEY: 'key_test_cfsBaSN7mn0ntAfhZq2A4nkivFjzYZKu',
   GOOGLE_API_KEY: 'AIzaSyBFfAIR1tt4-AOfcsGxc87y-yZMLdrMNbk'
 };
