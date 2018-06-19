@@ -367,7 +367,7 @@
                                     <mat-option *ngIf="matSpinnerActive1">
                                         <mat-spinner [diameter]="40" [strokeWidth]="3.2"></mat-spinner>
                                     </mat-option>
-                                    <mat-option (onSelectionChange)="showPlace(place)" *ngFor="let place of places1" value="{{place.description}}">
+                                    <mat-option (onSelectionChange)="showPlace2(place)" *ngFor="let place of places1" value="{{place.description}}">
                                         <span>{{ place.description }}</span>
                                     </mat-option>
                                 </mat-autocomplete>
@@ -384,7 +384,7 @@
                                     <mat-option *ngIf="matSpinnerActive2">
                                         <mat-spinner [diameter]="40" [strokeWidth]="3.2"></mat-spinner>
                                     </mat-option>
-                                    <mat-option (onSelectionChange)="showPlace(place)" *ngFor="let place of places2" value="{{place.description}}">
+                                    <mat-option (onSelectionChange)="showPlace3(place)" *ngFor="let place of places2" value="{{place.description}}">
                                         <span>{{ place.description }}</span>
                                     </mat-option>
                                 </mat-autocomplete>

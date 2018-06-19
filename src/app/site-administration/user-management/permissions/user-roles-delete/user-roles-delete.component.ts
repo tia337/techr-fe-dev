@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RootVCRService } from 'app/root_vcr.service';
 import { SiteAdministrationService } from './../../../site-administration.service';
 import { MatSnackBar } from '@angular/material';
+import { AccessLevelPageService } from '../../access-level-page/access-level-page.service';
 
 @Component({ 
   selector: 'app-user-roles-delete',
@@ -12,14 +13,22 @@ export class UserRolesDeleteComponent implements OnInit {
 
   currentUserRole;
   currentUserRoles;
+  users;
 
   constructor(
     private _rootVCRService: RootVCRService,
     private _siteAdministrationService: SiteAdministrationService,
-    private _snackbar: MatSnackBar
+    private _snackbar: MatSnackBar,
+    private _alService: AccessLevelPageService
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this._alService.getTeamMembersUserRoles(this.currentUserRole.roleName).then(data => {
+      this.users = data;
+    }).catch(error => {
+      console.log(error);
+    });
+  }
 
   set userRole(userRole) {
     this.currentUserRole = userRole;

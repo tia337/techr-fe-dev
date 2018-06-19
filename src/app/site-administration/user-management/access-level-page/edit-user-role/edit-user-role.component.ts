@@ -24,7 +24,7 @@ export class EditUserRoleComponent implements OnInit {
     this._alService.getUserRoles().then(roles => {
       for (let i = 0; i < roles.length; i++) {
         this.roles[i] = roles[i];
-        Object.defineProperty(this.roles[i], 'checked', {value: false, writable: true});
+        Object.defineProperty(this.roles[i], 'checked', { value: false, writable: true });
       }
       this.checkUserRoles(roles);
     }).catch(error => console.log(error));
@@ -81,7 +81,7 @@ export class EditUserRoleComponent implements OnInit {
 
   editTeamMemberUserRole() {
     const promise = new Promise ((resolve, reject) => {
-      this._parse.execCloud('editTeamMemberUserRole', {userId: this.user.userId, userRoles: this.user.userRoles}).then(data => {
+      this._parse.execCloud('editTeamMemberUserRole', { userId: this.user.userId, userRoles: this.user.userRoles }).then(data => {
         resolve(data);
         reject(data);
       });

@@ -59,6 +59,7 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   public bulkUploadStarted: boolean = false;
   public estimatedTimeLeft: number | string;
   public confirmCandidatesFromAddCandidateSubscription: Subscription;
+  public importPanelOpened = false;
 
   @ViewChild('filterSearchInput') filterSearchInput: HTMLInputElement;
 
