@@ -46,7 +46,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	newDepartment = false;
 	newSubdepartment = false;
 
-	offices;
+	offices = [];
 	officesFormGroup: FormGroup;
 	newOffice = false;
 
