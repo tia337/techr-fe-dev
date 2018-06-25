@@ -157,6 +157,7 @@ export class CandidateNotesComponent implements OnInit, OnDestroy {
 						});
 					}).then(() => {
 						this.CandidateNotesService.getContractOwner(this.contractId).then(owner => {
+							console.log('owner', owner);
 							this.owner = owner;
 						});
 					});

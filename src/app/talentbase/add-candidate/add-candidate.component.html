@@ -603,7 +603,7 @@
                   <h2 class="big-title">CV File</h2>      
                   <label *ngIf="CV === undefined && uploadedCandidates.length === 0" for="cv" class="add-property cv-input" (click)="$event.stopPropagation()">Upload files <mat-icon  class="icon-add">add</mat-icon></label>
                   <span class="CV display-flex align-items-c"
-                        *ngIf="uploadedCandidates.length > 0">{{uploadedCandidates[currentCandidateIndex]['developer'].documentCV.documentFile._name}}</span>
+                        *ngIf="uploadedCandidates.length > 0 && uploadedCandidates[currentCandidateIndex].fileName">{{uploadedCandidates[currentCandidateIndex].fileName}}</span>
                   <span class="CV display-flex align-items-c" *ngIf="CV !== undefined && uploadedCandidates.length === 0">{{CV.name}}<mat-icon class="icon-fz18 icon" (click)="CVInput.value = ''; CV = '';">clear</mat-icon></span>
                   <input id="cv" #CVInput (change)="setCVName($event);" accept=".pdf, .doc, .docx, .rtf" type="file" style="display: none;">
                 </div>

@@ -203,6 +203,7 @@ export class TalentbaseService {
   checkPendingBulkUploads(bulkArray: Array<BulkUploadItem>): BulkUploadItem {
     for (let i = 0; i < bulkArray.length; i++) {
       if (bulkArray[i].uploadFinished === false) {
+        console.log('bulkArray[i].uploadFinished', bulkArray[i]);
         return bulkArray[i];
       };
     }

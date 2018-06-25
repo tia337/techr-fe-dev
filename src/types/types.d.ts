@@ -1,3 +1,32 @@
+type UserParse = {
+    Languages: Array<any>,
+    Phone: string,
+    phone2?: string,
+    WebSites: Array<{ Type: string, Url: string }>,
+    dataOwners: Array<{ ownerId: string }>,
+    email: string,
+    firstName?: string,
+    lastName?: string,
+    summary?: string,
+    username?: string,
+    _created_at: Date,
+    _id: string,
+    _p_developer: string,
+    _updated_at: Date,
+    avatarURL?: string,
+    headline?: string
+}
+
+type DeveloperParse = {
+    dataOwners: Array<{ ownerId: string }>,
+    jobStatuses: Array<number>,
+    skills: Array<any>,
+    _created_at: Date,
+    _updated_at: Date,
+    _id: string,
+    _p_documentCV: string
+}
+
 type ChatTeamMember = {
     firstName: string,
     lastName: string,
@@ -175,4 +204,12 @@ type BulkActionsArray = Array<{
         description: string,
         hidden?: boolean
     }
+
+    type SingleViewCandidateLeftBlock = {
+        user: UserParse,
+        developer: DeveloperParse,
+        attachments: Array<any>,
+        tags: Array<any>
+    }
+
     // TALENT DATA BASE TYPES END  

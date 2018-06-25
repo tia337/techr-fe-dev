@@ -149,7 +149,7 @@
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    Careers Website Page
+                    Departments And Offices
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <!-- <div class="carrers-website-page">
@@ -300,11 +300,11 @@
                         <th>Likely to fill %</th>
                         <th>Description of stage</th>
                     </tr>
-                    <tr *ngFor="let clientProbabilityToCloseJob of clientProbabilitiesToCloseJob" [formGroup]="likelihoodFormGroup"> 
+                    <tr *ngFor="let clientProbabilityToCloseJob of clientProbabilitiesToCloseJob; let i = index;" [formGroup]="likelihoodFormGroup"> 
                         <td *ngIf="!editStageEnabled" class="stage-percentage">{{clientProbabilityToCloseJob.percentage}}%</td>
                         <td *ngIf="editStageEnabled">
                             <div class="pipeline-stage-table_edit-stage-percentage-box">
-                                <input type="text" [value]="clientProbabilityToCloseJob.percentage"  formControlName="stagePercentage">
+                                <input type="text" (keydown.enter)="editStage()" (input)="clientProbabilityToCloseJob.percentage = $event.target.value" [value]="clientProbabilityToCloseJob.percentage"  formControlName="stagePercentage">
                                 <div class="pipeline-stage-table_set-value">
                                     <p class="set-value" (click)="increaseClientProbability(clientProbabilityToCloseJob)">+</p>
                                     <p class="set-value" (click)="decreaseClientProbability(clientProbabilityToCloseJob)">-</p>
@@ -314,28 +314,29 @@
                         <td *ngIf="!editStageEnabled" class="stage-description">
                             {{clientProbabilityToCloseJob.description}}
                         </td>
-                        <td
-                            *ngIf="editStageEnabled" class="pipeline-stage-table_set-description">
-                            <input type="text" #inputDescription [value]="clientProbabilityToCloseJob.description" (keydown)="clientProbabilityToCloseJob.description = inputDescription.value">
+                        <td *ngIf="editStageEnabled" class="pipeline-stage-table_set-description">
+                            <input type="text" #inputDescription [value]="clientProbabilityToCloseJob.description" (keydown.enter)="editStage()" (input)="clientProbabilityToCloseJob.description = inputDescription.value">
+                            <mat-icon class="delete-icon" (click)="deleteLikelihoodStage(i)">delete</mat-icon>
                         </td>
                     </tr>
                     <tr class="pipeline-stage-table_add-likelihood-stage" *ngIf="newLikelihood">
                         <td>
-                            <input #newPercentageValue type="text" class="add-likelihood-stage_new-value" placeholder="50%">
+                            <input #newPercentageValue (keydown.enter)="addLikelihoodStage()" type="text" class="add-likelihood-stage_new-value" placeholder="50%">
                         </td>
                         <td>
-                            <input #newDescriptionValue type="text" class="add-likelihood-stage_new-description" placeholder="Description of stage">
+                            <input #newDescriptionValue (keydown.enter)="addLikelihoodStage()" type="text" class="add-likelihood-stage_new-description" placeholder="Description of stage">
                         </td>
                     </tr>
                 </table>
                 <div class="pipeline-stage-table_func-buttons">
-                    <button mat-raised-button color="primary" *ngIf="editStageEnabled === false"
-                        (click)="onEditStageClick()">Edit</button>
-                    <button mat-raised-button color="primary" *ngIf="editStageEnabled === true"
-                        (click)="onEditStageClick()">Save</button>
-                    <button mat-raised-button color="primary"
-                        (click)="onAddLikelihoodStage()">
-                        Add likelihood stage
+                    <button mat-raised-button color="primary" *ngIf="!editStageEnabled && !newLikelihood"
+                        (click)="editStage()">Edit</button>
+                    <button mat-raised-button color="primary" *ngIf="editStageEnabled && !newLikelihood" [ngClass]="{'btn-green': editStageEnabled }"
+                        (click)="editStage()">Save</button>
+                    <button mat-raised-button color="primary" *ngIf="!editStageEnabled" [ngClass]="{'btn-green': newLikelihood }"
+                        (click)="addLikelihoodStage()">
+                        <span *ngIf="!newLikelihood">Add likelihood stage</span>
+                        <span *ngIf="newLikelihood">Save likelihood stage</span>
                     </button>
                 </div>
             </div>

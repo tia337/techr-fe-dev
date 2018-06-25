@@ -4,6 +4,7 @@ import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 import { BehaviorSubject, ReplaySubject, Observable } from 'rxjs';
+import { deprecate } from 'util';
 
 @Injectable()
 export class CompanySettingsService {
@@ -178,14 +179,8 @@ export class CompanySettingsService {
 	}
 
 	setNewSettings(website, career, logo, companyDescription, companyBenefits, greeting) {
-		console.log(website);
-		console.log(career);
-		console.log(logo);
-		console.log(companyDescription);
-		console.log(companyBenefits);
 		let parseFile;
 		const client = this._parse.getCurrentUser().get('Client_Pointer');
-		console.log(client);
 		client.set('ClientWebsite', website);
 		client.set('ClientCareersPage', career);
 		client.set('erpPageGreeting', greeting);
@@ -195,9 +190,7 @@ export class CompanySettingsService {
 			parseFile = this._parse.File(logo.name, logo);
 			return parseFile.save().then(() => {
 				client.set('ClientLogo', parseFile);
-				console.log(client);
 				return client.save().then(res => {
-					console.log(res);
 					return res;
 				}, error => {
 					console.log(error);
@@ -205,10 +198,7 @@ export class CompanySettingsService {
 				});
 			})
 		} else {
-			console.log(client.get('ClientLogo'));
-			console.log(client);
 			return client.save().then(res => {
-				console.log(res);
 				return res;
 			}, error => {
 				console.log(error);
@@ -216,14 +206,17 @@ export class CompanySettingsService {
 			});
 		}
 	}
+
 	getCompany() {
 		return this._parse.getCurrentUser().fetch().then(res => {
 			return res.get('Client_Pointer');
 		});
 	}
+
 	getLogo() {
 		return this._parse.getCurrentUser().get('Client_Pointer').get('ClientLogo');
 	}
+
 	getAccessLevel() {
 		this._parse.Parse.User.current().fetch().then(res => {
 		});
@@ -231,6 +224,7 @@ export class CompanySettingsService {
 			return res.get('HR_Access_Level');
 		});
 	}
+
 	getAdmins() {
 		return this._parse.Parse.User.current().get('Client_Pointer').fetch().then(client => {
 			const admins: any[] = [];
@@ -248,15 +242,19 @@ export class CompanySettingsService {
 			});
 		});
 	}
+
 	getStages() {
 		return [...this.stages];
 	}
+
 	getClients(): ClientsArray {
 		return [...this.clients];
 	}
+
 	getProjects(): ProjectsArray {
 		return [...this.projects];
 	}
+
 	setPasswordState(state: boolean) {
 		const client = this._parse.getCurrentUser().get('Client_Pointer');
 		client.set('passwordSecured', state);
@@ -270,53 +268,68 @@ export class CompanySettingsService {
 
 	getClientProbabilitiesToCloseJob() {
 		const clientId = this.getClientId();
-		return this._parse.execCloud('getClientProbabilitiesToCloseJob', {clientId});
+		return this._parse.execCloud('getClientProbabilitiesToCloseJob', { clientId });
+	}
+
+	saveClientProbabilitiesToCloseJob(probabilities) {
+		const clientId = this.getClientId();
+		this._parse.execCloud('saveClientProbabilitiesToCloseJob', { clientId: clientId, probabilities: probabilities } );
 	}
 
 	getDepartments() {
 		const clientId = this.getClientId();
-		return this._parse.execCloud('getClientDepartments', {clientId});
+		return this._parse.execCloud('getClientDepartments', { clientId });
 	}
 
 	getOffices() {
 		const clientId = this.getClientId();
-		return this._parse.execCloud('getClientOffices', {clientId});
+		return this._parse.execCloud('getClientOffices', { clientId });
 	}
 
 	getClientsOfClient() {
 		const clientId = this.getClientId();
-		return this._parse.execCloud('getClientsOfClient', {clientId});
+		return this._parse.execCloud('getClientsOfClient', { clientId });
+	}
+
+	saveDepartments(departments) {
+		const clientId = this.getClientId();
+		this._parse.execCloud('saveDepartments', { clientId: clientId, departments: departments });
+	}
+
+	saveOffices(offices) {
+		const clientId = this.getClientId();
+		this._parse.execCloud('saveOffices', { clientId: clientId, offices: offices });
 	}
 
 	createClientOfClient(clientOfClientName) {
 		const clientId = this.getClientId();
-		return this._parse.execCloud('createClientOfClient', {clientId, clientOfClientName});
+		return this._parse.execCloud('createClientOfClient', { clientId, clientOfClientName });
 	}
 
 	editClientOfClient(clientOfClientId, clientOfClientName) {
-		this._parse.execCloud('editClientOfClient', { clientOfClientId, clientOfClientName});
+		this._parse.execCloud('editClientOfClient', { clientOfClientId, clientOfClientName });
 	}
 
 	deleteClientOfClient(clientOfClientId) {
-		this._parse.execCloud('deleteClientOfClient', {clientOfClientId});
+		this._parse.execCloud('deleteClientOfClient', { clientOfClientId });
 	}
 
 	getClientRecruitmentProjects() {
 		const clientId = this.getClientId();
-		return this._parse.execCloud('getClientRecruitmentProjects', {clientId});
+		return this._parse.execCloud('getClientRecruitmentProjects', { clientId });
 	}
 
 	createClientRecruitmentProject(clientOfClientId, projectName) {
 		const clientId = this.getClientId();
-		return this._parse.execCloud('createClientRecruitmentProject', {clientId, clientOfClientId, projectName});
+		return this._parse.execCloud('createClientRecruitmentProject', { clientId, clientOfClientId, projectName });
 	}
 
 	editClientRecruitmentProject(projectId, newProject) {
-		this._parse.execCloud('editClientRecruitmentProject', {projectId, newProject});
+		this._parse.execCloud('editClientRecruitmentProject', { projectId, newProject });
 	}
 
 	deleteClientRecruitmentProject(projectId) {
-		this._parse.execCloud('deleteClientRecruitmentProject', {projectId});
+		this._parse.execCloud('deleteClientRecruitmentProject', { projectId });
 	}
 
 	throwClient (client) {

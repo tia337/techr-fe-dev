@@ -9,6 +9,7 @@ export const environment = {
   SERVER_URL: 'http://localhost:5000/parse',
   SOCKET_IO: 'http://localhost:5000',
   REFERRAL_URL: 'http://localhost:5000/erp/',
+  BRANCHIO_KEY: 'key_test_cfsBaSN7mn0ntAfhZq2A4nkivFjzYZKu',
   STRIPE_KEY: 'pk_test_DOxsBoIZIbzfu3y6EafzMDNU',
   GOOGLE_API_KEY: 'AIzaSyBFfAIR1tt4-AOfcsGxc87y-yZMLdrMNbk'
 };

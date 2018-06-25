@@ -31,8 +31,8 @@ import 'rxjs/add/operator/distinct';
 })
 export class CompanySettingsComponent implements OnInit, OnDestroy {
 
-	tableRows;
-	clientProbabilitiesToCloseJob;
+	tableRows = [];
+	clientProbabilitiesToCloseJob = [];
 	editTableMode = false;
 	editStageEnabled = false;
 	newLikelihood = false;
@@ -41,7 +41,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	@ViewChild('newPercentageValue') newPercentageValue: ElementRef;
 	@ViewChild('newDescriptionValue') newDescriptionValue: ElementRef;
 
-	departments;
+	departments = [];
 	departmentFormGroup: FormGroup;
 	newDepartment = false;
 	newSubdepartment = false;
@@ -333,7 +333,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		this._CompanySettingsService.getDepartments()
 			.then(data => {
 				this.departments = data;
-				console.log(data);
 			});
 		this._CompanySettingsService.getOffices()
 			.then(data => {
@@ -625,10 +624,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			workFlowTypeName: client.workFlowTypeName,
 			workflowSaveChanges: false,
 		};
-		console.log(data);
 		let clientId = this._parse.getClientId();
 		this._parse.execCloud('saveCustomHiringWorkFlow', { clientId: clientId, data: data }).then(result => {
-			console.log(result);
 			data['_id'] = result.id;
 			this.workflowArray.push(data);
 		});
@@ -873,12 +870,13 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (department.edit) {
 			if (this.departmentFormGroup.value.departmentName !== null && this.departmentFormGroup.value.departmentName.trim() !== '') {
 				department.name = this.departmentFormGroup.value.departmentName;
-				this._parse.execCloud('saveNewDepartment', { clientId: this._parse.getClientId(), departments: this.departments });
+				this._CompanySettingsService.saveDepartments(this.departments);
 				department.edit = false;
 			} else {
 				this.departmentFormGroupInit(department);
 				department.edit = false;
 			}
+
 		} else {
 			this.departmentFormGroupInit(department);
 			department.edit = true;
@@ -898,7 +896,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		}, 4);
 
 	}
-
 	saveNewDepartment() {
 		if (this.departmentFormGroup.value.newDepartmentName !== null && this.departmentFormGroup.value.newDepartmentName.trim() !== '') {
 			const newDepartment = {
@@ -909,7 +906,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				subDepartments: []
 			};
 			this.departments.push(newDepartment);
-			this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments })
+			this._CompanySettingsService.saveDepartments(this.departments);
 			this.departmentFormGroup.reset();
 			this.newDepartment = false;
 		} else {
@@ -938,9 +935,9 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				edit: false
 			};
 			const index = this.departments.indexOf(department);
-			this.departments[index]['subDepartments'].push(newSubdepartment);
-			this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments });
+			this.departments[index].subDepartments.push(newSubdepartment);
 			department.newSubdepartment = false;
+			this._CompanySettingsService.saveDepartments(this.departments);
 			this.departmentFormGroup.reset();
 		} else {
 			this.departmentFormGroup.reset();
@@ -952,7 +949,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (subdepartment.edit) {
 			if (this.departmentFormGroup.value.subdepartmentName !== null && this.departmentFormGroup.value.subdepartmentName.trim() !== '') {
 				subdepartment.name = this.departmentFormGroup.value.subdepartmentName;
-				this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments });
+				this._CompanySettingsService.saveDepartments(this.departments);
 				subdepartment.edit = false;
 			} else {
 				subdepartment.edit = false;
@@ -969,9 +966,9 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	}
 	removeSubdepartment(department, subdepartment) {
 		const depIndex = this.departments.indexOf(department);
-		const subdepIndex = this.departments[depIndex]['subDepartments'].indexOf[subdepartment];
-		this.departments[depIndex]['subDepartments'].splice(subdepIndex, 1);
-		this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments });
+		const subdepIndex = this.departments[depIndex].subDepartments.indexOf[subdepartment];
+		this.departments[depIndex].subDepartments.splice(subdepIndex, 1);
+		this._CompanySettingsService.saveDepartments(this.departments);
 	}
 
 	removeDepartment(id) {
@@ -979,9 +976,9 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			if (department.id === id) {
 				const index = this.departments.indexOf(department);
 				this.departments.splice(index, 1);
+				this._CompanySettingsService.saveDepartments(this.departments);
 			}
 		});
-		this._parse.execCloud('saveDepartments', { clientId: this._parse.getClientId(), departments: this.departments });
 	}
 
 	officesFormGroupInit(office = null) {
@@ -1000,7 +997,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 					edit: false
 				};
 				this.offices.push(newOffice);
-				this._parse.execCloud('saveOffices', { clientId: this._parse.getClientId(), offices: this.offices });
+				this._CompanySettingsService.saveOffices(this.offices);
 				this.officesFormGroup.reset();
 				this.newOffice = false;
 			} else {
@@ -1021,8 +1018,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (office.edit) {
 			if (this.officesFormGroup.value.officeName !== null && this.officesFormGroup.value.officeName.trim() !== '') {
 				office.name = this.officesFormGroup.value.officeName;
-				this._parse.execCloud('saveOffices', { clientId: this._parse.getClientId(), offices: this.offices });
 				office.edit = false;
+				this._CompanySettingsService.saveOffices(this.offices);
 			} else {
 				office.edit = false;
 			}
@@ -1037,26 +1034,20 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	removeOffice(office) {
 		const officeIndex = this.offices.indexOf(office);
 		this.offices.splice(officeIndex, 1);
-		this._parse.execCloud('saveOffices', { clientId: this._parse.getClientId(), offices: this.offices });
+		this._CompanySettingsService.saveOffices(this.offices);
 	}
 
-	onEditStageClick() {
+	editStage() {
 		if (this.editStageEnabled !== true) {
 			return this.editStageEnabled = !this.editStageEnabled;
 		}
 		this.editStageEnabled = false;
-		this.clientProbabilitiesToCloseJob =
-			_.sortBy(
-				this.clientProbabilitiesToCloseJob,
-				function (clientProbability) {
-					return clientProbability.percentage;
-				}
-			);
+		this.clientProbabilitiesToCloseJob = _.sortBy(this.clientProbabilitiesToCloseJob, function (i) { return Number(i.percentage); });
+		this._CompanySettingsService.saveClientProbabilitiesToCloseJob(this.clientProbabilitiesToCloseJob);
 	}
 
 	increaseClientProbability(clientProbabilityToCloseJob) {
 		let percentage = Number(clientProbabilityToCloseJob.percentage);
-
 		if (percentage < 100) {
 			percentage += 5;
 			clientProbabilityToCloseJob.percentage = percentage;
@@ -1067,7 +1058,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 
 	decreaseClientProbability(clientProbabilityToCloseJob) {
 		let percentage = Number(clientProbabilityToCloseJob.percentage);
-
 		if (percentage > 0) {
 			percentage -= 5;
 			clientProbabilityToCloseJob.percentage = percentage;
@@ -1077,29 +1067,36 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	}
 
 
-	onAddLikelihoodStage() {
-		if (this.newLikelihood !== true) {
-			return this.newLikelihood = !this.newLikelihood;
-		}
-		const percentageValue = this.newPercentageValue.nativeElement.value;
-		const DescriptionValue = this.newDescriptionValue.nativeElement.value;
-
-		if ( percentageValue !== '' && DescriptionValue !== '' ) {
+	addLikelihoodStage() {
+		if (this.newLikelihood !== true) return this.newLikelihood = !this.newLikelihood;
+		let percentageValue = this.newPercentageValue.nativeElement.value;
+		const descriptionValue = this.newDescriptionValue.nativeElement.value;
+		if (percentageValue.indexOf('%') > -1) percentageValue = percentageValue.slice(0, percentageValue.indexOf('%'));
+		if (percentageValue !== '' && descriptionValue !== '') {
 			const newStageValue = {
-				stagePercentage: percentageValue,
-				stageDescription: DescriptionValue
+				percentage: percentageValue,
+				description: descriptionValue,
+				id: Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8)
 			};
-			this.tableRows.push(newStageValue);
-			this.tableRows = _.sortBy(this.tableRows, function (i) {return i.stagePercentage; });
+			this.clientProbabilitiesToCloseJob.push(newStageValue);
+			this.clientProbabilitiesToCloseJob = _.sortBy(this.clientProbabilitiesToCloseJob, function (i) { 
+				return Number(i.percentage); 
+			});
+			this._CompanySettingsService.saveClientProbabilitiesToCloseJob(this.clientProbabilitiesToCloseJob);
 		}
 		this.newLikelihood = false;
+	}
+
+	deleteLikelihoodStage(index) {
+		this.clientProbabilitiesToCloseJob.splice(index, 1);
+		this._CompanySettingsService.saveClientProbabilitiesToCloseJob(this.clientProbabilitiesToCloseJob);
 	}
 
 	addNewClient() {
 		this.newClient = true;
 		setTimeout(() => {
-		const newClientInput = document.getElementById('newClientInput');
-		this.renderer.invokeElementMethod(newClientInput, 'focus');
+			const newClientInput = document.getElementById('newClientInput');
+			this.renderer.invokeElementMethod(newClientInput, 'focus');
 		}, 4);
 	}
 

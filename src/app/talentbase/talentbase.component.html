@@ -159,7 +159,7 @@
               <div class="talentbase__filter-candidates--list" *ngIf="candidatesArray.length > 0" (scroll)="uploadMoreCandidates($event)">
                   <div class="talentbase__filter-candidates-candidate" 
                       *ngFor="let candidate of candidatesArray"
-                      (click)="openSingleViewAlert()">
+                      [routerLink]="['/talentbase/', candidate._id]">
                       <span class="filter-checkbox">
                           <mat-icon *ngIf="candidate.checked" class="icon-check">done</mat-icon>
                       </span>

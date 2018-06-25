@@ -1,0 +1,56 @@
+<div class="container-single-view">
+  <div class="back-button" [routerLink]="['/talentbase']">
+    <mat-icon class="icon-fz16">keyboard_arrow_left</mat-icon>
+    Back to TalentDB
+  </div>
+
+  <!-- MAIN CONTENT START -->
+
+  <div class="single-view__main-content">
+    <div class="single-view__left-block" *ngIf="leftBlockInfo">
+        <div class="single-view__candidate-main-info">
+          <div *ngIf="!leftBlockInfo.user.avatarURL" class="single-view__candidate-main-info_no-avatar">
+            <span>{{leftBlockInfo.user.firstName.charAt(0)}}&nbsp;{{leftBlockInfo.user.lastName.charAt(0)}}</span>
+          </div>
+          <img *ngIf="leftBlockInfo.user.avatarURL" src="{{leftBlockInfo.user.avatarURL}}" alt="" class="single-view__candidate-main-info_avatar">
+          <span class="single-view__candidate-main-info_name">{{leftBlockInfo.user.firstName}}&nbsp;{{leftBlockInfo.user.lastName}}</span>
+          <span class="single-view__candidate-main-info_headline">{{leftBlockInfo.user.headline}}</span>
+        </div>
+        <div class="single-view__candidate-contact-info">
+          <span class="single-view__candidate-contact-info_info" *ngIf="leftBlockInfo.user.email">
+            Email adress: <a href="mailto:{{leftBlockInfo.user.email}}">{{leftBlockInfo.user.email}}</a>
+          </span>
+          <span *ngIf="leftBlockInfo.user.Phone">Phone 1: {{leftBlockInfo.user.Phone}}</span>
+          <span *ngIf="leftBlockInfo.user.phone2">Phone 2: {{leftBlockInfo.user.phone2}}</span>
+        </div>
+        <div class="single-view__candidate-websites-info" *ngIf="leftBlockInfo.user.WebSites">
+          <span class="single-view__candidate-websites-info_website" *ngFor="let website of leftBlockInfo.user.WebSites">
+            <span *ngIf="website.Url !== ''">
+              <span>{{website.Type}}:&nbsp;</span>
+              <span>
+                <a href="{{website.Url}}" target="_blank">{{website.Url}}</a>
+              </span>
+            </span>
+          </span>
+        </div>
+        <div class="single-view__candidate-tags">
+          <p style="margin-bottom: 20px;">
+            <span class="single-view__candidate-tags_title">Tags</span>
+            <input type="text" placeholder="Add tag" (keydown.enter)="addTag($event.target.value)">
+          </p>
+          <span *ngIf="leftBlockInfo.tags.length === 0">
+            This candidate doesn't have any tags.
+          </span>
+          <span *ngIf="leftBlockInfo.tags.length > 0">
+            <span class="single-view__candidate-tags_tag" *ngFor="let tag of leftBlockInfo.tags">#{{tag.tagName}}</span>
+          </span>
+        </div>
+
+
+
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT END -->
+
+</div>

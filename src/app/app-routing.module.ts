@@ -81,6 +81,7 @@ import { JobDetailsGuard } from './guards/job-details.guard';
 import { TalentbaseComponent } from './talentbase/talentbase.component';
 import { AuthMicrosoftComponent } from './auth/auth-microsoft/auth-microsoft.component';
 import { AuthLinkedinComponent } from './auth/auth-linkedin/auth-linkedin.component';
+import { CandidateSingleViewComponent } from './talentbase/candidate-single-view/candidate-single-view.component';
 
 
 const routes: Routes = [
@@ -134,6 +135,7 @@ const routes: Routes = [
 		children: [
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 			{ path: 'talentbase', component: TalentbaseComponent },
+			{ path: 'talentbase/:id', component: CandidateSingleViewComponent },
 			{ path: 'chat/:id', component: ChatComponent, canActivate: [LoginGuard] },
 			{ path: 'chat/:id', component: NotificationComponent },
 			{ path: 'timeline', component: TimelineComponent },
