@@ -24,6 +24,10 @@
     flex-basis: 25%;
     background: #ffffff;
     border-radius: 2px;
+    margin-right: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .single-view__candidate-main-info {
@@ -32,13 +36,14 @@
     flex-direction: column;
     margin-bottom: 15px;
     &_avatar {
-        width: 150px;
-        height: 150px;
+        height: 4em;
+        width: 4em;
         margin: 50px 0 20px;
+        border-radius: 2px;
     }
     &_no-avatar {
-        height: 150px;
-        width: 150px;
+        height: 4em;
+        width: 4em;
         background: #e6b6b6;
         margin: 50px 0 20px;
         color: white;
@@ -47,6 +52,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 2px;
     }
     &_name {
         font-size: 18px;
@@ -71,6 +77,7 @@
     display: flex;
     flex-direction: column;
     padding: 0 10px;
+    margin-bottom: 10px;
     span {
         opacity: .8;
     }
@@ -80,8 +87,19 @@
     display: flex;
     flex-direction: column;
     padding: 0 10px;
+    margin-bottom: 20px;
+    &_holder {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .title {
+            flex-basis: 25%;
+        }
+    }
     &_title {
         margin-right: 5%;
+        margin-bottom: 5px;
         font-size: 18px;
         font-weight: bold;
     }
@@ -92,6 +110,7 @@
         padding: 4px;
         font-size: 14px;
         border-radius: 2px;
+        flex-basis: 70%;
     }
     &_tag {
         padding: 5px;
@@ -101,5 +120,144 @@
         margin-right: 5px;
         margin-bottom: 5px;
         border-radius: 2px;
+        font-size: 12px;
     }
+}
+
+.single-view__candidate-attachments {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0 10px;
+    margin-bottom: 15px;
+    &_attachment-name {
+        display: flex;
+        align-items: center;
+        mat-icon {
+            cursor: pointer;
+            margin-left: 3px;
+        }
+    }
+    &_add-file {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+    }
+}
+
+.single-view__candidate-edit {
+    padding: 0 10px;
+    margin-bottom: 15px;
+    &_buttons {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        mat-icon {
+            font-size: 26px;
+            width: 26px!important;
+            height: 26px!important;
+            cursor: pointer;
+        }
+        .reject-icon {
+            color: red;
+        }
+        .move-icon {
+            transform: rotate(135deg);
+        }
+    }
+    &_button {
+        background: #305597;
+        border: 1px solid transparent;
+        width: 100%;
+        padding: 5px 0;
+        color: #fff;
+        transition: .3s all ease-in-out;
+        cursor: pointer;
+        text-align: center;
+        font-size: 18px;
+        border-radius: 2px;
+        &:hover {
+            background: #fff;
+            border: 1px solid #305597;
+            color: #305597;
+        }
+    }
+}
+
+
+.single-view__center-block {
+    background: #ffffff;
+    flex-basis: 20%;
+    border-radius: 2px;
+}
+
+.single-view__center-block_no-info {
+    padding: 0 10px;
+    margin-top: 20px;
+    &__title {
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    &__description {
+        text-align: left;
+        &--bold {
+            font-weight: bold;
+        }
+    }
+}
+
+.single-view__center-block_info {
+    padding: 0 10px;
+    margin: 20px 0;
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+        tr {
+            cursor: pointer;
+            td {
+                border: 1px solid;
+                padding: 4px;
+                &:nth-child(2) {
+                    text-align: center;
+                }
+            }
+            &.active {
+                td {
+                    background: #305597;
+                    color: #fff;
+                    border: 1px solid #305597;
+                }
+            }
+        }
+    }
+}
+
+.single-view__center-contract-box {
+    border: 1px solid;
+    margin-bottom: 10px;
+    &--title {
+        border-bottom: 1px solid;
+        text-align: left;
+        padding: 5px 0;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        padding-left: 10px;
+        background: #797b7c;
+        color: #fff;
+    }
+    &--item {
+        margin-left: 10px;
+        margin-bottom: 5px;
+        font-size: 13px;
+    }
+}
+
+.dn {
+    display: none;
 }

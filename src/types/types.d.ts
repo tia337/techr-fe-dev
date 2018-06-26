@@ -212,4 +212,10 @@ type BulkActionsArray = Array<{
         tags: Array<any>
     }
 
+    type SingleViewCandidateCenterBlock = Array<{ 
+        title: string,
+        count: number | string,
+        contracts: Array<any>
+    }>
+
     // TALENT DATA BASE TYPES END  

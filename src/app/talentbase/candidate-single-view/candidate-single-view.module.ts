@@ -4,14 +4,15 @@ import { CandidateSingleViewComponent } from './candidate-single-view.component'
 import { CandidateSingleViewService } from './candidate-single-view.service';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from '../../app-routing.module';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule, MatTooltipModule } from '@angular/material';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     AppRoutingModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   declarations: [
     CandidateSingleViewComponent

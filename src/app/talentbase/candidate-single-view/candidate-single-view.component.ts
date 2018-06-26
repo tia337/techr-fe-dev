@@ -11,6 +11,9 @@ import { CandidateSingleViewService } from './candidate-single-view.service';
 export class CandidateSingleViewComponent implements OnInit, OnDestroy {
 
   public leftBlockInfo: SingleViewCandidateLeftBlock;
+  public centerBlockInfo: SingleViewCandidateCenterBlock = [];
+  public currentUser = this._parse.getCurrentUser();
+  public currentPipelineStage;
   public userId: string;
   public clientId: string = this._parse.getClientId();
 
@@ -20,36 +23,48 @@ export class CandidateSingleViewComponent implements OnInit, OnDestroy {
     private _candidateSingleViewService: CandidateSingleViewService
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._router.params.distinct().subscribe((params: { id: string }) => {
       this.userId = params.id;
       this.getCandidateInfo(this.userId, this.clientId);
     });
   }
 
-  getCandidateInfo(userId, clientId) {
+  getCandidateInfo(userId, clientId): void {
     this.getCandidateSingleViewLeftBlock(userId, clientId);
     this.getCandidateSingleViewCenterBlock(userId, clientId);
     this.getCandidateSingleViewRightBlock(userId, clientId); 
   }
 
-  getCandidateSingleViewLeftBlock(userId, clientId) {
-    this._candidateSingleViewService.getCandidateSingleViewLeftBlock(userId, clientId).then(result => {
+  getCandidateSingleViewLeftBlock(userId, clientId): void {
+    this._candidateSingleViewService.getCandidateSingleViewLeftBlock(userId, clientId).then((result: SingleViewCandidateLeftBlock) => {
       console.log('getCandidateSingleViewLeftBlock', result);
       this.leftBlockInfo = result;
     }).catch(error => console.log(error));
   }
 
-  getCandidateSingleViewCenterBlock(userId, clientId) {
-    this._candidateSingleViewService.getCandidateSingleViewCenterBlock(userId, clientId).then(result => {
+  getCandidateSingleViewCenterBlock(userId, clientId): void {
+    this._candidateSingleViewService.getCandidateSingleViewCenterBlock(userId, clientId).then((result: SingleViewCandidateCenterBlock) => {
       console.log('getCandidateSingleViewCenterBlock', result);
+      this.centerBlockInfo = result;
+      this.currentPipelineStage = this.centerBlockInfo[0];
     }).catch(error => console.log(error));
   }
 
-  getCandidateSingleViewRightBlock(userId, clientId) {
+  getCandidateSingleViewRightBlock(userId, clientId): void {
     this._candidateSingleViewService.getCandidateSingleViewRightBlock(userId, clientId).then(result => {
       console.log('getCandidateSingleViewRightBlock', result);
     }).catch(error => console.log(error));
+  }
+
+  getContractsById(contractIds): void {
+    this._candidateSingleViewService.getContractsById(contractIds).then(result => {
+      this.currentPipelineStage = result;
+    }).catch(error => console.log(error));
+  }
+
+  setCurrentPipelineStage(stage): void {
+    this.currentPipelineStage = stage;
   }
 
   ngOnDestroy() {
