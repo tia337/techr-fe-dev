@@ -23,6 +23,7 @@ import { Observable, Subscription } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/skipWhile';
 import 'rxjs/add/operator/distinct';
+import { ClientsArray, ProjectsArray, StagesArray, Stage } from 'types/types';
 
 @Component({
 	selector: 'app-company-settings',

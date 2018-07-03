@@ -18,6 +18,7 @@ import { SiteAdministrationComponent } from '../site-administration/site-adminis
 import { Subscription } from 'rxjs';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { Router } from '@angular/router';
+import { FilterItem, UserTalentDBFilter, TalentDBCandidate, PaginationLimits, BulkUploadItem } from 'types/types';
 
 // tslint:disable:indent
 @Component({

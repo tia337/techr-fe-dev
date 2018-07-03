@@ -1,3 +1,5 @@
+import { FinalVerdict } from "app/shared/utils";
+
 type UserParse = {
     Languages: Array<any>,
     Phone: string,
@@ -35,6 +37,68 @@ type ChatTeamMember = {
     avatar: string,
     undefinedAvatar: string,
     background: string
+}
+
+type MessageParse = {
+    IsEmailDelivered: boolean, 
+    IsEmailOpened: boolean,
+    IsEmailSent: boolean,
+    authorAvatarURL: string, 
+    authorFullname: string, 
+    isEmailed: boolean,
+    isPushSent: boolean, 
+    message: string,
+    _created_at: Date,
+    _updated_at: Date,
+    _id: string,
+    _p_Type: string,
+    _p_author: string,
+    _p_dialog: string
+}
+
+type NotesParse = {
+    IsPrivate: boolean,
+    Message: string,
+    TaggedColleagues: Array<string>,
+    authorAvatarURL: string,
+    authorFullname: string,
+    candidateFullname: string,
+    contractTitle: string,
+    emailIDs: Array<string>,
+    isEmailSent: boolean,
+    isPushSent: boolean,
+    notePipelineStage: number,
+    _created_at: Date,
+    _updated_at: Date,
+    _id: string,
+    _p_Author: string,
+    _p_Candidate: string,
+    _p_Client: string,
+    _p_Job: string,
+    _p_contractOwner: string
+}
+
+type ScorecardsParse = {
+    ClientName: string,
+    FinalVerdict: number,
+    FinalVerdictNotes: string,
+    TaggedColleagues: Array<string>,
+    WeightedScore: number,
+    authorAvatarURL: string,
+    authorFullname: string,
+    candidateFullname: string,
+    contractTitle: string,
+    isWebPushSent: boolean,
+    scoringPipelineStage: number,
+    _created_at: Date,
+    _updated_at: Date,
+    _id: string,
+    _p_Author: string,
+    _p_Candidate: string,
+    _p_Client: string,
+    _p_Job: string,
+    _p_Scorecard: string,
+    _p_contractOwner: string
 }
 
 type UpdatedUser = {
@@ -129,7 +193,6 @@ type BulkActionsArray = Array<{
     };
 
     
-    
     // TALENT DATA BASE TYPES START
     
     type TalentDBCandidate = {
@@ -216,6 +279,13 @@ type BulkActionsArray = Array<{
         title: string,
         count: number | string,
         contracts: Array<any>
+    }>
+
+    type SingleViewCandidateRightBlock = Array<{ 
+        title: string, 
+        items: Array<any>,
+        roles?: Array<any>,
+        industries?: Array<any>
     }>
 
     // TALENT DATA BASE TYPES END  

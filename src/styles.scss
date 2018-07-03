@@ -984,6 +984,10 @@ app-chat .dropdown-menu {
     display: inline-flex;
 }
 
+.flex-direction-c {
+    flex-direction: column;
+}
+
 .align-items-c {
     align-items: center;
 }
@@ -1006,6 +1010,10 @@ app-chat .dropdown-menu {
 
 .justify-content-fe {
     justify-content: flex-end;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 

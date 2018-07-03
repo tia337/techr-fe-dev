@@ -5,6 +5,7 @@ import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 import { BehaviorSubject, ReplaySubject, Observable } from 'rxjs';
 import { deprecate } from 'util';
+import { StagesArray, ProjectsArray, ClientsArray } from 'types/types';
 
 @Injectable()
 export class CompanySettingsService {

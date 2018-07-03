@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RootVCRService } from '../../../root_vcr.service';
 import { CompanySettingsService } from '../company-settings.service';
+import { ClientsArray, ProjectsArray } from 'types/types';
 //tslint:disable:indent
 @Component({
   selector: 'app-new-workflow',

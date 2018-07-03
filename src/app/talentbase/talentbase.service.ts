@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Parse } from '../parse.service';
 import * as _ from "underscore";
 import { Subject } from 'rxjs';
+import { PaginationLimits, TalentDBCandidate, FilterItem, UserTalentDBFilter, BulkUploadItem } from 'types/types';
 
 //tslint:disable:indent
 @Injectable()

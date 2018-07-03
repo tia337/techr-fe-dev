@@ -48,13 +48,13 @@
         <div class="single-view__candidate-tags">
           <p class="single-view__candidate-tags_holder">
             <span class="single-view__candidate-tags_title">Tags</span>
-            <input type="text" placeholder="Add tag" (keydown.enter)="addTag($event.target.value)">
+            <input type="text" #addTagInput placeholder="Add tag" (keydown.enter)="addTag($event.target.value); addTagInput.value = null;">
           </p>
           <span *ngIf="leftBlockInfo.tags.length === 0">
             This candidate doesn't have any tags.
           </span>
           <span *ngIf="leftBlockInfo.tags.length > 0">
-            <span class="single-view__candidate-tags_tag" *ngFor="let tag of leftBlockInfo.tags">#{{tag.tagName}}</span>
+            <span class="single-view__candidate-tags_tag" *ngFor="let tag of leftBlockInfo.tags; let i = index;">#{{tag.tagName}} <mat-icon class="icon-fz14" (click)="deleteTag(tag._id, i)">clear</mat-icon> </span>
           </span>
         </div>
         <div class="single-view__candidate-edit">
@@ -73,7 +73,6 @@
     <!-- LEFT BLOCK END -->
 
     <!-- CENTER BLOCK START -->
-
     <div class="single-view__center-block">
        <div class="single-view__center-block_no-info" *ngIf="centerBlockInfo.length === 0">
          <p class="single-view__center-block_no-info__title" *ngIf="leftBlockInfo && currentUser">{{leftBlockInfo.user.firstName}} & {{currentUser.get('Client')}}</p>
@@ -115,8 +114,332 @@
         </div>
        </div>
     </div>
-
     <!-- CENTER BLOCK END -->
+
+    <!-- RIGHT BLOCK START -->
+
+    <div class="single-view__right-block">
+      <div class="single-view__right-block--tabs-row">
+        <ul *ngIf="rightBlockInfo">
+          <li *ngFor="let tab of rightBlockInfo"
+              [ngClass]="{'active': currentRightBlockTab === tab}"
+              (click)="currentRightBlockTab = tab">
+            {{tab.title}} ({{tab.items.length}})
+          </li>
+        </ul>
+      </div>
+
+      <!-- RIGHT BLOCK OUTLET START -->
+
+      <div class="single-view__right-block--outlet" *ngIf="currentRightBlockTab">
+
+        <div *ngIf="currentRightBlockTab.title === 'Messages'">
+          <div class="single-view__right-block--message-input">
+            <span *ngIf="leftBlockInfo.user.avatarURL" class="single-view__right-block--message-input__image">
+              <img src="{{leftBlockInfo.user.avatarURL}}" alt="">
+            </span>
+            <span *ngIf="!leftBlockInfo.user.avatarURL" class="single-view__right-block--message-input__no-image">
+              {{leftBlockInfo.user.firstName.charAt(0)}} {{leftBlockInfo.user.lastName.charAt(0)}}
+            </span>
+            <textarea type="text" placeholder="Type here a message"></textarea>
+          </div>
+          <div *ngIf="currentRightBlockTab.items.length === 0">
+            No messages with this candidate.
+          </div>
+          <div *ngIf="currentRightBlockTab.items.length > 0">
+            <div class="single-view__right-block--message" *ngFor="let message of currentRightBlockTab.items">
+              <span class="single-view__right-block--message__avatar">
+                <img src="{{message.authorAvatarURL}}" alt="">
+              </span>
+              <div class="single-view__right-block--message__content">
+                <p>{{message.authorFullname}}</p>
+                <p>{{message.message}}</p>
+              </div>
+              <p class="single-view__right-block--message__date">{{message._created_at | date: "MMMM MM, yyyy"}}</p>
+            </div>
+          </div>
+          
+        </div>
+
+        <div *ngIf="currentRightBlockTab.title === 'Scorecards'">
+            <div class="single-view__right-block--scorecard__moving-block">
+
+            </div>
+          <div class="display-flex single-view__right-block--scorecard" *ngFor="let scorecard of currentRightBlockTab.items">
+            <span class="single-view__right-block--scorecard__avatar">
+              <img src="{{scorecard.authorAvatarURL}}" alt="">
+            </span>
+            <div class="display-flex flex-direction-c">
+              <span class="display-flex align-items-c">
+                <span class="bold">{{scorecard.authorFullname}}</span> 
+                <star-rating class="rating-stars" size="m" [disabled]="true" [(ngModel)]="scorecard.WeightedScore"></star-rating>
+              </span>
+              <span class="single-view__right-block--scorecard__note">{{scorecard.FinalVerdictNotes}}</span>
+              <div class="single-view__right-block--scorecard__buttons">
+                <p>Edit scoring</p>
+                <p>E-mail scoring</p>
+                <p>See scoring</p>
+              </div>
+              <p class="single-view__right-block--scorecard__date">{{scorecard._created_at | date: "MMMM MM, yyyy"}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="currentRightBlockTab.title === 'Notes'">
+          <div class="single-view__right-block--notes__create-note">
+            <textarea class="single-view__right-block--notes__create-note__textarea" placeholder="Write a note here"></textarea>
+            <div class="single-view__right-block--notes__create-note__buttons">
+              <p class="single-view__right-block--notes__create-note__btn">Create Note</p>
+            </div>
+          </div>
+          <div *ngIf="currentRightBlockTab.items.length > 0">
+            <div class="display-flex flex-direction-c" *ngFor="let note of currentRightBlockTab.items">
+              <span class="single-view__right-block--note__job-vacancy">
+                <span class="bold">Job vacancy:</span> 
+                {{note.contractTitle}}
+              </span>
+              <div class="display-flex single-view__right-block--note">
+                <span class="single-view__right-block--note__avatar">
+                  <img src="{{note.authorAvatarURL}}" alt="">
+                </span>
+                <p class="display-flex flex-direction-c">
+                  <span class="bold">{{note.authorFullname}}</span>
+                  <span>{{note.Message}}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="currentRightBlockTab.title === 'Skills'">
+
+            <div class="" style="display: flex;">
+              
+              <div class="holder">
+                <mat-form-field>
+                    <input matInput 
+                          placeholder="Select Skills" 
+                          formcontrolname="Skills" 
+                          [(ngModel)]="query" 
+                          (keydown)="prevDef($event, skillsdsuggestions)" 
+                          (blur)="activeUnSet()" 
+                          [ngModelOptions]="{standalone: true}" 
+                          (keyup)="keyPressing($event)" autocomplete="off">
+                </mat-form-field>
+                <label class="arrow-button-group" (click)="activeDropdown('skills', skillsdropdown, $event); dropdownVisible = !dropdownVisible; dropdownRolesVisible = false; dropdownIndustriesVisible = false;">
+                  <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownVisible" [ngModelOptions]="{standalone: true}" />
+                  <div class="arrow-button" >
+                    <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>
+                  </div>
+                </label>
+                <div #skillsdsuggestions>
+                    <div *ngIf="filteredList.length > 0 && active == true">
+                        <div class="suggestions-skills-wrap">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tr class="header">
+                                    <th class="skill-header">Skill</th>
+                                    <th class="experience-header">Experience Level (years)</th>
+                                    <th class="category-header">Skill Area</th>
+                                </tr>
+                            </table>
+                            <div class="inner-area" #scrollpanel>
+                                <table cellpadding="0" cellspacing="0" border="0">
+                                    <tr class="items-container" 
+                                        [ngClass]="{'container-selected': i == selectionCounter}" 
+                                        *ngFor="let item of filteredList; let i = index" 
+                                        (mouseenter)="selectionCounter = i" 
+                                        (click)="selectSkill(item, expPosition); $event.stopPropagation();">
+                                        <td class="name">
+                                            <a *ngIf="i != selectionCounter" class="item">{{item.get("title")}}</a>
+                                            <a *ngIf="i == selectionCounter" class="item-selected">{{item.get("title")}}</a>
+                                        </td>
+                                        <td class="experience" *ngIf="i == selectionCounter">
+                                            <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 1" [ngClass]="{'selected-exp': expPosition == 1}">any</span>
+                                            <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 2" [ngClass]="{'selected-exp': expPosition == 2}">+3</span>
+                                            <span *ngIf="i == selectionCounter" class="exp" (mouseenter)="expPosition = 3" [ngClass]="{'selected-exp': expPosition == 3}">+5</span>
+                                        </td>
+                                        <td class="experience" *ngIf="i != selectionCounter">
+                                            <span class="exp">any</span>
+                                            <span class="exp">+3</span>
+                                            <span class="exp">+5</span>
+                                        </td>
+                                        <td class="category">
+                                            <a *ngFor="let cat of categories">
+                                                <a *ngFor="let c of item.get('categories'); let first = first">
+                                                    <a *ngIf="first && c == cat.id">{{cat.get('title')}}</a>
+                                                </a>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
+        
+                <!-- ROLES INPUT -->
+                <div class="holder">
+                  <mat-form-field style="margin: 0 15px; margin-right: 25px;">
+                      <input matInput placeholder="Select Roles" [(ngModel)]="queryRoles" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'role', rolessuggestions)" (blur)="activeRolesUnSet()" (keyup)="keyRnIPressing($event, 'role')" autocomplete="off">
+                  </mat-form-field>
+                  <label class="arrow-button-group" (click)="activeDropdown('roles',rolesdropdown, $event);  dropdownVisible  = false; dropdownRolesVisible = !dropdownRolesVisible; dropdownIndustriesVisible = false;">
+                    <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownRolesVisible" [ngModelOptions]="{standalone: true}"  />
+                    <div class="arrow-button" style="margin-left: -55px;">
+                      <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>
+                    </div>
+                  </label>
+                   <!-- ROLES SUGGESTIONS -->
+                  <div #rolessuggestions>
+                      <div class="suggestions suggestions-roles" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForRoles == true">
+                          <div class="suggestions-roles-wrap">
+                              <div class="inner-area" #scrollpanel>
+                                  <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectRole(item);">
+                                      <td class="name">
+                                          <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
+                                          <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
+                                      </td>
+                                  </tr>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+        
+                <!-- INDUSTRIES INPUT -->
+                <div class="holder">
+                  <mat-form-field>
+                      <input matInput placeholder="Select Industries" [(ngModel)]="queryIndustries" [ngModelOptions]="{standalone: true}" (keydown)="prevDefRnI($event, 'industry', industriessuggestions)" (blur)="activeIndustriesUnSet()" (keyup)="keyRnIPressing($event, 'industry')"
+                         autocomplete="off">
+                  </mat-form-field>
+                  <label class="arrow-button-group" (click)="activeDropdown('industries', industriesdropdown, $event); dropdownIndustriesVisible = !dropdownIndustriesVisible; dropdownRolesVisible = false; dropdownVisible = false;">
+                    <input class="arrow-checkbox" type="checkbox" [(ngModel)]="dropdownIndustriesVisible" [ngModelOptions]="{standalone: true}" />
+                    <div class="arrow-button">
+                      <mat-icon class="icon-fz18" style="transform: rotate(90deg)">play_arrow</mat-icon>              
+                    </div>
+                  </label>
+                  <!-- INDUSTRIES SUGGESTIONS -->
+                          
+                  <div #industriessuggestions>
+                      <div class="suggestions suggestions-industries" *ngIf="filteredRnIList && filteredRnIList.length > 0 && activeForIndustries == true">
+                          <div class="suggestions-industries-wrap">
+                              <div class="inner-area" #scrollpanel>
+                                  <tr class="items-container" [ngClass]="{'container-selected': i == selectionRnICounter}" *ngFor="let item of filteredRnIList; let i = index" (mouseenter)="selectionRnICounter = i" (click)="selectIndustry(item);">
+                                      <td class="name">
+                                          <a *ngIf="i != selectionRnICounter" class="item">{{item.get("title")}}</a>
+                                          <a *ngIf="i == selectionRnICounter" class="item-selected">{{item.get("title")}}</a>
+                                      </td>
+                                  </tr>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+        
+               
+               
+        
+
+                <!-- SKILLS DROPDOWN -->
+                <div #skillsdropdown>
+                    <div class="dropdown-wrap" *ngIf="dropdownVisible === true">
+                        <div class="categories-wrap" 
+                            (clickOutside)="dropdownVisible = false; $event.stopPropagation()" 
+                            [delayClickOutsideInit]="true">
+                            <div class="category-wrap" *ngFor="let category of categories; let i = index">
+                                <div class="category-title" 
+                                    *ngIf="category" 
+                                    (click)="getCategorySkills(i); activeSkillsCategory = category.get('title')">
+                                    {{category.get('title')}}
+                                </div>
+                                <div #categoryTitles class="skills-wrap"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+        
+                <!-- ROLES DROPDOWN -->
+                <div #rolesdropdown>
+                    <div class="dropdown-wrap dropdown-roles" *ngIf="dropdownRolesVisible === true">
+                        <div class="roles-wrap" (clickOutside)="dropdownRolesVisible = false" [delayClickOutsideInit]="true">
+                            <div>
+                                <div class="role-wrap" *ngFor="let item of roles; let i = index" (click)="prevDfSelecting($event)">
+                                    <div *ngIf="item" class="item-title" (click)="prevDfSelecting($event); selectRole(item);">
+                                        {{item.get('title')}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- INDUSTRIES DROPDOWN -->
+                <div #industriesdropdown>
+                    <div class="dropdown-wrap dropdown-industries" *ngIf="dropdownIndustriesVisible === true">
+                        <div class="roles-wrap" (clickOutside)="dropdownIndustriesVisible = false" [delayClickOutsideInit]="true">
+                            <div class="role-wrap" *ngFor="let item of industries; let i = index">
+                                <div *ngIf="item" class="item-title" (click)="selectIndustry(item);">
+                                    {{item.get('title')}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+              </div>
+
+            <div class="single-view__right-block--roles">
+              <p class="single-view__right-block--roles__title">Industries</p>
+              <div class="single-view__right-block--roles__wrap" *ngIf="currentRightBlockTab.industries.length === 0">
+                No industries.
+              </div>
+              <div class="single-view__right-block--roles__wrap" *ngIf="currentRightBlockTab.industries.length > 0">
+                <span class="single-view__right-block--roles__role" *ngFor="let role of currentRightBlockTab.industries; let i = index;">
+                  <span class="single-view__right-block--roles__role-visible">{{role.get('title')}}</span>
+                  <span class="single-view__right-block--roles__role-remove" (click)="removeRole(role.id, i, currentRightBlockTab.roles)">Remove</span>
+                </span>
+              </div>
+          </div>
+
+          <div class="single-view__right-block--roles">
+            <p class="single-view__right-block--roles__title">Roles</p>
+            <div class="single-view__right-block--roles__wrap" *ngIf="currentRightBlockTab.roles.length === 0">
+              No roles.
+            </div>
+            <div class="single-view__right-block--roles__wrap" *ngIf="currentRightBlockTab.roles.length > 0">
+              <span class="single-view__right-block--roles__role" *ngFor="let role of currentRightBlockTab.roles; let i = index;">
+                <span class="single-view__right-block--roles__role-visible">{{role.get('title')}}</span>
+                <span class="single-view__right-block--roles__role-remove" (click)="removeRole(role.id, i, currentRightBlockTab.roles)">Remove</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="single-view__right-block--skills">
+            <p class="single-view__right-block--skills__title">Skills</p>
+            <div class="single-view__right-block--roles__wrap" *ngIf="currentRightBlockTab.items.length === 0">
+              No skills.
+            </div>
+            <div class="single-view__right-block--skills__wrap" *ngIf="currentRightBlockTab.items.length > 0">
+              <span class="single-view__right-block--skills__skill" *ngFor="let skill of currentRightBlockTab.items; let i = index;">
+                <span class="single-view__right-block--skills__skill-visible">{{skill.get('skill').get('title')}}</span>
+                <span class="single-view__right-block--skills__skill-visible">{{skill.get('selectedExperienceDuration')}}+</span>
+                <span class="single-view__right-block--skills__skill-remove" (click)="removeSkill(skill.id, i, currentRightBlockTab.items)">Remove</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT BLOCK OUTLET END -->
+
+
+
+    </div>
+
+    <!-- RIGHT BLOCK END -->
+
 
 
   </div>

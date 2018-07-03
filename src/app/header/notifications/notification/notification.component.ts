@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, Element
 import { RootVCRService } from '../../../root_vcr.service';
 import { Router } from '@angular/router';
 import { JobDetailsService } from '../../../job-details/job-details.service';
+import { NotificationMessageSender } from 'types/types';
 
 @Component({
 	selector: "notification",
