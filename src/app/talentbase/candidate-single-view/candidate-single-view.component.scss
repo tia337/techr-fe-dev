@@ -2,7 +2,6 @@
 @import '../../../styles/variables.scss';
 @import '../../../styles/mixins';
 
-
 .back-button {
     background: #797b7c;
     display: inline-flex;
@@ -163,7 +162,7 @@
         display: flex;
         width: 100%;
         align-items: center;
-        justify-content: space-between;
+        justify-content: space-around;
         margin-bottom: 10px;
         mat-icon {
             font-size: 26px;
@@ -273,7 +272,6 @@
     display: none;
 }
 
-
 .single-view__right-block {
     flex-basis: 60%;
     background: #ffffff;
@@ -329,6 +327,22 @@
     }
 }
 
+.single-view__right-block--message-button {
+    background: #305597;
+    color: #fff;
+    border-radius: 2px;
+    padding: 5px 10px;
+    transition: .3s all ease-in-out;
+    border: 1px solid transparent;
+    margin-bottom: 10px;
+    cursor: pointer;
+    &:hover {
+        background: #ffffff;
+        color: #305597;
+        border: 1px solid #305597;
+    }
+}
+
 .single-view__right-block--outlet {
     padding: 0 10px;
     margin-bottom: 10px;
@@ -368,7 +382,6 @@
     }
 }
 
-
 .single-view__right-block--scorecard {
     position: relative;
     margin-bottom: 10px;
@@ -401,8 +414,9 @@
 }
 
 .single-view__right-block--note {
-    background: #d0d0d0;
+    // background: #d0d0d0;
     margin-bottom: 10px;
+    position: relative;
     &__job-vacancy {
         margin-bottom: 5px;
     }
@@ -413,6 +427,11 @@
             width: 100px;
             height: 100px;
         }
+    }
+    &__date {
+        position: absolute;
+        right: 0;
+        top: 0;
     }
 }
 
@@ -433,6 +452,7 @@
         padding: 5px 10px;
         transition: .3s all ease-in-out;
         border: 1px solid transparent;
+        cursor: pointer;
         &:hover {
             background: #ffffff;
             color: #305597;
@@ -460,7 +480,7 @@
             background: #0579b6;
             color: #fff;
             text-align: center;
-            padding: 0 3px;
+            padding: 0 4px;
             font-size: 12px;
         }
         &-remove {
@@ -468,8 +488,10 @@
             position: absolute;
             left: 0;
             right: 0;
-            top: 4px;
+            top: 0px;
             text-align: center;
+            justify-content: center;
+            align-items: center;
         }
         &:hover {
             background: #0579b6;
@@ -477,12 +499,18 @@
             cursor: pointer;
         }
         &:hover &-remove {
-            display: block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         &:hover &-visible {
             visibility: hidden;
         }
     }
+}
+
+.removeProcess {
+    background: #0579b6;
 }
 
 .single-view__right-block--roles {
@@ -513,8 +541,10 @@
             position: absolute;
             left: 0;
             right: 0;
-            top: 4px;
+            top: 0;
             text-align: center;
+            align-items: center;
+            justify-content: center;
         }
         &:hover {
             background: #0579b6;
@@ -522,7 +552,8 @@
             cursor: pointer;
         }
         &:hover &-remove {
-            display: block;
+            display: flex;
+            justify-content: center;
         }
         &:hover &-visible {
             visibility: hidden;
@@ -530,7 +561,36 @@
     }
 }
 
+.scroll {
+    overflow: auto;
+    max-height: calc(100vh - 320px);
+}
 
+.display-flex {
+    display: flex!important;
+    align-items: center!important;
+    justify-content: center!important;
+}
+
+.removeInProcess {
+    background: #0579b6;
+    cursor: not-allowed;
+}
+
+.visibility-hidden {
+    visibility: hidden!important;
+}
+
+.spinner {
+}
+
+.spinner /deep/{
+    svg {
+        circle {
+            stroke: #fff !important;
+        }
+    }
+}
 //  SKILLS ROLES INDUSTRIES START
 
 .edit-buttons-container {
@@ -583,8 +643,8 @@
 
 .dropdown-industries {
     .roles-wrap {
-        top: 28rem!important;
-        left: 29.2rem!important;
+        top: 3.5em!important;
+        left: 0!important;
     }
 }
 
@@ -607,8 +667,8 @@
         padding: 15px 10px;
         background-color: $white;
         z-index: 99;
-        top: 28rem;
-        left: 15.2rem;
+        top: 3.5em;
+        left: 0;
         .role-wrap {
             cursor: pointer;
             .item-title {
@@ -628,8 +688,8 @@
         padding: 15px 10px;
         background-color: $white;
         z-index: 101;
-        top: 28rem;
-        left: 1.2rem;
+        top: 3.5em;
+        left: 0;
         .category-wrap {
             cursor: pointer;
             .category-title {
@@ -640,7 +700,7 @@
             }
             .skills-wrap {
                 padding-left: 20px;
-                overflow: hidden;
+                // overflow: hidden;
                 height: auto;
                 max-height: 0;
                 overflow-y: auto;
@@ -765,19 +825,19 @@
     }
     .suggestions-roles-wrap {
         background: white;
-        // position: absolute;
+        position: absolute;
         z-index: 999;
         border: 1px solid rgb(219, 217, 217);
-        top: 32em;        
-        left: 13.2rem;
+        top: 3.5em;        
+        left: 0;
     }
     .suggestions-industries-wrap {
         background: white;
-        // position: absolute;
+        position: absolute;
         z-index: 999;
         border: 1px solid rgb(219, 217, 217);
-        top: 32rem;        
-        left: 13.2rem;
+        top: 3.5em;        
+        left: 0;
     }
     table {
         table-layout: fixed;
@@ -1053,6 +1113,10 @@ table {
 
 .selected-no-display {
     display: none;
+}
+
+.mat-form-field {
+    width: auto!important;
 }
 
 //  SKILLS ROLES INDUSTRIES END

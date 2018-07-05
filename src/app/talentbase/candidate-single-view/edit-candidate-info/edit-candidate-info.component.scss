@@ -1,0 +1,236 @@
+.modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: #000;
+    background: rgba(0,0,0,0.5);
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.modal--clean {
+    background: transparent!important;
+}
+
+.alignment--vertical:after, .modal:after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.ngdialog-overlay {
+    background: rgba(0,0,0,0.4);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    -webkit-backface-visibility: hidden;
+}
+
+.ngdialog--noClose>.ngdialog-content {
+    width: 100%;
+}
+
+.ngdialog-content {
+    display: inline-block;
+    position: relative;
+    z-index: 21;
+}
+
+.modal-dialog {
+    background: #fafafa;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 30px 0;
+    outline: 0;
+    position: relative;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.modal--wide {
+    max-width: 900px;
+    width: 84%;
+    background: #fafafa;
+    margin: 40px auto;
+    position: relative;
+}
+
+.icon-close-modal {
+    position: absolute;
+    right: 2px;
+    color: #fafafa;
+    top: 2px;
+    cursor: pointer;
+    transition: .3s all ease-in-out;
+    &:hover {
+        transform: rotate(180deg);
+    }
+}
+
+.modal {
+    &__title {
+        font-size: 20px;
+        padding: 10px 10px;
+        padding-top: 25px;
+        text-transform: uppercase;
+        text-align: center;
+        width: 100%;
+        background: #616161;
+        color: #ECEFF1;
+    }
+}
+
+.row {
+    display: flex;
+    padding: 5px 20px;
+    justify-content: space-between;
+    .title-holder {
+        display: flex;
+        align-items: center;
+    }
+    &.form-row {
+        flex-direction: column;
+    }
+    .add-property {
+        display: flex;
+        align-items: center;
+        color: #13579a;
+        cursor: pointer;
+        &.cv-input {
+            display: flex;
+            align-items: center;
+        }
+        .icon-add {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
+    }
+    .double-inputs-holder {
+        display: flex;
+    }
+    .big-title {
+        font-size: 20px;
+        font-weight: bold;
+        width: 120px;
+        margin-right: 15px;
+    }
+    .input-holder {
+        display: flex;
+        flex-direction: column;
+        flex-basis: 50%;
+        &.dates {
+            flex-basis: 100%;
+            flex-direction: row;
+            p {
+                width: 50%;
+            }
+            .form-field-holder {
+                display: flex;
+                margin-top: 10px;
+            }
+            .year-select {
+                margin-right: 10px;
+            }
+            ::ng-deep .mat-form-field-flex {
+                border: 1px solid;
+            }
+            ::ng-deep .mat-form-field-infix {
+                border-top: none!important;
+                background: #fafafa;
+            }
+            ::ng-deep .mat-form-field-type-mat-select .mat-form-field-placeholder {
+                margin-left: 10px;
+            }
+        }
+    }
+    .input-name {
+        margin-bottom: 10px;
+    }
+    input {
+        max-width: 300px;
+        width: 200px;
+        min-width: 120px;
+        padding: 5px 9px;
+        border: 1px solid #616161;
+        font-size: 13px;
+    }
+}
+
+.candidate-form {
+    position: relative;
+    padding-right: 60px;
+    padding-bottom: 15px;
+    padding-top: 20px;
+    .avatar {
+        position: absolute;
+        margin-right: 20px;
+        right: 45px;
+        top: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        label,
+        span {
+            cursor: pointer;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.form-buttons {
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    justify-content: flex-end;
+    .send-add-candidate-form {
+        background: #4f9f48;
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        outline: none;
+        font-size: 15px;
+        cursor: pointer;
+        border: 1px solid transparent;
+        min-width: 120px;
+        transition: .3s all ease-in-out;
+        &:hover {
+            color: #4f9f48;
+            border: 1px solid #4f9f48;
+            background: #fff;
+        }
+    }
+    .cancel-add-candidate-form {
+        background: red;
+        padding: 5px 10px;
+        color: #fff;
+        border: none;
+        outline: none;
+        margin-right: 15px;
+        font-size: 15px;
+        border: 1px solid transparent;        
+        cursor: pointer;
+        min-width: 120px;
+        transition: .3s all ease-in-out;
+        &:hover {
+            color: red;
+            border: 1px solid red;
+            background: #fff;
+        }
+    }
+}

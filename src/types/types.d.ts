@@ -16,7 +16,8 @@ type UserParse = {
     _p_developer: string,
     _updated_at: Date,
     avatarURL?: string,
-    headline?: string
+    headline?: string,
+    location?: string
 }
 
 type DeveloperParse = {

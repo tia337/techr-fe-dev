@@ -4,10 +4,11 @@ import { CandidateSingleViewComponent } from './candidate-single-view.component'
 import { CandidateSingleViewService } from './candidate-single-view.service';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from '../../app-routing.module';
-import { MatIconModule, MatTooltipModule, MatFormFieldModule, MatSelectModule, MatOptionModule, MatInputModule } from '@angular/material';
+import { MatIconModule, MatTooltipModule, MatFormFieldModule, MatSelectModule, MatOptionModule, MatInputModule, MatProgressSpinnerModule } from '@angular/material';
 import { StarRatingModule } from '../../shared/star-rating/star-rating.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ClickOutsideModule } from 'ng-click-outside';
+import { EditCandidateInfoComponent } from './edit-candidate-info/edit-candidate-info.component';
 
 @NgModule({
   imports: [
@@ -24,13 +25,18 @@ import { ClickOutsideModule } from 'ng-click-outside';
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    MatProgressSpinnerModule
   ],
   declarations: [
-    CandidateSingleViewComponent
+    CandidateSingleViewComponent,
+    EditCandidateInfoComponent,
   ],
   providers: [
     CandidateSingleViewService
+  ],
+  entryComponents: [
+    EditCandidateInfoComponent
   ]
 })
 export class CandidateSingleViewModule { }
