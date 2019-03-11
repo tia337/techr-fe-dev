@@ -1,28 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Parse } from './parse.service';
-import { ParsePromise, ParseUser } from 'parse';
 import * as md5 from 'crypto-js/md5';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { PreloaderComponent } from 'app/shared/preloader/preloader.component';
 import { RootVCRService } from 'app/root_vcr.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class Login {
 
-	private _profile: BehaviorSubject<ParseUser> = new BehaviorSubject(null);
+	private _profile: BehaviorSubject<any> = new BehaviorSubject(null);
 	private _maxTrialDays = 15;
-	private _global: any;
+	private global: any;
 
 	constructor(
-		private _parse: Parse,
-		private _router: Router,
-		private _vcr: RootVCRService
+		private readonly parse: Parse,
+		private readonly router: Router,
+		private readonly httpService: HttpClient
 	) {
-		this._global = window as any;
-		if (this._parse.getCurrentUser()) {
-			this._profile.next(this._parse.Parse.User.current());
-			_router.navigate(['/dashboard']);
+		this.global = window as any;
+		if (this.parse.getCurrentUser()) {
+			this._profile.next(this.parse.Parse.User.current());
+			router.navigate(['/dashboard']);
 		}
 	}
 /*
@@ -54,11 +53,20 @@ export class Login {
 		});
 	}
 */
-	getAuthUrl(provider: String) {
-		this._parse.execCloud('getAuthUrl', { provider: provider })
-		.then(authUrl => {
-			window.location.href = authUrl;
-		});
+	getAuthUrl(provider: string) {
+		// this.parse
+		// 	.execCloud('getAuthUrl', { provider: provider })
+		// 	.then(authUrl => {
+		// 		window.location.href = authUrl;
+		// 	});
+
+		const params = { params: { provider } };
+
+		this.httpService
+			.post('login/getAuthUrl', params)
+			.subscribe((result: string) => {
+			
+			});
 	}
 
 	signInWithLinkedin(code: String, branchData?: Object) {
@@ -66,7 +74,7 @@ export class Login {
 		const provider = 'linkedin';
 		const tokenName = 'token-li';
 		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem(tokenName)) === 0)) {
-			this._parse.execCloud('getAccessToken', { provider: provider, code: code })
+			this.parse.execCloud('getAccessToken', { provider: provider, code: code })
 			.then(token => {
 				localStorage.setItem(tokenName, JSON.stringify(token));
 				this.signIn(providerFuncName, token, branchData);
@@ -84,7 +92,7 @@ export class Login {
 		const provider = 'microsoft';
 		const tokenName = 'token-ms';
 		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem(tokenName)) === 0)) {
-			this._parse.execCloud('getAccessToken', { provider: provider, code: code })
+			this.parse.execCloud('getAccessToken', { provider: provider, code: code })
 			.then(token => {
 				localStorage.setItem(tokenName, JSON.stringify(token));
 				this.signIn(providerFuncName, token, branchData);
@@ -98,7 +106,7 @@ export class Login {
 	}
 
 	signIn(provider: string, token: Object, branchData?: Object) {
-		this._parse.execCloud(provider, { token: token, branchData: branchData })
+		this.parse.execCloud(provider, { token: token, branchData: branchData })
 		.then(user => {
 			if (user === 'unauthorized') {
 				throw 'unauthorized';
@@ -106,18 +114,18 @@ export class Login {
 			console.log(user);
 			if (!user.authenticated()) {
 				console.log('authenticating user'); // debug
-				return this._parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
+				return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
 			} else {
 				return user;
 			}
 		})
 		.then(user => {
 			this._profile.next(user);
-			this._router.navigate(['/dashboard']);
+			this.router.navigate(['/dashboard']);
 		})
 		.catch(err => {
 			console.error(err);
-			this._router.navigate(['/login'])
+			this.router.navigate(['/login'])
 		})
 	}
 
@@ -147,14 +155,14 @@ export class Login {
 
 	signOut() {
 		console.log('logout')
-		this._parse.Parse.User.logOut().then(() => {
+		this.parse.Parse.User.logOut().then(() => {
 			localStorage.removeItem('token-li');
 			localStorage.removeItem('token-ms');
 
 			// this._global.IN.User.logout(); Linkedin JS SDK deprecated
 			// add ms logout, remove token from localStorage
 			console.log('redirecting to /login')
-			this._router.navigate(['/login']);
+			this.router.navigate(['/login']);
 			this.profile.next(null);
 		});
 	}

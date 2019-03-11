@@ -7,7 +7,6 @@ import {
 	EventEmitter
 } from '@angular/core';
 import * as parse from 'parse';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import * as md5 from 'crypto-js/md5';
@@ -30,15 +29,13 @@ export class Parse {
 		this._Parse = parse;
 		this._Parse.initialize(environment.APP_ID);
 		this._Parse.serverURL = environment.SERVER_URL;
-		
-
 	}
 
 	get Parse() {
 		return this._Parse;
 	}
 
-	// signIn(user: IUser): ParsePromise {
+	// signIn(user: IUser) {
 	//   const userQuery = new this._Parse.Query(this._Parse.User);
 	//   userQuery.equalTo('username', user.username);
 	//   return userQuery.first().then( existingUser => {

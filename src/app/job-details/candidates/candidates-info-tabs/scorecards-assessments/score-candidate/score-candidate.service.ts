@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ParseObject, ParsePromise } from 'parse';
 import { Parse } from '../../../../../parse.service';
 import { IScoringOptions } from './score-candidate.interface';
 
@@ -8,7 +7,7 @@ export class ScoreCandidateService {
 
 	constructor(private _parse: Parse) {}
 
-	getScorecardAreas(scorecard: ParseObject): ParsePromise {
+	getScorecardAreas(scorecard) {
 		const areasQuery = new this._parse.Parse.Query('ScorecardAreas');
 		areasQuery.equalTo('Scorecard', scorecard);
 		areasQuery.notEqualTo('isDeleted', true);
@@ -16,7 +15,7 @@ export class ScoreCandidateService {
 		return areasQuery.find();
 	}
 
-	getScorecardQuestions(scorecard: ParseObject): ParsePromise {
+	getScorecardQuestions(scorecard) {
 		const questionsQuery = new this._parse.Parse.Query('ScorecardQuestions');
 		questionsQuery.equalTo('Scorecard', scorecard);
 		questionsQuery.notEqualTo('isDeleted', true);
@@ -58,7 +57,7 @@ export class ScoreCandidateService {
 			scoringPromises.push(weightedScore.save());
 
 			const areas = [];
-			options.areas.forEach(area => {
+			options.area.forEach(area => {
 				let areaScoring;
 				if (area.parseObj) {
 					areaScoring = area.parseObj
@@ -121,7 +120,7 @@ export class ScoreCandidateService {
 		});
 	}
 
-	getScorecardWeightedScores(candidate: ParseObject, contract: ParseObject, scorecard: ParseObject) {
+	getScorecardWeightedScores(candidate, contract, scorecard) {
 		const weightedScoreQuery = new this._parse.Parse.Query('ScorecardWeightedScore');
 		weightedScoreQuery.equalTo('Scorecard', scorecard);
 		weightedScoreQuery.equalTo('Candidate', candidate);
@@ -130,7 +129,7 @@ export class ScoreCandidateService {
 		return weightedScoreQuery.first();
 	}
 
-	getScorecardQuestionNotes(candidate: ParseObject, contract: ParseObject, scorecardQuestions: Array<ParseObject>) {
+	getScorecardQuestionNotes(candidate, contract, scorecardQuestions: Array<any>) {
 		const questionNoteQuery = new this._parse.Parse.Query('ScorecardQuestionNotes');
 		questionNoteQuery.equalTo('Candidate', candidate);
 		questionNoteQuery.equalTo('contract', contract);
@@ -139,7 +138,7 @@ export class ScoreCandidateService {
 		return questionNoteQuery.find();
 	}
 
-	getScorecardAreaScoring(candidate: ParseObject, contract: ParseObject, scorecardAreas: Array<ParseObject>) {
+	getScorecardAreaScoring(candidate, contract, scorecardAreas: Array<any>) {
 		const areaScoringQuery = new this._parse.Parse.Query('ScorecardAreaScoring');
 		areaScoringQuery.equalTo('Candidate', candidate);
 		areaScoringQuery.equalTo('ScoringJob', contract);
@@ -149,23 +148,23 @@ export class ScoreCandidateService {
 	}
 
 	// export interface IScoringOptions {
-	//   scorecard: ParseObject;
+	//   scorecardany;
 	//   candidate: ParseUser;
 	//   verdict: string;
 	//   weightedScore: number;
 	//   finalMark: number;
-	//   contract: ParseObject;
+	//   contractany;
 	//   questions: Array<IQuestionObject>;
 	//   areas: Array<IAreaObject>;
 	// }
 	//
 	// interface IQuestionObject {
-	//   question: ParseObject;
+	//   questionany;
 	//   note: FormControl;
 	// }
 	//
 	// interface IAreaObject {
-	//   area: ParseObject;
+	//   areaany;
 	//   rating: FormControl;
 	// }
 

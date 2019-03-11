@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 
-import { ParseObject, ParsePromise } from 'parse';
 import { Parse } from '../../../parse.service';
 
 @Injectable()
@@ -25,7 +24,7 @@ export class UserService {
 
 	}
 
-	deactivateUser(userId: string): ParsePromise {
+	deactivateUser(userId: string): any {
 		return this._parse.Parse.Cloud.run('deactivateUser', {userId: userId});
 	}
 

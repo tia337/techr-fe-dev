@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CheckoutServService } from '../../shared/checkout-serv.service'
-import { ParseObject }  from 'parse';
 import { Parse } from '../../../parse.service';
 
 @Injectable()

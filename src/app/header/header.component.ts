@@ -5,7 +5,6 @@ import { CartAdding } from './cartadding.service';
 import { Router } from '@angular/router';
 import { AdministrationMenuComponent } from './administration-menu/administration-menu.component';
 import { ConfirmationAlertComponent } from './confirmation-alert/confirmation-alert.component';
-import { ParseUser } from 'parse';
 import { RootVCRService } from '../root_vcr.service';
 import { HeaderService } from './header.service';
 import { CompanySettingsService } from 'app/site-administration/company-settings/company-settings.service';
@@ -31,7 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	cartAmount: number;
 	CartTotal: number;
 	currency: string;
-	currentUser: ParseUser;
+	currentUser: any;
 	animationActive: boolean;
 	private _currentUserSubscription;
 	loadLogoSubsc;

@@ -1,27 +1,26 @@
-import { ParseObject, ParseUser } from 'parse';
 import { FormControl } from '@angular/forms';
 
 export interface IScoringOptions {
-  scorecard: ParseObject;
-  candidate: ParseUser;
+  scorecard: any;
+  candidate: any;
   verdict: string;
   weightedScore: number;
   finalMark: number;
   taggedUsers: any;
-  contract: ParseObject;
+  contract: any;
   questions: Array<IQuestionsObject>;
-  areas: Array<IAreaObject>;
-  ScorecardWeightedScore?: ParseObject;
+  area: Array<IAreaObject>;
+  ScorecardWeightedScore?: any;
 }
 
 interface IQuestionsObject {
-  question: ParseObject;
+  question: any;
   note: FormControl;
-  parseObj?: ParseObject;
+  parseObj?: any;
 }
 
 interface IAreaObject {
-  area: ParseObject;
+  area: any;
   rating: FormControl;
-  parseObj?: ParseObject;
+  parseObj?: any;
 }

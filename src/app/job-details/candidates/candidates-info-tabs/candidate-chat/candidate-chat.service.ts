@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Parse } from './../../../../parse.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 
 @Injectable()
 export class CandidateChatService {
@@ -14,25 +13,25 @@ export class CandidateChatService {
 		pointerToFoo.id = objectID;
 		return pointerToFoo;
 	}
-	getContractOwner(contractId: string): ParsePromise {
+	getContractOwner(contractId: string) {
 		const owner = this._parse.Query('Contract');
 		owner.include('owner');
-		return owner.get(contractId).then((contract: ParseUser) => {
+		return owner.get(contractId).then((contract) => {
 			return (contract.get('owner'));
 		});
 	}
-	getCandidate(userId: string): ParsePromise {
+	getCandidate(userId: string) {
 		const user = this._parse.Query('User');
 		user.include('voted_user_ids');
-		return user.get(userId).then((user: ParseUser) => {
+		return user.get(userId).then((user) => {
 			return user;
 		});
 	}
-	getMessage(messageId: string): ParsePromise {
+	getMessage(messageId: string)  {
 		const message = this._parse.Query('Message');
 		message.include('author');
 		message.include('documentCV');
-		return message.get(messageId).then((msg: ParseObject) => {
+		return message.get(messageId).then((msg) => {
 			return msg;
 		});
 	}
@@ -42,7 +41,7 @@ export class CandidateChatService {
 			msg.save({ 'isReaded': true });
 		});
 	}
-	getDialogForContract(user1Id: string, user2Id: string, contractId: string): ParsePromise {
+	getDialogForContract(user1Id: string, user2Id: string, contractId: string)  {
 		const user1Pointer = this.createPointer('_User', user1Id);
 		const user2Pointer = this.createPointer('_User', user2Id);
 		const contractPointer = this.createPointer('Contract', contractId);
@@ -59,7 +58,7 @@ export class CandidateChatService {
 			return (dialog);
 		}));
 	}
-	createDialog(user1Id: string, user2Id: string, contractId: string): ParsePromise {
+	createDialog(user1Id: string, user2Id: string, contractId: string)  {
 		const user1Pointer = this.createPointer('_User', user1Id);
 		const user2Pointer = this.createPointer('_User', user2Id);
 		const contractPointer = this.createPointer('Contract', contractId);
@@ -76,7 +75,7 @@ export class CandidateChatService {
 			});
 		});
 	}
-	createCVFile(file: File, filename: string): ParsePromise {
+	createCVFile(file: File, filename: string) {
 		const newAttachedFile = this._parse.Object('CVFile');
 		newAttachedFile.set('documentFile', file);
 		newAttachedFile.set('fileName', filename);

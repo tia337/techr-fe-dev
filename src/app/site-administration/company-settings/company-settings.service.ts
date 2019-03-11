@@ -1,6 +1,5 @@
 import { Subject } from 'rxjs/Subject';
 import { Injectable, EventEmitter } from '@angular/core';
-import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 import { BehaviorSubject, ReplaySubject, Observable } from 'rxjs';

@@ -1,8 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Http } from '@angular/http';
 import { Parse } from '../parse.service';
-import { ParsePromise } from 'parse';
-import { ParseObject } from 'parse';
 import { Observable, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/map';
 //tslint:disable:indent
@@ -70,7 +68,7 @@ export class PostJobService {
     return this._parse.Query('Currencies').find();
   }
 
-  getDefaultCurrency(): ParsePromise {
+  getDefaultCurrency(): any {
     const currency = this._parse.Query('Currencies');
     currency.equalTo('Currency', 'GBP');
     return currency.first(value => {
@@ -122,7 +120,7 @@ export class PostJobService {
     return skillCategoriesQuery.find();
   }
 
-  createSkillComponent(skill: ParseObject, experience: number) {
+  createSkillComponent(skill: any, experience: number) {
     const skillComponent = new this._parse.Parse.Object('SkillComponent');
     skillComponent.set('skill', skill);
     skillComponent.set('selectedExperienceDuration', experience);

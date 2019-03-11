@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, OnChanges } from '@angular/core';
 import { CandidatesService } from './candidates.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { JobDetailsService } from '../job-details.service';
 import { Router } from '@angular/router';
 import { DeveloperListType, Loading } from '../../shared/utils';
@@ -546,14 +545,14 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
         });
     }
 
-	getPercentageMatch(user: ParseUser): number {
+	getPercentageMatch(user): number {
 		if (this.candidates.weights) {
 			const developerId = user.get('developer').id;
 			return this.candidates.weights[developerId] ? this.candidates.weights[developerId] : 0;
 		}
 	}
 
-	getLocationMatch(user: ParseUser): number {
+	getLocationMatch(user): number {
 		if (this.candidates.distances) {
 			const developerId = user.get('developer').id;
 			let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;

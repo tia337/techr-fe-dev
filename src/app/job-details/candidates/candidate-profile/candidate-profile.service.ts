@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../../parse.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { Subject } from 'rxjs';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class CandidateProfileService {
 
 	constructor(private _parse: Parse) {}
 
-	getCandidate(userId: string): ParsePromise {
+	getCandidate(userId: string) {
 		const user = this._parse.Query('User');
 		user.include('developer');
 		user.include('developer.roles');
@@ -29,7 +28,7 @@ export class CandidateProfileService {
 		});
 	}
 
-	getScorecardWeightedScores(contractId: string, candidate: ParseUser): ParsePromise {
+	getScorecardWeightedScores(contractId: string, candidate) {
 		let currentUser;
 
 		return this._parse.getCurrentUser().fetch().then(me => {

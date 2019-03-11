@@ -1,9 +1,7 @@
-import { Component, ElementRef, OnInit, OnChanges, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { RootVCRService } from 'app/root_vcr.service';
 import { Login } from 'app/login.service';
-import { PreloaderComponent } from 'app/shared/preloader/preloader.component';
-import { ConfirmationAlertComponent } from 'app/header/confirmation-alert/confirmation-alert.component';
 
 @Component({
 	selector: 'app-login',

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../parse.service';
 import {BehaviorSubject} from 'rxjs/Rx';
-import { ParseObject }  from 'parse';
 import { ContractStatus, JobBoardPush } from '../shared/utils';
 import * as _ from 'underscore';
 
@@ -15,8 +14,8 @@ export class CartAdding{
     freecount:number = 0;
     paidcount:number = 0;
     totalsum:number = 0;
-    products:ParseObject[] = [];
-    freeproducts:ParseObject[] = [];
+    products:any[] = [];
+    freeproducts:any[] = [];
     currency: string = '';
     contracts: any[] = [];
     freecontracts: any[] = [];
@@ -30,7 +29,7 @@ export class CartAdding{
     cartLoad(){
         // console.log("cartLoad works");
         this.totalsum = 0;
-        let jBPriceObj : ParseObject;
+        let jBPriceObj: any;
         let notPushedPaidCart : any[];
         const client = this._parse.Parse.User.current().get('Client_Pointer');
         return this._parse.Parse.Session.current().then(res=>{

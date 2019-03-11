@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../parse.service';
 import {BehaviorSubject} from 'rxjs/Rx';
-import { ParseObject } from 'parse';
 
 
 @Injectable()
