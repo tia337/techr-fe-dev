@@ -1,124 +1,133 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Parse } from './parse.service';
-import { ParsePromise, ParseUser } from 'parse';
 import * as md5 from 'crypto-js/md5';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { PreloaderComponent } from 'app/shared/preloader/preloader.component';
 import { RootVCRService } from 'app/root_vcr.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class Login {
 
-	private _profile: BehaviorSubject<ParseUser> = new BehaviorSubject(null);
+	global: Window;
+
+	private _profile = new BehaviorSubject(null);
 	private _maxTrialDays = 15;
-	private _global: any;
 
 	constructor(
-		private _parse: Parse,
-		private _router: Router,
-		private _vcr: RootVCRService
+		private readonly parse: Parse,
+		private readonly router: Router,
+		private readonly httpService: HttpClient
 	) {
-		this._global = window as any;
-		if (this._parse.getCurrentUser()) {
-			this._profile.next(this._parse.Parse.User.current());
-			_router.navigate(['/dashboard']);
-		}
-	}
-/*
-	signIn(): Promise<ParseUser> {
-		return new Promise( (resolve, reject) => {
-			this._global.IN.User.authorize(() => {
-				this._vcr.createComponent(PreloaderComponent);
-				this._global.IN.API.Raw(
-					'/people/~:(id,first-name,last-name,picture-url,headline,location,industry,num-connections,summary,positions,email-address,picture-urls::(original))?format=json'
-				).result( data => {
-					console.log(data);
-					this._parse.Parse.Cloud.run('signUp', {data: data})
-					.then(user => {
-						if (!user.authenticated()) {
-							return this._parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
-						} else {
-							return user;
-						}
-					}).then(user => {
-						this._profile.next(user);
-						this._router.navigate(['/dashboard']);
-						resolve(user);
-						this._vcr.clear();
-					}, error => {
-						reject(error);
-					});
-				});
-			});
-		});
-	}
-*/
-	getAuthUrl(provider: String) {
-		this._parse.execCloud('getAuthUrl', { provider: provider })
-		.then(authUrl => {
-			window.location.href = authUrl;
-		});
+		this.global = window;
+
+		this.checkCurrentUser();
 	}
 
-	signInWithLinkedin(code: String, branchData?: Object) {
+	getAuthUrl(provider: string): void {
+		// this.parse
+		// 	.execCloud('getAuthUrl', { provider: provider })
+		// 	.then(authUrl => {
+		// 		window.location.href = authUrl;
+		// 	});
+
+		const params = { params: { provider } };
+
+		this.httpService
+			.post('login/getAuthUrl', params)
+			.subscribe((result: string) => {
+				window.location.href = result;
+			});
+	}
+
+	signInWithLinkedin(code: string, branchData?: Object): void {
 		const providerFuncName = 'signInWithLinkedin';
 		const provider = 'linkedin';
 		const tokenName = 'token-li';
-		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem(tokenName)) === 0)) {
-			this._parse.execCloud('getAccessToken', { provider: provider, code: code })
-			.then(token => {
-				localStorage.setItem(tokenName, JSON.stringify(token));
-				this.signIn(providerFuncName, token, branchData);
-			})
-			return;
-		}
 
-		let token = localStorage.getItem(tokenName);
-		token = JSON.parse(token);
-		this.signIn(providerFuncName, token, branchData);
+		this.processSocialSignIn(provider, code, tokenName, branchData, providerFuncName);
 	}
 
-	signInWithMicrosoft(code: String, branchData?: Object) {
+	signInWithMicrosoft(code: string, branchData?: Object): void {
 		const providerFuncName = 'signInWithMicrosoft';
 		const provider = 'microsoft';
 		const tokenName = 'token-ms';
-		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem(tokenName)) === 0)) {
-			this._parse.execCloud('getAccessToken', { provider: provider, code: code })
-			.then(token => {
+
+		this.processSocialSignIn(provider, code, tokenName, branchData, providerFuncName);
+	}
+
+	signIn(provider: string, token: Object, branchData?: Object): void {
+		this.parse.execCloud(provider, { token: token, branchData: branchData })
+			.then(user => {
+				if (user === 'unauthorized') {
+					throw 'unauthorized';
+				}
+
+				if (!user.authenticated()) {
+					return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
+				} else {
+					return user;
+				}
+
+			})
+			.then(user => {
+				this._profile.next(user);
+				this.router.navigate(['/dashboard']);
+			})
+			.catch(err => {
+				this.router.navigate(['/login']);
+			});
+	}
+
+	private getAccessToken(
+		provider: string,
+		code: string,
+		tokenName: string,
+		branchData: Object,
+		providerFuncName: string
+	): void {
+
+		const params = { provider, code };
+
+		// this.parse
+		// 	.execCloud('getAccessToken', { provider, code })
+		// 	.then(token => {
+		// 		localStorage.setItem(tokenName, JSON.stringify(token));
+		// 		this.signIn(providerFuncName, token, branchData);
+		// 	});
+
+		this.httpService
+			.post('login/getAccessToken', params)
+			.subscribe((token: any) => {
 				localStorage.setItem(tokenName, JSON.stringify(token));
 				this.signIn(providerFuncName, token, branchData);
-			})
+			});
+	}
+
+	private processSocialSignIn(
+		provider: string,
+		code: string,
+		tokenName: string,
+		branchData: Object,
+		providerFuncName: string
+	): void {
+
+		if (!localStorage.getItem(tokenName) || Object.keys(JSON.parse(localStorage.getItem(tokenName)) === 0)) {
+			this.getAccessToken(provider, code, tokenName, branchData, providerFuncName);
+
 			return;
 		}
 
-		let token = localStorage.getItem(tokenName);
-		token = JSON.parse(token);
+		const token = JSON.parse(localStorage.getItem(tokenName));
+
 		this.signIn(providerFuncName, token, branchData);
 	}
 
-	signIn(provider: string, token: Object, branchData?: Object) {
-		this._parse.execCloud(provider, { token: token, branchData: branchData })
-		.then(user => {
-			if (user === 'unauthorized') {
-				throw 'unauthorized';
-			}
-			console.log(user);
-			if (!user.authenticated()) {
-				console.log('authenticating user'); // debug
-				return this._parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
-			} else {
-				return user;
-			}
-		})
-		.then(user => {
-			this._profile.next(user);
-			this._router.navigate(['/dashboard']);
-		})
-		.catch(err => {
-			console.error(err);
-			this._router.navigate(['/login'])
-		})
+	private checkCurrentUser(): void {
+		if (this.parse.getCurrentUser()) {
+			this._profile.next(this.parse.Parse.User.current());
+			this.router.navigate(['/dashboard']);
+		}
 	}
 
 /*
@@ -145,16 +154,14 @@ export class Login {
 		return md5(username).toString().toUpperCase();
 	}
 
-	signOut() {
-		console.log('logout')
-		this._parse.Parse.User.logOut().then(() => {
+	signOut(): void {
+		this.parse.Parse.User.logOut().then(() => {
 			localStorage.removeItem('token-li');
 			localStorage.removeItem('token-ms');
 
 			// this._global.IN.User.logout(); Linkedin JS SDK deprecated
 			// add ms logout, remove token from localStorage
-			console.log('redirecting to /login')
-			this._router.navigate(['/login']);
+			this.router.navigate(['/login']);
 			this.profile.next(null);
 		});
 	}
@@ -167,11 +174,7 @@ export class Login {
 		this._profile.next(value);
 	}
 
-	get maxTrialDays() {
+	get maxTrialDays(): number {
 		return this._maxTrialDays;
 	}
-
-
-
-
 }
