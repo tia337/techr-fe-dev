@@ -685,6 +685,7 @@ export class PostJobPageComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.contractForm.value.JobState = this.JobState;
 		this.contractForm.value.JobState2 = this.JobState2;
 		this.contractForm.value.JobState3 = this.JobState3;
+
 		if (this.postCode) {
 			this.contractForm.value.postCode = this.postCode;
 			this.contractForm.value.postCode2 = this.postCode2;

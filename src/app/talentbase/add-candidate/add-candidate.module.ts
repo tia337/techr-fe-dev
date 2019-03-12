@@ -8,6 +8,7 @@ import { AddCandidateService } from './add-candidate.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SanitizerPipe } from '../../shared/sanitizer.pipe';
 import { SearchJobPipe } from './search-job.pipe';
+import { CandidateSingleViewComponent } from '../candidate-single-view/candidate-single-view.component';
 
 @NgModule({
   imports: [

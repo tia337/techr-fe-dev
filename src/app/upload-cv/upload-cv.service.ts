@@ -120,8 +120,8 @@ export class UploadCvService {
 					return null;
 				}
 				const r = resz.ResumeParserData;
-				// console.log('RCHILLI LOG:');
-				// console.log(r);
+				console.log('RCHILLI LOG:');
+				console.log(r);
 				const skills: {
 					name: string,
 					id: string

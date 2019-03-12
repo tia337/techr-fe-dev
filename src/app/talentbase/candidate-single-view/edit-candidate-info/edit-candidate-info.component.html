@@ -1,0 +1,85 @@
+<div class="ngdialog modal modal--clean ngdialog--noClose ngdialog-disabled-animation">
+  <div class="ngdialog-overlay"></div>
+  <div class="ngdialog-content">
+    <div class="modal--wide">
+      <mat-icon class="icon-fz18 icon-close-modal" (click)="closeModal()">clear</mat-icon>
+        <p class="modal__title">
+          Add candidate
+        </p>
+        <form action="" class="candidate-form" [formGroup]="candidateForm">
+          <div class="row">
+            <p class="input-holder">
+              <span class="input-name">* First Name</span>
+              <input type="text" formControlName="firstName" name="firstName">
+            </p>
+            <p class="input-holder">
+              <span class="input-name">* Last Name</span>          
+              <input type="text" formControlName="lastName" name="lastName">
+            </p>
+          </div>
+          <div class="avatar">
+            <img *ngIf="!avatar" src="../../../assets/img/default-userpic.png" alt="">
+            <img *ngIf="avatar" [src]="avatar" alt="">
+            <label for="avatar">Change avatar</label>
+            <label for="avatar">
+              Upload avatar
+            </label>
+            <span *ngIf="avatar" (click)="removeAvatar()">Remove avatar</span>
+            <input style="display: none;" 
+                id="avatar" 
+                #avatarInput 
+                accept=".jpg, .jpeg, .png, .tif, .gif, .tiff, .ppm, .pgm, .pbm, .pnm" 
+                (change)="changeAvatar($event)" 
+                type="file" 
+                formControlName="avatarURL" 
+                name="avatar">
+          </div>
+          <div class="row">
+            <p class="input-holder">
+              <span class="input-name">Location</span>
+              <input type="text" formControlName="location" name="location">
+            </p>
+            <p class="input-holder">
+              <span class="input-name display-flex align-items-c">
+                Phone Number 
+                <mat-icon style="margin-left: 10px; cursor: pointer; cursor: pointer; font-size: 16px; width: 15px; height: 15px;"
+                    *ngIf="!newPhone" 
+                    (click)="addPhone(); disabledCandidateSaveChanges = false;">
+                    add
+                  </mat-icon>
+                </span>
+              <span> 
+                <input type="text" formControlName="Phone" name="Phone">
+              </span>
+              <span *ngIf="newPhone" style="display: flex; align-items: center; margin-top: 10px;">
+                <input type="text"  #phone2Input formControlName="phone2" name="phone2">
+                <mat-icon style="cursor: pointer;" (click)="removephone2();">delete</mat-icon>
+              </span>
+            </p>
+          </div>
+          <div class="row">
+            <p class="input-holder">
+              <span class="input-name">* Email</span>
+              <input type="email" formControlName="email" name="email">
+            </p>
+            <p class="input-holder" formArrayName="WebSites">
+                <span class="input-name">Social/Web precense <mat-icon style="margin-left: 10px; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPrecense()">add</mat-icon></span>
+                <span *ngFor="let precense of candidateForm.controls['WebSites'].controls; let i = index;">
+                  <span class="display-flex align-items-c"  [formGroupName]="i" style="margin-bottom: 5px; position: relative;">
+                    <input type="text" formControlName="Url"  placeholder="Url" style="margin-bottom: 5px;">
+                    <input type="text" formControlName="Type" placeholder="Type" style="margin-bottom: 5px;">                    
+                    <mat-icon class="icon-fz16 delete-website" *ngIf="i !== 0" (click)="removeWebPrecense(i);">delete</mat-icon>
+                  </span>
+              </span>
+            </p>
+          </div>
+          <div class="form-buttons display-flex">
+            <span>
+              <button type="button" class="cancel-add-candidate-form" (click)="closeModal()">Cancel</button>
+              <button type="button" class="send-add-candidate-form" (click)="saveCandidateInfo()">Save Changes</button>
+            </span>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>

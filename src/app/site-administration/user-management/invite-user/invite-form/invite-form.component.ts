@@ -15,6 +15,7 @@ import { InviteVCR } from '../inviteVCR.service';
 import { InviteFormService } from './invite-form.service';
 import { Parse } from '../../../../parse.service';
 import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
+import { UserRole } from 'types/types';
 
 @Component({
 	selector: 'app-invite-form',

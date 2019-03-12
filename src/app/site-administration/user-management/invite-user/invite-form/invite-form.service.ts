@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../../../parse.service';
+import { UserRole } from 'types/types';
 
 @Injectable()
 export class InviteFormService {

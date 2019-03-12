@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { ScorecardsService } from '../scorecards.service';
-import { ParseObject } from 'parse';
 import { Parse } from '../../parse.service';
 
 @Component({

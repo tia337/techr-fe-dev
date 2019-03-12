@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from './../../../environments/environment';
 import * as branch from 'branch-sdk';
 import { environment } from './../../../environments/environment';
 

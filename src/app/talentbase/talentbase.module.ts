@@ -9,16 +9,23 @@ import { HighlightSearchPipe } from './highlight-search.pipe';
 import { MatIconModule, MatProgressSpinnerModule } from '@angular/material';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { AddCandidateModule } from './add-candidate/add-candidate.module';
+import { CandidateChatModule } from '../job-details/candidates/candidates-info-tabs/candidate-chat/candidate-chat.module';
+import { AppRoutingModule } from '../app-routing.module';
+import { CandidateSingleViewComponent } from './candidate-single-view/candidate-single-view.component';
+import { CandidateSingleViewModule } from './candidate-single-view/candidate-single-view.module';
 
 @NgModule({
   imports: [
     CommonModule,
     AddCandidateModule,
+    CandidateSingleViewModule,
+    CandidateChatModule,
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    AppRoutingModule
   ],
   declarations: [
     TalentbaseComponent,

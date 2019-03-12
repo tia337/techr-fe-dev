@@ -14,6 +14,7 @@ import { PostJobService } from '../../post-job-page/post-job.service';
 import * as _ from 'underscore';
 import { SearchJobPipe } from './search-job.pipe';
 import { TalentbaseService } from '../talentbase.service';
+import { Experience, Education } from 'types/types';
 
 @Component({
   selector: 'app-add-candidate',
@@ -163,16 +164,17 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 			this._postJobService.getCategories().then(categories => {
 				this.categories = categories;
 			});
+			
+			this._postJobService.getIndustries().then(industries => {
+				this.industries = industries;
+				this.industries = _.sortBy(this.industries, function(industries){ return industries.get("title"); });
+			});
 
 			this._postJobService.getRoles().then(roles => {
 				this.roles = roles;
 				this.roles = _.sortBy(this.roles, function(roles){ return roles.get("title"); });
 			});
 
-			this._postJobService.getIndustries().then(industries => {
-				this.industries = industries;
-				this.industries = _.sortBy(this.industries, function(industries){ return industries.get("title"); });
-			});
 
 
 			this._addCandidateService.getJobs(this.clientId).then(result => {
@@ -881,16 +883,16 @@ export class AddCandidateComponent implements OnInit, OnDestroy {
 	activeDropdown(name: string, loc, value?) {}
 	
 	selectSkill(skill, experience) {
-			const skillComponent = this._postJobService.createSkillComponent(skill, experience);
-			this.selected.push(skillComponent);
-			const skillRows = this._elementRef.nativeElement.querySelectorAll('._' + skill.id);
-			skillRows.forEach(element => {
-				this._renderer.setStyle(element, 'display', 'none');
-			});
-			this.skills = _.without(this.skills, skill);
-			this.query = '';
-			this.filteredList = [];
-			this.checkInitialCandidatePropertiesArrays('skills');
+		const skillComponent = this._postJobService.createSkillComponent(skill, experience);
+		this.selected.push(skillComponent);
+		const skillRows = this._elementRef.nativeElement.querySelectorAll('._' + skill.id);
+		skillRows.forEach(element => {
+			this._renderer.setStyle(element, 'display', 'none');
+		});
+		this.skills = _.without(this.skills, skill);
+		this.query = '';
+		this.filteredList = [];
+		this.checkInitialCandidatePropertiesArrays('skills');
 	}
 	
 	getCategorySkills(index) {

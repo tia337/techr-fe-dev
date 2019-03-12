@@ -179,7 +179,7 @@ export class PreviewScoringComponent implements OnInit {
 		}
 		return new File([u8arr], filename, { type: mime });
 	}
-	pdfDrawNameListTitle(pdf: jsPDF) {
+	pdfDrawNameListTitle(pdf: any) {
 		const fullname = `Candidate: ${this.candidate.get('firstName')} ${this.candidate.get('lastName')}`;
 		let title: string = `Scorecard: ${this.scorecard.get('ScorecardTitle')}`;
 		let typeName;
@@ -218,7 +218,7 @@ export class PreviewScoringComponent implements OnInit {
 		}
 		return (str);
 	}
-	// pdfPrintVerdict(pdf: jsPDF, y, scorescore) {
+	// pdfPrintVerdict(pdf: any, y, scorescore) {
 	// 	console.log(y);
 	// 	if (y > 700) {
 	// 		pdf.addPage();
@@ -273,7 +273,7 @@ export class PreviewScoringComponent implements OnInit {
 
 		return str.replace(/[^\x20-\x7E]/g, '');
 	}
-	pdfPrintVerdict(pdf: jsPDF, y, scorescore) {
+	pdfPrintVerdict(pdf, y, scorescore) {
 		if (y > 700) {
 			pdf.addPage();
 			y = 110;
@@ -331,7 +331,7 @@ export class PreviewScoringComponent implements OnInit {
 			default: pdf.text(430, y, 'No Answer');
 		}
 	}
-	pdfDrawAreaName(pdf: jsPDF, y, area, score) {
+	pdfDrawAreaName(pdf: any, y, area, score) {
 		pdf.setFontSize(18);
 		pdf.setLineWidth(1);
 
@@ -356,7 +356,7 @@ export class PreviewScoringComponent implements OnInit {
 		y += 30;
 		return (y);
 	}
-	pdfDrawQuestion(pdf: jsPDF, qIndex, y, answ) {
+	pdfDrawQuestion(pdf: any, qIndex, y, answ) {
 		answ = 'Q' + qIndex + ': ' + answ;
 		const characters = 60;
 		const margin_bottom = 22;
@@ -388,7 +388,7 @@ export class PreviewScoringComponent implements OnInit {
 		}
 		return (y);
 	}
-	pdfDrawAnswer(pdf: jsPDF, qIndex, y, answ: string) {
+	pdfDrawAnswer(pdf: any, qIndex, y, answ: string) {
 		const characters = 60;
 		const margin_bottom = 22;
 		pdf.setFontSize(12);
@@ -420,7 +420,7 @@ export class PreviewScoringComponent implements OnInit {
 		}
 		return (y);
 	}
-	addPageAndMoveY(pdf: jsPDF, y) {
+	addPageAndMoveY(pdf: any, y) {
 		if (y > 750) {
 			pdf.addPage();
 			pdf.roundedRect(15, 20, 565, 800, 5, 1, 'S');
@@ -429,7 +429,7 @@ export class PreviewScoringComponent implements OnInit {
 			return (y);
 		}
 	}
-	addPageAndMoveYAREA(pdf: jsPDF, y) {
+	addPageAndMoveYAREA(pdf: any, y) {
 		if (y > 650) {
 			pdf.addPage();
 			pdf.roundedRect(15, 30, 565, 790, 5, 1, 'S');

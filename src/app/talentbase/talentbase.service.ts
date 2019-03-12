@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Parse } from '../parse.service';
 import * as _ from "underscore";
 import { Subject } from 'rxjs';
+import { PaginationLimits, TalentDBCandidate, FilterItem, UserTalentDBFilter, BulkUploadItem } from 'types/types';
 
 //tslint:disable:indent
 @Injectable()
@@ -203,6 +204,7 @@ export class TalentbaseService {
   checkPendingBulkUploads(bulkArray: Array<BulkUploadItem>): BulkUploadItem {
     for (let i = 0; i < bulkArray.length; i++) {
       if (bulkArray[i].uploadFinished === false) {
+        console.log('bulkArray[i].uploadFinished', bulkArray[i]);
         return bulkArray[i];
       };
     }

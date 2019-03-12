@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { ParseObject } from 'parse';
 import { Parse } from '../parse.service';
 import * as _ from 'underscore';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from './../../environments/environment';
+import { ChatTeamMember } from 'types/types';
 
 @Injectable()
 export class ChatService {

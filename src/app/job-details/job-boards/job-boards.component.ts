@@ -22,9 +22,7 @@ import {
 import {
 	Parse
 } from '../../parse.service';
-import {
-	ParseObject
-} from 'parse';
+
 import {
 	JobDetailsService
 } from '../job-details.service';
@@ -250,7 +248,7 @@ export class JobBoardsComponent implements OnInit {
 		}
 	}
 
-	addToCart(jobBoard: ParseObject, board: ParseObject, index: number) {
+	addToCart(jobBoard: any, board: any, index: number) {
 		if (board.jobBoard.get('needsContractUrl') && !this.isForJobBoardURL) {
 			const inputUrl = this._rootVCR.createComponent(UrlInputComponent);
 			inputUrl.jobBoard = jobBoard;

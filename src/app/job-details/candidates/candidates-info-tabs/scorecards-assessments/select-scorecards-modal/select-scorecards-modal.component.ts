@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ScorecardsAssessmentsService } from '../scorecards-assessments.service';
 import { RootVCRService } from '../../../../../root_vcr.service';
-import { ParseObject, ParseUser } from 'parse';
 import { PreviewModalComponent } from '../../../../../scorecards/preview-modal/preview-modal.component';
 
 @Component({
@@ -11,8 +10,8 @@ import { PreviewModalComponent } from '../../../../../scorecards/preview-modal/p
 })
 export class SelectScorecardsModalComponent implements OnInit {
 
-  scorecards;
-  private _candidate: ParseUser;
+  scorecard;
+  private _candidate: any;
   private _contractId: string;
 
   attachedScorecards: any[];
@@ -24,7 +23,7 @@ export class SelectScorecardsModalComponent implements OnInit {
   ngOnInit() {
     this._saService.getCompanyScorecards().then(parseScorecards => {
       console.log(parseScorecards);
-      this.scorecards = parseScorecards;
+      this.scorecard = parseScorecards;
     });
     console.log(this._contractId);
     console.log(this.attachedScorecards);
@@ -34,14 +33,14 @@ export class SelectScorecardsModalComponent implements OnInit {
     this._root_vcr.clear();
   }
 
-  previewScorecard(scorecard: ParseObject) {
+  previewScorecard(scorecard: any) {
     this._root_vcr.clear();
     const previewInstance = this._root_vcr.createComponent(PreviewModalComponent);
     previewInstance.scorecard = scorecard;
     previewInstance.editable = false;
   }
 
-  attachScorecard(scorecard: ParseObject) {
+  attachScorecard(scorecard: any) {
     this._saService.getContract(this._contractId).then(parseContract => {
       return this._saService.attachScorecard(this._candidate, scorecard, parseContract);
     }).then(() => {
@@ -56,7 +55,7 @@ export class SelectScorecardsModalComponent implements OnInit {
 
   }
 
-  set candidate(user: ParseUser) {
+  set candidate(user: any) {
     this._candidate = user;
   }
 

@@ -1,11 +1,9 @@
-import { Component, OnInit, ViewContainerRef, ComponentFactoryResolver, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, OnDestroy } from '@angular/core';
 import { Login } from '../login.service';
 import { Parse } from '../parse.service';
 import { CartAdding } from './cartadding.service';
 import { Router } from '@angular/router';
-import { AdministrationMenuComponent } from './administration-menu/administration-menu.component';
 import { ConfirmationAlertComponent } from './confirmation-alert/confirmation-alert.component';
-import { ParseUser } from 'parse';
 import { RootVCRService } from '../root_vcr.service';
 import { HeaderService } from './header.service';
 import { CompanySettingsService } from 'app/site-administration/company-settings/company-settings.service';
@@ -14,24 +12,23 @@ import { Socket } from 'ng-socket-io';
 import { PostJobService } from 'app/post-job-page/post-job.service';
 
 import { ContactUsComponent } from 'app/contact-us/contact-us.component';
-import { NotificationsComponent } from './notifications/notifications.component';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'underscore';
 
 
 
 @Component({
-	selector: 'app-header',
+	selector: 'header',
 	templateUrl: './header.component.html',
 	styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-	private _theme = 'old';
+	theme: 'old' | 'new' = 'old';
 	cartAmount: number;
 	CartTotal: number;
 	currency: string;
-	currentUser: ParseUser;
+	currentUser: any;
 	animationActive: boolean;
 	private _currentUserSubscription;
 	loadLogoSubsc;
@@ -49,83 +46,67 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	public _notificationsOpened: boolean = false;
 	public notificationsCount = 0;
 
-	private _notificationsLimits = {
-		from: 0,
-		to: 5
-	};
-
 	constructor(
-		private router: Router,
-		private _root_vcr: RootVCRService,
-		private _CartAddingService: CartAdding,
-		private _login: Login,
-		private _parse: Parse,
-		private _vcr: ViewContainerRef,
-		private _cfr: ComponentFactoryResolver,
-		private _headerService: HeaderService,
-		private _companySettingsService: CompanySettingsService,
-		private _socket: Socket,
-		private _postJobService: PostJobService
+		private readonly router: Router,
+		private readonly rootVcrService: RootVCRService,
+		private readonly cartAddingService: CartAdding,
+		private readonly loginService: Login,
+		private readonly parseService: Parse,
+		private readonly headerService: HeaderService,
+		private readonly companySettingsService: CompanySettingsService,
+		private readonly socket: Socket,
+		private readonly postJobService: PostJobService
 	) {
-		this._CartAddingService.CartCount.subscribe(CartCount => {
+		this.cartAddingService.CartCount.subscribe(CartCount => {
 			this.cartAmount = CartCount;
 		});
-		this._CartAddingService.CartTotal.subscribe(CartTotal => {
+		this.cartAddingService.CartTotal.subscribe(CartTotal => {
 			this.CartTotal = CartTotal;
 		});
-		this._CartAddingService.Currency.subscribe(currency => {
+		this.cartAddingService.Currency.subscribe(currency => {
 			this.currency = currency;
 		});
-		this._CartAddingService.animationActive.subscribe(animation => {
+		this.cartAddingService.animationActive.subscribe(animation => {
 			this.animationActive = animation;
 		});
 	}
 
 	ngOnInit() {
-		if (localStorage.getItem('theme')) {
-			const theme = localStorage.getItem('theme');
-			if (theme === 'old') {
-				this._theme = 'old';
-			};
-			if (theme === 'new') {
-				this._theme = 'new';
-			};
-			// this.changeTheme(theme);
-		}
+		this.changeTheme();
 
 		this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
-			console.log(data);
 			this.notificationsCount++;
 		});
-		if (this._parse.getCurrentUser()) {
-			this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(result => {
-				const data = JSON.parse(result);
-				this.notificationsCount = data;
-			});
+
+		if (this.parseService.getCurrentUser()) {
+			// this.parseService.execCloud('getUnreadNotificationsCount', { userId: this.parseService.getCurrentUser().id }).then(result => {
+			// 	const data = JSON.parse(result);
+			// 	this.notificationsCount = data;
+			// });
 		}
 
-		this._headerService.currentNotificationsCount.subscribe(data => {
+		this.headerService.currentNotificationsCount.subscribe(data => {
 			this.notificationsCount = parseFloat(data);
 		});
 
-		this.loadLogoSubsc = this._companySettingsService.logoUpdate.subscribe(() => {
+		this.loadLogoSubsc = this.companySettingsService.logoUpdate.subscribe(() => {
 			this.getLogo();
 		});
 
-		this.loadLogoSubscPJ = this._postJobService.logoUpdate.subscribe(() => {
+		this.loadLogoSubscPJ = this.postJobService.logoUpdate.subscribe(() => {
 			this.getLogo();
 		});
 
-		if (this._parse.getCurrentUser()) {
+		if (this.parseService.getCurrentUser()) {
 			this.getLogo();
 		}
-		this._currentUserSubscription = this._login.profile.subscribe(profile => {
+		this._currentUserSubscription = this.loginService.profile.subscribe(profile => {
 			if (profile) {
 				// profile1.fetch().then(profile => {
 				this.currentUser = profile;
 				if (!profile.toJSON().Client_Pointer) {
-					this._root_vcr.clear();
-					this._root_vcr.createComponent(ConfirmationAlertComponent);
+					this.rootVcrService.clear();
+					this.rootVcrService.createComponent(ConfirmationAlertComponent);
 				}
 				// });
 			}
@@ -155,48 +136,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}
 	}
 
-  closeUserMenu(event?) {
-        if (event) {
-            if (event.clientY < 55) {
-                this._closeUserAnim= true;
-                setTimeout(() => {
-                    if (this._closeUserAnim === true) {
-                        this._userMenuOpened = false;
-                        this._closeUserAnim = false;
-                    }
-                }, 450);
-            }
-        } else {
-            this._closeUserAnim = true;
-            setTimeout(() => {
-                if (this.closeUserAnim === true) {
-                    this._userMenuOpened = false;
-                    this._closeUserAnim = false;
-                }
-            }, 450);
-        }
-    }
-
+	closeUserMenu(event?) {
+		if (event) {
+			if (event.clientY < 55) {
+				this._closeUserAnim = true;
+				setTimeout(() => {
+					if (this._closeUserAnim === true) {
+						this._userMenuOpened = false;
+						this._closeUserAnim = false;
+					}
+				}, 450);
+			}
+		} else {
+			this._closeUserAnim = true;
+			setTimeout(() => {
+				if (this.closeUserAnim === true) {
+					this._userMenuOpened = false;
+					this._closeUserAnim = false;
+				}
+			}, 450);
+		}
+	}
 
 	getLogo() {
-		this._headerService.getClientLogo().then(logo => {
+		this.headerService.getClientLogo().then(logo => {
 			this._clientLogo = logo;
 		});
 	}
 
-	signInWithLinkedin() {
-		this._login.getAuthUrl('linkedin');
+	signInWithLinkedin(): void {
+		this.loginService.getAuthUrl('linkedin');
 	}
 
-	signInWithMicrosoft() {
-		this._login.getAuthUrl('microsoft');
+	signInWithMicrosoft(): void {
+		this.loginService.getAuthUrl('microsoft');
 	}
 
-	signOut() {
-		this._login.signOut();
+	signOut(): void {
+		this.loginService.signOut();
 		this.currentUser = null;
-		this._socket.emit('disconnect', {});
-		this._socket.disconnect();
+		this.socket.emit('disconnect', {});
+		this.socket.disconnect();
 		localStorage.clear();
 	}
 
@@ -205,10 +185,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this._menuOpened = true;
 	}
 
-  openUserMenu() {
-        this._closeUserAnim = false;
-        this._userMenuOpened = true;
-    }
+	openUserMenu() {
+		this._closeUserAnim = false;
+		this._userMenuOpened = true;
+	}
 
 	redirect() {
 		this.router.navigate(['checkout']);
@@ -219,24 +199,24 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	test() {
-		this._root_vcr.createComponent(ConfirmationAlertComponent);
+		this.rootVcrService.createComponent(ConfirmationAlertComponent);
 	}
 
 	accessCheck(event) {
 		event.stopPropagation();
-		this._headerService.getAccessLevel().then(alevel => {
+		this.headerService.getAccessLevel().then(alevel => {
 			this.accessLevel = alevel;
-			return this._headerService.getAdmins();
+			return this.headerService.getAdmins();
 		}).then(admins => {
 			if (this.accessLevel === 1) {
 				this.router.navigate(['/', 'administration', 'billing']);
 			} else if (this.accessLevel > 1) {
-				const alert = this._root_vcr.createComponent(AlertComponent);
+				const alert = this.rootVcrService.createComponent(AlertComponent);
 				alert.title = 'Access level Required';
 				alert.icon = 'lock';
 				alert.type = 'sad';
 				alert.contentAlign = 'left';
-				alert.content = `<a style = 'white-space:nowrap'>Hi, ` + this._parse.Parse.User.current().get('firstName') +
+				alert.content = `<a style = 'white-space:nowrap'>Hi, ` + this.parseService.Parse.User.current().get('firstName') +
 					`. You need to be site admin in order to see your billing information.</a><br><a style = 'white-space:nowrap'><strong>` +
 					admins + `</strong> can set you up as a site admin if needed.</a>` +
 					`<a style = 'white-space:nowrap'>Contact SwipeIn if you need urgent access to Billing and you can't reach your Billing information.</a>`;
@@ -244,15 +224,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 					title: 'Contact SwipeIn',
 					type: 'secondary',
 					onClick: () => {
-						this._root_vcr.clear();
-						let contactForm = this._root_vcr.createComponent(ContactUsComponent);
+						this.rootVcrService.clear();
+						let contactForm = this.rootVcrService.createComponent(ContactUsComponent);
 						contactForm.contactType = 'K9A4lQwYNs';
 					}
 				});
 				alert.addButton({
 					title: 'Close',
 					type: 'primary',
-					onClick: () => this._root_vcr.clear()
+					onClick: () => this.rootVcrService.clear()
 				});
 			}
 		});
@@ -272,35 +252,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	get menuOpened() {
 		return this._menuOpened;
 	}
-  get userMenuOpened() {
-    return this._userMenuOpened;
+	get userMenuOpened() {
+		return this._userMenuOpened;
 	}
-	changeNotifications (notifications: boolean): void {
+
+	changeNotifications(notifications: boolean): void {
 		this._notificationsOpened = notifications;
 	}
 
-	listenToIncrementUnreadNotificationsCounter () {
-		const observable = new Observable (observer => {
-			this._socket.on('incrementUnreadNotificationsCounter', data => {
+	listenToIncrementUnreadNotificationsCounter() {
+		const observable = new Observable(observer => {
+			this.socket.on('incrementUnreadNotificationsCounter', data => {
 				observer.next(data);
 			});
 		});
 		return observable;
 	}
 
-	// changeTheme(theme?: string) {
-	// 	if (this._theme === 'old' || theme === 'old') {
-	// 		this._theme = 'new';
-	// 		const body = document.getElementById('body');
-	// 		body.classList.add('new');
-	// 		localStorage.setItem('theme', 'new');
-	// 	} else if (this._theme === 'new' || theme === 'new') {
-	// 		this._theme = 'old';
-	// 		const body = document.getElementById('body');
-	// 		body.classList.remove('new');
-	// 		localStorage.setItem('theme', 'old');
-	// 	}
-	// }
-
-
+	private changeTheme(): void {
+		if (localStorage.getItem('theme')) {
+			this.theme = localStorage.getItem('theme') as 'old' | 'new';
+		}
+	}
 }

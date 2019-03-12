@@ -4,7 +4,6 @@ import { CancelSubscriptionAlertService } from './cancel-subscription-alert.serv
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AlertComponent } from '../../../../shared/alert/alert.component';
 import { DatePipe } from '@angular/common';
-import { ParseUser } from 'parse';
 
 @Component({
 	selector: 'app-cancel-subscription-alert',

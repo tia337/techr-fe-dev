@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { BillingOverviewService } from './billing-overview.service';
-import { ParseObject } from 'parse';
 import { RootVCRService } from '../../../root_vcr.service';
 import { Router } from '@angular/router';
 import { CancelSubscriptionAlertComponent } from './cancel-subscription-alert/cancel-subscription-alert.component';
@@ -18,7 +17,7 @@ import { ContactUsComponent } from 'app/contact-us/contact-us.component';
 })
 export class BillingOverviewComponent implements OnInit {
 
-	client: ParseObject;
+	client: any;
 	isTrial: boolean;
 	subscription;
 	parsePlan;

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ParseObject }  from 'parse';
 import { Parse } from '../../../parse.service';
 import { CheckoutServService } from '../../shared/checkout-serv.service'
 import { TarifsService } from './tarifs.service'

@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../../../parse.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 
 @Injectable()
 export class ScoringService {
 
 	private companyName: string;
-	private userObject: ParseObject;
+	private userObject;
 
 	constructor(private _parse: Parse) { }
 
@@ -15,7 +14,7 @@ export class ScoringService {
 		this.companyName = this._parse.getCurrentUser().get("Client");
 		let query2 = this._parse.Query("User");
 		query2.equalTo("objectId", userId );
-		let userObj: ParseObject;
+		let userObj;
 		return query2.first().then(results => {
 			// console.log(results);
 			userObj = results;

@@ -1,20 +1,16 @@
-import { Component, ElementRef, OnInit, OnChanges, QueryList, Renderer2, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
-import { RootVCRService } from 'app/root_vcr.service';
 import { Login } from 'app/login.service';
-import { PreloaderComponent } from 'app/shared/preloader/preloader.component';
-import { ConfirmationAlertComponent } from 'app/header/confirmation-alert/confirmation-alert.component';
+import { FeedBack } from 'types/types';
 
 @Component({
-	selector: 'app-login',
+	selector: 'login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
-	_currentUserSubscription;
-
-	feedback = [
+	feedback: Array<FeedBack> = [
 		{
 			avatarUrl: '../../assets/img/pre-login/avatars/DavidCrabb.jpg',
 			name: 'David Crabb',
@@ -37,14 +33,41 @@ export class LoginComponent implements OnInit {
 	];
 
 	constructor(
-		private _router: Router,
-		private _root_vcr: RootVCRService,
-		private _login: Login
+		private readonly router: Router,
+		private readonly loginService: Login
 	) {
-		this._router.navigate(['/', 'login', {outlets: {'login-slider': ['reach-and-manage-candidates']}}], {skipLocationChange: true});
+		this.router.navigate(['/', 'login', {outlets: {'login-slider': ['reach-and-manage-candidates']}}], {skipLocationChange: true});
 	}
 
-	ngOnInit() {
+	ngOnInit(): void {
+		this.detectMobileOperatingSystem();
+	}
+
+	signInWithLinkedin() {
+		this.loginService.getAuthUrl('linkedin');
+	}
+
+	private getMobileOperatingSystem(): string {
+        var userAgent = navigator.userAgent || navigator.vendor;
+
+        // Windows Phone must come first because its UA also contains 'Android'
+        if (/windows phone/i.test(userAgent)) {
+            return 'Windows Phone';
+        }
+
+        if (/android/i.test(userAgent)) {
+            return 'Android';
+        }
+
+        // iOS detection from: http://stackoverflow.com/a/9039885/177710
+        if (/iPad|iPhone|iPod/.test(userAgent)) {
+            return 'iOS';
+		}
+
+        return 'unknown';
+	}
+	
+	private detectMobileOperatingSystem(): void {
 		switch (this.getMobileOperatingSystem()) {
 			case 'iOS':
                 document.getElementById('ios-wrap').style.display = 'none';
@@ -52,36 +75,11 @@ export class LoginComponent implements OnInit {
                 break;
 			case 'Android':
 				document.getElementById('ios-wrap').style.display = 'none';
-				window.location.href = "https://play.google.com/store/apps/details?id=com.swipein";
+				window.location.href = 'https://play.google.com/store/apps/details?id=com.swipein';
                 break;
 			case 'Windows Phone':
 				document.getElementById('ios-wrap').style.display = 'none';
 				alert('SwipeIn is only available on iOS/Android or https://swipein.hr for the web desktop version');
 		}
 	}
-
-    getMobileOperatingSystem() {
-        var userAgent = navigator.userAgent || navigator.vendor;
-
-        // Windows Phone must come first because its UA also contains "Android"
-        if (/windows phone/i.test(userAgent)) {
-            return "Windows Phone";
-        }
-
-        if (/android/i.test(userAgent)) {
-            return "Android";
-        }
-
-        // iOS detection from: http://stackoverflow.com/a/9039885/177710
-        if (/iPad|iPhone|iPod/.test(userAgent)) {
-            return "iOS";
-		}
-
-        return "unknown";
-    }
-
-	signInWithLinkedin() {
-		this._login.getAuthUrl('linkedin');
-	}
-
 }

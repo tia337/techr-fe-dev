@@ -126,9 +126,9 @@ nameForGrid: any[] = new Array();
 contractIds = new Array();
 stepSize = 1;
 chartOptions;
-my1Chart: Chart;
-my2Chart: Chart;
-my3Chart: Chart;
+my1Chart: any;
+my2Chart: any;
+my3Chart: any;
 
 //  				DATA FOR SKILLS && ROLES
 rolesArray = new Array();
@@ -608,8 +608,8 @@ ngAfterViewInit() {
 				const cTooltip = document.getElementById('bestTooltip');
 				const panel = document.getElementById('radarArea');
 				document.getElementById('bestTooltip').onmouseleave = function (event) {
-					this.style.opacity = '0';
-					this.style.pointerEvents = 'none';
+					// this.styles.opacity = '0';
+					// this.styles.pointerEvents = 'none';
 					const skills = document.getElementById('panelForSkills');
 					const roles = document.getElementById('panelForRoles');
 					const owners = document.getElementById('panelForOwners');
@@ -858,8 +858,8 @@ ngAfterViewInit() {
 			} else if (this.graphicType === 3) {
 				//   let cTooltip = document.getElementById('bestTooltip2');
 				document.getElementById('bestTooltip2').onmouseleave = function (event) {
-					this.style.opacity = '0';
-					this.style.pointerEvents = 'none';
+					// this.style.opacity = '0';
+					// this.style.pointerEvents = 'none';
 					const skills = document.getElementById('panelForSkills2');
 					const roles = document.getElementById('panelForRoles2');
 					const employees = document.getElementById('panelForEmployees');

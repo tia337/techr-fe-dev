@@ -17,6 +17,9 @@ import { GmailComponent } from '../gmail/gmail.component';
 import { SiteAdministrationComponent } from '../site-administration/site-administration.component';
 import { Subscription } from 'rxjs';
 import { AlertComponent } from '../shared/alert/alert.component';
+import { Router } from '@angular/router';
+import { FilterItem, UserTalentDBFilter, TalentDBCandidate, PaginationLimits, BulkUploadItem } from 'types/types';
+
 // tslint:disable:indent
 @Component({
   selector: 'app-talentbase',
@@ -95,7 +98,6 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
     });
 
     this.confirmCandidatesFromAddCandidateSubscription = this._talentBaseService._confirmCandidatesFromAddCandidate.subscribe(value => {
-      console.log(value);
       this.getTalentDBCandidates();
     });
 
@@ -104,8 +106,9 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
   getTalentDBCandidates() {
     const clientId = this._parse.getClientId()
     this._talentBaseService.getTalentDBCandidates(clientId).then(data => {
-      console.log(data);
       if (data.length === 0) return this.noCandidatesInDB = true;
+      if (data.length > 0) this.noCandidatesInDB = false;
+      this.resetPaginationLimits();
       this.candidatesArray = data.slice(this.paginationLimits.from, this.paginationLimits.to);
       this.candidatesStorage = data;
       this.updatePaginationLimits();
@@ -118,7 +121,6 @@ export class TalentbaseComponent implements OnInit, OnDestroy {
         if (filter.type === item.type) {
           this._talentBaseService.getFilter(filter.functionName, this.clientId).then(result => {
             this.filters.push(result);
-            console.log(this.filters);
           }).catch(error => console.log(error));
         }
       });

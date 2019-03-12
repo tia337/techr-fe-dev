@@ -4,7 +4,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { RootVCRService } from '../../root_vcr.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 import * as _ from 'underscore';
@@ -23,6 +22,7 @@ import { Observable, Subscription } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/skipWhile';
 import 'rxjs/add/operator/distinct';
+import { ClientsArray, ProjectsArray, StagesArray, Stage } from 'types/types';
 
 @Component({
 	selector: 'app-company-settings',
@@ -31,8 +31,8 @@ import 'rxjs/add/operator/distinct';
 })
 export class CompanySettingsComponent implements OnInit, OnDestroy {
 
-	tableRows;
-	clientProbabilitiesToCloseJob;
+	tableRows = [];
+	clientProbabilitiesToCloseJob = [];
 	editTableMode = false;
 	editStageEnabled = false;
 	newLikelihood = false;
@@ -41,7 +41,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	@ViewChild('newPercentageValue') newPercentageValue: ElementRef;
 	@ViewChild('newDescriptionValue') newDescriptionValue: ElementRef;
 
-	departments;
+	departments = [];
 	departmentFormGroup: FormGroup;
 	newDepartment = false;
 	newSubdepartment = false;
@@ -69,7 +69,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	companyDescriptionDef: string;
 	companyBenefits: string;
 	companyBenefitsDef: string;
-	company: ParseObject;
+	company: any;
 	website: string;
 	websiteDef: string;
 	careers: string;
@@ -333,7 +333,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		this._CompanySettingsService.getDepartments()
 			.then(data => {
 				this.departments = data;
-				console.log(data);
 			});
 		this._CompanySettingsService.getOffices()
 			.then(data => {
@@ -625,10 +624,8 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			workFlowTypeName: client.workFlowTypeName,
 			workflowSaveChanges: false,
 		};
-		console.log(data);
 		let clientId = this._parse.getClientId();
 		this._parse.execCloud('saveCustomHiringWorkFlow', { clientId: clientId, data: data }).then(result => {
-			console.log(result);
 			data['_id'] = result.id;
 			this.workflowArray.push(data);
 		});
@@ -873,6 +870,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (department.edit) {
 			if (this.departmentFormGroup.value.departmentName !== null && this.departmentFormGroup.value.departmentName.trim() !== '') {
 				department.name = this.departmentFormGroup.value.departmentName;
+				this._CompanySettingsService.saveDepartments(this.departments);
 				department.edit = false;
 			} else {
 				this.departmentFormGroupInit(department);
@@ -908,6 +906,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 				subDepartments: []
 			};
 			this.departments.push(newDepartment);
+			this._CompanySettingsService.saveDepartments(this.departments);
 			this.departmentFormGroup.reset();
 			this.newDepartment = false;
 		} else {
@@ -938,6 +937,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			const index = this.departments.indexOf(department);
 			this.departments[index].subDepartments.push(newSubdepartment);
 			department.newSubdepartment = false;
+			this._CompanySettingsService.saveDepartments(this.departments);
 			this.departmentFormGroup.reset();
 		} else {
 			this.departmentFormGroup.reset();
@@ -949,6 +949,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		if (subdepartment.edit) {
 			if (this.departmentFormGroup.value.subdepartmentName !== null && this.departmentFormGroup.value.subdepartmentName.trim() !== '') {
 				subdepartment.name = this.departmentFormGroup.value.subdepartmentName;
+				this._CompanySettingsService.saveDepartments(this.departments);
 				subdepartment.edit = false;
 			} else {
 				subdepartment.edit = false;
@@ -967,15 +968,15 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 		const depIndex = this.departments.indexOf(department);
 		const subdepIndex = this.departments[depIndex].subDepartments.indexOf[subdepartment];
 		this.departments[depIndex].subDepartments.splice(subdepIndex, 1);
+		this._CompanySettingsService.saveDepartments(this.departments);
 	}
 
 	removeDepartment(id) {
-		console.log(id);
 		this.departments.forEach(department => {
 			if (department.id === id) {
-				console.log(id);
 				const index = this.departments.indexOf(department);
 				this.departments.splice(index, 1);
+				this._CompanySettingsService.saveDepartments(this.departments);
 			}
 		});
 	}
@@ -996,6 +997,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 					edit: false
 				};
 				this.offices.push(newOffice);
+				this._CompanySettingsService.saveOffices(this.offices);
 				this.officesFormGroup.reset();
 				this.newOffice = false;
 			} else {
@@ -1017,6 +1019,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 			if (this.officesFormGroup.value.officeName !== null && this.officesFormGroup.value.officeName.trim() !== '') {
 				office.name = this.officesFormGroup.value.officeName;
 				office.edit = false;
+				this._CompanySettingsService.saveOffices(this.offices);
 			} else {
 				office.edit = false;
 			}
@@ -1031,25 +1034,20 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	removeOffice(office) {
 		const officeIndex = this.offices.indexOf(office);
 		this.offices.splice(officeIndex, 1);
+		this._CompanySettingsService.saveOffices(this.offices);
 	}
 
-	onEditStageClick() {
+	editStage() {
 		if (this.editStageEnabled !== true) {
 			return this.editStageEnabled = !this.editStageEnabled;
 		}
 		this.editStageEnabled = false;
-		this.clientProbabilitiesToCloseJob =
-			_.sortBy(
-				this.clientProbabilitiesToCloseJob,
-				function (clientProbability) {
-					return clientProbability.percentage;
-				}
-			);
+		this.clientProbabilitiesToCloseJob = _.sortBy(this.clientProbabilitiesToCloseJob, function (i) { return Number(i.percentage); });
+		this._CompanySettingsService.saveClientProbabilitiesToCloseJob(this.clientProbabilitiesToCloseJob);
 	}
 
 	increaseClientProbability(clientProbabilityToCloseJob) {
 		let percentage = Number(clientProbabilityToCloseJob.percentage);
-
 		if (percentage < 100) {
 			percentage += 5;
 			clientProbabilityToCloseJob.percentage = percentage;
@@ -1060,7 +1058,6 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 
 	decreaseClientProbability(clientProbabilityToCloseJob) {
 		let percentage = Number(clientProbabilityToCloseJob.percentage);
-
 		if (percentage > 0) {
 			percentage -= 5;
 			clientProbabilityToCloseJob.percentage = percentage;
@@ -1070,29 +1067,36 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	}
 
 
-	onAddLikelihoodStage() {
-		if (this.newLikelihood !== true) {
-			return this.newLikelihood = !this.newLikelihood;
-		}
-		const percentageValue = this.newPercentageValue.nativeElement.value;
-		const DescriptionValue = this.newDescriptionValue.nativeElement.value;
-
-		if ( percentageValue !== '' && DescriptionValue !== '' ) {
+	addLikelihoodStage() {
+		if (this.newLikelihood !== true) return this.newLikelihood = !this.newLikelihood;
+		let percentageValue = this.newPercentageValue.nativeElement.value;
+		const descriptionValue = this.newDescriptionValue.nativeElement.value;
+		if (percentageValue.indexOf('%') > -1) percentageValue = percentageValue.slice(0, percentageValue.indexOf('%'));
+		if (percentageValue !== '' && descriptionValue !== '') {
 			const newStageValue = {
-				stagePercentage: percentageValue,
-				stageDescription: DescriptionValue
+				percentage: percentageValue,
+				description: descriptionValue,
+				id: Math.random().toString(36).substring(2, 8) + Math.random().toString(36).substring(2, 8)
 			};
-			this.tableRows.push(newStageValue);
-			this.tableRows = _.sortBy(this.tableRows, function (i) {return i.stagePercentage; });
+			this.clientProbabilitiesToCloseJob.push(newStageValue);
+			this.clientProbabilitiesToCloseJob = _.sortBy(this.clientProbabilitiesToCloseJob, function (i) { 
+				return Number(i.percentage); 
+			});
+			this._CompanySettingsService.saveClientProbabilitiesToCloseJob(this.clientProbabilitiesToCloseJob);
 		}
 		this.newLikelihood = false;
+	}
+
+	deleteLikelihoodStage(index) {
+		this.clientProbabilitiesToCloseJob.splice(index, 1);
+		this._CompanySettingsService.saveClientProbabilitiesToCloseJob(this.clientProbabilitiesToCloseJob);
 	}
 
 	addNewClient() {
 		this.newClient = true;
 		setTimeout(() => {
-		const newClientInput = document.getElementById('newClientInput');
-		this.renderer.invokeElementMethod(newClientInput, 'focus');
+			const newClientInput = document.getElementById('newClientInput');
+			this.renderer.invokeElementMethod(newClientInput, 'focus');
 		}, 4);
 	}
 

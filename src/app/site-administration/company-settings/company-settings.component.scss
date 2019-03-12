@@ -195,11 +195,18 @@ $dashed-border: 1px dashed #ccc;
 }
 
 .pipeline-stage-table_set-description {
-    width:336px;
+    width: 336px;
+    position: relative;
+    .delete-icon {
+        position: absolute;
+        right: -35px;
+        top: 10px;
+        cursor: pointer;
+    }
 }
 .pipeline-stage-table_set-description input {
     padding: 3px 5px;
-    width:100%;
+    width: 100%;
 }
 
 .pipeline-stage-table_add-likelihood-stage > td {
@@ -207,14 +214,14 @@ $dashed-border: 1px dashed #ccc;
 }
 
 .add-likelihood-stage_new-value{
-    width:45px;
+    width: 45px;
     text-align: center;
     padding: 3px 5px;
 }
 
 .add-likelihood-stage_new-description {
     padding: 3px 5px;
-    width:100%;
+    width: 100%;
 }
 
 .pipeline-stage-table_func-buttons {
@@ -827,4 +834,8 @@ input {
       opacity: .5;
       background: grey!important;
       cursor: not-allowed!important;
+  }
+
+  .btn-green {
+      background-color: #02b102!important;
   }

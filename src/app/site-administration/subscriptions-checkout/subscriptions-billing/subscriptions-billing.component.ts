@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ParseObject } from 'parse';
 import { CheckoutServService } from '../../shared/checkout-serv.service';
 import { SubscriptionsBillingService } from './subscriptions-billing.service';
 import { FormBuilder } from '@angular/forms';

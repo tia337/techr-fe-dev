@@ -1,6 +1,5 @@
 import { Parse } from './../parse.service';
 import { Injectable } from '@angular/core';
-import { ParsePromise } from 'parse';
 
 @Injectable()
 export class GmailDraftsService {
@@ -32,7 +31,7 @@ export class GmailDraftsService {
 		});
 		request.execute(callback);
 	}
-	createTemplate(template): ParsePromise {
+	createTemplate(template) {
 		const firstAuthor = this.createPointer('_User', this._parse.getCurrentUser().id);
 		let clientId;
 		let type;

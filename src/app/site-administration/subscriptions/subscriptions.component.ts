@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 import { SubscriptionService } from './subscriptions.service';
@@ -20,16 +19,16 @@ import { ContactUsComponent } from "app/contact-us/contact-us.component";
 })
 export class SubscriptionsComponent implements OnInit {
 
-	Subscriptions: ParseObject[];
+	Subscriptions: any[];
 	standardPrice: any[] = [];
 	standardMonthPrice: any[] = [];
 	professionalPrice: any[] = [];
 	professionalMonthPrice: any[] = [];
-	activeSubscription: ParseObject;
+	activeSubscription: any;
 	activePlan: string;
 	proButton: string;
 	standardButton: string;
-	client: ParseObject;
+	client: any;
 	trialActive: boolean;
 	trialPeople: number;
 	proBackgroundPannel: string;

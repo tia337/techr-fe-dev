@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
 import { Parse } from './../../../../parse.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 
 @Injectable()
 export class CandidateNotesService {
@@ -14,33 +13,33 @@ export class CandidateNotesService {
 		pointerToFoo.id = objectID;
 		return pointerToFoo;
 	}
-	getContractOwner(contractId: string): ParsePromise {
+	getContractOwner(contractId: string) {
 		const owner = this._parse.Query('Contract');
 		owner.include('owner');
 		owner.include('owner.Client_Pointer');
-		return owner.get(contractId).then((contract: ParseUser) => {
+		return owner.get(contractId).then((contract) => {
 			return (contract.get('owner'));
 		});
 	}
 
-	getCandidate(userId: string): ParsePromise {
+	getCandidate(userId: string) {
 		const user = this._parse.Query('User');
 		user.include('voted_user_ids');
-		return user.get(userId).then((user: ParseUser) => {
+		return user.get(userId).then((user) => {
 			return user;
 		});
 	}
 
-	getNote(noteId: string): ParsePromise {
+	getNote(noteId: string) {
 		const note = this._parse.Query('CandidateNotes');
 		note.include('Author');
 		note.include('FileAttached');
-		return note.get(noteId).then((msg: ParseObject) => {
+		return note.get(noteId).then((msg) => {
 			console.log(msg);
 			return msg;
 		});
 	}
-	getContractApply(contractId: string, candidateId: string): ParsePromise {
+	getContractApply(contractId: string, candidateId: string) {
 		const contractPointer = this.createPointer('Contract', contractId);
 		const candidatePointer = this.createPointer('_User', candidateId);
 
@@ -66,7 +65,7 @@ export class CandidateNotesService {
 			return data;
 		});
 	}
-	getScorecardScoring(contractId: string, candidateId: string): ParsePromise {
+	getScorecardScoring(contractId: string, candidateId: string) {
 		const contractPointer = this.createPointer('Contract', contractId);
 		const candidatePointer = this.createPointer('_User', candidateId);
 		const query = this._parse.Query('ScorecardWeightedScore');
@@ -91,7 +90,7 @@ export class CandidateNotesService {
 			return data;
 		});
 	}
-	getUserList(contractId: string, candidateId: string): ParsePromise {
+	getUserList(contractId: string, candidateId: string) {
 		const contractPointer = this.createPointer('Contract', contractId);
 		const candidatePointer = this.createPointer('_User', candidateId);
 
@@ -139,7 +138,7 @@ export class CandidateNotesService {
 			return data;
 		});
 	}
-	createCVFile(file: File, filename: string): ParsePromise {
+	createCVFile(file: File, filename: string) {
 
 		const newAttachedFile = this._parse.Object('CVFile');
 		newAttachedFile.set('documentFile', file);

@@ -17,6 +17,7 @@ import { MatMenuModule } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import * as _ from 'underscore';
+import { CandidateSingleViewService } from '../talentbase/candidate-single-view/candidate-single-view.service';
 
 declare const gapi: any;
 
@@ -111,7 +112,8 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 		private _gDraft: GmailDraftsService,
 		private _gapi: Gapi,
 		private _elementRef: ElementRef,
-		private _chatService: CandidateChatService
+		private _chatService: CandidateChatService,
+		private _candidateSingleViewService: CandidateSingleViewService
 	) {
 	}
 
@@ -195,6 +197,7 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 			};
 			this.candidateEmail = data.fCandidateEmail;
 		});
+		if (localStorage.getItem('candidateEmail')) this.candidateEmail = localStorage.getItem('candidateEmail');
 	}
 
 
@@ -742,8 +745,17 @@ export class GmailComponent implements OnInit, OnChanges, OnDestroy {
 		return this._onSend;
 	}
 
+	set email (value) {
+		this.candidateEmail = value;
+	}
+
+	get email () {
+		return this.candidateEmail;
+	}
+
 	ngOnDestroy() {
 		this._onDestroy.emit();
+		if (localStorage.getItem('candidateEmail')) localStorage.removeItem('candidateEmail');
 	}
 
 }

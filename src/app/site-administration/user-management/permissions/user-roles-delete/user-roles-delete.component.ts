@@ -13,7 +13,7 @@ export class UserRolesDeleteComponent implements OnInit {
 
   currentUserRole;
   currentUserRoles;
-  users;
+  users: any = [];
 
   constructor(
     private _rootVCRService: RootVCRService,
@@ -24,6 +24,7 @@ export class UserRolesDeleteComponent implements OnInit {
 
   ngOnInit() {
     this._alService.getTeamMembersUserRoles(this.currentUserRole.roleName).then(data => {
+      console.log(data);
       this.users = data;
     }).catch(error => {
       console.log(error);

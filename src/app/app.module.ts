@@ -65,6 +65,7 @@ import { ClickOutsideModule } from 'ng-click-outside';
 import { TalentbaseModule } from './talentbase/talentbase.module';
 import { AuthMicrosoftComponent } from './auth/auth-microsoft/auth-microsoft.component';
 import { AuthLinkedinComponent } from './auth/auth-linkedin/auth-linkedin.component';
+import { HttpClientModule } from '@angular/common/http';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -125,7 +126,8 @@ const config: SocketIoConfig = {
 		ReactiveFormsModule,
 		NgxDnDModule,
 		ClickOutsideModule,
-		TalentbaseModule
+		TalentbaseModule,
+		HttpClientModule
 	],
 	providers: [
 		SidenavService,

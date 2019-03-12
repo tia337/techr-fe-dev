@@ -1,6 +1,5 @@
 import { Parse } from './../parse.service';
 import { Injectable } from '@angular/core';
-import { ParsePromise, ParseObject } from 'parse';
 import { Promise } from 'q';
 @Injectable()
 export class GmailService {
@@ -14,7 +13,7 @@ export class GmailService {
 		return pointerToFoo;
 	}
 
-	getStandardTemplates(templateTypeId?: string): ParsePromise {
+	getStandardTemplates(templateTypeId?: string) {
 		if (!templateTypeId) {
 			return (0);
 		}
@@ -28,7 +27,7 @@ export class GmailService {
 		});
 	};
 
-	getCustomTemplatesForClient(templateTypeId?: string): ParsePromise {
+	getCustomTemplatesForClient(templateTypeId?: string) {
 		if (!templateTypeId) {
 			return (0);
 		}
@@ -51,7 +50,7 @@ export class GmailService {
 		});
 	};
 
-	getFillers(contractId: string, candidateId?: string | Array<any>): ParsePromise {
+	getFillers(contractId: string, candidateId?: string | Array<any>) {
 		const data = {
 			fCompanyName: <string>'',
 			fCandidateName: <string>'',
@@ -144,7 +143,7 @@ export class GmailService {
 		return (text);
 	}
 
-	getCompanyName(): ParsePromise {
+	getCompanyName() {
 		const query = this._parse.Query('User');
 		return query.get(this._parse.getCurrentUser().id).then(user => {
 			return user.get('Client');

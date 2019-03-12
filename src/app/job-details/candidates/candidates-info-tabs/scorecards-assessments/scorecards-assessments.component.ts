@@ -2,7 +2,6 @@ import { Component, OnInit, OnChanges, Input, NgZone, OnDestroy } from '@angular
 import { ScorecardsAssessmentsService } from './scorecards-assessments.service';
 import { RootVCRService } from '../../../../root_vcr.service';
 import { ChangeDetectorRef } from '@angular/core';
-import { ParseObject, ParsePromise } from 'parse';
 import { Parse } from '../../../../parse.service';
 import { SelectScorecardsModalComponent } from './select-scorecards-modal/select-scorecards-modal.component';
 import { PreviewModalComponent } from '../../../../scorecards/preview-modal/preview-modal.component';
@@ -26,7 +25,7 @@ export class ScorecardsAssessmentsComponent implements OnInit, OnDestroy {
 
 	private _subscription;
 
-	scorecardRelationships: Array<ParseObject> = [];
+	scorecardRelationships: Array<any> = [];
 	scored = {};
 
 	private _userIdSubscriprion;
@@ -99,14 +98,14 @@ export class ScorecardsAssessmentsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	scoreCandidate(scorecard: ParseObject) {
+	scoreCandidate(scorecard) {
 		const scoreCandidateComponent = this._root_vcr.createComponent(ScoreCandidateComponent);
 		scoreCandidateComponent.candidate = this._candidate;
 		scoreCandidateComponent.contract = this._contract;
 		scoreCandidateComponent.scorecard = scorecard;
 	}
 
-	previewScorecard(scorecard: ParseObject) {
+	previewScorecard(scorecard) {
 		this._root_vcr.clear();
 		const previewInstance = this._root_vcr.createComponent(PreviewModalComponent);
 		previewInstance.scorecard = scorecard;
@@ -121,7 +120,7 @@ export class ScorecardsAssessmentsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	removeScorecard(scorecardRelationship: ParseObject) {
+	removeScorecard(scorecardRelationship) {
 
 		const alert = this._root_vcr.createComponent(AlertComponent);
 		alert.title = 'Unattach scorecard?';

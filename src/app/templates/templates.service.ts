@@ -1,6 +1,5 @@
 import { Parse } from './../parse.service';
 import { Injectable } from '@angular/core';
-import { ParsePromise, ParseObject } from 'parse';
 @Injectable()
 export class TemplatesService {
 
@@ -17,7 +16,7 @@ export class TemplatesService {
 		return pointerToFoo;
 	}
 
-	getTemplateTypes(): ParsePromise {
+	getTemplateTypes() {
 		let types = [];
 		const query = this._parse.Query('TemplatesType');
 		query.exists('Name');
@@ -31,7 +30,7 @@ export class TemplatesService {
 		});
 	};
 
-	getStandardTemplates(): ParsePromise {
+	getStandardTemplates(): any {
 		let templates = [];
 		const query = this._parse.Query('TemplatesStandard');
 		query.include('Type');
@@ -41,7 +40,7 @@ export class TemplatesService {
 		});
 	};
 
-	getCustomTemplates(): ParsePromise {
+	getCustomTemplates() {
 		const author = this.createPointer('_User', this._parse.getCurrentUser().id);
 		let clientId;
 		return author.fetch('Client_Pointer').then(fetchedAthor => {
@@ -60,7 +59,7 @@ export class TemplatesService {
 		});
 	};
 
-	createCustomTemplate(template): ParsePromise {
+	createCustomTemplate(template) {
 		const firstAuthor = this.createPointer('_User', this._parse.getCurrentUser().id);
 		let clientId;
 		let type;
@@ -90,7 +89,7 @@ export class TemplatesService {
 		});
 	};
 
-	updateCustomTemplate(template: ParseObject): ParsePromise {
+	updateCustomTemplate(template) {
 		const redactor = this.createPointer('_User', this._parse.getCurrentUser().id);
 		const query = this._parse.Query('TemplatesCustomized');
 		let redactingHistory = template.get('LastEdited');
@@ -109,14 +108,14 @@ export class TemplatesService {
 		});
 	};
 
-	getCompanyName(): ParsePromise {
+	getCompanyName() {
 		const query = this._parse.Query('User');
 		return query.get(this._parse.getCurrentUser().id).then(user => {
 			return user.get('Client');
 		});
 	};
 
-	getLastModifier(template: ParseObject): ParsePromise {
+	getLastModifier(template: any): any {
 		let lastMod = {
 			date: Date,
 			author: ''
@@ -137,7 +136,7 @@ export class TemplatesService {
 		}
 	}
 
-	removeTemplate(tempId): ParsePromise {
+	removeTemplate(tempId): any {
 		const query = this._parse.Query('TemplatesCustomized');
 		return query.get(tempId).then(temp => {
 			temp.set('isDeleted', true);

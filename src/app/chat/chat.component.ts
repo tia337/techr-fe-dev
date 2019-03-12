@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { stat } from 'fs';
 import { FormControl } from '@angular/forms';
+import { ChatTeamMember } from 'types/types';
 // tslint:disable
 @Component({
   selector: 'app-chat',

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { RootVCRService } from '../../root_vcr.service';
-import { ParseObject } from 'parse';
 import { Parse } from '../../parse.service';
 import { ScorecardsService } from '../scorecards.service';
 import { EditScorecardComponent } from '../edit-scorecard/edit-scorecard.component';
@@ -12,7 +11,7 @@ import { EditScorecardComponent } from '../edit-scorecard/edit-scorecard.compone
 })
 export class PreviewModalComponent implements OnInit, OnDestroy {
 
-	private _scorecard: ParseObject;
+	private _scorecard: any;
 
 	private _editable: boolean;
 	private _buttons = [];
@@ -66,11 +65,11 @@ export class PreviewModalComponent implements OnInit, OnDestroy {
 		this._scorecardsService.type = null;
 	}
 
-	set scorecard(scorecardObject: ParseObject) {
+	set scorecard(scorecardObject: any) {
 		this._scorecard = scorecardObject;
 	}
 
-	get scorecard(): ParseObject {
+	get scorecard(): any {
 		return this._scorecard;
 	}
 

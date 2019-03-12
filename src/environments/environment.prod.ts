@@ -5,6 +5,6 @@ export const environment = {
   SOCKET_IO: 'https://swipein.herokuapp.com/',
   REFERRAL_URL: 'https://referrals.swipein.hr',
   BRANCHIO_KEY: 'key_live_bhFriOV0lfWfszoe8C1b8idnsDpv63Jn',
+  GOOGLE_API_KEY: 'AIzaSyBFfAIR1tt4-AOfcsGxc87y-yZMLdrMNbk',
   STRIPE_KEY: 'pk_live_TSR5x2Li5UBQnSCox5iU3siB',
-  GOOGLE_API_KEY: 'AIzaSyBFfAIR1tt4-AOfcsGxc87y-yZMLdrMNbk'
 };

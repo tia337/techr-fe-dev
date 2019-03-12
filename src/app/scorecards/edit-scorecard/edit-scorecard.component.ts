@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewRef, EventEmitter } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, FormControl} from '@angular/forms';
 import { EditScorecardService } from './edit-scorecard.service';
-import { ParseObject } from 'parse';
 import { Parse } from '../../parse.service';
 import { RootVCRService } from '../../root_vcr.service';
 import * as _ from 'underscore';
@@ -15,7 +14,7 @@ import * as _ from 'underscore';
 export class EditScorecardComponent implements OnInit, OnDestroy {
 
 	private _scorecardId: string;
-	private _scorecardObject: ParseObject;
+	private _scorecardObject: any;
 	private _areas: any[] = [];
 	editForm: FormGroup;
 	editProcessing = false;
@@ -269,7 +268,7 @@ export class EditScorecardComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	findDeletedQuestions(parseObjArray: any[], formControlsArray: FormGroup[]): ParseObject[] {
+	findDeletedQuestions(parseObjArray: any[], formControlsArray: FormGroup[]): any[] {
 		const formQuestionsIds = formControlsArray.map(value => {
 			return value.value.questionId;
 		});

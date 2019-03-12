@@ -26,8 +26,17 @@
         </div>
       </div>
       <div *ngIf="loading == Loading.success">
-        <button class="signup-button" type="button" (click)="signInWithLinkedin()">Join with LinkedIn</button>
-        <button class="signup-button" type="button" (click)="signInWithMicrosoft()">Join with Microsoft</button>
+        <!-- <button class="signup-button" type="button" (click)="signInWithLinkedin()">Join with LinkedIn</button> -->
+        <!-- <button class="signup-button" type="button" (click)="signInWithMicrosoft()">Join with Microsoft</button> -->
+        <div style="margin-right: 10px;" class="microsoft-signin-button" (click)="signInWithMicrosoft()">
+          <img src="../../assets/icons/microsoft-icon.png" alt="">
+          <span>Sign in with Microsoft</span>
+        </div>
+        <div class="linkedin-signin-button" (click)="signInWithLinkedin()">
+          <img src="../../assets/img/linkedin-logo-icon.png"/>
+          <a class="sign-in" style="white-space: nowrap;">Sign In</a>
+          <a style="white-space: nowrap;">with LinkedIn</a>
+        </div>
       </div>
     </div>
   </div>

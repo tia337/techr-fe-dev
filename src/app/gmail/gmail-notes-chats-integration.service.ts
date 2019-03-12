@@ -3,12 +3,11 @@ import { CandidateNotesService } from './../job-details/candidates/candidates-in
 import { Injectable } from '@angular/core';
 import { Socket } from 'ng-socket-io';
 import { Parse } from './../parse.service';
-import { ParsePromise, ParseObject, ParseUser } from 'parse';
 
 @Injectable()
 export class GmailNotesChatsIntegrationService {
 
-	private currUser: ParseUser = this._parse.getCurrentUser();
+	private currUser = this._parse.getCurrentUser();
 
 	constructor(
 		private _chats: CandidateChatService,
@@ -17,7 +16,7 @@ export class GmailNotesChatsIntegrationService {
 		private _socket: Socket
 	) { }
 
-	saveGmailToChat(email, candidateId: string, contractId: string, threadId?: string): ParsePromise {
+	saveGmailToChat(email, candidateId: string, contractId: string, threadId?: string) {
 		return this._chats.getDialogForContract(this.currUser.id, candidateId, contractId).then(
 			dialog => {
 				const message = [`Subject: ${email.sub.value}`, `Body: ${email.body.value}`].join('\n');
