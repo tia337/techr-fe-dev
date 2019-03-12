@@ -118,7 +118,7 @@ type NotificationMessageSender = {
     sessionStatus: boolean
 }
 
-type StagesArray  = Array<{ 
+type StagesArray = Array<{ 
     index: number, 
     type: string, 
     title: string, 
@@ -170,123 +170,132 @@ type BulkActionsArray = Array<{
     _objCount: string
     attributes: Object,
     createdAt: Date
-  }>;
+}>;
 
-  type FilterParams = {
-      applied: Array<any>,
-      pipeline: Array<any>,
-      location: Array<any>,
-      preferences: Array<any>,
-      source: Array<any>
-  }
+type FilterParams = {
+    applied: Array<any>,
+    pipeline: Array<any>,
+    location: Array<any>,
+    preferences: Array<any>,
+    source: Array<any>
+}
 
-  type UserRole = {
-      roleName: string, 
-      roleDescription: string, 
-      roleRights: [
-          { id: string, description: string }
-        ]
-    };
+type UserRole = {
+    roleName: string, 
+    roleDescription: string, 
+    roleRights: [
+        { id: string, description: string }
+    ]
+};
 
-    type PaginationLimits = {
-        from: number,
-        to: number
-    };
+type PaginationLimits = {
+    from: number,
+    to: number
+};
 
+
+// TALENT DATA BASE TYPES START
     
-    // TALENT DATA BASE TYPES START
-    
-    type TalentDBCandidate = {
-        _id: string,
-        firstName: string,
-        lastName: string,
-        headline: string,
-        location: string,
-        avatarURL: string,
-        checked?: boolean
-    }
-    
-    type FilterItem = {
-        type: string,
-        items: Array<{ 
-            title: string, 
-            usersId: Array<string>,
-            filteredUsersId?: Array<string>,
-            count: number,
-            disabled?: boolean,
-            hidden?: boolean    
-          }>,
-        checked?: boolean,
-    }
-    
-    type UserTalentDBFilter = {
-        title: string
-        type: string,
-        index?: string,
-        checked?: boolean
-    }
+type TalentDBCandidate = {
+    _id: string,
+    firstName: string,
+    lastName: string,
+    headline: string,
+    location: string,
+    avatarURL: string,
+    checked?: boolean
+}
 
-    type BulkUploadItem = {
-        id: string,
-        date: Date,
-        author: string,
-        authorEmail: string,
-        filesError?: number,
-        filesSuccess: number,
-        filesTotal: number,
-        uploadFilename: string,
-        uploadFinished: boolean,
-        uploadSize: number,
-        uploadUserFilename: string
-    }
-
-    type Experience = {
-        id: string,
-        jobTitle: string,
-        companyName: string,
-        location: string,
-        monthDateFrom: string,
-        yearDateFrom: string,
-        monthDateTo: string,
-        yearDateTo: string,
-        currentlyWorks: boolean,
-        description: string,
-        hidden?: boolean
-    }
-
-    type Education = {
-        id: string,
-        schoolInstitutionName: string,
-        degree: string,
-        major: string,
-        location: string,
-        yearDateFrom: string,
-        monthDateFrom: string,
-        yearDateTo: string,
-        monthDateTo: string,
-        currentlyAttends: boolean,
-        description: string,
-        hidden?: boolean
-    }
-
-    type SingleViewCandidateLeftBlock = {
-        user: UserParse,
-        developer: DeveloperParse,
-        attachments: Array<any>,
-        tags: Array<any>
-    }
-
-    type SingleViewCandidateCenterBlock = Array<{ 
-        title: string,
-        count: number | string,
-        contracts: Array<any>
-    }>
-
-    type SingleViewCandidateRightBlock = Array<{ 
+type FilterItem = {
+    type: string,
+    items: Array<{ 
         title: string, 
-        items: Array<any>,
-        roles?: Array<any>,
-        industries?: Array<any>
-    }>
+        usersId: Array<string>,
+        filteredUsersId?: Array<string>,
+        count: number,
+        disabled?: boolean,
+        hidden?: boolean    
+    }>,
+    checked?: boolean,
+}
 
-    // TALENT DATA BASE TYPES END  
+type UserTalentDBFilter = {
+    title: string
+    type: string,
+    index?: string,
+    checked?: boolean
+}
+
+type BulkUploadItem = {
+    id: string,
+    date: Date,
+    author: string,
+    authorEmail: string,
+    filesError?: number,
+    filesSuccess: number,
+    filesTotal: number,
+    uploadFilename: string,
+    uploadFinished: boolean,
+    uploadSize: number,
+    uploadUserFilename: string
+}
+
+type Experience = {
+    id: string,
+    jobTitle: string,
+    companyName: string,
+    location: string,
+    monthDateFrom: string,
+    yearDateFrom: string,
+    monthDateTo: string,
+    yearDateTo: string,
+    currentlyWorks: boolean,
+    description: string,
+    hidden?: boolean
+}
+
+type Education = {
+    id: string,
+    schoolInstitutionName: string,
+    degree: string,
+    major: string,
+    location: string,
+    yearDateFrom: string,
+    monthDateFrom: string,
+    yearDateTo: string,
+    monthDateTo: string,
+    currentlyAttends: boolean,
+    description: string,
+    hidden?: boolean
+}
+
+type SingleViewCandidateLeftBlock = {
+    user: UserParse,
+    developer: DeveloperParse,
+    attachments: Array<any>,
+    tags: Array<any>
+}
+
+type SingleViewCandidateCenterBlock = Array<{ 
+    title: string,
+    count: number | string,
+    contracts: Array<any>
+}>
+
+type SingleViewCandidateRightBlock = Array<{ 
+    title: string, 
+    items: Array<any>,
+    roles?: Array<any>,
+    industries?: Array<any>
+}>
+
+// TALENT DATA BASE TYPES END 
+
+
+type FeedBack = {
+    avatarUrl: string,
+    name: string,
+    position: string,
+    feedback: string
+}
+
