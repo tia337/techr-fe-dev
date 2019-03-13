@@ -4,7 +4,7 @@ import { Parse } from './parse.service';
 import * as md5 from 'crypto-js/md5';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { RootVCRService } from 'app/root_vcr.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class Login {
@@ -110,7 +110,7 @@ export class Login {
 		providerFuncName: string
 	): void {
 
-		const params = { provider, code };
+		const body = { provider, code };
 
 		// this.parse
 		// 	.execCloud('getAccessToken', { provider, code })
@@ -119,8 +119,11 @@ export class Login {
 		// 		this.signIn(providerFuncName, token, branchData);
 		// 	});
 
+		const headers = new HttpHeaders();
+		headers.append('Content-Type', 'X-www-form-urlencoded');
+
 		this.httpService
-			.post('login/getAccessToken', { params: params })
+			.request('POST', 'login/getAccessToken', { body: body, headers: headers })
 			.subscribe((token: any) => {
 				localStorage.setItem(tokenName, JSON.stringify(token));
 				this.signIn(providerFuncName, token, branchData);
