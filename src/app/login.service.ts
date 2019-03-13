@@ -120,7 +120,7 @@ export class Login {
 		// 	});
 
 		this.httpService
-			.post('login/getAccessToken', params)
+			.post('login/getAccessToken', { params: params })
 			.subscribe((token: any) => {
 				localStorage.setItem(tokenName, JSON.stringify(token));
 				this.signIn(providerFuncName, token, branchData);
