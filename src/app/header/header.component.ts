@@ -98,7 +98,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			this.notificationsCount++;
 		});
 		if (this._parse.getCurrentUser()) {
-			this._parse.execCloud('getUnreadNotificationsCount', {userId: this._parse.getCurrentUser().id}).then(result => {
+			this._parse.execCloud('getUnreadNotificationsCount', { userId: this._parse.getCurrentUser().id }).then(result => {
 				const data = JSON.parse(result);
 				this.notificationsCount = data;
 			});
@@ -155,28 +155,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}
 	}
 
-  closeUserMenu(event?) {
-        if (event) {
-            if (event.clientY < 55) {
-                this._closeUserAnim= true;
-                setTimeout(() => {
-                    if (this._closeUserAnim === true) {
-                        this._userMenuOpened = false;
-                        this._closeUserAnim = false;
-                    }
-                }, 450);
-            }
-        } else {
-            this._closeUserAnim = true;
-            setTimeout(() => {
-                if (this.closeUserAnim === true) {
-                    this._userMenuOpened = false;
-                    this._closeUserAnim = false;
-                }
-            }, 450);
-        }
-    }
-
+	closeUserMenu(event?): void {
+		if (event) {
+			if (event.clientY < 55) {
+				this._closeUserAnim = true;
+				setTimeout(() => {
+					if (this._closeUserAnim === true) {
+						this._userMenuOpened = false;
+						this._closeUserAnim = false;
+					}
+				}, 450);
+			}
+		} else {
+			this._closeUserAnim = true;
+			setTimeout(() => {
+				if (this.closeUserAnim === true) {
+					this._userMenuOpened = false;
+					this._closeUserAnim = false;
+				}
+			}, 450);
+		}
+	}
 
 	getLogo() {
 		this._headerService.getClientLogo().then(logo => {
@@ -205,10 +204,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		this._menuOpened = true;
 	}
 
-  openUserMenu() {
-        this._closeUserAnim = false;
-        this._userMenuOpened = true;
-    }
+	openUserMenu() {
+		this._closeUserAnim = false;
+		this._userMenuOpened = true;
+	}
 
 	redirect() {
 		this.router.navigate(['checkout']);
@@ -272,15 +271,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	get menuOpened() {
 		return this._menuOpened;
 	}
-  get userMenuOpened() {
-    return this._userMenuOpened;
+	get userMenuOpened() {
+		return this._userMenuOpened;
 	}
-	changeNotifications (notifications: boolean): void {
+	changeNotifications(notifications: boolean): void {
 		this._notificationsOpened = notifications;
 	}
 
-	listenToIncrementUnreadNotificationsCounter () {
-		const observable = new Observable (observer => {
+	listenToIncrementUnreadNotificationsCounter() {
+		const observable = new Observable(observer => {
 			this._socket.on('incrementUnreadNotificationsCounter', data => {
 				observer.next(data);
 			});

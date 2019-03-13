@@ -36,6 +36,8 @@ export class Login {
 		this.httpService
 			.post('login/getAuthUrl', params)
 			.subscribe((result: string) => {
+				console.log(result);
+
 				window.location.href = result;
 			});
 	}
@@ -57,8 +59,29 @@ export class Login {
 	}
 
 	signIn(provider: string, token: Object, branchData?: Object): void {
-		this.parse.execCloud(provider, { token: token, branchData: branchData })
-			.then(user => {
+		// this.parse.execCloud(provider, { token: token, branchData: branchData })
+		// 	.then(user => {
+		// 		if (user === 'unauthorized') {
+		// 			throw 'unauthorized';
+		// 		}
+
+		// 		if (!user.authenticated()) {
+		// 			return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
+		// 		} else {
+		// 			return user;
+		// 		}
+
+		// 	})
+		// 	.then(user => {
+		// 		this._profile.next(user);
+		// 		this.router.navigate(['/dashboard']);
+		// 	})
+		// 	.catch(err => {
+		// 		this.router.navigate(['/login']);
+		// 	});
+		this.httpService
+			.post(provider, { token: token, branchData: branchData })
+			.subscribe((user: any) => {
 				if (user === 'unauthorized') {
 					throw 'unauthorized';
 				}
@@ -69,14 +92,14 @@ export class Login {
 					return user;
 				}
 
-			})
-			.then(user => {
-				this._profile.next(user);
-				this.router.navigate(['/dashboard']);
-			})
-			.catch(err => {
-				this.router.navigate(['/login']);
 			});
+			// .then(user => {
+			// 	this._profile.next(user);
+			// 	this.router.navigate(['/dashboard']);
+			// })
+			// .catch(err => {
+			// 	this.router.navigate(['/login']);
+			// });
 	}
 
 	private getAccessToken(
