@@ -58,7 +58,7 @@ export class Login {
 		this.processSocialSignIn(provider, code, tokenName, branchData, providerFuncName);
 	}
 
-	signIn(provider: string, token: Object, branchData?: Object): void {
+	signIn(providerFuncName: string, token: Object, branchData?: Object): void {
 		// this.parse.execCloud(provider, { token: token, branchData: branchData })
 		// 	.then(user => {
 		// 		if (user === 'unauthorized') {
@@ -80,17 +80,18 @@ export class Login {
 		// 		this.router.navigate(['/login']);
 		// 	});
 		this.httpService
-			.post(provider, { token: token, branchData: branchData })
+			.post(`login/${providerFuncName}`, { token: token, branchData: branchData })
 			.subscribe((user: any) => {
+				console.log(user);
 				if (user === 'unauthorized') {
 					throw 'unauthorized';
 				}
 
-				if (!user.authenticated()) {
-					return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
-				} else {
-					return user;
-				}
+				// if (!user.authenticated()) {
+				// 	return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
+				// } else {
+				// 	return user;
+				// }
 
 			});
 			// .then(user => {
@@ -119,11 +120,12 @@ export class Login {
 		// 		this.signIn(providerFuncName, token, branchData);
 		// 	});
 
-		const headers = new HttpHeaders();
-		headers.append('Content-Type', 'X-www-form-urlencoded');
+		const headers = new HttpHeaders({
+			// 'Content-Type': 'application/x-www-form-urlencoded'
+		});
 
 		this.httpService
-			.request('POST', 'login/getAccessToken', { body: body, headers: headers })
+			.request('POST', 'login/getAccessToken', { body, headers })
 			.subscribe((token: any) => {
 				localStorage.setItem(tokenName, JSON.stringify(token));
 				this.signIn(providerFuncName, token, branchData);
