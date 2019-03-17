@@ -54,12 +54,12 @@
       <span class="profile-span">
           <span class="user-logo-name" (mouseenter)="openUserMenu()" (mouseleave)="closeUserMenu($event)"
                 [ngClass]="{'user-name-hovered': userMenuOpened == true}">
-          <img *ngIf="currentUser.get('avatarURL')" routerLink="/" class="profile-pic"
-               src="{{currentUser.get('avatarURL')}}"/>
-          <img *ngIf="!currentUser.get('avatarURL')" routerLink="/" class="profile-pic"
+          <img *ngIf="currentUser.avatarURL" routerLink="/" class="profile-pic"
+               src="{{currentUser.avatarURL}}"/>
+          <img *ngIf="!currentUser.avatarURL" routerLink="/" class="profile-pic"
                src="../../assets/img/default-userpic.png"
           />
-          <p class="user-name">{{currentUser.get('firstName')}}</p>
+          <p class="user-name">{{currentUser.firstName}}</p>
             </span>
           <button class="sign-out-btn" (click)="signOut()">
             <a style="white-space:nowrap">Sign Out</a>

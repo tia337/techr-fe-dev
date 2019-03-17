@@ -5,6 +5,7 @@ import * as md5 from 'crypto-js/md5';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { RootVCRService } from 'app/root_vcr.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { User } from 'types/types';
 
 @Injectable()
 export class Login {
@@ -12,7 +13,7 @@ export class Login {
 	global: Window;
 
 	private _profile = new BehaviorSubject(null);
-	private _maxTrialDays = 15;
+	private readonly _maxTrialDays = 15;
 
 	constructor(
 		private readonly parse: Parse,
@@ -25,19 +26,11 @@ export class Login {
 	}
 
 	getAuthUrl(provider: string): void {
-		// this.parse
-		// 	.execCloud('getAuthUrl', { provider: provider })
-		// 	.then(authUrl => {
-		// 		window.location.href = authUrl;
-		// 	});
-
 		const params = { params: { provider } };
 
 		this.httpService
 			.post('login/getAuthUrl', params)
 			.subscribe((result: string) => {
-				console.log(result);
-
 				window.location.href = result;
 			});
 	}
@@ -66,7 +59,7 @@ export class Login {
 		// 		}
 
 		// 		if (!user.authenticated()) {
-		// 			return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
+					// return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
 		// 		} else {
 		// 			return user;
 		// 		}
@@ -79,28 +72,15 @@ export class Login {
 		// 	.catch(err => {
 		// 		this.router.navigate(['/login']);
 		// 	});
+
 		this.httpService
 			.post(`login/${providerFuncName}`, { token: token, branchData: branchData })
-			.subscribe((user: any) => {
+			.subscribe((user: User) => {
 				console.log(user);
-				if (user === 'unauthorized') {
-					throw 'unauthorized';
-				}
+				this._profile.next(user);
 
-				// if (!user.authenticated()) {
-				// 	return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
-				// } else {
-				// 	return user;
-				// }
-
+				this.router.navigate(['/dashboard']);
 			});
-			// .then(user => {
-			// 	this._profile.next(user);
-			// 	this.router.navigate(['/dashboard']);
-			// })
-			// .catch(err => {
-			// 	this.router.navigate(['/login']);
-			// });
 	}
 
 	private getAccessToken(
@@ -119,13 +99,8 @@ export class Login {
 		// 		localStorage.setItem(tokenName, JSON.stringify(token));
 		// 		this.signIn(providerFuncName, token, branchData);
 		// 	});
-
-		const headers = new HttpHeaders({
-			// 'Content-Type': 'application/x-www-form-urlencoded'
-		});
-
 		this.httpService
-			.request('POST', 'login/getAccessToken', { body, headers })
+			.request('POST', 'login/getAccessToken', { body })
 			.subscribe((token: any) => {
 				localStorage.setItem(tokenName, JSON.stringify(token));
 				this.signIn(providerFuncName, token, branchData);

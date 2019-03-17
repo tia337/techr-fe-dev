@@ -1,20 +1,20 @@
 import { FinalVerdict } from "app/shared/utils";
 
-type UserParse = {
-    Languages: Array<any>,
-    Phone: string,
+type User = {
+    languages: Array<any>,
+    phone: string,
     phone2?: string,
-    WebSites: Array<{ Type: string, Url: string }>,
+    webSites: Array<{ type: string, url: string }>,
     dataOwners: Array<{ ownerId: string }>,
     email: string,
     firstName?: string,
     lastName?: string,
     summary?: string,
     username?: string,
-    _created_at: Date,
+    createdAt: Date,
     _id: string,
-    _p_developer: string,
-    _updated_at: Date,
+    pDeveloper: string,
+    updatedAt: Date,
     avatarURL?: string,
     headline?: string,
     location?: string
@@ -270,7 +270,7 @@ type Education = {
 }
 
 type SingleViewCandidateLeftBlock = {
-    user: UserParse,
+    user: any,
     developer: DeveloperParse,
     attachments: Array<any>,
     tags: Array<any>

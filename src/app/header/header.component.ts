@@ -5,7 +5,6 @@ import { CartAdding } from './cartadding.service';
 import { Router } from '@angular/router';
 import { AdministrationMenuComponent } from './administration-menu/administration-menu.component';
 import { ConfirmationAlertComponent } from './confirmation-alert/confirmation-alert.component';
-import { ParseUser } from 'parse';
 import { RootVCRService } from '../root_vcr.service';
 import { HeaderService } from './header.service';
 import { CompanySettingsService } from 'app/site-administration/company-settings/company-settings.service';
@@ -17,6 +16,7 @@ import { ContactUsComponent } from 'app/contact-us/contact-us.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'underscore';
+import { User } from 'types/types';
 
 
 
@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	cartAmount: number;
 	CartTotal: number;
 	currency: string;
-	currentUser: ParseUser;
+	currentUser: User;
 	animationActive: boolean;
 	private _currentUserSubscription;
 	loadLogoSubsc;
@@ -93,40 +93,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
 			// this.changeTheme(theme);
 		}
 
-		this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
-			console.log(data);
-			this.notificationsCount++;
-		});
-		if (this._parse.getCurrentUser()) {
-			this._parse.execCloud('getUnreadNotificationsCount', { userId: this._parse.getCurrentUser().id }).then(result => {
-				const data = JSON.parse(result);
-				this.notificationsCount = data;
-			});
-		}
+		// this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
+		// 	console.log(data);
+		// 	this.notificationsCount++;
+		// });
 
-		this._headerService.currentNotificationsCount.subscribe(data => {
-			this.notificationsCount = parseFloat(data);
-		});
+		// if (this._parse.getCurrentUser()) {
+		// 	this._parse.execCloud('getUnreadNotificationsCount', { userId: this._parse.getCurrentUser().id }).then(result => {
+		// 		const data = JSON.parse(result);
+		// 		this.notificationsCount = data;
+		// 	});
+		// }
 
-		this.loadLogoSubsc = this._companySettingsService.logoUpdate.subscribe(() => {
-			this.getLogo();
-		});
+		// this._headerService.currentNotificationsCount.subscribe(data => {
+		// 	this.notificationsCount = parseFloat(data);
+		// });
 
-		this.loadLogoSubscPJ = this._postJobService.logoUpdate.subscribe(() => {
-			this.getLogo();
-		});
+		// this.loadLogoSubsc = this._companySettingsService.logoUpdate.subscribe(() => {
+		// 	this.getLogo();
+		// });
 
-		if (this._parse.getCurrentUser()) {
-			this.getLogo();
-		}
+		// this.loadLogoSubscPJ = this._postJobService.logoUpdate.subscribe(() => {
+		// 	this.getLogo();
+		// });
+
+		// if (this._parse.getCurrentUser()) {
+		// 	this.getLogo();
+		// }
+
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				// profile1.fetch().then(profile => {
 				this.currentUser = profile;
-				if (!profile.toJSON().Client_Pointer) {
-					this._root_vcr.clear();
-					this._root_vcr.createComponent(ConfirmationAlertComponent);
-				}
+				// if (!profile.toJSON().Client_Pointer) {
+				// 	this._root_vcr.clear();
+				// 	this._root_vcr.createComponent(ConfirmationAlertComponent);
+				// }
 				// });
 			}
 		});
@@ -271,20 +273,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	get menuOpened() {
 		return this._menuOpened;
 	}
+
 	get userMenuOpened() {
 		return this._userMenuOpened;
 	}
+
 	changeNotifications(notifications: boolean): void {
 		this._notificationsOpened = notifications;
 	}
 
 	listenToIncrementUnreadNotificationsCounter() {
-		const observable = new Observable(observer => {
-			this._socket.on('incrementUnreadNotificationsCounter', data => {
-				observer.next(data);
-			});
-		});
-		return observable;
+		// const observable = new Observable(observer => {
+		// 	this._socket.on('incrementUnreadNotificationsCounter', data => {
+		// 		observer.next(data);
+		// 	});
+		// });
+		// return observable;
 	}
 
 	// changeTheme(theme?: string) {
