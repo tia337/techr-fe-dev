@@ -11,6 +11,7 @@ import { PreviewModalComponent } from '../../../../../scorecards/preview-modal/p
 export class SelectScorecardsModalComponent implements OnInit {
 
   scorecard;
+  scorecards;
   private _candidate: any;
   private _contractId: string;
 
