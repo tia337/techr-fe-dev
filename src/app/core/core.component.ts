@@ -52,109 +52,109 @@ export class CoreComponent implements OnInit, OnDestroy {
 		private _route: ActivatedRoute,
 		public _chatService: ChatService
 	) {
-		this._coreService.currentDeactivatedUser.subscribe(userId => {
-			this.teamMembers.forEach(member => {
-				const memberId = this.teamMembers.indexOf(member);
-				if (member.id === userId) {
-					this.teamMembers.splice(memberId, 1);
-					this.inactiveTeamMembers.push(member);
-				}
-			});
-		});
+		// this._coreService.currentDeactivatedUser.subscribe(userId => {
+		// 	this.teamMembers.forEach(member => {
+		// 		const memberId = this.teamMembers.indexOf(member);
+		// 		if (member.id === userId) {
+		// 			this.teamMembers.splice(memberId, 1);
+		// 			this.inactiveTeamMembers.push(member);
+		// 		}
+		// 	});
+		// });
 	}
 
 	ngOnInit() {
 
-		this.getCurrentPartner().then(result => {
-			const partner = result;
-			this.clientSettings = partner.toJSON();
-			this.changeTheme();
-		});
-		this._sidenav.setSidenav(this.sidenav);
-		this.listenToDialogIdUpdated().subscribe(data => {
-			this.updateDialogId(data);
-		});
-		this._chatService.updatedDialogId.subscribe(data => {
-			this.updateDialogId(data);
-		});
-		this.recruterTyping().subscribe(data => {
-			this.addAnimationToTyping(data);
-		});
-		this._coreService.currentTypingStatus.subscribe(data => {
-			this.teamMembers.forEach(member => {
-				if (member.dialogId === data) {
-					member.typing = false;
-				};
-			});
-		});
-		this._coreService.readCurrentMessages.subscribe(data => {
-			this.teamMembers.forEach(member => {
-				if (member.dialogId === data) {
-					member.unreadMessages = 0;
-				};
-			});
-		});
-		this.getTeamMemberOnline().subscribe(data => {
-			this.teamMembers.forEach(member => {
-				if (member.id === data) {
-					member.sessionStatus = true;
-				}
-			});
-		});
-		this.getTeamMemberOffline().subscribe(data => {
-			this.teamMembers.forEach(member => {
-				if (member.id === data) {
-					member.sessionStatus = false;
-				}
-			});
-		});
-		this.getUnreadMessagesCountUpdated().subscribe(data => {
-			this.teamMembers.forEach(member => {
-				if (member.id === data) {
-					if (window.location.href.indexOf(member.dialogId) > -1) {
-						return;
-					} else {
-						member.unreadMessages = parseFloat(member.unreadMessages) + 1;
-						member.typing = false;
-					}
-				}
-			});
-		});
+		// this.getCurrentPartner().then(result => {
+		// 	const partner = result;
+		// 	this.clientSettings = partner.toJSON();
+		// 	this.changeTheme();
+		// });
+		// this._sidenav.setSidenav(this.sidenav);
+		// this.listenToDialogIdUpdated().subscribe(data => {
+		// 	this.updateDialogId(data);
+		// });
+		// this._chatService.updatedDialogId.subscribe(data => {
+		// 	this.updateDialogId(data);
+		// });
+		// this.recruterTyping().subscribe(data => {
+		// 	this.addAnimationToTyping(data);
+		// });
+		// this._coreService.currentTypingStatus.subscribe(data => {
+		// 	this.teamMembers.forEach(member => {
+		// 		if (member.dialogId === data) {
+		// 			member.typing = false;
+		// 		};
+		// 	});
+		// });
+		// this._coreService.readCurrentMessages.subscribe(data => {
+		// 	this.teamMembers.forEach(member => {
+		// 		if (member.dialogId === data) {
+		// 			member.unreadMessages = 0;
+		// 		};
+		// 	});
+		// });
+		// this.getTeamMemberOnline().subscribe(data => {
+		// 	this.teamMembers.forEach(member => {
+		// 		if (member.id === data) {
+		// 			member.sessionStatus = true;
+		// 		}
+		// 	});
+		// });
+		// this.getTeamMemberOffline().subscribe(data => {
+		// 	this.teamMembers.forEach(member => {
+		// 		if (member.id === data) {
+		// 			member.sessionStatus = false;
+		// 		}
+		// 	});
+		// });
+		// this.getUnreadMessagesCountUpdated().subscribe(data => {
+			// this.teamMembers.forEach(member => {
+			// 	if (member.id === data) {
+			// 		if (window.location.href.indexOf(member.dialogId) > -1) {
+			// 			return;
+			// 		} else {
+			// 			member.unreadMessages = parseFloat(member.unreadMessages) + 1;
+			// 			member.typing = false;
+			// 		}
+			// 	}
+			// });
+		// });
 		this._coreService.currentHighlighter.subscribe(data => {
-			this.teamMembers.forEach(member => {
-				if (member.id === data) {
-					member.dialogActive = false;
-				}
-			});
+			// this.teamMembers.forEach(member => {
+			// 	if (member.id === data) {
+			// 		member.dialogActive = false;
+			// 	}
+			// });
 		});
 		this._coreService.readCurrentMessages.subscribe(data => {
-			this.teamMembers.forEach(member => {
-				if (member.dialogId === data) {
-					member.unreadMessages = 0;
-				}
-			});
+			// this.teamMembers.forEach(member => {
+			// 	if (member.dialogId === data) {
+			// 		member.unreadMessages = 0;
+			// 	}
+			// });
 		});
 
 		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
-				this.currentUser = profile;
-				this._coreService.getTeamMembers().then(members => {
-					this.teamMembers = members;
-					this.teamMembers = this.teamMembers.filter(member => {
-						return member.id !== this._parse.getCurrentUser().id;
-					});
-					this.addTypingStatus();
-					this.getUnreadMessages(this.teamMembers);
-				});
+				// this.currentUser = profile;
+				// this._coreService.getTeamMembers().then(members => {
+				// 	this.teamMembers = members;
+				// 	this.teamMembers = this.teamMembers.filter(member => {
+				// 		return member.id !== this._parse.getCurrentUser().id;
+				// 	});
+				// 	this.addTypingStatus();
+				// 	this.getUnreadMessages(this.teamMembers);
+				// });
 
-				this._coreService.getInvitations().then(invitations => {
-					this.invitedMembers = invitations;
-				});
+				// this._coreService.getInvitations().then(invitations => {
+				// 	this.invitedMembers = invitations;
+				// });
 
-				this._coreService.getInactiveTeamMembers().then(members => {
-					this.inactiveTeamMembers = members;
-					this.getUnreadMessages(this.inactiveTeamMembers);
-				});
+				// this._coreService.getInactiveTeamMembers().then(members => {
+				// 	this.inactiveTeamMembers = members;
+				// 	this.getUnreadMessages(this.inactiveTeamMembers);
+				// });
 			} else {
 				this.currentUser = null;
 				// this.teamMembers = null;
@@ -166,20 +166,20 @@ export class CoreComponent implements OnInit, OnDestroy {
 
 		this.sessionId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 		sessionStorage.setItem('sessionId', this.sessionId);
-		if (this._parse.getCurrentUser()) {
-			this._socket.connect();
-			this._socket.emit('subscribe', {userId: this._parse.getCurrentUser().id, sessionId: this.sessionId});
-			// console.log('Second time', this._socket);
-		}
-		this._cartAdding.cartLoad();
+		// if (this._parse.getCurrentUser()) {
+		// 	this._socket.connect();
+		// 	this._socket.emit('subscribe', {userId: this._parse.getCurrentUser().id, sessionId: this.sessionId});
+		// 	// console.log('Second time', this._socket);
+		// }
+		// this._cartAdding.cartLoad();
 	}
 
-	getCurrentPartner(): Promise<any> {
-		return new Promise ((resolve, reject) => {
-			const partner = this._parse.getPartner(this._parse.Parse.User.current());
-			// console.log(partner);
-			resolve(partner);
-		});
+	getCurrentPartner(): any {
+		// return new Promise ((resolve, reject) => {
+		// 	const partner = this._parse.getPartner(this._parse.Parse.User.current());
+		// 	// console.log(partner);
+		// 	resolve(partner);
+		// });
 	}
 
 	changeTheme() {

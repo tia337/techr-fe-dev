@@ -51,7 +51,7 @@ import { BillingGuard } from './guards/billing.guard';
 import { TermsConditionsModule } from './info-pages/terms-conditions/terms-conditions.module';
 import { PrivacyPolicyModule } from './info-pages/privacy-policy/privacy-policy.module';
 import { InvitationPageModule } from './invitation-page/invitation-page.module';
-import { ContactUsModule } from "app/contact-us/contact-us.module";
+import { ContactUsModule } from 'app/contact-us/contact-us.module';
 import { ActiveSubscriptionGuard } from './guards/active-subscription.guard';
 import { environment } from './../environments/environment';
 import { ChatModule } from './chat/chat.module';
@@ -65,7 +65,8 @@ import { ClickOutsideModule } from 'ng-click-outside';
 import { TalentbaseModule } from './talentbase/talentbase.module';
 import { AuthMicrosoftComponent } from './auth/auth-microsoft/auth-microsoft.component';
 import { AuthLinkedinComponent } from './auth/auth-linkedin/auth-linkedin.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { CustomHttpInterceptor } from './http-interceptor';
 
 const config: SocketIoConfig = {
 	url: environment.SOCKET_IO, options: {
@@ -137,7 +138,12 @@ const config: SocketIoConfig = {
 		LoginGuard,
 		BillingGuard,
 		ActiveSubscriptionGuard,
-		TimelineService
+		TimelineService,
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: CustomHttpInterceptor,
+			multi: true,
+		}
 	],
 	bootstrap: [AppComponent],
 	exports: [],

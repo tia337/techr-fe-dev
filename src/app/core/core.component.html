@@ -1,15 +1,25 @@
 <header></header>
 <mat-sidenav-container class="main-nav">
-  <mat-sidenav mode="side" #sidenav class="sidenav" [opened]="true" (mouseenter)="mouseEnter($event)" (mouseleave)="mouseEnter($event)">
+  <mat-sidenav mode="side" 
+               #sidenav 
+               class="sidenav" 
+               [opened]="true" 
+               (mouseenter)="mouseEnter($event)" 
+               (mouseleave)="mouseEnter($event)">
 
-    <div class="sidenav-toggle open" #sidenavToggle (click)="toggle()">
+    <div class="sidenav-toggle open" 
+         #sidenavToggle 
+         (click)="toggle()">
       <mat-icon>keyboard_arrow_right</mat-icon>
     </div>
 
     <div class="sidenav-content-inner">
       <div class="toggle">
         <label class="checkbox__label">
-          <input class="checkbox" type="checkbox" (click)="pinSideNav()" checked>
+          <input class="checkbox" 
+                 type="checkbox" 
+                 (click)="pinSideNav()" 
+                 checked>
           <!-- [checked]="sideNavPinned" -->
           <span class="pin__track">
 					<span class="pin">
@@ -59,7 +69,8 @@
             </li>
           </span>
         </ul>
-        <span class="invite-button " (click)="changeLocationToInviteuser() ">
+        <span class="invite-button " 
+              (click)="changeLocationToInviteuser() ">
           <p>+Invite People</p>
         </span>
       </nav>
@@ -71,15 +82,30 @@
       <div class="team-members " *ngIf="teamMembers">
         <div *ngFor="let teamMember of teamMembers">
           <p class="team-member" 
-            [ngClass]="{'active-dialog': teamMember.dialogActive === true}"
-            (click)="highlightDialog(teamMember.id)" 
-            [routerLink]="['/chat', teamMember.dialogId]" 
-            [queryParams]="[teamMember.firstName, teamMember.lastName, teamMember.avatarURL, teamMember.sessionStatus, teamMember.id, teamMember.dialogId ]"> 
-              <span *ngIf="teamMember.sessionStatus === false" class="team-member-status offline"></span>
-              <span *ngIf="teamMember.sessionStatus === true" class="team-member-status online"></span>
+             [ngClass]="{'active-dialog': teamMember.dialogActive === true}"
+             (click)="highlightDialog(teamMember.id)" 
+             [routerLink]="['/chat', teamMember.dialogId]" 
+             [queryParams]="[teamMember.firstName, 
+                             teamMember.lastName, 
+                             teamMember.avatarURL, 
+                             teamMember.sessionStatus, 
+                             teamMember.id, 
+                             teamMember.dialogId]"> 
+              <span *ngIf="teamMember.sessionStatus === false" 
+                    class="team-member-status offline">
+              </span>
+              <span *ngIf="teamMember.sessionStatus === true" 
+                    class="team-member-status online">
+              </span>
               <span>{{ teamMember.firstName }}</span>  
-              <span class="team-member-unread-messages" *ngIf="teamMember.unreadMessages > 0 && teamMember.typing === false">{{teamMember.unreadMessages}}</span>
-              <span *ngIf="teamMember.typing === true" class="team-member-typing"><img src="../../assets/icons/typing.svg" alt=""></span>
+              <span class="team-member-unread-messages" 
+                    *ngIf="teamMember.unreadMessages > 0 && teamMember.typing === false">
+                    {{teamMember.unreadMessages}}
+              </span>
+              <span *ngIf="teamMember.typing === true" 
+                    class="team-member-typing">
+                    <img src="../../assets/icons/typing.svg" alt="">
+              </span>
           </p>
         </div>
       </div>
@@ -90,7 +116,7 @@
         <div [hidden]="showInactiveMembers" *ngIf="inactiveTeamMembers">
           <div *ngFor="let teamMember of inactiveTeamMembers">
             <p class="team-member" [routerLink]="['/chat', teamMember.dialogId]"> 
-              {{ teamMember.get('firstName') }} 
+              <!-- {{ teamMember.get('firstName') }}  -->
               <span class="team-member-unread-messages" *ngIf="teamMember.unreadMessages > 0">{{teamMember.unreadMessages}}</span>
             </p>
           </div>
