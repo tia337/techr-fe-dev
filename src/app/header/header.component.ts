@@ -14,6 +14,7 @@ import { PostJobService } from 'app/post-job-page/post-job.service';
 import { ContactUsComponent } from 'app/contact-us/contact-us.component';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'underscore';
+import { User } from 'types/types';
 
 
 
@@ -28,7 +29,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	cartAmount: number;
 	CartTotal: number;
 	currency: string;
-	currentUser: any;
+	currentUser: User;
 	animationActive: boolean;
 	private _currentUserSubscription;
 	loadLogoSubsc;
@@ -74,40 +75,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.changeTheme();
 
-		this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
-			this.notificationsCount++;
-		});
+		// this.listenToIncrementUnreadNotificationsCounter().subscribe(data => {
+		// 	console.log(data);
+		// 	this.notificationsCount++;
+		// });
 
-		if (this.parseService.getCurrentUser()) {
-			// this.parseService.execCloud('getUnreadNotificationsCount', { userId: this.parseService.getCurrentUser().id }).then(result => {
-			// 	const data = JSON.parse(result);
-			// 	this.notificationsCount = data;
-			// });
-		}
+		// if (this._parse.getCurrentUser()) {
+		// 	this._parse.execCloud('getUnreadNotificationsCount', { userId: this._parse.getCurrentUser().id }).then(result => {
+		// 		const data = JSON.parse(result);
+		// 		this.notificationsCount = data;
+		// 	});
+		// }
 
-		this.headerService.currentNotificationsCount.subscribe(data => {
-			this.notificationsCount = parseFloat(data);
-		});
+		// this._headerService.currentNotificationsCount.subscribe(data => {
+		// 	this.notificationsCount = parseFloat(data);
+		// });
 
-		this.loadLogoSubsc = this.companySettingsService.logoUpdate.subscribe(() => {
-			this.getLogo();
-		});
+		// this.loadLogoSubsc = this._companySettingsService.logoUpdate.subscribe(() => {
+		// 	this.getLogo();
+		// });
 
-		this.loadLogoSubscPJ = this.postJobService.logoUpdate.subscribe(() => {
-			this.getLogo();
-		});
+		// this.loadLogoSubscPJ = this._postJobService.logoUpdate.subscribe(() => {
+		// 	this.getLogo();
+		// });
 
-		if (this.parseService.getCurrentUser()) {
-			this.getLogo();
-		}
-		this._currentUserSubscription = this.loginService.profile.subscribe(profile => {
+		// if (this._parse.getCurrentUser()) {
+		// 	this.getLogo();
+		// }
+
+		this._currentUserSubscription = this._login.profile.subscribe(profile => {
 			if (profile) {
 				// profile1.fetch().then(profile => {
 				this.currentUser = profile;
-				if (!profile.toJSON().Client_Pointer) {
-					this.rootVcrService.clear();
-					this.rootVcrService.createComponent(ConfirmationAlertComponent);
-				}
+				// if (!profile.toJSON().Client_Pointer) {
+				// 	this._root_vcr.clear();
+				// 	this._root_vcr.createComponent(ConfirmationAlertComponent);
+				// }
 				// });
 			}
 		});
@@ -136,7 +139,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	closeUserMenu(event?) {
+	closeUserMenu(event?): void {
 		if (event) {
 			if (event.clientY < 55) {
 				this._closeUserAnim = true;
@@ -261,12 +264,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	listenToIncrementUnreadNotificationsCounter() {
-		const observable = new Observable(observer => {
-			this.socket.on('incrementUnreadNotificationsCounter', data => {
-				observer.next(data);
-			});
-		});
-		return observable;
+		// const observable = new Observable(observer => {
+		// 	this._socket.on('incrementUnreadNotificationsCounter', data => {
+		// 		observer.next(data);
+		// 	});
+		// });
+		// return observable;
 	}
 
 	private changeTheme(): void {
