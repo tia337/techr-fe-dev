@@ -103,7 +103,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		// 	this.getLogo();
 		// }
 
-		this._currentUserSubscription = this._login.profile.subscribe(profile => {
+		this._currentUserSubscription = this.loginService.profile.subscribe(profile => {
 			if (profile) {
 				// profile1.fetch().then(profile => {
 				this.currentUser = profile;

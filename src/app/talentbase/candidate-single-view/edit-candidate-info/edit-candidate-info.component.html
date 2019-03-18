@@ -24,12 +24,11 @@
             <label for="avatar">
               Upload avatar
             </label>
-            <span *ngIf="avatar" (click)="removeAvatar()">Remove avatar</span>
+            <span *ngIf="avatar">Remove avatar</span>
             <input style="display: none;" 
                 id="avatar" 
                 #avatarInput 
                 accept=".jpg, .jpeg, .png, .tif, .gif, .tiff, .ppm, .pgm, .pbm, .pnm" 
-                (change)="changeAvatar($event)" 
                 type="file" 
                 formControlName="avatarURL" 
                 name="avatar">
@@ -64,13 +63,13 @@
             </p>
             <p class="input-holder" formArrayName="WebSites">
                 <span class="input-name">Social/Web precense <mat-icon style="margin-left: 10px; cursor: pointer; font-size: 16px; width: 15px; height: 15px;" (click)="addPrecense()">add</mat-icon></span>
-                <span *ngFor="let precense of candidateForm.controls['WebSites'].controls; let i = index;">
+                <!-- <span *ngFor="let precense of candidateForm.controls['WebSites'].controls; let i = index;">
                   <span class="display-flex align-items-c"  [formGroupName]="i" style="margin-bottom: 5px; position: relative;">
                     <input type="text" formControlName="Url"  placeholder="Url" style="margin-bottom: 5px;">
                     <input type="text" formControlName="Type" placeholder="Type" style="margin-bottom: 5px;">                    
                     <mat-icon class="icon-fz16 delete-website" *ngIf="i !== 0" (click)="removeWebPrecense(i);">delete</mat-icon>
                   </span>
-              </span>
+                </span> -->
             </p>
           </div>
           <div class="form-buttons display-flex">
