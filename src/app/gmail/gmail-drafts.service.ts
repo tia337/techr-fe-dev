@@ -32,7 +32,7 @@ export class GmailDraftsService {
 		});
 		request.execute(callback);
 	}
-	createTemplate(template): ParsePromise {
+	createTemplate(template): any {
 		const firstAuthor = this.createPointer('_User', this._parse.getCurrentUser().id);
 		let clientId;
 		let type;

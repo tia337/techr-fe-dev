@@ -18,7 +18,7 @@ getButtons(){
         return results;    
         });
     }
-getCategoryIntegrations(categoryObject?: ParseObject): ParsePromise{
+getCategoryIntegrations(categoryObject?: any): any{
     let query = this._parse.Query("Integrations");
     if (categoryObject) {
         query.equalTo("Integration_Category", categoryObject);

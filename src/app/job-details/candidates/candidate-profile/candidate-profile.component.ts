@@ -28,7 +28,7 @@ export class CandidateProfileComponent implements OnInit, OnDestroy, OnChanges {
 	@Input('userId') userId: string;
 	@Input('contractId') contractId: string;
 	@Input('weight') weight: number;
-	candidate: ParseUser;
+	candidate: any;
 	averageRating = 0;
 	private roles;
 	private developer;

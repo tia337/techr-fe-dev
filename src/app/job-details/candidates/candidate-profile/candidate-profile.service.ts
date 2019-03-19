@@ -18,7 +18,7 @@ export class CandidateProfileService {
 
 	constructor(private _parse: Parse) {}
 
-	getCandidate(userId: string): ParsePromise {
+	getCandidate(userId: string): any {
 		const user = this._parse.Query('User');
 		user.include('developer');
 		user.include('developer.roles');
@@ -29,7 +29,7 @@ export class CandidateProfileService {
 		});
 	}
 
-	getScorecardWeightedScores(contractId: string, candidate: ParseUser): ParsePromise {
+	getScorecardWeightedScores(contractId: string, candidate: any): any {
 		let currentUser;
 
 		return this._parse.getCurrentUser().fetch().then(me => {

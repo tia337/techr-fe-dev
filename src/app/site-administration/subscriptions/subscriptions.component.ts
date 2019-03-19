@@ -20,16 +20,16 @@ import { ContactUsComponent } from "app/contact-us/contact-us.component";
 })
 export class SubscriptionsComponent implements OnInit {
 
-	Subscriptions: ParseObject[];
+	Subscriptions: any[];
 	standardPrice: any[] = [];
 	standardMonthPrice: any[] = [];
 	professionalPrice: any[] = [];
 	professionalMonthPrice: any[] = [];
-	activeSubscription: ParseObject;
+	activeSubscription: any;
 	activePlan: string;
 	proButton: string;
 	standardButton: string;
-	client: ParseObject;
+	client: any;
 	trialActive: boolean;
 	trialPeople: number;
 	proBackgroundPannel: string;

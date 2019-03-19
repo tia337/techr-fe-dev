@@ -18,7 +18,7 @@ import { ContactUsComponent } from 'app/contact-us/contact-us.component';
 })
 export class BillingOverviewComponent implements OnInit {
 
-	client: ParseObject;
+	client: any;
 	isTrial: boolean;
 	subscription;
 	parsePlan;

@@ -25,7 +25,7 @@ export class UserService {
 
 	}
 
-	deactivateUser(userId: string): ParsePromise {
+	deactivateUser(userId: string): any {
 		return this._parse.Parse.Cloud.run('deactivateUser', {userId: userId});
 	}
 

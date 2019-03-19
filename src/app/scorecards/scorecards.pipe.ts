@@ -6,7 +6,7 @@ import { ParseObject } from 'parse';
   pure: false
 })
 export class ScorecardsFilterPipe implements PipeTransform {
-  transform(data: ParseObject[], scorecardStatus: number): any[] {
+  transform(data: any[], scorecardStatus: number): any[] {
     if (data) {
       return data.filter(scorecard => {
         return scorecard.get('Status') === scorecardStatus;

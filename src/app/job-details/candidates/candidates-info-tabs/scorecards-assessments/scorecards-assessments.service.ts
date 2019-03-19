@@ -8,7 +8,7 @@ export class ScorecardsAssessmentsService {
 
 	constructor(private _parse: Parse) { }
 
-	getCandidate(id: string): ParsePromise {
+	getCandidate(id: string): any {
 		// console.log(id);
 		const user = new this._parse.Parse.Query('User');
 		return user.get(id).then(parseUser => {
@@ -25,14 +25,14 @@ export class ScorecardsAssessmentsService {
 		});
 	}
 
-	getContract(id: string): ParsePromise {
+	getContract(id: string): any {
 		const contract = new this._parse.Parse.Query('Contract');
 		return contract.get(id).then(parseContract => {
 			return parseContract;
 		});
 	}
 
-	attachScorecard(candidate: ParseUser, scorecard: ParseObject, contract: ParseObject): ParsePromise {
+	attachScorecard(candidate: any, scorecard: any, contract: any): any {
 		const currentUser = this._parse.Parse.User.current();
 		const scorecardRelationship = new this._parse.Parse.Object('ScorecardRelationship');
 		scorecardRelationship.set('Linking_Author', currentUser);
@@ -45,7 +45,7 @@ export class ScorecardsAssessmentsService {
 		return scorecardRelationship.save();
 	}
 
-	getAttachedScorecards(candidate: ParseUser, contract: ParseObject): ParsePromise {
+	getAttachedScorecards(candidate: any, contract: any): any {
 		const scorecardRelationship = new this._parse.Parse.Query('ScorecardRelationship');
 		scorecardRelationship.equalTo('Job', contract);
 		scorecardRelationship.equalTo('Candidate', candidate);
@@ -56,7 +56,7 @@ export class ScorecardsAssessmentsService {
 		return scorecardRelationship.find();
 	}
 
-	removeAttachedScorecard(scorecardRelationship: ParseObject): ParsePromise {
+	removeAttachedScorecard(scorecardRelationship: any): any {
 		scorecardRelationship.set('isDeleted', true);
 		return scorecardRelationship.save();
 	}

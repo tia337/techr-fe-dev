@@ -53,12 +53,12 @@ export class ScorecardsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	isMyScorecard(scorecard: ParseObject): boolean {
+	isMyScorecard(scorecard: any): boolean {
 		if(scorecard.has('Author')) return scorecard.get('Author').equals(this._scorecardsService.me());
 		else return false;
 	}
 
-	editScorecard(scorecard: ParseObject) {
+	editScorecard(scorecard: any) {
 		// this._scorecardsService.getScorecard(scorecard.id).then(questions => {
 		//   this._scorecardsService.questions = questions.questionsObj;
 		//   console.log(questions.questionsObj);
@@ -87,7 +87,7 @@ export class ScorecardsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	previewScorecard(scorecard: ParseObject) {
+	previewScorecard(scorecard: any) {
 		const previewInstance = this._root_vcr.createComponent(PreviewModalComponent);
 		previewInstance.scorecard = scorecard;
 		previewInstance.addButton({
@@ -116,7 +116,7 @@ export class ScorecardsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	archiveScorecard(scorecard: ParseObject) {
+	archiveScorecard(scorecard: any) {
 		const alert = this._root_vcr.createComponent(AlertComponent);
 		alert.title = 'Archive scorecard';
 		alert.content = `
@@ -140,7 +140,7 @@ export class ScorecardsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	activateScorecard(scorecard: ParseObject) {
+	activateScorecard(scorecard: any) {
 		this._scorecardsService.activateScorecard(scorecard).then(() => {
 			const alert = this._root_vcr.createComponent(AlertComponent);
 			alert.title = 'Scorecard activated!';
@@ -157,19 +157,19 @@ export class ScorecardsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	private _archiveScorecard(scorecard: ParseObject) {
+	private _archiveScorecard(scorecard: any) {
 		this._scorecardsService.archiveScorecard(scorecard).then(() => {
 			this.updateScorecards();
 		});
 	}
 
-	private _activateScorecard(scorecard: ParseObject) {
+	private _activateScorecard(scorecard: any) {
 		this._scorecardsService.activateScorecard(scorecard).then(() => {
 			this.updateScorecards();
 		});
 	}
 
-	deleteScorecard(scorecard: ParseObject) {
+	deleteScorecard(scorecard: any) {
 		const alert = this._root_vcr.createComponent(AlertComponent);
 		alert.title = 'Delete scorecard';
 
@@ -201,7 +201,7 @@ export class ScorecardsComponent implements OnInit, OnDestroy {
 		this._root_vcr.createComponent(FeedbackAlertComponent);
 	}
 
-	private _deleteScorecard(scorecard: ParseObject) {
+	private _deleteScorecard(scorecard: any) {
 		this._scorecardsService.deleteScorecard(scorecard).then(() => {
 			this.updateScorecards();
 		});

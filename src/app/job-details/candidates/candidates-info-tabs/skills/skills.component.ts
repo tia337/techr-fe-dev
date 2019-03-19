@@ -12,9 +12,9 @@ import {CandidatesService} from "../../candidates.service";
 })
 export class SkillsComponent implements OnInit, OnDestroy {
 
-	skills: ParseObject;
+	skills: any;
 	categories: any[];
-	categoriesObject: ParseObject[];
+	categoriesObject: any[];
 	experience: any[];
 	sortedSkills: any[];
 	summary: string;

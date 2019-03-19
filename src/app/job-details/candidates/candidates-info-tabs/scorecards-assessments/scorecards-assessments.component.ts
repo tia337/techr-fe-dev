@@ -99,14 +99,14 @@ export class ScorecardsAssessmentsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	scoreCandidate(scorecard: ParseObject) {
+	scoreCandidate(scorecard: any) {
 		const scoreCandidateComponent = this._root_vcr.createComponent(ScoreCandidateComponent);
 		scoreCandidateComponent.candidate = this._candidate;
 		scoreCandidateComponent.contract = this._contract;
 		scoreCandidateComponent.scorecard = scorecard;
 	}
 
-	previewScorecard(scorecard: ParseObject) {
+	previewScorecard(scorecard: any) {
 		this._root_vcr.clear();
 		const previewInstance = this._root_vcr.createComponent(PreviewModalComponent);
 		previewInstance.scorecard = scorecard;
@@ -121,7 +121,7 @@ export class ScorecardsAssessmentsComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	removeScorecard(scorecardRelationship: ParseObject) {
+	removeScorecard(scorecardRelationship: any) {
 
 		const alert = this._root_vcr.createComponent(AlertComponent);
 		alert.title = 'Unattach scorecard?';

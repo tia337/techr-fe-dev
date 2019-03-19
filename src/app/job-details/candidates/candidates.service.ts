@@ -22,8 +22,8 @@ export class CandidatesService {
 		private _headerService: HeaderService
 	) { }
 
-	// getSuggestedCandidates(contractId: string): ParsePromise {
-	getSuggestedCandidates(contractId: string, from?: number, limit?: number, sortBy?: string, skillsFit?: Array<string>, countries?: Array<string>): ParsePromise {
+	// getSuggestedCandidates(contractId: string): any {
+	getSuggestedCandidates(contractId: string, from?: number, limit?: number, sortBy?: string, skillsFit?: Array<string>, countries?: Array<string>): any {
 
 		return this._parse.execCloud('searchSuggestionCandidates',
 			{
@@ -37,14 +37,14 @@ export class CandidatesService {
 			});
 	}
 
-	getSuggestedCandidatesWeb(contractId: string): ParsePromise {
+	getSuggestedCandidatesWeb(contractId: string): any {
 		return this._parse.execCloud('searchSuggestionCandidatesWeb', {
 			profileType: 2,
 			contractId: contractId
 		});
 	}
 
-	getDevelopersById(developerIds: Array<string>): ParsePromise {
+	getDevelopersById(developerIds: Array<string>): any {
 		return this._parse.execCloud('getDevelopersById', { developerIds: developerIds });
 	}
 
@@ -220,7 +220,7 @@ export class CandidatesService {
 	//   this._contractId.next(value);
 	// }
 
-	// getUserById(userId: string): ParsePromise {
+	// getUserById(userId: string): any {
 	//   let user = this._parse.Query('User');
 	//   user.get(userId).then(user => {
 	//     return user;
@@ -228,7 +228,7 @@ export class CandidatesService {
 	// }
 
 
-	private getPercentageMatch(users: Array<ParseUser>, contract: ParseObject) {
+	private getPercentageMatch(users: Array<ParseUser>, contract: any) {
 
 		const contractsSkills = _.groupBy(contract.get('programingSkills'), skillComponent => {
 			return skillComponent.get('skill').id;
@@ -277,7 +277,7 @@ export class CandidatesService {
 		}
 	}
 
-	private getLocationMatch(users: Array<ParseUser>, contract: ParseObject) {
+	private getLocationMatch(users: Array<ParseUser>, contract: any) {
 		var distances = {};
 		var location = contract.get('postLocation')
 		if (location) {

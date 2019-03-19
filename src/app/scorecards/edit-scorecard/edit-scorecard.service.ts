@@ -11,13 +11,13 @@ export class EditScorecardService {
 
 	constructor(private _parse: Parse) {}
 
-	getScorecard(id: string): ParsePromise {
+	getScorecard(id: string): any {
 		const scorecard = this._parse.Query('Scorecards');
 		scorecard.equalTo('Author', this._parse.getCurrentUser());
 		return scorecard.get(id);
 	}
 
-	getAreas(scorecard: any): ParsePromise {
+	getAreas(scorecard: any): any {
 		const areas = this._parse.Query('ScorecardAreas');
 		areas.equalTo('Author', this._parse.getCurrentUser());
 		areas.equalTo('Scorecard', scorecard);
@@ -27,7 +27,7 @@ export class EditScorecardService {
 		return areas.find();
 	}
 
-	getQuestions(area: any): ParsePromise {
+	getQuestions(area: any): any {
 		const questions = this._parse.Query('ScorecardQuestions');
 		questions.equalTo('ScorecardArea', area);
 		questions.equalTo('Scorecard', area.get('Scorecard'));
@@ -37,7 +37,7 @@ export class EditScorecardService {
 		return questions.find();
 	}
 
-	addArea(scorecardId: string, areaTitle: string, index: number): ParsePromise {
+	addArea(scorecardId: string, areaTitle: string, index: number): any {
 		// const scorecardQuery = new this._parse.Parse.Query('Scorecards');
 		// scorecardQuery.equalTo('objectId', scorecardId);
 		// let scorecardObj;
@@ -76,7 +76,7 @@ export class EditScorecardService {
 		return pointerToFoo;
 	}
 
-	deleteArea(area: ParseObject): ParsePromise {
+	deleteArea(area: any): any {
 		area.set('isDeleted', true);
 		return area.save().then(area => {
 			const deletedAreaQuestions = this._parse.Query('ScorecardQuestions');
@@ -92,7 +92,7 @@ export class EditScorecardService {
 		});
 	}
 
-	addQuestion(area: ParseObject, question: string, order): ParsePromise {
+	addQuestion(area: any, question: string, order): any {
 		// const lastQuestionQuery = new this._parse.Parse.Query('ScorecardQuestions');
 		// lastQuestionQuery.descending('order');
 		// lastQuestionQuery.equalTo('ScorecardArea', area);
@@ -113,7 +113,7 @@ export class EditScorecardService {
 		// });
 	}
 
-	deleteQuestion(question: ParseObject): ParsePromise {
+	deleteQuestion(question: any): any {
 		question.set('isDeleted', true);
 		return question.save();
 	}

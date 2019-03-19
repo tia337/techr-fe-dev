@@ -17,8 +17,8 @@ import { ContactUsComponent } from "app/contact-us/contact-us.component";
 
 export class AppIntegrationsComponent implements OnInit {
 
-companies: ParseObject[];
-integCompanies: ParseObject[];
+companies: any[];
+integCompanies: any[];
 Parse;
 accessLevel: number;
 admins: any[];
@@ -73,7 +73,7 @@ hasItems(categories: any[]){
   }
 }
 
-getID(categoryObj?: ParseObject){
+getID(categoryObj?: any){
   this._testService.getCategoryIntegrations(categoryObj).then((comp)=>{
     this.companies = comp;
   });

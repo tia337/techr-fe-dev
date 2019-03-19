@@ -7,21 +7,21 @@ export class PreviewScoringService {
 
 	constructor(private _parse: Parse) { }
 
-	getScorecardsAreas(scorecard: ParseObject) {
+	getScorecardsAreas(scorecard: any) {
 		const areas = new this._parse.Parse.Query('ScorecardAreas');
 		areas.equalTo('Scorecard', scorecard);
 		areas.notEqualTo('isDeleted', true);
 		return areas.find();
 	}
 
-	getScorecardsQuestions(scorecard: ParseObject) {
+	getScorecardsQuestions(scorecard: any) {
 		const questions = new this._parse.Parse.Query('ScorecardQuestions');
 		questions.equalTo('Scorecard', scorecard);
 		questions.notEqualTo('isDeleted', true);
 		return questions.find();
 	}
 
-	getScorecardsQuestionNotes(scorecardRelationship: ParseObject) {
+	getScorecardsQuestionNotes(scorecardRelationship: any) {
 		const scorecardsQuestionNotes = new this._parse.Parse.Query('ScorecardQuestionNotes');
 		scorecardsQuestionNotes.equalTo('Scorecard', scorecardRelationship.get('Scorecard'));
 		scorecardsQuestionNotes.equalTo('Author', scorecardRelationship.get('Author'));
@@ -31,7 +31,7 @@ export class PreviewScoringService {
 		return scorecardsQuestionNotes.find();
 	}
 
-	getScorecardAreaScorings(scorecardWeightedScore: ParseObject) {
+	getScorecardAreaScorings(scorecardWeightedScore: any) {
 		const scorecardAreaQuery = new this._parse.Parse.Query('ScorecardAreas');
 		scorecardAreaQuery.equalTo('Scorecard', scorecardWeightedScore.get('Scorecard'));
 		scorecardAreaQuery.notEqualTo('isDeleted', true);

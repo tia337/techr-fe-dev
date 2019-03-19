@@ -48,20 +48,20 @@ export class TestSkillsService {
     return skillCategoriesQuery.find();
   }
 
-  createSkillComponent(skill: ParseObject, experience: number) {
+  createSkillComponent(skill: any, experience: number) {
     const skillComponent = new this._parse.Parse.Object('SkillComponent');
     skillComponent.set('skill', skill);
     skillComponent.set('selectedExperienceDuration', experience);
     return skillComponent;
   }
 
-  createRoleComponent(role: ParseObject) {
+  createRoleComponent(role: any) {
     const roleComponent = new this._parse.Parse.Object('UserRole');
     roleComponent.set('role', role);
     return roleComponent;
   }
 
-  createIndustryComponent(industry: ParseObject) {
+  createIndustryComponent(industry: any) {
     const industryComponent = new this._parse.Parse.Object('Industry');
     industryComponent.set('industry', industry);
     return industryComponent;

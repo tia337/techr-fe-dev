@@ -30,7 +30,7 @@ export class CartAdding{
     cartLoad(){
         // console.log("cartLoad works");
         this.totalsum = 0;
-        let jBPriceObj : ParseObject;
+        let jBPriceObj : any;
         let notPushedPaidCart : any[];
         const client = this._parse.Parse.User.current().get('Client_Pointer');
         return this._parse.Parse.Session.current().then(res=>{

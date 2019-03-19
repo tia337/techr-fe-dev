@@ -17,8 +17,8 @@ import {Location} from '@angular/common';
 })
 export class CheckoutPageComponent implements OnInit, OnDestroy {
 
-	tosell: ParseObject[] = [];
-	freetosell: ParseObject[] = [];
+	tosell: any[] = [];
+	freetosell: any[] = [];
 	test: string;
 	total: number;
 	totalwthtaxes: number;
@@ -94,7 +94,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 				this.tosell = [];
 			}else{
 				for(let r of res){
-					let contract: ParseObject;
+					let contract: any;
 					this._CheckoutPageService.getContract(r).then(contr=>{
 						contract = contr;
 						return this._CheckoutPageService.findPaidJobBoards(r);
@@ -118,7 +118,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 				this.emptyFree = true;
 			}else{
 				for(let r of res){
-					let contract: ParseObject;
+					let contract: any;
 					this._CheckoutPageService.getContract(r).then(contr=>{
 						contract = contr;
 						return this._CheckoutPageService.findFreeJobBoards(r)
@@ -137,13 +137,13 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 	}
 
 
-	deleteItem(sell: ParseObject){
+	deleteItem(sell: any){
 		this._CartAdding.deleteItem(sell).then(res=>{
 			this.getCheckoutInf();
 		})
 
 	}
-	deleteFreeItem(freesell: ParseObject){
+	deleteFreeItem(freesell: any){
 		this._CartAdding.deleteFreeItem(freesell).then(res=>{
 			this.getCheckoutInf();
 		})

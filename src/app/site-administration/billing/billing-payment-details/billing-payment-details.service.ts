@@ -7,7 +7,7 @@ export class BillingPaymentDetailsService {
 
   constructor(private _parse: Parse) { }
 
-  getCurrentClient(): ParsePromise {
+  getCurrentClient(): any {
     return this._parse.Parse.User.current().get('Client_Pointer').fetch();
   }
 

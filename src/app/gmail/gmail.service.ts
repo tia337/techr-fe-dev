@@ -14,7 +14,7 @@ export class GmailService {
 		return pointerToFoo;
 	}
 
-	getStandardTemplates(templateTypeId?: string): ParsePromise {
+	getStandardTemplates(templateTypeId?: string): any {
 		if (!templateTypeId) {
 			return (0);
 		}
@@ -28,7 +28,7 @@ export class GmailService {
 		});
 	};
 
-	getCustomTemplatesForClient(templateTypeId?: string): ParsePromise {
+	getCustomTemplatesForClient(templateTypeId?: string): any {
 		if (!templateTypeId) {
 			return (0);
 		}
@@ -51,7 +51,7 @@ export class GmailService {
 		});
 	};
 
-	getFillers(contractId: string, candidateId?: string | Array<any>): ParsePromise {
+	getFillers(contractId: string, candidateId?: string | Array<any>): any {
 		const data = {
 			fCompanyName: <string>'',
 			fCandidateName: <string>'',
@@ -144,7 +144,7 @@ export class GmailService {
 		return (text);
 	}
 
-	getCompanyName(): ParsePromise {
+	getCompanyName(): any {
 		const query = this._parse.Query('User');
 		return query.get(this._parse.getCurrentUser().id).then(user => {
 			return user.get('Client');

@@ -6,7 +6,7 @@ import { ParseUser, ParsePromise, ParseObject } from 'parse';
 export class ScoringService {
 
 	private companyName: string;
-	private userObject: ParseObject;
+	private userObject: any;
 
 	constructor(private _parse: Parse) { }
 
@@ -15,7 +15,7 @@ export class ScoringService {
 		this.companyName = this._parse.getCurrentUser().get("Client");
 		let query2 = this._parse.Query("User");
 		query2.equalTo("objectId", userId );
-		let userObj: ParseObject;
+		let userObj: any;
 		return query2.first().then(results => {
 			// console.log(results);
 			userObj = results;

@@ -70,7 +70,7 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 	companyDescriptionDef: string;
 	companyBenefits: string;
 	companyBenefitsDef: string;
-	company: ParseObject;
+	company: any;
 	website: string;
 	websiteDef: string;
 	careers: string;

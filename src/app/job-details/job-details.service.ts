@@ -9,7 +9,7 @@ import { BoundElementPropertyAst } from '@angular/compiler';
 @Injectable()
 export class JobDetailsService {
 
-	private _contract: ParseObject;
+	private _contract: any;
 	private _contractId: string;
 	private _suggestionsCount: number;
 
@@ -38,7 +38,7 @@ export class JobDetailsService {
 		return this._contractId;
 	}
 
-	getContract(): ParsePromise {
+	getContract(): any {
 		const contractQuery = this._parse.Query('Contract');
 		contractQuery.include('jobCountry');
 		contractQuery.include('salaryCurrency');
@@ -62,14 +62,14 @@ export class JobDetailsService {
 		});
 	}
 
-	getUserList(contract: ParseObject) {
+	getUserList(contract: any) {
 		const userListQuery = new this._parse.Parse.Query('UserList');
 		userListQuery.equalTo('contract', contract);
 		userListQuery.equalTo('Client', this._parse.Parse.User.current().get('Client_Pointer'));
 		return userListQuery.find();
 	}
 
-	// getUserListLive(contract: ParseObject) {
+	// getUserListLive(contract: any) {
 	// 	const userListQuery = new this._parse.Parse.Query('UserList');
 	// 	userListQuery.equalTo('contract', contract);
 	// 	userListQuery.equalTo('Client', this._parse.Parse.User.current().get('Client_Pointer'));
@@ -83,7 +83,7 @@ export class JobDetailsService {
 		return userQuery.get(this._parse.getCurrentUser().id);
 	}
 
-	getReferralsCount(contract: ParseObject) {
+	getReferralsCount(contract: any) {
 		const referralsCount = new this._parse.Parse.Query('EmployeeReferrals');
 		referralsCount.equalTo('contract', contract);
 		referralsCount.equalTo('Client', this._parse.Parse.User.current().get('Client_Pointer'));

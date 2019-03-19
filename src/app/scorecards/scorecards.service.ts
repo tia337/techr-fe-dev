@@ -17,7 +17,7 @@ export class ScorecardsService {
 	constructor(private _parse: Parse) {}
 
 
-	createScorecard(): ParsePromise {
+	createScorecard(): any {
 		if (this._type && this._questions) {
 			const author = this._parse.getCurrentUser();
 			const client = this._parse.getCurrentUser().get('Client_Pointer');
@@ -127,7 +127,7 @@ export class ScorecardsService {
 		});
 	}
 
-	getScorecards(): ParsePromise {
+	getScorecards(): any {
 		const currentUser = this._parse.Query('User');
 		currentUser.include('Client_Pointer');
 		return currentUser.get(this._parse.getCurrentUser().id).then(me => {
@@ -145,17 +145,17 @@ export class ScorecardsService {
 		return this._parse.Parse.User.current();
 	}
 
-	archiveScorecard(scorecard: ParseObject): ParsePromise {
+	archiveScorecard(scorecard: any): any {
 		scorecard.set('Status', ScorecardStatus.archived);
 		return scorecard.save();
 	}
 
-	activateScorecard(scorecard: ParseObject): ParsePromise {
+	activateScorecard(scorecard: any): any {
 		scorecard.set('Status', ScorecardStatus.active);
 		return scorecard.save();
 	}
 
-	deleteScorecard(scorecard: ParseObject): ParsePromise {
+	deleteScorecard(scorecard: any): any {
 		scorecard.set('Status', ScorecardStatus.deleted);
 		return scorecard.save();
 	}

@@ -14,7 +14,7 @@ export class JobBoxService {
 		return this._parse.Parse.Cloud.run('countSuggestedCandidates', {contractId: contractId});
 	}
 
-	getUserList(contract: ParseObject) {
+	getUserList(contract: any) {
 		const userListQuery = new this._parse.Parse.Query('UserList');
 		userListQuery.equalTo('contract', contract.toPointer());
 		userListQuery.equalTo('contract', contract.toPointer());
@@ -22,33 +22,33 @@ export class JobBoxService {
 		return userListQuery.find();
 	}
 
-	archiveContract(contract: ParseObject) {
+	archiveContract(contract: any) {
 		return this.unpublishJob(contract).then(() => {
 			contract.set('status', ContractStatus.archived);
 			return contract.save();
 		});
 	}
 
-	activateContract(contract: ParseObject) {
+	activateContract(contract: any) {
 		contract.set('status', ContractStatus.active);
 		return contract.save();
 	}
 
-	deleteContract(contract: ParseObject) {
+	deleteContract(contract: any) {
 		return this.unpublishJob(contract).then(() => {
 			contract.set('status', ContractStatus.deleted);
 			return contract.save();
 		});
 	}
 
-	getReferralsCount(contract: ParseObject) {
+	getReferralsCount(contract: any) {
 		const referralsCount = new this._parse.Parse.Query('EmployeeReferrals');
 		referralsCount.equalTo('contract', contract);
 		referralsCount.equalTo('Client', this._parse.Parse.User.current().get('Client_Pointer'));
 		return referralsCount.count();
 	}
 
-	getIntegratedJobBoards(contract: ParseObject) {
+	getIntegratedJobBoards(contract: any) {
 		const jobBoardPushQuery = new this._parse.Parse.Query('JobBoardPush');
 		jobBoardPushQuery.equalTo('Job', contract);
 		jobBoardPushQuery.equalTo('Client', this._parse.Parse.User.current().get('Client_Pointer'));
@@ -66,7 +66,7 @@ export class JobBoxService {
 		return this._parse.Parse.Cloud.run('duplicateJobAsDraft', {contractId: contractId});
 	}
 
-	private unpublishJob(contract: ParseObject) {
+	private unpublishJob(contract: any) {
 		const jobBoardPushQuery = new this._parse.Parse.Query('JobBoardPush');
 		jobBoardPushQuery.equalTo('Job', contract);
 		jobBoardPushQuery.equalTo('Client', this._parse.Parse.User.current().get('Client_Pointer'));

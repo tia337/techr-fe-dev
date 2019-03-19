@@ -546,14 +546,14 @@ export class CandidatesComponent implements OnInit, OnDestroy, OnChanges {
         });
     }
 
-	getPercentageMatch(user: ParseUser): number {
+	getPercentageMatch(user: any): number {
 		if (this.candidates.weights) {
 			const developerId = user.get('developer').id;
 			return this.candidates.weights[developerId] ? this.candidates.weights[developerId] : 0;
 		}
 	}
 
-	getLocationMatch(user: ParseUser): number {
+	getLocationMatch(user: any): number {
 		if (this.candidates.distances) {
 			const developerId = user.get('developer').id;
 			let unitCoefficient = (this.unitPreference == 2) ? 0.67 : 1;

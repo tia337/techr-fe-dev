@@ -12,7 +12,7 @@ import { PreviewModalComponent } from '../../../../../scorecards/preview-modal/p
 export class SelectScorecardsModalComponent implements OnInit {
 
   scorecards;
-  private _candidate: ParseUser;
+  private _candidate: any;
   private _contractId: string;
 
   attachedScorecards: any[];
@@ -34,14 +34,14 @@ export class SelectScorecardsModalComponent implements OnInit {
     this._root_vcr.clear();
   }
 
-  previewScorecard(scorecard: ParseObject) {
+  previewScorecard(scorecard: any) {
     this._root_vcr.clear();
     const previewInstance = this._root_vcr.createComponent(PreviewModalComponent);
     previewInstance.scorecard = scorecard;
     previewInstance.editable = false;
   }
 
-  attachScorecard(scorecard: ParseObject) {
+  attachScorecard(scorecard: any) {
     this._saService.getContract(this._contractId).then(parseContract => {
       return this._saService.attachScorecard(this._candidate, scorecard, parseContract);
     }).then(() => {
@@ -56,7 +56,7 @@ export class SelectScorecardsModalComponent implements OnInit {
 
   }
 
-  set candidate(user: ParseUser) {
+  set candidate(user: any) {
     this._candidate = user;
   }
 

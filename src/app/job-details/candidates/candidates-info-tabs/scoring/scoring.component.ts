@@ -22,7 +22,7 @@ import * as jsPDF from 'jspdf'
 export class ScoringComponent implements OnInit, OnDestroy {
 
 	private _contractId: string;
-	private _scorings: ParseObject[];
+	private _scorings: any[];
 	// private date: string;
 	private curUserId: string;
 	// stars: number = 3;
@@ -71,7 +71,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 
 	readScoringCard (scorings: Array<any>) {
 		const scorecardQuery = new this._parse.Parse.Query('ScorecardWeightedScore');
-		const currentUser: ParseObject = this._parse.getCurrentUser();
+		const currentUser: any = this._parse.getCurrentUser();
 		scorings.forEach(scoring => {
 			scorecardQuery.equalTo('objectId', scoring.id).find().then(result => {
 				const taggedArray: Array<any> = result[0].get('TaggedColleagues');
@@ -109,7 +109,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this._userIdSubscriprion.unsubscribe();
 	}
-	editScorecard(scorecardWeightedScore: ParseObject) {
+	editScorecard(scorecardWeightedScore: any) {
 		this.editLoader.push(scorecardWeightedScore.id);
 		console.log('editLoader = true');
 		console.log(scorecardWeightedScore);
@@ -128,7 +128,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 		return weightedScore.get('Author').equals(this._parse.Parse.User.current());
 	}
 
-	previewScoring(scorecardWeightedScore: ParseObject) {
+	previewScoring(scorecardWeightedScore: any) {
 		this.previewLoader.push(scorecardWeightedScore.id);
 		const preview = this._root_vcr.createComponent(PreviewScoringComponent);
 		preview._contractId = this._contractId;

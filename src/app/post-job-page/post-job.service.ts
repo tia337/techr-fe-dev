@@ -70,7 +70,7 @@ export class PostJobService {
     return this._parse.Query('Currencies').find();
   }
 
-  getDefaultCurrency(): ParsePromise {
+  getDefaultCurrency(): any {
     const currency = this._parse.Query('Currencies');
     currency.equalTo('Currency', 'GBP');
     return currency.first(value => {
@@ -122,7 +122,7 @@ export class PostJobService {
     return skillCategoriesQuery.find();
   }
 
-  createSkillComponent(skill: ParseObject, experience: number) {
+  createSkillComponent(skill: any, experience: number) {
     const skillComponent = new this._parse.Parse.Object('SkillComponent');
     skillComponent.set('skill', skill);
     skillComponent.set('selectedExperienceDuration', experience);

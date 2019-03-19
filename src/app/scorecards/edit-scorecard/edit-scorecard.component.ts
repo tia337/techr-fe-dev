@@ -15,7 +15,7 @@ import * as _ from 'underscore';
 export class EditScorecardComponent implements OnInit, OnDestroy {
 
 	private _scorecardId: string;
-	private _scorecardObject: ParseObject;
+	private _scorecardObject: any;
 	private _areas: any[] = [];
 	editForm: FormGroup;
 	editProcessing = false;
@@ -269,7 +269,7 @@ export class EditScorecardComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	findDeletedQuestions(parseObjArray: any[], formControlsArray: FormGroup[]): ParseObject[] {
+	findDeletedQuestions(parseObjArray: any[], formControlsArray: FormGroup[]): any[] {
 		const formQuestionsIds = formControlsArray.map(value => {
 			return value.value.questionId;
 		});

@@ -38,7 +38,7 @@ export class Parse {
 		return this._Parse;
 	}
 
-	// signIn(user: IUser): ParsePromise {
+	// signIn(user: IUser): any {
 	//   const userQuery = new this._Parse.Query(this._Parse.User);
 	//   userQuery.equalTo('username', user.username);
 	//   return userQuery.first().then( existingUser => {
