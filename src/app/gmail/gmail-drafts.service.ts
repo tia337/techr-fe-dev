@@ -1,6 +1,5 @@
 import { Parse } from './../parse.service';
 import { Injectable } from '@angular/core';
-import { ParsePromise } from 'parse';
 
 @Injectable()
 export class GmailDraftsService {

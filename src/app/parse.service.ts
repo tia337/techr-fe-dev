@@ -7,7 +7,6 @@ import {
 	EventEmitter
 } from '@angular/core';
 import * as parse from 'parse';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import * as md5 from 'crypto-js/md5';

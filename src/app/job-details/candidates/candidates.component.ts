@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, OnChanges } from '@angular/core';
 import { CandidatesService } from './candidates.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { JobDetailsService } from '../job-details.service';
 import { Router } from '@angular/router';
 import { DeveloperListType, Loading } from '../../shared/utils';

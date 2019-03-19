@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnDestroy, Renderer2, ElementRef } from '@angular/core';
-import { ParseObject }  from 'parse';
 import { Parse } from '../parse.service';
 import { CartAdding } from '../header/cartadding.service';
 import { Router } from '@angular/router';

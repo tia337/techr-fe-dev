@@ -2,7 +2,6 @@ import { Component, OnInit, OnChanges, Input, NgZone, OnDestroy } from '@angular
 import { ScorecardsAssessmentsService } from './scorecards-assessments.service';
 import { RootVCRService } from '../../../../root_vcr.service';
 import { ChangeDetectorRef } from '@angular/core';
-import { ParseObject, ParsePromise } from 'parse';
 import { Parse } from '../../../../parse.service';
 import { SelectScorecardsModalComponent } from './select-scorecards-modal/select-scorecards-modal.component';
 import { PreviewModalComponent } from '../../../../scorecards/preview-modal/preview-modal.component';
@@ -26,7 +25,7 @@ export class ScorecardsAssessmentsComponent implements OnInit, OnDestroy {
 
 	private _subscription;
 
-	scorecardRelationships: Array<ParseObject> = [];
+	scorecardRelationships: Array<any> = [];
 	scored = {};
 
 	private _userIdSubscriprion;

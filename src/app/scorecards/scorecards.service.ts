@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../parse.service';
-import { ParsePromise, ParseObject } from 'parse';
 import { BehaviorSubject } from 'rxjs';
 import { ScorecardStatus } from '../shared/utils';
 

@@ -22,9 +22,7 @@ import {
 import {
 	Parse
 } from '../../parse.service';
-import {
-	ParseObject
-} from 'parse';
+
 import {
 	JobDetailsService
 } from '../job-details.service';

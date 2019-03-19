@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ScorecardsAssessmentsService } from '../scorecards-assessments.service';
 import { RootVCRService } from '../../../../../root_vcr.service';
-import { ParseObject, ParseUser } from 'parse';
 import { PreviewModalComponent } from '../../../../../scorecards/preview-modal/preview-modal.component';
 
 @Component({

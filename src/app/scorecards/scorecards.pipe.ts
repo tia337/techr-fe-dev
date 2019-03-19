@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ParseObject } from 'parse';
 
 @Pipe({
   name: 'filterScorecards',

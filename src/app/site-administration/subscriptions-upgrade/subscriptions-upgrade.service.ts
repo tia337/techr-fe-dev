@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ParseObject }  from 'parse';
 import { Parse } from '../../parse.service';
 import { StripeService } from '../../shared/services/stripe.service';
 

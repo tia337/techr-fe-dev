@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ParseObject, ParsePromise } from 'parse';
 import { Parse } from '../../../../../parse.service';
 import { IScoringOptions } from './score-candidate.interface';
 
@@ -130,7 +129,7 @@ export class ScoreCandidateService {
 		return weightedScoreQuery.first();
 	}
 
-	getScorecardQuestionNotes(candidate: any, contract: any, scorecardQuestions: Array<ParseObject>) {
+	getScorecardQuestionNotes(candidate: any, contract: any, scorecardQuestions: Array<any>) {
 		const questionNoteQuery = new this._parse.Parse.Query('ScorecardQuestionNotes');
 		questionNoteQuery.equalTo('Candidate', candidate);
 		questionNoteQuery.equalTo('contract', contract);
@@ -139,7 +138,7 @@ export class ScoreCandidateService {
 		return questionNoteQuery.find();
 	}
 
-	getScorecardAreaScoring(candidate: any, contract: any, scorecardAreas: Array<ParseObject>) {
+	getScorecardAreaScoring(candidate: any, contract: any, scorecardAreas: Array<any>) {
 		const areaScoringQuery = new this._parse.Parse.Query('ScorecardAreaScoring');
 		areaScoringQuery.equalTo('Candidate', candidate);
 		areaScoringQuery.equalTo('ScoringJob', contract);

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { RootVCRService } from '../../root_vcr.service';
-import { ParseObject } from 'parse';
 import { Parse } from '../../parse.service';
 import { ScorecardsService } from '../scorecards.service';
 import { EditScorecardComponent } from '../edit-scorecard/edit-scorecard.component';

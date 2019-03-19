@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 
 import { RootVCRService } from '../../root_vcr.service';
 
-import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 

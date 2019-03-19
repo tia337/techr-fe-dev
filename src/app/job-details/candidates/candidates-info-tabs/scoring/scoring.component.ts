@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ScoringService } from './scoring.service';
 import { DatePipe } from '@angular/common';
 import { Parse } from '../../../../parse.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { CandidatesService } from '../../candidates.service';
 import { FinalVerdict } from '../../../../shared/utils';
 import { RootVCRService } from '../../../../root_vcr.service';
@@ -12,7 +11,7 @@ import { GmailComponent } from 'app/gmail/gmail.component';
 import { HeaderService } from '../../../../header/header.service';
 import { PreviewScoringService } from 'app/job-details/candidates/candidates-info-tabs/scoring/preview-scoring/preview-scoring.service';
 import * as _ from 'underscore';
-import * as jsPDF from 'jspdf'
+import * as jsPDF from 'jspdf';
 
 @Component({
 	selector: 'app-scoring',
@@ -225,7 +224,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 		}
 		return new File([u8arr], filename, { type: mime });
 	}
-	pdfDrawNameListTitle(pdf: jsPDF) {
+	pdfDrawNameListTitle(pdf: any) {
 		const fullname = `Candidate: ${this.candidate.get('firstName')} ${this.candidate.get('lastName')}`;
 		// let title: string = `${this.contractTitle} Scorecard: ${this.scorecard.get('ScorecardTitle')}`;
 		let typeName;
@@ -281,7 +280,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 
 		return str.replace(/[^\x20-\x7E]/g, '');
 	}
-	pdfPrintVerdict(pdf: jsPDF, y, scorescore) {
+	pdfPrintVerdict(pdf: any, y, scorescore) {
 		if (y > 700) {
 			pdf.addPage();
 			y = 110;
@@ -339,7 +338,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 			default: pdf.text(430, y, 'No Answer');
 		}
 	}
-	pdfDrawAreaName(pdf: jsPDF, y, area, score) {
+	pdfDrawAreaName(pdf: any, y, area, score) {
 		pdf.setFontSize(18);
 		pdf.setLineWidth(1);
 
@@ -377,7 +376,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 		y += 30;
 		return (y);
 	}
-	pdfDrawQuestion(pdf: jsPDF, qIndex, y, answ) {
+	pdfDrawQuestion(pdf: any, qIndex, y, answ) {
 		answ = 'Q' + qIndex + ': ' + answ;
 		const characters = 60;
 		const margin_bottom = 22;
@@ -409,7 +408,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 		}
 		return (y);
 	}
-	pdfDrawAnswer(pdf: jsPDF, qIndex, y, answ: string) {
+	pdfDrawAnswer(pdf: any, qIndex, y, answ: string) {
 		const characters = 60;
 		const margin_bottom = 22;
 		pdf.setFontSize(12);
@@ -441,7 +440,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 		}
 		return (y);
 	}
-	addPageAndMoveY(pdf: jsPDF, y) {
+	addPageAndMoveY(pdf: any, y) {
 		if (y > 750) {
 			pdf.addPage();
 			pdf.roundedRect(15, 20, 565, 800, 5, 1, 'S');
@@ -450,7 +449,7 @@ export class ScoringComponent implements OnInit, OnDestroy {
 			return (y);
 		}
 	}
-	addPageAndMoveYAREA(pdf: jsPDF, y) {
+	addPageAndMoveYAREA(pdf: any, y) {
 		if (y > 650) {
 			pdf.addPage();
 			pdf.roundedRect(15, 30, 565, 790, 5, 1, 'S');

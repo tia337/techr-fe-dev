@@ -5,7 +5,6 @@ import {
 } from '@angular/core';
 import { CandidateProfileService } from './candidate-profile.service';
 import { Parse } from '../../../parse.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CandidatesService } from '../candidates.service';
 import * as _ from 'underscore';

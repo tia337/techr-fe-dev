@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ParseObject }  from 'parse';
 import { Parse } from '../parse.service';
 import * as _ from 'underscore';
 import { environment } from './../../environments/environment';
@@ -229,7 +228,7 @@ export class CheckoutPageService {
     })
   }
 
-  unsetJBPush(jBP:ParseObject){
+  unsetJBPush(jBP: any) {
     const errorPushQuery =  new this._parse.Parse.Query("JobBoardPush");
     errorPushQuery.get(jBP.id).then(res=>{
       res.set("Status", 0);

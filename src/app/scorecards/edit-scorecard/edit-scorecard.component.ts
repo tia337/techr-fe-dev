@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewRef, EventEmitter } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators, FormControl} from '@angular/forms';
 import { EditScorecardService } from './edit-scorecard.service';
-import { ParseObject } from 'parse';
 import { Parse } from '../../parse.service';
 import { RootVCRService } from '../../root_vcr.service';
 import * as _ from 'underscore';

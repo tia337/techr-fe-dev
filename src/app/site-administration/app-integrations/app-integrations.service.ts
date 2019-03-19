@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 

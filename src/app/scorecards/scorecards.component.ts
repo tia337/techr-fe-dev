@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, Renderer2, ElementRef, ComponentFactoryRe
 import { Router } from '@angular/router';
 import { ScorecardsService } from './scorecards.service';
 import { EditScorecardComponent } from './edit-scorecard/edit-scorecard.component';
-import { ParsePromise, ParseObject } from 'parse';
 import { RootVCRService } from '../root_vcr.service';
 import { PreviewModalComponent } from './preview-modal/preview-modal.component';
 import { AlertComponent } from '../shared/alert/alert.component';

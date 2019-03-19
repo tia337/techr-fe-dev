@@ -4,7 +4,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { RootVCRService } from '../../root_vcr.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 import * as _ from 'underscore';

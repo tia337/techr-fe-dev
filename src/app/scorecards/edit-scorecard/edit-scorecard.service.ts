@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../parse.service';
-import { ParseObject, ParsePromise } from 'parse';
 
 @Injectable()
 export class EditScorecardService {

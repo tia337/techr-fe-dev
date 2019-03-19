@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../parse.service';
-import { ParseObject } from 'parse';
 
 @Injectable()
 export class TestSkillsService {

@@ -1,4 +1,3 @@
-import { ParseObject, ParseUser } from 'parse';
 import { FormControl } from '@angular/forms';
 
 export interface IScoringOptions {

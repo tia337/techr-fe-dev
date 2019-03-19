@@ -1,7 +1,6 @@
 import {Component, OnInit, Pipe, PipeTransform, OnDestroy } from '@angular/core';
 import { SkillsService } from './skills.service';
 import { Parse } from '../../../../parse.service';
-import { ParseUser, ParsePromise, ParseObject } from 'parse';
 import * as _ from 'underscore';
 import {CandidatesService} from "../../candidates.service";
 

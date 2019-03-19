@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ParseObject }  from 'parse';
 import { IntegrationService } from './app-integrations.service';
 import { Parse } from '../../parse.service';
 import { AlertComponent } from '../../shared/alert/alert.component';
@@ -49,11 +48,11 @@ constructor(
   
 }
 
-getActiveIntegrations():ParseObject[]{
+getActiveIntegrations():any[]{
   return this._parse.getCurrentUser().get('Client_Pointer').get('Active_Integrations');
 }
 
-isIntegrated(company:ParseObject){
+isIntegrated(company:any){
   if(this.integCompanies){
     for(let int of this.integCompanies){
       if(int.equals(company)){

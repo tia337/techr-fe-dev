@@ -5,7 +5,6 @@ import { RootVCRService } from '../../root_vcr.service';
 import { AlertComponent } from '../../shared/alert/alert.component';
 import { Router } from '@angular/router';
 
-import { ParseObject } from 'parse';
 import { Parse } from '../../parse.service';
 
 @Component({

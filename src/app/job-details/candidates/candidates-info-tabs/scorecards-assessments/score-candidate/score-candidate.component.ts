@@ -4,7 +4,6 @@ import {
 } from '@angular/core';
 import { RootVCRService } from '../../../../../root_vcr.service';
 import { ScoreCandidateService } from './score-candidate.service';
-import { ParseObject } from 'parse';
 import { FormControl } from '@angular/forms';
 import { IScoringOptions } from './score-candidate.interface';
 import { AlertComponent } from '../../../../../shared/alert/alert.component';
@@ -28,7 +27,6 @@ export class ScoreCandidateComponent implements OnInit, AfterViewInit, OnDestroy
 	private _team;
 	private _questionListSubscription;
 
-	// ScorecardWeightedScore ParseObject (if exists)
 	private _scorecardWeightedScore;
 
 	private scoringInProcess : boolean = false;

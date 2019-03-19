@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../parse.service';
-import { ParsePromise, ParseObject, ParseUser } from 'parse';
 import { ContractStatus, JobBoardPush } from '../../shared/utils';
 
 @Injectable()

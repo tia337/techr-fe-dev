@@ -1,8 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Http } from '@angular/http';
 import { Parse } from '../parse.service';
-import { ParsePromise } from 'parse';
-import { ParseObject } from 'parse';
 import { Observable, BehaviorSubject } from 'rxjs';
 import 'rxjs/add/operator/map';
 //tslint:disable:indent

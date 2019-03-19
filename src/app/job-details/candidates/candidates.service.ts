@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Parse } from '../../parse.service';
-import { ParseUser, ParsePromise, ParseObject, ParseObjectSubclass } from 'parse';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { JobDetailsService } from '../job-details.service';
 import { DeveloperListType } from '../../shared/utils';
@@ -228,7 +227,7 @@ export class CandidatesService {
 	// }
 
 
-	private getPercentageMatch(users: Array<ParseUser>, contract: any) {
+	private getPercentageMatch(users: Array<any>, contract: any) {
 
 		const contractsSkills = _.groupBy(contract.get('programingSkills'), skillComponent => {
 			return skillComponent.get('skill').id;
@@ -277,7 +276,7 @@ export class CandidatesService {
 		}
 	}
 
-	private getLocationMatch(users: Array<ParseUser>, contract: any) {
+	private getLocationMatch(users: Array<any>, contract: any) {
 		var distances = {};
 		var location = contract.get('postLocation')
 		if (location) {

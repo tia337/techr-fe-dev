@@ -3,7 +3,6 @@ import { CandidateNotesService } from './../job-details/candidates/candidates-in
 import { Injectable } from '@angular/core';
 import { Socket } from 'ng-socket-io';
 import { Parse } from './../parse.service';
-import { ParsePromise, ParseObject, ParseUser } from 'parse';
 
 @Injectable()
 export class GmailNotesChatsIntegrationService {

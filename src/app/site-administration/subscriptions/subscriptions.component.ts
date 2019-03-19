@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ParseObject, ParsePromise } from 'parse';
 import * as parse from 'parse';
 import { Parse } from '../../parse.service';
 import { SubscriptionService } from './subscriptions.service';
