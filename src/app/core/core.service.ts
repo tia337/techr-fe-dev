@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Parse } from '../parse.service';
 import { BehaviorSubject } from 'rxjs';
+import { Login } from 'app/login.service';
+import { User, TokenLi } from 'types/types';
+import { Router } from '@angular/router';
 
 @Injectable()
-export class CoreService {
+export class CoreService implements OnInit {
 
 	public deactivatedUser: BehaviorSubject<string> = new BehaviorSubject('');
 	public readMessages: BehaviorSubject<string> = new BehaviorSubject('');
@@ -14,7 +17,14 @@ export class CoreService {
 	currentTypingStatus = this.typingStatus.asObservable();
 	currentHighlighter = this.highlighter.asObservable();
 
-	constructor(private _parse: Parse) { }
+	constructor(
+		private _parse: Parse,
+		private readonly loginService: Login,
+		private readonly router: Router
+	) { }
+
+	ngOnInit(): void {
+	}
 
 	getClientLogo() {
 		// if (this._parse.getCurrentUser()) {

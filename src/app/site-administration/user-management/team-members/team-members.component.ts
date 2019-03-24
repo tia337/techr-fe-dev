@@ -19,16 +19,20 @@ export class TeamMembersComponent implements OnInit, OnDestroy {
 	searchInput = '';
 	allMembers: Array<any> = [];
 
-	constructor(private _teamMembersService: TeamMembersService, private _router: Router, private _root_vcr: RootVCRService) { }
+	constructor(
+		private _teamMembersService: TeamMembersService,
+		private _router: Router,
+		private _root_vcr: RootVCRService
+	) { }
 
 	ngOnInit() {
 		// this._root_vcr = null;
 		this.allMembers = [];
 		this.invitations = [];
 		this.teamMembers = [];
-		this.loadMembers();
-		this.loadInvitations(true);
-		this.loadInactive();
+		// this.loadMembers();
+		// this.loadInvitations(true);
+		// this.loadInactive();
 	}
 
 	loadInvitations(first?) {
@@ -70,12 +74,12 @@ export class TeamMembersComponent implements OnInit, OnDestroy {
 	}
 
 	goToUser(userId: string, inactive?) {
-		// console.log(userId);
-		if (inactive)
-		{
-			this._router.navigate(['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['user', userId] } }], {skipLocationChange: true});
+		if (inactive) {
+			this._router.navigate(
+				['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['user', userId] } }],
+				{skipLocationChange: true}
+			);
 		}
-		// {skipLocationChange: true}
 	}
 
 	deleteInvitation(invitiation) {

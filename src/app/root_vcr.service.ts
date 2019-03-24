@@ -13,8 +13,6 @@ export class RootVCRService {
 		this._vcr = vcr;
 	}
 
-
-
 	public clear() {
 		this._vcr.clear();
 	}

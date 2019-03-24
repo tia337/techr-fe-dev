@@ -17,7 +17,8 @@ type User = {
     updatedAt: Date,
     avatarURL?: string,
     headline?: string,
-    location?: string
+    location?: string,
+    pClientPointer?: string | null | number 
 }
 
 type DeveloperParse = {
@@ -299,3 +300,8 @@ type FeedBack = {
     feedback: string
 }
 
+interface TokenLi {
+    access_token: string,
+    expires_at: string,
+    expires_in: number
+}

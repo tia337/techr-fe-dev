@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private _root_vcr: RootVCRService,
 		private _CartAddingService: CartAdding,
-		private _login: Login,
+		private readonly loginService: Login,
 		private _parse: Parse,
 		private _vcr: ViewContainerRef,
 		private _cfr: ComponentFactoryResolver,
@@ -82,14 +82,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		this.loginService.getUser();
+
 		if (localStorage.getItem('theme')) {
-			const theme = localStorage.getItem('theme');
-			if (theme === 'old') {
-				this._theme = 'old';
-			};
-			if (theme === 'new') {
-				this._theme = 'new';
-			};
+			// this._theme = localStorage.getItem('theme');
 			// this.changeTheme(theme);
 		}
 
@@ -121,14 +117,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
 		// 	this.getLogo();
 		// }
 
-		this._currentUserSubscription = this._login.profile.subscribe(profile => {
+		this._currentUserSubscription = this.loginService.profile.subscribe(profile => {
 			if (profile) {
 				// profile1.fetch().then(profile => {
 				this.currentUser = profile;
-				// if (!profile.toJSON().Client_Pointer) {
-				// 	this._root_vcr.clear();
-				// 	this._root_vcr.createComponent(ConfirmationAlertComponent);
-				// }
+
+				const clientPointer = this.currentUser.pClientPointer;
+
+				if (!clientPointer) {
+					this._root_vcr.clear();
+					this._root_vcr.createComponent(ConfirmationAlertComponent);
+				}
 				// });
 			}
 		});
@@ -186,15 +185,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
 	}
 
 	signInWithLinkedin() {
-		this._login.getAuthUrl('linkedin');
+		this.loginService.getAuthUrl('linkedin');
 	}
 
 	signInWithMicrosoft() {
-		this._login.getAuthUrl('microsoft');
+		this.loginService.getAuthUrl('microsoft');
 	}
 
 	signOut() {
-		this._login.signOut();
+		this.loginService.signOut();
 		this.currentUser = null;
 		this._socket.emit('disconnect', {});
 		this._socket.disconnect();

@@ -1,19 +1,35 @@
 <div class="header-block">
     <h2>Site Administration</h2>
     <div class="header-buttons-wrap">
-        <a [routerLink]="[{ outlets: { 'user-management-sections': ['team-members'] } }]" skipLocationChange class="header-button" [class.active]="activeUrl == 'team-members' || activeUrl == 'user'">User management</a>
-        <a [routerLink]="[{ outlets: { 'user-management-sections': ['permissions'] } }]" skipLocationChange class="header-button" [class.active]="activeUrl == 'permissions' || activeUrl == 'access-level'">User Roles</a>
-        <a [routerLink]="[{ outlets: { 'user-management-sections': ['recruitment-teams'] } }]" skipLocationChange class="header-button" [class.active]="activeUrl == 'recruitment-teams' || activeUrl == 'team'">Recruitment Teams</a>
+        <a [routerLink]="[{ outlets: { 'user-management-sections': ['team-members'] } }]" 
+           skipLocationChange 
+           class="header-button" 
+           [class.active]="activeUrl == 'team-members' || activeUrl == 'user'">
+           User management
+        </a>
+        <a [routerLink]="[{ outlets: { 'user-management-sections': ['permissions'] } }]" 
+           skipLocationChange 
+           class="header-button" 
+           [class.active]="activeUrl == 'permissions' || activeUrl == 'access-level'">
+           User Roles
+        </a>
+        <a [routerLink]="[{ outlets: { 'user-management-sections': ['recruitment-teams'] } }]" 
+           skipLocationChange 
+           class="header-button" 
+           [class.active]="activeUrl == 'recruitment-teams' || activeUrl == 'team'">
+           Recruitment Team
+        </a>
     </div>
 </div>
 
 <router-outlet name="user-management-sections"></router-outlet>
 
-<div class = "triangle-wrap">
-    <div class="feedback_triangle" (click)="feedbackCreation()">
+<div class="triangle-wrap">
+    <div class="feedback_triangle" 
+         (click)="feedbackCreation()">
         <div class="feedback_text">
             FeedBack+
         </div>
-        <img class = "speaker" src = "../../../assets/icons/speaker.png">
+        <img class="speaker" src="../../../assets/icons/speaker.png">
     </div>
 </div>

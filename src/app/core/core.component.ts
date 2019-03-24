@@ -64,7 +64,6 @@ export class CoreComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-
 		// this.getCurrentPartner().then(result => {
 		// 	const partner = result;
 		// 	this.clientSettings = partner.toJSON();
@@ -206,6 +205,7 @@ export class CoreComponent implements OnInit, OnDestroy {
 	pinSideNav() {
 		this.sideNavPinned = !this.sideNavPinned;
 	}
+
 	toggle() {
 		this._renderer.removeClass(this.sidenavToggle.nativeElement, 'open');
 		this._renderer.removeClass(this.sidenavToggle.nativeElement, 'close');
@@ -260,10 +260,14 @@ export class CoreComponent implements OnInit, OnDestroy {
 			this._router.navigate(['/', 'post-job']);
 		}
 	}
+
 	changeLocationToInviteuser() {
 		this._router.navigate(['/', 'administration', 'user-management']);
 		setTimeout(() => {
-			this._router.navigate(['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['invite-user'] } }], { skipLocationChange: true});
+			this._router.navigate(
+				['/', 'administration', 'user-management', { outlets: { 'user-management-sections': ['invite-user'] } }],
+				{ skipLocationChange: true }
+			);
 		}, 0);
 	}
 	feedbackCreation() {

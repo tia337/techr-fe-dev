@@ -5,7 +5,7 @@ import * as md5 from 'crypto-js/md5';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { RootVCRService } from 'app/root_vcr.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { User } from 'types/types';
+import { User, TokenLi } from 'types/types';
 
 @Injectable()
 export class Login {
@@ -22,7 +22,7 @@ export class Login {
 	) {
 		this.global = window;
 
-		this.checkCurrentUser();
+		// this.checkCurrentUser();
 	}
 
 	getAuthUrl(provider: string): void {
@@ -52,32 +52,12 @@ export class Login {
 	}
 
 	signIn(providerFuncName: string, token: Object, branchData?: Object): void {
-		// this.parse.execCloud(provider, { token: token, branchData: branchData })
-		// 	.then(user => {
-		// 		if (user === 'unauthorized') {
-		// 			throw 'unauthorized';
-		// 		}
-
-		// 		if (!user.authenticated()) {
-					// return this.parse.Parse.User.logIn(user.get('username'), this.getPassword(user.get('username')));
-		// 		} else {
-		// 			return user;
-		// 		}
-
-		// 	})
-		// 	.then(user => {
-		// 		this._profile.next(user);
-		// 		this.router.navigate(['/dashboard']);
-		// 	})
-		// 	.catch(err => {
-		// 		this.router.navigate(['/login']);
-		// 	});
-
 		this.httpService
 			.post(`login/${providerFuncName}`, { token: token, branchData: branchData })
 			.subscribe((user: User) => {
-				console.log(user);
 				this._profile.next(user);
+
+				localStorage.setItem('currentUser', JSON.stringify(user));
 
 				this.router.navigate(['/dashboard']);
 			});
@@ -179,5 +159,45 @@ export class Login {
 
 	get maxTrialDays(): number {
 		return this._maxTrialDays;
+	}
+
+	getUser(): void {
+		if (this.accessTokenExists()) {
+			if (this.accessTokenExpired()) {
+				return;
+			}
+
+			if (localStorage.getItem('currentUser')) {
+				const user: User = JSON.parse(localStorage.getItem('currentUser'));
+
+				this.profile.next(user);
+
+				this.router.navigate(['/dashboard']);
+			}
+
+			return;
+		}
+
+		this.router.navigate(['/login']);
+	}
+
+	private accessTokenExpired(): boolean {
+		const token: TokenLi = JSON.parse(localStorage.getItem('token-li'));
+
+		const currentDate = new Date();
+		const expireDate = new Date(token.expires_at);
+
+		if (currentDate > expireDate) {
+			localStorage.removeItem('token-li');
+			localStorage.removeItem('currentUser');
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private accessTokenExists(): boolean {
+		return localStorage.getItem('token-li') ? true : false;
 	}
 }
