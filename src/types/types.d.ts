@@ -18,7 +18,8 @@ type User = {
     avatarURL?: string,
     headline?: string,
     location?: string,
-    pClientPointer?: string | null | number 
+    pClientPointer?: string | null | number,
+    clientName?: string
 }
 
 type DeveloperParse = {

@@ -1,21 +1,11 @@
 import {
-	Component,
-	OnInit,
-	OnDestroy,
-	ViewContainerRef,
-	ComponentFactoryResolver,
-	ViewRef,
-	ElementRef,
-	Renderer2
+	Component, OnInit, OnDestroy, ViewContainerRef, ComponentFactoryResolver, ViewRef, ElementRef, Renderer2
 } from '@angular/core';
-
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { InviteVCR } from '../inviteVCR.service';
 import { InviteFormService } from './invite-form.service';
 import { Parse } from '../../../../parse.service';
-import { MatProgressSpinnerModule, MatSelectModule, MatFormFieldModule } from '@angular/material';
-import { UserRole } from 'types/types';
+import { UserRole, User } from 'types/types';
+import { Login } from 'app/login.service';
 
 @Component({
 	selector: 'app-invite-form',
@@ -25,50 +15,58 @@ import { UserRole } from 'types/types';
 export class InviteFormComponent implements OnInit, OnDestroy {
 
 	viewRef: ViewRef;
-	currentUser;
+	currentUser: User;
 
 	email: string;
 	fullName: string;
 	inviteMessage: string;
 
 	emailErrorMessage: string;
-
-
 	formIndex: number;
 
-
 	permissions = [
-		{ name: 'Site-admin', value: 1, tooltip: 'SwipeIn application access. Can invite and manage users, company settings and billing', disabled: false },
-		{ name: 'Admin', value: 2, tooltip: 'Swipe in application access. Can invite and manage users and company settings.', disabled: false  },
-		{ name: 'Contributor', value: 3, tooltip: 'SwipeIn application access. Can invite users.', disabled: false }
+		{
+			name: 'Site-admin',
+			value: 1,
+			tooltip: 'TechR application access. Can invite and manage users, company settings and billing',
+			disabled: false
+		},
+		{
+			name: 'Admin',
+			value: 2,
+			tooltip: 'TechR application access. Can invite and manage users and company settings.',
+			disabled: false
+		},
+		{
+			name: 'Contributor',
+			value: 3,
+			tooltip: 'TechR application access. Can invite users.',
+			disabled: false
+		}
 	];
 
-	checkedPermission = this.permissions.find(al => {return al.value === 3});
-	private accessLevel: string = this.checkedPermission.value.toString();
-	userRoles: Array<UserRole> = [];
-	userRolesArray;
+	checkedPermission = this.permissions.find(al => { return al.value === 3; });
+	private accessLevel = this.checkedPermission.value.toString();
+	userRoles = new Array<UserRole>();
+	userRolesArray = new Array<UserRole>();
 
 	constructor(
-		private _vcr: ViewContainerRef,
-		private _cfr: ComponentFactoryResolver,
 		private _inviteVCR: InviteVCR,
 		private _inviteFormService: InviteFormService,
 		private _elRef: ElementRef,
 		private _renderer: Renderer2,
-		private _parse: Parse
-	) {}
+		private _parse: Parse,
+		private readonly loginService: Login
+	) { }
 
 	ngOnInit() {
 
-		this._inviteFormService.getCurrentUser().then(user => {
-			this.currentUser = user;
-			this.inviteMessage = 'Hi,\n\n'+this.currentUser.get('firstName')+' '+this.currentUser.get('lastName')+' wants to collaborate with you on SwipeIn.hr. Join now to the '+user.get('Client_Pointer').get('ClientName')+' recruitment team on the following link.';
-		});
+		this.getUser();
 
 		this.formIndex = this._inviteVCR.getIndex(this.viewRef);
 
-		this._inviteFormService.getCurrentUserAccessLevel().then( userAL => {
-			if(userAL > 0)
+		this._inviteFormService.getCurrentUserAccessLevel().then(userAL => {
+			if (userAL > 0)
 				this.permissions.filter(al => {
 					return al.value < userAL;
 				}).forEach(al => {
@@ -89,7 +87,7 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 	}
 
 	deleteForm() {
-		if(this.formIndex >= 1)
+		if (this.formIndex >= 1)
 			this._inviteVCR.removeComponent(this.formIndex, this);
 	}
 
@@ -112,24 +110,24 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 
 	submitForm() {
 		this._inviteFormService.
-			createInvitation(this.email, this.fullName, parseInt(this.accessLevel, 10), this.inviteMessage, this.userRolesArray);
+			createInvitation(this.email,
+				this.fullName,
+				parseInt(this.accessLevel, 10),
+				this.inviteMessage,
+				this.userRolesArray
+			);
 	}
-
-	log() {
-		console.log(this.userRolesArray);
-	}
-
 
 	validateEmail(): boolean {
-		if(!this.email || this.email.length == 0) {
+		if (!this.email || this.email.length == 0) {
 			this.emailErrorMessage = 'Please, enter your work email';
 			return false;
 		}
-		else if(!/[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*/g.test(this.email)) {
+		else if (!/[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*/g.test(this.email)) {
 			this.emailErrorMessage = 'Invalid email address!';
 			return false;
 		}
-		else if(!/[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@(?!gmail|hotmail)[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*/g.test(this.email)) {
+		else if (!/[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@(?!gmail|hotmail)[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*/g.test(this.email)) {
 			this.emailErrorMessage = 'You should enter a company email address';
 			return false;
 		}
@@ -143,7 +141,14 @@ export class InviteFormComponent implements OnInit, OnDestroy {
 
 	getUserRoles() {
 		const clientId = this._parse.getCurrentUser().get('Client_Pointer').id;
-		return this._parse.execCloud('getUserRoles', {clientId: clientId});
+		return this._parse.execCloud('getUserRoles', { clientId: clientId });
+	}
+
+	private getUser(): void {
+		this.loginService.profile.subscribe((user: User) => {
+			this.currentUser = user;
+			this.inviteMessage = `Hi,\n\n ${this.currentUser.firstName} ${this.currentUser.lastName} wants to collaborate with you on TechR. Join now to the ${this.currentUser.clientName} recruitment team on the following link.`;
+		});
 	}
 
 }
